@@ -1,0 +1,38 @@
+# ---------------------------------
+# Java / Spring Boot
+# ---------------------------------
+/target/                  # Carpeta de builds de Maven
+/build/                   # Carpeta de builds de Gradle
+/out/                     # Salida de compilación
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración sensibles
+application-*.yml
+application-*.yaml
+application-*.properties
+!application-example.yml   # Deja un archivo de ejemplo si lo necesitas
+
+# ---------------------------------
+# Maven
+# ---------------------------------
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/MavenWrapperDownloader.java
+.settings/
+dependency-reduced-pom.xml
+
+# ---------------------------------
+# Sistema operativo
+# ---------------------------------
+.DS_Store           # macOS
+Thumbs.db           # Windows
+*.swp               # Archivos temporales de editores
+
+# ---------------------------------
+# Otros
+# ---------------------------------
+*.tmp
+*.bak
+*.old
