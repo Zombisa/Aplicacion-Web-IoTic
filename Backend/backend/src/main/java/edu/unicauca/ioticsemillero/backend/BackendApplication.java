@@ -1,13 +1,13 @@
-package edu.unicauca.iotic.iotsemillero_backend;
+package edu.unicauca.ioticsemillero.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IotsemilleroBackendApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IotsemilleroBackendApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }

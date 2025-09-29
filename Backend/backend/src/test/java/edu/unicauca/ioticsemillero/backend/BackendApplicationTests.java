@@ -1,10 +1,10 @@
-package edu.unicauca.iotic.iotsemillero_backend;
+package edu.unicauca.ioticsemillero.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IotsemilleroBackendApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
