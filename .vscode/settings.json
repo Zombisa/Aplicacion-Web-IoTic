@@ -1,7 +1,0 @@
-{
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "java.project.sourcePaths": [
-        "Backend/ioticsemillero-backend/src/main/java/edu/unicauca/iotic/iotsemillero_backend"
-    ]
-}
