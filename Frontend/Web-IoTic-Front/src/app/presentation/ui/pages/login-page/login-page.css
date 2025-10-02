@@ -1,0 +1,89 @@
+.background-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  z-index: 0;
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.form-login {
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
+  padding: 0;
+  border-radius: 24px;
+  background: transparent;
+}
+
+.card {
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(32,33,54,0.12);
+  background: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.iot-bg-letter {
+  position: absolute;
+  font-size: 12rem;
+  font-style: italic;
+  font-weight: bold;
+  color: rgba(12, 29, 83, 0.25);
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.iot-bg-i {
+  top: -4rem;
+  left: -2rem;
+}
+
+.iot-bg-o {
+  bottom: -5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.iot-bg-t {
+  bottom: -2rem;
+  right: -2rem;
+}
+
+.textTitle {
+  color: #F3A537;
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
+}
+
+.button-pri {
+  background-color: #202136;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 0;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.button-pri:hover, .button-pri:focus {
+  background-color: #151528;
+}
+
+@media (max-width: 768px) {
+  .form-login {
+    max-width: 95vw;
+    border-radius: 16px;
+  }
+  .iot-bg-letter {
+    font-size: 7rem;
+  }
+}
