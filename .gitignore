@@ -63,3 +63,6 @@ Thumbs.db
 *.bak
 *.tmp
 *.swp
+
+
+firebase-key.json
