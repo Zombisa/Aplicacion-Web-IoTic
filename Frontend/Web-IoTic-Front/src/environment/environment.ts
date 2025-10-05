@@ -8,4 +8,5 @@ export const environment = {
     appId: "1:972662292545:web:02e2688b3f208c968e06c0",
     measurementId: "G-RKLF8G6XJE"
   }
+  , apiBaseUrl: 'http://127.0.0.1:8000/api'
 };
