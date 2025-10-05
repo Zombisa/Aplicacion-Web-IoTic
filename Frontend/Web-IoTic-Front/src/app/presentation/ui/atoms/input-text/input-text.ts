@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-input-text',
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './input-text.html',
-  styleUrl: './input-text.css'
+  styleUrls: ['./input-text.css']
 })
 export class InputText {
   @Input() label: string = '';

@@ -1,28 +1,31 @@
 import { Component } from '@angular/core';
-import { InputText } from '../../atoms/input-text/input-text';
-import { ButtonPrimary } from '../../atoms/button-primary/button-primary';
-import { CommonEngine } from '@angular/ssr/node';
+
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ CommonModule, FormsModule, InputText, ButtonPrimary ],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './login-page.html',
-  styleUrl: './login-page.css'
+  styleUrls: ['./login-page.css']
 })
 export class LoginPage {
   correo: string = '';
   nombre: string = '';
   password: string = '';
 
-  correoError: boolean = true;
-  nombreError: boolean = true;
-  passwordError: boolean = true;
+  constructor(private authService: AuthService) {}
 
-  onLogin(form: NgForm) {
-    if (form.valid) {
-      console.log(form.value); // { email: "...", password: "..." }
+  async onLogin() {
+    try {
+      await this.authService.login(this.correo, this.password);
+      // Validar token contra backend
+      await this.authService.fetchCurrentUserFromBackend();
+      location.assign('/home');
+    } catch (error) {
+      alert('Correo o contraseña incorrectos');
     }
   }
 }
