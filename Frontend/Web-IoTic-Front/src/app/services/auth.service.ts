@@ -1,7 +1,7 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult } from '@angular/fire/auth';
+import { Observable, BehaviorSubject, firstValueFrom, from } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment/environment';
@@ -18,7 +18,7 @@ export class AuthService {
     authState(this.afAuth).subscribe(async (user) => {
       this.currentUserSubject.next(user);
       if (user) {
-        const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'SERA', user.uid)));
+        const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'usuarios', user.uid)));
         if (docSnap.exists()) {
           const data = docSnap.data();
           this.role$.next(data['role'] ?? null);
@@ -76,15 +76,33 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.afAuth.currentUser;
   }
-
-  get role(): Observable<string | null> {
-    return this.role$.asObservable();
+  /**
+ * Obtiene los custom claims del usuario autenticado desde Firebase.
+ * 
+ * Retorna un observable que emite un objeto con los claims (roles, permisos, etc.)
+ * o null si no hay usuario autenticado.
+ * 
+ * Utiliza el observable del usuario actual y llama a getIdTokenResult(user, true)
+ * para obtener los claims actualizados del token JWT de Firebase.
+ *
+ * @returns Observable<{ [key: string]: any } | null>
+ */
+  getUserClaims(): Observable<{ [key: string]: any } | null> {
+    return this.currentUser.pipe(
+      filter((user): user is User => !!user),
+      switchMap(user => from(getIdTokenResult(user, true))),
+      map(idTokenResult => idTokenResult.claims)
+    );
   }
-
   get name(): Observable<string | null> {
     return this.name$.asObservable();
   }
 
+  isAdmin(): Observable<boolean> {
+        return this.getUserClaims().pipe(
+          map(claims => !!(claims && claims['admin'] === true))
+        );
+  }
   get uid(): Observable<string | null> {
     return this.currentUser.pipe(
       filter((user): user is User => user !== null),
