@@ -11,6 +11,12 @@
 npm-debug.log
 yarn-error.log
 
+
+src/app/environment/*.ts
+firebase.json
+firestore.rules
+firestore.indexes.json
+
 # IDEs and editors
 .idea/
 .project
