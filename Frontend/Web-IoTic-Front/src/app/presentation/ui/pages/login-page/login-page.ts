@@ -22,7 +22,7 @@ export class LoginPage {
     try {
       await this.authService.login(this.correo, this.password);
       // Validar token contra backend
-      await this.authService.fetchCurrentUserFromBackend();
+      //await this.authService.fetchCurrentUserFromBackend();
       location.assign('/home');
     } catch (error) {
       alert('Correo o contraseña incorrectos');
