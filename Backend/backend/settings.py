@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "apps.usuarios_roles.middleware.firebase_auth_middleware",
+    #"apps.usuarios_roles.middleware.firebase_auth_middleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -91,7 +91,7 @@ DATABASES = {
 
 # Ruta absoluta al archivo de credenciales
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIREBASE_KEY_PATH = os.path.join(BASE_DIR, "firebase-key.json")
+FIREBASE_KEY_PATH = os.path.join(BASE_DIR, "firebase", "firebase-key.json")
 
 # Inicializar Firebase
 if not firebase_admin._apps:
