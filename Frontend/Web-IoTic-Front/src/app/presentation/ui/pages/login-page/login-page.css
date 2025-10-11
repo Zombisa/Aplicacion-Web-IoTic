@@ -1,13 +1,13 @@
 .background-login {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  
-  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #202136;
+  z-index: -1;
+  pointer-events: none;
 }
-
+ 
 .login-wrapper {
   position: relative;
   z-index: 1;
@@ -18,47 +18,48 @@
 .form-login {
   max-width: 500px;
   width: 100%;
+  height: 37rem;
   margin: auto;
   padding: 0;
   border-radius: 24px;
   background: transparent;
 }
 
-.card {
+.card2 {
   border-radius: 24px;
+  border-color: rgb(255, 255, 255);
   box-shadow: 0 8px 32px rgba(32,33,54,0.12);
   background: #fff;
   position: relative;
+  
   z-index: 2;
+
+}
+.iotic-circles {
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 10;
 }
 
-.iot-bg-letter {
-  position: absolute;
-  font-size: 12rem;
-  font-style: italic;
+.iotic-circle {
+  width: 70px;
+  height: 70px;
+  background: #ffffff;
+  color: #202136;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
   font-weight: bold;
-  color: rgba(12, 29, 83, 0.25);
-  z-index: 1;
-  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(32,33,54,0.12);
   user-select: none;
 }
-
-.iot-bg-i {
-  top: -4rem;
-  left: -2rem;
-}
-
-.iot-bg-o {
-  bottom: -5rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.iot-bg-t {
-  bottom: -2rem;
-  right: -2rem;
-}
-
 .textTitle {
   color: #F3A537;
   font-size: clamp(1.5rem, 2vw, 2.5rem);
