@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject, firstValueFrom, from } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environment/environment';
+import { environment } from '../environment/environment';
 
 
 @Injectable({ providedIn: 'root' })
@@ -44,7 +44,7 @@ export class AuthService {
     const token = await this.getToken();
     console.log('Token obtenido de Firebase:', token); 
   
-    const url = `${environment.apiBaseUrl}/auth/me`;
+    const url = `${environment.apiUrl}/auth/me`;
     if (token) {
       return firstValueFrom(
         this.http.get(url, {

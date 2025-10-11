@@ -1,12 +1,9 @@
 <div class="background-login"></div>
 <div class="login-wrapper d-flex justify-content-center align-items-center min-vh-100">
   <div class="form-login position-relative">
-    <div class="iot-bg-letter iot-bg-i">I</div>
-    <div class="iot-bg-letter iot-bg-o">O</div>
-    <div class="iot-bg-letter iot-bg-t">T</div>
     <div class="card p-4 d-flex flex-column" style="height: 100%;">
-      <h2 class="mb-4 fw-bold text-center textTitle">Iniciar sesión</h2>
       <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" class="w-100 flex-grow-1 d-flex flex-column justify-content-center">
+        <h2 class="mb-4 fw-bold text-center textTitle">Iniciar sesión</h2>
         <div class="mb-3">
           <label for="correo" class="form-label">Correo</label>
           <input
@@ -41,10 +38,11 @@
             La contraseña es obligatoria y debe tener al menos 6 caracteres.
           </div>
         </div>
-        <button type="submit" class="btn button-pri w-100" [disabled]="loginForm.invalid">
+        <button type="submit" class="btn button-pri w-100" [disabled]="loginForm.invalid" click="onLogin(loginForm)">
           Entrar
         </button>
       </form>
+      
     </div>
   </div>
 </div>

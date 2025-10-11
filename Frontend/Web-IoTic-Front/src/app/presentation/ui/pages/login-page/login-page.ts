@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 
 @Component({
@@ -18,14 +18,14 @@ export class LoginPage {
 
   constructor(private authService: AuthService) {}
 
-  async onLogin() {
-    try {
-      await this.authService.login(this.correo, this.password);
-      // Validar token contra backend
-      //await this.authService.fetchCurrentUserFromBackend();
-      location.assign('/home');
-    } catch (error) {
-      alert('Correo o contraseña incorrectos');
+  async onLogin(form: NgForm) {
+      try {
+        await this.authService.login(this.correo, this.password);
+        // Validar token contra backend
+        //await this.authService.fetchCurrentUserFromBackend();
+        location.assign('/home');
+      } catch (error) {
+        alert('Correo o contraseña incorrectos');
+      }
     }
-  }
 }
