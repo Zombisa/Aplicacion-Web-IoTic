@@ -1,21 +1,19 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Node modules
+/node_modules
 
-# Compiled output
+# Build output
 /dist
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Angular cache
+/.angular/cache
 
-
-src/app/environment/*.ts
-firebase.json
-firestore.rules
-firestore.indexes.json
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # IDEs and editors
 .idea/
@@ -32,18 +30,31 @@ firestore.indexes.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
 # Miscellaneous
-/.angular/cache
 .sass-cache/
-/connect.lock
+.connect.lock
 /coverage
 /libpeerconnection.log
 testem.log
 /typings
 __screenshots__/
+.history/
 
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase and environment (do not commit secrets)
+firebase.json
+firestore.rules
+firestore.indexes.json
+.firebaserc
+
+# Angular environment files (do not commit secrets)
+src/environment/*.ts
+src/app/environment/*.ts
+
+# Server files (if generated)
+main.server.ts
+server.ts
