@@ -1,0 +1,21 @@
+<header class="header-container">
+  <nav class="nav-bar d-flex">
+    <div class="logo-section">
+      <h2>IoTic</h2>
+    </div>
+
+    <ul class="nav-list d-flex ">
+      <ng-container *ngFor="let item of visibleSections()">
+        <li 
+            [class.active]="router.url === item.path"
+            (click)="navigateTo(item.path)"
+            class="nav-item">
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        </li>
+      </ng-container>
+    </ul>
+
+    
+
+  </nav>
+</header>
