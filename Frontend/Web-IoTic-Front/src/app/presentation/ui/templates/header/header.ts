@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatIconModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -30,10 +30,10 @@ export class Header implements OnDestroy {
 
     return [
       { path: '/home', icon: 'home', label: 'Inicio', show: true },
-      { path: '/grupos', icon: 'groups', label: 'Grupos', show: isAuthenticated },
-      { path: '/proyectos', icon: 'widgets', label: 'Proyectos', show: isAuthenticated },
-      { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: isAdmin },
-      { path: '/login', icon: 'person', label: 'Perfil', show: isAuthenticated }
+      { path: '/grupos', icon: 'groups', label: 'Grupos', show: true },
+      { path: '/proyectos', icon: 'widgets', label: 'Proyectos', show: true},
+      { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: true},
+      { path: '/login', icon: 'person', label: 'Perfil', show: true }
     ];
   });
 
