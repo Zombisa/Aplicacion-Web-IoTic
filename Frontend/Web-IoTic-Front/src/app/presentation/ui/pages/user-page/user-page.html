@@ -1,0 +1,30 @@
+<div class="app-container ">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+  
+  <main class="main-content ">
+    <div>
+        <i class="iconuser"></i>
+        <p>Nombre</p>
+        <p>Rol</p>
+        <button> Cerrar sesion</button>
+    </div>
+    <ng-container *ngFor="let item of visibleSections(); let i = index">
+        <div 
+            *ngIf="item.show"
+            class="col-12 col-lg"
+            [class.active-col]="router.url === item.path"
+        >
+        <div 
+            [class.active]="router.url === item.path"
+            (click)="navigateTo(item.path)"
+            class="nav-item w-100 h-100 d-flex align-items-center justify-content-center"
+        >
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span class="nav-label d-lg-none ms-2">{{ item.label }}</span>
+        </div>
+        </div>
+    </ng-container>
+  </main>
+</div>
