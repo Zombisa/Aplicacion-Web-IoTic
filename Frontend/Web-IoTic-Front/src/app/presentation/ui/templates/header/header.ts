@@ -23,6 +23,11 @@ export class Header implements OnDestroy {
   userName = signal<string | null>(null);
   isAdmin = signal<boolean>(false);
   userClaims = signal<{ [key: string]: any } | null>(null);
+  hasAuthenticatedUser = signal<boolean>(false);
+  
+  // Signals para inactividad
+  inactivityWarning = signal<{ show: boolean; timeLeft: number }>({ show: false, timeLeft: 0 });
+  inactivityTimeout = signal<number>(15); // 15 minutos por defecto
   
   visibleSections = computed(() => {
     const isAuthenticated = this.isLoggedIn();
@@ -42,6 +47,16 @@ export class Header implements OnDestroy {
     this.subscription.add(
       this.authService.isLoggedIn$.subscribe(loggedIn => {
         this.isLoggedIn.set(loggedIn);
+        this.hasAuthenticatedUser.set(loggedIn);
+      })
+    );
+
+    // Suscribirse al usuario actual para verificar autenticación real
+    this.subscription.add(
+      this.authService.currentUser.subscribe(user => {
+        const isAuthenticated = !!user;
+        this.hasAuthenticatedUser.set(isAuthenticated);
+        this.isLoggedIn.set(isAuthenticated);
       })
     );
 
@@ -65,6 +80,19 @@ export class Header implements OnDestroy {
         this.userClaims.set(claims);
       })
     );
+
+    // Suscribirse al estado de advertencia de inactividad
+    this.subscription.add(
+      this.authService.warningStatus$.subscribe(warning => {
+        this.inactivityWarning.set(warning);
+      })
+    );
+
+    // Obtener timeout de inactividad
+    this.inactivityTimeout.set(this.authService.inactivityTimeout);
+    
+    // Verificar estado inicial de autenticación
+    this.checkAuthenticationStatus();
   }
 
   ngOnDestroy() {
@@ -78,6 +106,9 @@ export class Header implements OnDestroy {
   async logout() {
     try {
       await this.authService.logout();
+      // Actualizar el estado local
+      this.hasAuthenticatedUser.set(false);
+      this.isLoggedIn.set(false);
       this.router.navigate(['/login']);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
@@ -88,5 +119,22 @@ export class Header implements OnDestroy {
     if (!this.isLoggedIn()) return false;
     if (!requiredClaim) return true;
     return true; // Implementar lógica según necesites
+  }
+
+  extendSession() {
+    this.authService.extendSession();
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  // Método para verificar si hay un usuario realmente autenticado
+  private checkAuthenticationStatus() {
+    // Verificar tanto el estado del observable como el usuario actual
+    const hasUser = this.authService.getCurrentUser() !== null;
+    this.hasAuthenticatedUser.set(hasUser);
   }
 }

@@ -4,6 +4,46 @@
     <div class="card p-4 d-flex flex-column" style="height: 100%;">
       <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" class="w-100 flex-grow-1 d-flex flex-column justify-content-center">
         <h2 class="mb-4 fw-bold text-center textTitle">Iniciar sesión</h2>
+        
+        <!-- Mensaje de error -->
+        <div *ngIf="showError" 
+             class="alert alert-danger alert-dismissible fade show mb-3" 
+             [attr.data-error-type]="errorType"
+             role="alert">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <div class="flex-grow-1">
+              {{ errorMessage }}
+              <!-- Mostrar tiempo de bloqueo -->
+              <div *ngIf="isBlocked" class="mt-2">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-shield-alt me-1"></i>
+                  <span class="fw-bold">
+                    <span *ngIf="errorType === 'ip_blocked'">IP bloqueada temporalmente</span>
+                    <span *ngIf="errorType !== 'ip_blocked'">Cuenta bloqueada temporalmente</span>
+                  </span>
+                </div>
+                <small class="text-muted">
+                  Tiempo restante: {{ formatTime(blockTimeRemaining) }}
+                  <span *ngIf="errorType === 'ip_blocked'" class="d-block">
+                    Por seguridad, tu IP ha sido bloqueada debido a múltiples intentos fallidos.
+                  </span>
+                </small>
+              </div>
+            </div>
+            <button type="button" class="btn-close" (click)="hideMessages()" aria-label="Close"></button>
+          </div>
+        </div>
+        
+        <!-- Mensaje de éxito -->
+        <div *ngIf="showSuccess" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-2"></i>
+            <div class="flex-grow-1">{{ successMessage }}</div>
+            <div class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></div>
+          </div>
+        </div>
+        
         <div class="mb-3">
           <label for="correo" class="form-label">Correo</label>
           <input
@@ -11,14 +51,20 @@
             type="email"
             name="correo"
             class="form-control"
+            [class.is-invalid]="emailError"
             placeholder="ejemplo@correo.com"
             [(ngModel)]="correo"
             required
             email
             #correoInput="ngModel"
+            (input)="onInputChange()"
+            [disabled]="isLoading"
           />
-          <div *ngIf="(correoInput.invalid && (correoInput.dirty || correoInput.touched || loginForm.submitted))" class="text-danger small">
+          <div *ngIf="(correoInput.invalid && (correoInput.dirty || correoInput.touched || loginForm.submitted)) && !emailError" class="text-danger small">
             El correo es obligatorio y debe tener un formato válido.
+          </div>
+          <div *ngIf="emailError" class="text-danger small">
+            {{ emailError }}
           </div>
         </div>
         <div class="mb-4">
@@ -28,21 +74,52 @@
             type="password"
             name="password"
             class="form-control"
+            [class.is-invalid]="passwordError"
             placeholder="••••••"
             [(ngModel)]="password"
             required
             minlength="6"
             #passwordInput="ngModel"
+            (input)="onInputChange()"
+            [disabled]="isLoading"
           />
-          <div *ngIf="(passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || loginForm.submitted))" class="text-danger small">
+          <div *ngIf="(passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || loginForm.submitted)) && !passwordError" class="text-danger small">
             La contraseña es obligatoria y debe tener al menos 6 caracteres.
           </div>
+          <div *ngIf="passwordError" class="text-danger small">
+            {{ passwordError }}
+          </div>
         </div>
-        <button type="submit" class="btn button-pri w-100" [disabled]="loginForm.invalid" click="onLogin(loginForm)">
-          Entrar
+        <button 
+          type="submit" 
+          class="btn button-pri w-100 position-relative" 
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Entrar</span>
+          <span *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Iniciando sesión...
+          </span>
         </button>
       </form>
       
+    </div>
+  </div>
+</div>
+
+<!-- Modal de credenciales incorrectas -->
+<div *ngIf="showCredentialsModal" class="credentials-modal-overlay">
+  <div class="credentials-modal">
+    <div class="modal-body">
+      <div class="credentials-message">
+        {{ credentialsMessage }}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="closeCredentialsModal()">
+        <i class="fas fa-check me-1"></i>
+        Entendido
+      </button>
     </div>
   </div>
 </div>

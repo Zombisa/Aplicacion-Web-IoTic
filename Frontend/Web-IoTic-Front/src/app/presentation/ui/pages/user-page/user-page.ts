@@ -1,15 +1,23 @@
 import { Component, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Header } from '../../templates/header/header';
 
 @Component({
   selector: 'app-user-page',
-  imports: [Header],
+  imports: [Header, CommonModule],
   templateUrl: './user-page.html',
   styleUrl: './user-page.css'
 })
 export class UserPage {
+  constructor(public router: Router) {}
+
   isAdmin() {
     throw new Error('Method not implemented.');
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
     
   visibleSections = computed(() => {
