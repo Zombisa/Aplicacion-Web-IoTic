@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import firebase_admin
 from firebase_admin import credentials, auth
+import shutil   
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,10 +85,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'aplicacion_web_iotic',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+if shutil.which('psql') is None:
+    os.environ['PATH'] += os.pathsep + r"C:\Program Files\PostgreSQL\18\bin"
 
 # Ruta absoluta al archivo de credenciales
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
