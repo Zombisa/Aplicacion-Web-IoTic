@@ -133,8 +133,12 @@ export class Header implements OnDestroy {
 
   // Método para verificar si hay un usuario realmente autenticado
   private checkAuthenticationStatus() {
-    // Verificar tanto el estado del observable como el usuario actual
-    const hasUser = this.authService.getCurrentUser() !== null;
-    this.hasAuthenticatedUser.set(hasUser);
+    // Verificar el estado actual de autenticación
+    const authState = this.authService.getCurrentAuthState();
+    this.hasAuthenticatedUser.set(authState.isLoggedIn);
+    this.isLoggedIn.set(authState.isLoggedIn);
+    this.isAdmin.set(authState.isAdmin);
+    this.userName.set(authState.name);
+    this.userClaims.set(authState.claims);
   }
 }

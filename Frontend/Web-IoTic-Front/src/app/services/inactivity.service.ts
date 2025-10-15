@@ -108,6 +108,7 @@ export class InactivityService {
   }
 
   private triggerLogout() {
+    console.log('InactivityService: Triggering logout due to inactivity');
     this.logoutSubject.next(true);
     this.clearTimers();
   }
