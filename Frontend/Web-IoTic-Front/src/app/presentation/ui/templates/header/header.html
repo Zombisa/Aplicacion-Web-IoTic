@@ -33,5 +33,18 @@
         </div>
       </div>
     </div>
+        <!-- Indicador de inactividad -->
+    <div *ngIf="hasAuthenticatedUser() && inactivityWarning().show" class="inactivity-indicator">
+      <div class="warning-badge">
+        <i class="fas fa-clock"></i>
+        <span class="time-text">{{ formatTime(inactivityWarning().timeLeft) }}</span>
+        <button 
+          class="btn-extend" 
+          (click)="extendSession()"
+          title="Extender sesión">
+          <i class="fas fa-refresh"></i>
+        </button>
+      </div>
+    </div>
   </nav>
 </header>
