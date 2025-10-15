@@ -1,21 +1,39 @@
 <header class="header-container">
-  <nav class="nav-bar d-flex">
-    <div class="logo-section">
+  <nav class="navbar navbar-expand-lg p-0">
+    <!-- Logo Section -->
+    <div class="navbar-brand logo-section">
       <h2>IoTic</h2>
     </div>
 
-    <ul class="nav-list d-flex ">
-      <ng-container *ngFor="let item of visibleSections()">
-        <li 
-            [class.active]="router.url === item.path"
-            (click)="navigateTo(item.path)"
-            class="nav-item">
-          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-        </li>
-      </ng-container>
-    </ul>
+    <!-- Mobile Hamburger Button -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <mat-icon style="color: #1b1f3b;">menu</mat-icon>
+    </button>
 
-    <!-- Indicador de inactividad -->
+    <!-- Collapsible Navigation -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="container-fluid p-0">
+        <div class="row w-100 g-0">
+          <ng-container *ngFor="let item of visibleSections(); let i = index">
+            <div 
+              *ngIf="item.show"
+              class="col-12 col-lg"
+              [class.active-col]="router.url === item.path"
+            >
+              <div 
+                [class.active]="router.url === item.path"
+                (click)="navigateTo(item.path)"
+                class="nav-item w-100 h-100 d-flex align-items-center justify-content-center"
+              >
+                <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+                <span class="nav-label d-lg-none ms-2">{{ item.label }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+        <!-- Indicador de inactividad -->
     <div *ngIf="hasAuthenticatedUser() && inactivityWarning().show" class="inactivity-indicator">
       <div class="warning-badge">
         <i class="fas fa-clock"></i>
@@ -28,17 +46,5 @@
         </button>
       </div>
     </div>
-
-    <!-- Botón de cerrar sesión -->
-    <div *ngIf="hasAuthenticatedUser()" class="logout-section">
-      <button 
-        class="btn-logout" 
-        (click)="logout()"
-        title="Cerrar sesión">
-        <i class="fas fa-sign-out-alt"></i>
-        <span class="logout-text">Cerrar sesión</span>
-      </button>
-    </div>
-
   </nav>
 </header>
