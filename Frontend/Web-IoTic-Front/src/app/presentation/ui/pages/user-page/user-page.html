@@ -1,16 +1,40 @@
-<div class="app-container ">
-  <div class="header-wrapper">
+<div class="app-container container-fluid background">
+  <div class="header-wrapper mb-3">
     <app-header></app-header>
   </div>
-  
-  <main class="main-content ">
-    <div>
-        <i class="iconuser"></i>
-        <div *ngIf="user$ | async as user">
-            <h3>Bienvenido {{ user.email }}</h3>
+
+  <main class="main-content">
+    <div class="card shadow-sm p-3 d-flex flex-row align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <mat-icon class="me-3 icon-user" style="font-size: 3rem; color: #6c757d;">account_circle</mat-icon>
+        <div class="user-details">
+          <ng-container *ngIf="user$ | async as user; else loading">
+            <h5 class="mb-1 fw-semibold">
+              {{ user.displayName || user.email || 'Usuario sin nombre' }}
+            </h5>
+            <p class="mb-0 text-muted small">
+              {{ user.email || 'Sin email' }}
+            </p>
+          </ng-container>
+          <ng-template #loading>
+            <span>Cargando usuario...</span>
+          </ng-template>
         </div>
-        <button> Cerrar sesion</button>
+      </div>
+      <button class="btn btn-outline-danger d-flex align-items-center" (click)="logout()">
+        <mat-icon class="me-1">logout</mat-icon>
+      </button>
     </div>
-   
+
+    <div>
+      <div class="card shadow-sm p-4 my-3 d-flex flex-column align-items-start">
+        <h2>Gestionar Inventario</h2>
+      </div>
+    </div>
+    <div>
+      <div class="card shadow-sm p-4 my-3 d-flex flex-column align-items-start">
+        <h2>Gestionar Usuarios</h2>
+      </div>
+    </div>
   </main>
 </div>

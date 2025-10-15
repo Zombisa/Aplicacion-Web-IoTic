@@ -5,10 +5,11 @@ import { Header } from '../../templates/header/header';
 import { Observable } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { AuthService } from '../../../../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-page',
-  imports: [Header, CommonModule],
+  imports: [Header, CommonModule, MatIconModule],
   templateUrl: './user-page.html',
   styleUrl: './user-page.css'
 })
@@ -26,7 +27,11 @@ export class UserPage implements OnInit {
     });
   }
 
-
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/home']);
+    console.log('Sesión cerrada');
+  }
   navigateTo(path: string) {
     this.router.navigate([path]);
   }
