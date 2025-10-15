@@ -43,56 +43,14 @@ export class Header implements OnDestroy {
   });
 
   constructor() {
-    // Suscribirse al estado de autenticación
-    this.subscription.add(
-      this.authService.isLoggedIn$.subscribe(loggedIn => {
-        this.isLoggedIn.set(loggedIn);
-        this.hasAuthenticatedUser.set(loggedIn);
-      })
-    );
-
-    // Suscribirse al usuario actual para verificar autenticación real
-    this.subscription.add(
-      this.authService.currentUser.subscribe(user => {
-        const isAuthenticated = !!user;
-        this.hasAuthenticatedUser.set(isAuthenticated);
-        this.isLoggedIn.set(isAuthenticated);
-      })
-    );
-
-    // Suscribirse al nombre del usuario
-    this.subscription.add(
-      this.authService.name.subscribe(name => {
-        this.userName.set(name);
-      })
-    );
-
-    // Suscribirse al estado de admin
-    this.subscription.add(
-      this.authService.isAdmin().subscribe(admin => {
-        this.isAdmin.set(admin);
-      })
-    );
-
-    // Suscribirse a los claims del usuario
-    this.subscription.add(
-      this.authService.getUserClaims().subscribe(claims => {
-        this.userClaims.set(claims);
-      })
-    );
-
+    
     // Suscribirse al estado de advertencia de inactividad
-    this.subscription.add(
-      this.authService.warningStatus$.subscribe(warning => {
-        this.inactivityWarning.set(warning);
-      })
-    );
 
     // Obtener timeout de inactividad
-    this.inactivityTimeout.set(this.authService.inactivityTimeout);
+
     
     // Verificar estado inicial de autenticación
-    this.checkAuthenticationStatus();
+  
   }
 
   ngOnDestroy() {
@@ -121,9 +79,7 @@ export class Header implements OnDestroy {
     return true; // Implementar lógica según necesites
   }
 
-  extendSession() {
-    this.authService.extendSession();
-  }
+ 
 
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
@@ -132,13 +88,5 @@ export class Header implements OnDestroy {
   }
 
   // Método para verificar si hay un usuario realmente autenticado
-  private checkAuthenticationStatus() {
-    // Verificar el estado actual de autenticación
-    const authState = this.authService.getCurrentAuthState();
-    this.hasAuthenticatedUser.set(authState.isLoggedIn);
-    this.isLoggedIn.set(authState.isLoggedIn);
-    this.isAdmin.set(authState.isAdmin);
-    this.userName.set(authState.name);
-    this.userClaims.set(authState.claims);
-  }
+  
 }

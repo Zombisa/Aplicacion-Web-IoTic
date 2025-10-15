@@ -18,12 +18,7 @@ export class InactivityWarningComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.warningSubscription = this.authService.warningStatus$.subscribe(
-      ({ show, timeLeft }) => {
-        this.showWarning = show;
-        this.timeLeft = timeLeft;
-      }
-    );
+  
   }
 
   ngOnDestroy() {
@@ -32,9 +27,7 @@ export class InactivityWarningComponent implements OnInit, OnDestroy {
     }
   }
 
-  extendSession() {
-    this.authService.extendSession();
-  }
+  
 
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);

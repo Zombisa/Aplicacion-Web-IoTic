@@ -1,7 +1,10 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Header } from '../../templates/header/header';
+import { Observable } from 'rxjs';
+import { User } from '@angular/fire/auth';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-user-page',
@@ -9,27 +12,25 @@ import { Header } from '../../templates/header/header';
   templateUrl: './user-page.html',
   styleUrl: './user-page.css'
 })
-export class UserPage {
-  constructor(public router: Router) {}
-
-  isAdmin() {
-    throw new Error('Method not implemented.');
+export class UserPage implements OnInit {
+  user$!: Observable<User | null>;
+  constructor(public router: Router, private authService: AuthService) {}
+  ngOnInit(): void {
+    this.user$ = this.authService.currentUser;
+    this.user$.subscribe(user => {
+      if (user) {
+        console.log('Usuario autenticado:', user);
+      } else {
+        console.log('No hay usuario autenticado');
+      }
+    });
   }
+
 
   navigateTo(path: string) {
     this.router.navigate([path]);
   }
     
-  visibleSections = computed(() => {
-    const isAdmin = this.isAdmin();
-
-    return [
-      { path: '/home', icon: 'home', label: 'Inicio', show: true },
-      { path: '/grupos', icon: 'groups', label: 'Grupos', show: true },
-      { path: '/proyectos', icon: 'widgets', label: 'Proyectos', show: true},
-      { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: true},
-      { path: '/login', icon: 'person', label: 'Perfil', show: true }
-    ];
-  });
+  
 
 }

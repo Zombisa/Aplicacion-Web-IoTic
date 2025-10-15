@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -37,27 +37,18 @@ export class LoginPage {
   maxAttempts: number = 5;
   isBlocked: boolean = false;
   blockTimeRemaining: number = 0;
+  public router = inject(Router);
 
   constructor(private authService: AuthService) {
     console.log('LoginPage - Constructor iniciado');
     
-    // Suscribirse a los observables de debug para monitorear el estado
-    this.authService.debugIsLoggedIn$.subscribe(isLoggedIn => {
-      console.log('Debug - Is Logged In:', isLoggedIn);
-    });
 
-    this.authService.debugIsAdmin$.subscribe(isAdmin => {
-      console.log('Debug - Is Admin:', isAdmin);
-    });
 
-    this.authService.debugUserClaims$.subscribe(claims => {
-      console.log('Debug - User Claims:', claims);
-    });
 
-    // Mostrar estado actual al cargar el componente
-    console.log('Debug - Current Auth State:', this.authService.getCurrentAuthState());
   }
-
+   navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
   async onLogin(form: NgForm) {
     if (form.invalid) {
       this.showErrorMessage('Por favor, completa todos los campos correctamente');
@@ -74,24 +65,9 @@ export class LoginPage {
 
     try {
       console.log('Starting login process...');
-      console.log('Auth state before login:', this.authService.getCurrentAuthState());
-      
+      console.log('Auth state before login:', this.authService.currentUser);
       const result = await this.authService.login(this.correo, this.password);
-      
-      if (result.success) {
-        console.log('Login successful!');
-        this.failedAttempts = 0; // Reset contador de intentos fallidos
-        this.showSuccessMessage('Inicio de sesión exitoso. Redirigiendo...');
-        
-        // Esperar un poco para que se actualicen los observables
-        setTimeout(() => {
-          console.log('Auth state after login:', this.authService.getCurrentAuthState());
-          location.assign('/home');
-        }, 2000); // tiempo para ver los logs
-      } else {
-        console.log('Login failed:', result);
-        this.handleLoginError(result);
-      }
+      this.navigateTo('/user');
     } catch (error: any) {
       this.handleLoginError({
         success: false,

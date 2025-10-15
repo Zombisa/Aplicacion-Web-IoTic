@@ -6,25 +6,11 @@
   <main class="main-content ">
     <div>
         <i class="iconuser"></i>
-        <p>Nombre</p>
-        <p>Rol</p>
+        <div *ngIf="user$ | async as user">
+            <h3>Bienvenido {{ user.email }}</h3>
+        </div>
         <button> Cerrar sesion</button>
     </div>
-    <ng-container *ngFor="let item of visibleSections(); let i = index">
-        <div 
-            *ngIf="item.show"
-            class="col-12 col-lg"
-            [class.active-col]="router.url === item.path"
-        >
-        <div 
-            [class.active]="router.url === item.path"
-            (click)="navigateTo(item.path)"
-            class="nav-item w-100 h-100 d-flex align-items-center justify-content-center"
-        >
-            <i class="fas fa-{{ item.icon }} nav-icon"></i>
-            <span class="nav-label d-lg-none ms-2">{{ item.label }}</span>
-        </div>
-        </div>
-    </ng-container>
+   
   </main>
 </div>
