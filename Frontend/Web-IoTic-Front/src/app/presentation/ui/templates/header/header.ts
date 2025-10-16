@@ -38,7 +38,7 @@ export class Header implements OnDestroy {
       { path: '/grupos', icon: 'groups', label: 'Grupos', show: true },
       { path: '/proyectos', icon: 'widgets', label: 'Proyectos', show: true},
       { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: true},
-      { path: '/login', icon: 'person', label: 'Perfil', show: true }
+      { path: '/user', icon: 'person', label: 'Perfil', show: true }
     ];
   });
 
