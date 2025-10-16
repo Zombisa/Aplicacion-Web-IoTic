@@ -15,9 +15,11 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class UserPage implements OnInit {
   user$!: Observable<User | null>;
+  isAdmin$!: Observable<boolean>;
   constructor(public router: Router, private authService: AuthService) {}
   ngOnInit(): void {
     this.user$ = this.authService.currentUser;
+    this.isAdmin$ = this.authService.isAdmin();
     this.user$.subscribe(user => {
       if (user) {
         console.log('Usuario autenticado:', user);

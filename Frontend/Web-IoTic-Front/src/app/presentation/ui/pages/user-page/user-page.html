@@ -25,8 +25,7 @@
         <mat-icon class="me-1">logout</mat-icon>
       </button>
     </div>
-
-    <div>
+    <div *ngIf="isAdmin$ | async">
       <div class="card shadow-sm p-4 my-3 d-flex flex-column align-items-start">
         <h2>Gestionar Inventario</h2>
       </div>
