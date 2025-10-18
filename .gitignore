@@ -10,9 +10,11 @@ db.sqlite3
 db.sqlite3-journal
 
 # Archivos de migraciones compilados
-*/migrations/__pycache__/
-*/migrations/*.pyc
-*/migrations/*.pyo
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/*.py~ 
+**/migrations/__pycache__/
+**/migrations/!(__init__.py)
 
 # Entorno virtual
 venv/
@@ -64,5 +66,6 @@ Thumbs.db
 *.tmp
 *.swp
 
-
 firebase-key.json
+/Backend/apps/inventario/migrations
+/Backend/apps/usuarios_roles/migrations

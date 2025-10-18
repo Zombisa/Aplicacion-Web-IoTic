@@ -63,7 +63,7 @@ def crear_usuario(data):
         except Exception as db_error:
             print(f" Error eliminando usuario de PostgreSQL: {db_error}")
 
-        # 🔹 Eliminar del Authentication de Firebase
+        # Eliminar del Authentication de Firebase
         try:
             if uid_firebase:
                 auth.delete_user(uid_firebase)

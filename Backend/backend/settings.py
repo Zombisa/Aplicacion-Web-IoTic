@@ -15,6 +15,10 @@ import os
 import firebase_admin
 from firebase_admin import credentials, auth
 import shutil   
+import os
+from dotenv import load_dotenv
+
+load_dotenv() #cargar el .env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
 
     # Microservicios
     'apps.usuarios_roles',
+    'apps.inventario',
 ]
 
 MIDDLEWARE = [
@@ -86,11 +91,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'aplicacion_web_iotic',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
