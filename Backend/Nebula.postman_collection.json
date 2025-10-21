@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "e72179d6-e607-427e-8d95-5a411508be0c",
+		"name": "Nebula",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40286637"
+	},
+	"item": [
+		{
+			"name": "Consultar inventario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/inventario/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"inventario",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Añadir item a inventario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"nombre\",\r\n    \"tipo\": \"devolutivo\",\r\n    \"cantidad_total\": 20,\r\n    \"cantidad_disponible\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/inventario/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"inventario",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar préstamos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"prestamos",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
