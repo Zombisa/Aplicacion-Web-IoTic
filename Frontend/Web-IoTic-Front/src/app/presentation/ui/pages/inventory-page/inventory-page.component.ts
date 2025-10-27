@@ -1,67 +1,120 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Device, InventoryService } from '../../../../services/inventory.service';
+import { Device, EstadoItem, InventoryService, TipoItem } from '../../../../services/inventory.service';
+import { FilterInventoryPipe } from '../../../../pipes/filter-inventory-pipe';
 
 @Component({
   selector: 'app-inventory-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FilterInventoryPipe],
   templateUrl: './inventory-page.component.html',
   styleUrls: ['./inventory-page.component.css']
 })
 export class InventoryPageComponent implements OnInit {
-
   devices: Device[] = [];
-  newDevice: Device = { id: 0, nombre: '', descripcion: '', categoria: '', estado: 'Disponible' };
 
-  constructor(private inventoryService: InventoryService) { }
+  // filtros
+  filtro = { nombre: '', categoria: '', estado: '' };
+  categorias = ['Microcontrolador', 'Sensor', 'Actuador', 'Cable', 'Módulo', 'Kit'];
+  estados: EstadoItem[] = ['Nuevo', 'Operativo', 'En mantenimiento', 'Dado de baja'];
+  tipos: TipoItem[] = ['CONSUMIBLE', 'NO_CONSUMIBLE'];
+
+  // modal agregar/editar
+  @ViewChild('modal') modalRef!: ElementRef<HTMLDialogElement>;
+  editando = false;
+  form: Device = this.resetDevice();
+
+  constructor(private inventoryService: InventoryService) {}
 
   ngOnInit(): void {
     this.loadDevices();
   }
 
-  //  Cargar dispositivos
+  // cargar
   loadDevices(): void {
     this.inventoryService.getDevices().subscribe({
-      next: (data) => (this.devices = data),
-      error: (err) => console.error('Error al cargar dispositivos:', err)
+      next: data => (this.devices = data),
+      error: err => console.error('Error al cargar dispositivos:', err)
     });
   }
 
-  //  Agregar nuevo dispositivo
-  addDevice(): void {
-    if (!this.newDevice.nombre.trim()) return;
-    this.inventoryService.addDevice(this.newDevice).subscribe({
-      next: (device) => {
-        this.devices.push(device);
-        this.newDevice = { id: 0, nombre: '', descripcion: '', categoria: '', estado: 'Disponible' };
-      },
-      error: (err) => console.error('Error al agregar dispositivo:', err)
-    });
+  // helpers
+  resetDevice(): Device {
+    return {
+      id: 0,
+      referencia: '',
+      nombre: '',
+      descripcion: '',
+      categoria: '',
+      tipo: 'NO_CONSUMIBLE',
+      unidad: 'unidad',
+      cantidad: 0,
+      valorUnitario: 0,
+      valorTotal: 0,
+      estado: 'Nuevo',
+      ubicacion: '',
+      fechaAdquisicion: new Date().toISOString().slice(0, 10),
+      documentoSoporte: ''
+    };
   }
 
-  //  Eliminar dispositivo
-  deleteDevice(id: number): void {
+  // modal
+  abrirModal(): void {
+    this.editando = false;
+    this.form = this.resetDevice();
+    this.modalRef.nativeElement.showModal();
+  }
+  cerrarModal(): void {
+    this.modalRef.nativeElement.close();
+  }
+
+  editar(d: Device): void {
+    this.editando = true;
+    this.form = { ...d };
+    this.modalRef.nativeElement.showModal();
+  }
+
+  guardar(): void {
+    // calcular valor total localmente
+    this.form.valorTotal = (this.form.cantidad || 0) * (this.form.valorUnitario || 0);
+
+    if (this.editando) {
+      this.inventoryService.updateDevice(this.form.id, this.form).subscribe({
+        next: upd => {
+          const i = this.devices.findIndex(x => x.id === upd.id);
+          if (i !== -1) this.devices[i] = upd;
+          this.cerrarModal();
+        },
+        error: err => console.error('Error al actualizar:', err)
+      });
+    } else {
+      this.inventoryService.addDevice(this.form).subscribe({
+        next: nuevo => {
+          this.devices.push(nuevo);
+          this.cerrarModal();
+        },
+        error: err => console.error('Error al agregar:', err)
+      });
+    }
+  }
+
+  eliminar(id: number): void {
     this.inventoryService.deleteDevice(id).subscribe({
-      next: () => (this.devices = this.devices.filter((d) => d.id !== id)),
-      error: (err) => console.error('Error al eliminar dispositivo:', err)
+      next: () => (this.devices = this.devices.filter(d => d.id !== id)),
+      error: err => console.error('Error al eliminar:', err)
     });
   }
 
-  //  Cambiar estado (Disponible ↔ Prestado)
-  toggleEstado(device: Device): void {
-    const nuevoEstado: 'Disponible' | 'Prestado' | 'Dañado' =
-      device.estado === 'Disponible' ? 'Prestado' : 'Disponible';
-
-    const actualizado: Device = { ...device, estado: nuevoEstado };
-
-    this.inventoryService.updateDevice(device.id, actualizado).subscribe({
-      next: (d: Device) => {
-        const index = this.devices.findIndex((x) => x.id === d.id);
-        if (index !== -1) this.devices[index] = d;
+  registrarBaja(d: Device): void {
+    // versión simple: marcar como "Dado de baja" y cantidad=0
+    const actualizado: Device = { ...d, estado: 'Dado de baja', cantidad: 0, valorTotal: 0 };
+    this.inventoryService.updateDevice(d.id, actualizado).subscribe({
+      next: upd => {
+        const i = this.devices.findIndex(x => x.id === upd.id);
+        if (i !== -1) this.devices[i] = upd;
       },
-      error: (err: any) => console.error('Error al cambiar estado:', err)
+      error: err => console.error('Error al dar de baja:', err)
     });
   }
 }

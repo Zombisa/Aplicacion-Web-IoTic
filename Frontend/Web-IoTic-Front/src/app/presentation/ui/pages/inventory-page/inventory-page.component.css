@@ -1,73 +1,106 @@
 .inventory-container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 16px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 24px auto;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.formulario {
+.title {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  font-size: 1.6rem;
+  margin: 0 0 12px;
 }
+.title .cube { font-size: 1.8rem; }
 
-.formulario input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 14px;
 }
-
-.formulario button {
-  background-color: #3f51b5;
-  color: white;
+.filters input, .filters select {
+  padding: 10px 12px;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  outline: none;
+}
+.btn-primary {
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 10px;
+  padding: 10px 14px;
   cursor: pointer;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-.disponible {
-  color: green;
-  font-weight: bold;
-}
-.prestado {
-  color: orange;
-  font-weight: bold;
-}
-.danado {
-  color: red;
-  font-weight: bold;
-}
-
-button {
+.table-wrap { overflow-x: auto; border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 12px; border-bottom: 1px solid #f1f1f1; text-align: left; }
+th { background: #fafafa; font-weight: 600; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.acciones { white-space: nowrap; }
+.acciones button {
   margin-right: 6px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
   cursor: pointer;
 }
+.acciones .danger { border-color: #ffdada; }
 
-button:hover {
-  opacity: 0.9;
+.nombre .n { font-weight: 600; }
+.nombre .desc { color: #6b7280; }
+
+.estado {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.estado.nuevo { background: #e6ffed; color: #116b2e; }
+.estado.operativo { background: #edf2ff; color: #273e9a; }
+.estado.mantenimiento { background: #fff6e6; color: #8a5b00; }
+.estado.baja { background: #ffecec; color: #b42318; }
+
+/* Modal */
+dialog {
+  width: min(880px, 92vw);
+  border: none;
+  border-radius: 14px;
+  padding: 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+dialog::backdrop { background: rgba(0,0,0,0.45); }
+.modal { padding: 20px; }
+.modal h3 { margin: 0 0 12px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.grid .col-2 { grid-column: span 2; }
+
+.grid label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.92rem;
+}
+.grid input, .grid select {
+  padding: 10px 12px;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  outline: none;
+}
+.modal-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
