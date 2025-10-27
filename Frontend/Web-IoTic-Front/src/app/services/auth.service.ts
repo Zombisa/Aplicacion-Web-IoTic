@@ -6,7 +6,6 @@ import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environment/environment';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);

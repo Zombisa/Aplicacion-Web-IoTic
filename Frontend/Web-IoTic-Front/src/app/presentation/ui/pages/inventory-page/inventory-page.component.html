@@ -1,0 +1,60 @@
+<div class="inventory-container">
+  <h1>📦 Inventario de Dispositivos</h1>
+
+  <form (ngSubmit)="addDevice()" class="formulario">
+    <input
+      type="text"
+      placeholder="Nombre"
+      [(ngModel)]="newDevice.nombre"
+      name="nombre"
+      required
+    />
+    <input
+      type="text"
+      placeholder="Descripción"
+      [(ngModel)]="newDevice.descripcion"
+      name="descripcion"
+    />
+    <input
+      type="text"
+      placeholder="Categoría"
+      [(ngModel)]="newDevice.categoria"
+      name="categoria"
+    />
+    <button type="submit">Agregar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Categoría</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let device of devices">
+        <td>{{ device.nombre }}</td>
+        <td>{{ device.descripcion }}</td>
+        <td>{{ device.categoria }}</td>
+        <td>
+          <span
+            [ngClass]="{
+              disponible: device.estado === 'Disponible',
+              prestado: device.estado === 'Prestado',
+              danado: device.estado === 'Dañado'
+            }"
+          >
+            {{ device.estado }}
+          </span>
+        </td>
+        <td>
+          <button (click)="toggleEstado(device)">Cambiar estado</button>
+          <button (click)="deleteDevice(device.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
