@@ -4,16 +4,33 @@
     Inventario de Dispositivos
   </h2>
 
+  <!--  Resumen -->
+  <div class="summary">
+    <div class="card">
+      <h4>Total Ítems</h4>
+      <p>{{ totalItems }}</p>
+    </div>
+    <div class="card available">
+      <h4>Disponibles</h4>
+      <p>{{ totalDisponibles }}</p>
+    </div>
+    <div class="card borrowed">
+      <h4>Prestados</h4>
+      <p>{{ totalPrestados }}</p>
+    </div>
+    <div class="card low">
+      <h4>Dado de baja</h4>
+      <p>{{ totalBaja }}</p>
+    </div>
+  </div>
+
   <!-- Filtros -->
   <div class="filters">
     <input [(ngModel)]="filtro.nombre" placeholder="Buscar por nombre o referencia" />
-    <select [(ngModel)]="filtro.categoria">
-      <option value="">Todas las categorías</option>
-      <option *ngFor="let c of categorias" [value]="c">{{ c }}</option>
-    </select>
+    
     <select [(ngModel)]="filtro.estado">
       <option value="">Todos los estados</option>
-      <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+      @for (e of estados; track e) { <option [value]="e">{{ e }}</option>}
     </select>
     <button class="btn-primary" (click)="abrirModal()">➕ Agregar</button>
   </div>
@@ -25,47 +42,44 @@
         <tr>
           <th>Ref.</th>
           <th>Nombre</th>
-          <th>Categoría</th>
           <th>Tipo</th>
-          <th>Unidad</th>
           <th class="num">Cant.</th>
-          <th class="num">V. Unit.</th>
-          <th class="num">V. Total</th>
           <th>Estado</th>
-          <th>Ubicación</th>
           <th class="acciones">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let d of devices | filterInventory:filtro">
-          <td>{{ d.referencia }}</td>
-          <td>
-            <div class="nombre">
-              <div class="n">{{ d.nombre }}</div>
-              <small class="desc">{{ d.descripcion }}</small>
-            </div>
-          </td>
-          <td>{{ d.categoria }}</td>
-          <td>{{ d.tipo === 'CONSUMIBLE' ? 'Consumible' : 'No consumible' }}</td>
-          <td>{{ d.unidad }}</td>
-          <td class="num">{{ d.cantidad }}</td>
-          <td class="num">{{ d.valorUnitario | currency:'COP':'symbol' }}</td>
-          <td class="num">{{ d.valorTotal | currency:'COP':'symbol' }}</td>
-          <td>
-            <span class="estado" [ngClass]="{
-              nuevo: d.estado === 'Nuevo',
-              operativo: d.estado === 'Operativo',
-              mantenimiento: d.estado === 'En mantenimiento',
-              baja: d.estado === 'Dado de baja'
-            }">{{ d.estado }}</span>
-          </td>
-          <td>{{ d.ubicacion }}</td>
-          <td class="acciones">
-            <button title="Editar" (click)="editar(d)">✏️</button>
-            <button title="Dar de baja" (click)="registrarBaja(d)">📉</button>
-            <button title="Eliminar" class="danger" (click)="eliminar(d.id)">🗑️</button>
-          </td>
-        </tr>
+        @for (d of devices | filterInventory : filtro; track d.referencia) {
+          <tr>
+            <td>{{ d.referencia }}</td>
+            <td>
+              <div class="nombre">
+                <div class="n">{{ d.nombre }}</div>
+              </div>
+            </td>
+            <td>{{ d.tipo === 'CONSUMIBLE' ? 'Consumible' : 'No consumible' }}</td>
+            <td class="num">{{ d.cantidad }}</td>
+            <td>
+              <span
+                class="estado"
+                [ngClass]="{
+                  prestado: d.estado === 'Prestado',
+                  disponible: d.estado === 'Disponible',
+                  baja: d.estado === 'Dado de baja'
+                }"
+              >
+                {{ d.estado }}
+              </span>
+            </td>
+            <td class="acciones">
+              <button title="Editar" (click)="editar(d)">✏️</button>
+              <button title="Préstamo" (click)="registrarPrestamo(d)">📤</button>
+              <button title="Devolución" (click)="registrarDevolucion(d)">📥</button>
+              <button title="Dar de baja" (click)="registrarBaja(d)">📉</button>
+              <button title="Eliminar" class="danger" (click)="eliminar(d.id)">🗑️</button>
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
@@ -87,19 +101,6 @@
         <input [(ngModel)]="form.nombre" name="nombre" required />
       </label>
 
-      <label class="col-2">
-        <span>Descripción</span>
-        <input [(ngModel)]="form.descripcion" name="descripcion" />
-      </label>
-
-      <label>
-        <span>Categoría</span>
-        <input [(ngModel)]="form.categoria" name="categoria" list="catList" />
-        <datalist id="catList">
-          <option *ngFor="let c of categorias" [value]="c"></option>
-        </datalist>
-      </label>
-
       <label>
         <span>Tipo</span>
         <select [(ngModel)]="form.tipo" name="tipo">
@@ -109,18 +110,8 @@
       </label>
 
       <label>
-        <span>Unidad</span>
-        <input [(ngModel)]="form.unidad" name="unidad" />
-      </label>
-
-      <label>
         <span>Cantidad</span>
         <input type="number" [(ngModel)]="form.cantidad" name="cantidad" min="0" />
-      </label>
-
-      <label>
-        <span>Valor unitario</span>
-        <input type="number" [(ngModel)]="form.valorUnitario" name="valorUnitario" min="0" />
       </label>
 
       <label>
@@ -131,18 +122,8 @@
       </label>
 
       <label>
-        <span>Ubicación</span>
-        <input [(ngModel)]="form.ubicacion" name="ubicacion" />
-      </label>
-
-      <label>
         <span>Fecha adquisición</span>
         <input type="date" [(ngModel)]="form.fechaAdquisicion" name="fechaAdquisicion" />
-      </label>
-
-      <label class="col-2">
-        <span>Doc. soporte (opcional)</span>
-        <input [(ngModel)]="form.documentoSoporte" name="documentoSoporte" placeholder="OC-2025-0001 / URL" />
       </label>
     </div>
 

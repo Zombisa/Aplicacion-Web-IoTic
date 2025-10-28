@@ -15,7 +15,6 @@ export class FilterInventoryPipe implements PipeTransform {
 
     return list.filter(d =>
       (!nombre || d.nombre.toLowerCase().includes(nombre)) &&
-      (!categoria || d.categoria === categoria) &&
       (!estado || d.estado === estado)
     );
   }

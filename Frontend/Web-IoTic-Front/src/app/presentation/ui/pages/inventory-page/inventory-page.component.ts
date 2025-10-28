@@ -17,7 +17,7 @@ export class InventoryPageComponent implements OnInit {
   // filtros
   filtro = { nombre: '', categoria: '', estado: '' };
   categorias = ['Microcontrolador', 'Sensor', 'Actuador', 'Cable', 'Módulo', 'Kit'];
-  estados: EstadoItem[] = ['Nuevo', 'Operativo', 'En mantenimiento', 'Dado de baja'];
+  estados: EstadoItem[] = ['Prestado', 'Disponible', 'Dado de baja'];
   tipos: TipoItem[] = ['CONSUMIBLE', 'NO_CONSUMIBLE'];
 
   // modal agregar/editar
@@ -25,7 +25,7 @@ export class InventoryPageComponent implements OnInit {
   editando = false;
   form: Device = this.resetDevice();
 
-  constructor(private inventoryService: InventoryService) {}
+  constructor(private inventoryService: InventoryService) { }
 
   ngOnInit(): void {
     this.loadDevices();
@@ -45,17 +45,10 @@ export class InventoryPageComponent implements OnInit {
       id: 0,
       referencia: '',
       nombre: '',
-      descripcion: '',
-      categoria: '',
       tipo: 'NO_CONSUMIBLE',
-      unidad: 'unidad',
       cantidad: 0,
-      valorUnitario: 0,
-      valorTotal: 0,
-      estado: 'Nuevo',
-      ubicacion: '',
+      estado: 'Prestado',
       fechaAdquisicion: new Date().toISOString().slice(0, 10),
-      documentoSoporte: ''
     };
   }
 
@@ -63,21 +56,29 @@ export class InventoryPageComponent implements OnInit {
   abrirModal(): void {
     this.editando = false;
     this.form = this.resetDevice();
-    this.modalRef.nativeElement.showModal();
+    const modal = document.querySelector('dialog') as HTMLDialogElement;
+    console.log('Modal encontrado:', modal);
+    if (modal) {
+    modal.showModal();
+    console.log('Intentando abrir modal...');
+  } else {
+    console.warn('❌ No se encontró el elemento <dialog>');
   }
+  }
+
   cerrarModal(): void {
-    this.modalRef.nativeElement.close();
+    const modal = document.querySelector('dialog') as HTMLDialogElement;
+    if (modal && modal.open) modal.close();
   }
 
   editar(d: Device): void {
     this.editando = true;
     this.form = { ...d };
-    this.modalRef.nativeElement.showModal();
+    const modal = document.querySelector('dialog') as HTMLDialogElement;
+    if (modal) modal.showModal();
   }
 
   guardar(): void {
-    // calcular valor total localmente
-    this.form.valorTotal = (this.form.cantidad || 0) * (this.form.valorUnitario || 0);
 
     if (this.editando) {
       this.inventoryService.updateDevice(this.form.id, this.form).subscribe({
@@ -108,7 +109,7 @@ export class InventoryPageComponent implements OnInit {
 
   registrarBaja(d: Device): void {
     // versión simple: marcar como "Dado de baja" y cantidad=0
-    const actualizado: Device = { ...d, estado: 'Dado de baja', cantidad: 0, valorTotal: 0 };
+    const actualizado: Device = { ...d, estado: 'Dado de baja', cantidad: 0};
     this.inventoryService.updateDevice(d.id, actualizado).subscribe({
       next: upd => {
         const i = this.devices.findIndex(x => x.id === upd.id);
@@ -117,4 +118,66 @@ export class InventoryPageComponent implements OnInit {
       error: err => console.error('Error al dar de baja:', err)
     });
   }
+
+  // 🔹 Resumen general
+  get totalItems(): number {
+    return this.devices.length;
+  }
+
+  get totalDisponibles(): number {
+    return this.devices.filter(d => d.estado === 'Disponible').length;
+  }
+
+  get totalPrestados(): number {
+    return this.devices.filter(d => d.estado === 'Prestado').length; // cuando haya préstamos
+  }
+
+  get totalBaja(): number {
+    return this.devices.filter(d => d.estado === 'Dado de baja').length;
+  }
+
+  // 🔹 Registro de préstamo simple
+  registrarPrestamo(d: Device): void {
+    if (d.cantidad <= 0) {
+      alert('No hay unidades disponibles para préstamo.');
+      return;
+    }
+    const cantidadPrestada = prompt(`¿Cuántas unidades de "${d.nombre}" deseas prestar?`, '1');
+    const n = Number(cantidadPrestada);
+
+    if (!isNaN(n) && n > 0 && n <= d.cantidad) {
+      const actualizado: Device = {
+        ...d,
+        cantidad: d.cantidad - n,
+        estado: d.cantidad - n > 0 ? d.estado : 'Prestado'
+      };
+      this.inventoryService.updateDevice(d.id, actualizado).subscribe({
+        next: upd => {
+          const i = this.devices.findIndex(x => x.id === upd.id);
+          if (i !== -1) this.devices[i] = upd;
+        }
+      });
+    }
+  }
+
+  // 🔹 Devolución
+  registrarDevolucion(d: Device): void {
+    const cantidadDevuelta = prompt(`¿Cuántas unidades de "${d.nombre}" devuelves?`, '1');
+    const n = Number(cantidadDevuelta);
+
+    if (!isNaN(n) && n > 0) {
+      const actualizado: Device = {
+        ...d,
+        cantidad: d.cantidad + n,
+        estado: 'Disponible'
+      };
+      this.inventoryService.updateDevice(d.id, actualizado).subscribe({
+        next: upd => {
+          const i = this.devices.findIndex(x => x.id === upd.id);
+          if (i !== -1) this.devices[i] = upd;
+        }
+      });
+    }
+  }
+
 }
