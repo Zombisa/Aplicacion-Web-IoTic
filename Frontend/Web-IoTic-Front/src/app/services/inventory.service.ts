@@ -16,7 +16,7 @@ export interface Device {
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  // 🧪 Datos simulados (mock)
+  //  Datos simulados (mock)
   private devices: Device[] = [
     {
       id: 1,

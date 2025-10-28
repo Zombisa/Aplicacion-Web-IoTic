@@ -27,10 +27,12 @@
   <!-- Filtros -->
   <div class="filters">
     <input [(ngModel)]="filtro.nombre" placeholder="Buscar por nombre o referencia" />
-    
+
     <select [(ngModel)]="filtro.estado">
       <option value="">Todos los estados</option>
-      @for (e of estados; track e) { <option [value]="e">{{ e }}</option>}
+      @for (e of estados; track e) {
+      <option [value]="e">{{ e }}</option>
+      }
     </select>
     <button class="btn-primary" (click)="abrirModal()">➕ Agregar</button>
   </div>
@@ -43,46 +45,52 @@
           <th>Ref.</th>
           <th>Nombre</th>
           <th>Tipo</th>
-          <th class="num">Cant.</th>
+          <th class="num">Disp.</th>
+          <th class="num">Prest.</th>
           <th>Estado</th>
           <th class="acciones">Acciones</th>
         </tr>
       </thead>
       <tbody>
         @for (d of devices | filterInventory : filtro; track d.referencia) {
-          <tr>
-            <td>{{ d.referencia }}</td>
-            <td>
-              <div class="nombre">
-                <div class="n">{{ d.nombre }}</div>
-              </div>
-            </td>
-            <td>{{ d.tipo === 'CONSUMIBLE' ? 'Consumible' : 'No consumible' }}</td>
-            <td class="num">{{ d.cantidad }}</td>
-            <td>
-              <span
-                class="estado"
-                [ngClass]="{
-                  prestado: d.estado === 'Prestado',
-                  disponible: d.estado === 'Disponible',
-                  baja: d.estado === 'Dado de baja'
-                }"
-              >
-                {{ d.estado }}
-              </span>
-            </td>
-            <td class="acciones">
-              <button title="Editar" (click)="editar(d)">✏️</button>
-              <button title="Préstamo" (click)="registrarPrestamo(d)">📤</button>
-              <button title="Devolución" (click)="registrarDevolucion(d)">📥</button>
-              <button title="Dar de baja" (click)="registrarBaja(d)">📉</button>
-              <button title="Eliminar" class="danger" (click)="eliminar(d.id)">🗑️</button>
-            </td>
-          </tr>
+        <tr>
+          <td>{{ d.referencia }}</td>
+          <td>
+            <div class="nombre">
+              <div class="n">{{ d.nombre }}</div>
+            </div>
+          </td>
+          <td>{{ d.tipo === 'CONSUMIBLE' ? 'Consumible' : 'No consumible' }}</td>
+          <td class="num">{{ getCantidadDisponible(d) }}</td>
+          <td class="num">{{ getCantidadPrestada(d) }}</td>
+          <td>
+            <span
+              class="estado"
+              [ngClass]="{
+                prestado: d.estado === 'Prestado',
+                disponible: d.estado === 'Disponible',
+                baja: d.estado === 'Dado de baja'
+              }"
+            >
+              {{ d.estado }}
+            </span>
+          </td>
+          <td class="acciones">
+            <button title="Editar" (click)="editar(d)">✏️</button>
+            <button title="Préstamo" (click)="abrirPrestamoModal(d, 'PRESTAMO')">📤</button>
+            <button title="Devolución" (click)="abrirPrestamoModal(d, 'DEVOLUCION')">📥</button>
+            <button title="Dar de baja" (click)="registrarBaja(d)">📉</button>
+            <button title="Eliminar" class="danger" (click)="eliminar(d.id)">🗑️</button>
+          </td>
+        </tr>
         }
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="toast" *ngIf="toastVisible">
+  {{ toastMessage }}
 </div>
 
 <!--  Modal Agregar/Editar -->
@@ -132,4 +140,48 @@
       <button type="button" (click)="cerrarModal()">Cancelar</button>
     </div>
   </form>
+</dialog>
+
+<dialog #prestamoModal class="modal-prestamo">
+  <h3>
+    {{ prestamoForm.tipo === 'PRESTAMO' ? 'Registrar préstamo' : 'Registrar devolución' }}
+  </h3>
+
+  <!-- Si es préstamo -->
+  @if (prestamoForm.tipo === 'PRESTAMO') {
+  <form (ngSubmit)="procesarPrestamoDevolucion()" class="form-prestamo">
+    <label>Usuario:</label>
+    <input type="text" [(ngModel)]="prestamoForm.usuario" name="usuario" required />
+
+    <label>Cantidad:</label>
+    <input type="number" [(ngModel)]="prestamoForm.cantidad" name="cantidad" min="1" required />
+
+    <div class="botones">
+      <button type="submit" class="btn-primary">Prestar</button>
+      <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cancelar</button>
+    </div>
+  </form>
+}
+
+
+  <!-- Si es devolución -->
+  @if (prestamoForm.tipo === 'DEVOLUCION') {
+  <div class="devolucion-lista">
+    @if (prestamosPendientes.length === 0) {
+    <p>No hay préstamos pendientes.</p>
+    } @if (prestamosPendientes.length > 0) {
+    <ul>
+      @for (p of prestamosPendientes; track p.id) {
+      <li>
+        <strong>{{ p.usuario }}</strong> — {{ p.cantidad }} unidad(es) — {{ p.fecha }}
+        <button (click)="marcarDevuelto(p)">✅ Devuelto</button>
+      </li>
+      }
+    </ul>
+    }
+    <div class="botones">
+      <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cerrar</button>
+    </div>
+  </div>
+  }
 </dialog>

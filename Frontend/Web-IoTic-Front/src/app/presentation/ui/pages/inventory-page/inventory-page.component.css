@@ -209,3 +209,94 @@ dialog::backdrop {
 .card.available { background: #e8f5e9; color: #2e7d32; }
 .card.borrowed { background: #e3f2fd; color: #1565c0; }
 .card.low { background: #ffebee; color: #c62828; }
+
+.modal-prestamo {
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  width: 350px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.form-prestamo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.botones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-primary {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #323232;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0.95;
+  animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(10px); }
+}
+
+
+.devolucion-lista ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.devolucion-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  background: #f7f7f7;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.devolucion-lista button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.devolucion-lista button:hover {
+  background-color: #43a047;
+}
+
