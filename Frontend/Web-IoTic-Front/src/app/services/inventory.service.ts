@@ -1,76 +1,37 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-
-export type EstadoItem = 'Disponible' | 'Dado de baja' | 'Prestado';
-export type TipoItem = 'CONSUMIBLE' | 'NO_CONSUMIBLE';
-
-export interface Device {
-  id: number;
-  referencia: string;
-  nombre: string;
-  tipo: TipoItem;
-  cantidad: number;     
-  estado: EstadoItem;
-  fechaAdquisicion: string;    // ISO string 'YYYY-MM-DD'
-}
+import { MOCK_COMPONENTS } from '../mocks/electronicComponent.mock';
+import { ElectronicComponent } from '../models/electronicComponent.model';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  //  Datos simulados (mock)
-  private devices: Device[] = [
-    {
-      id: 1,
-      referencia: 'MCU-UNO',
-      nombre: 'Arduino Uno',
-      tipo: 'NO_CONSUMIBLE',
-      cantidad: 5,
-      estado: 'Disponible',
-      fechaAdquisicion: '2024-08-15'
-    },
-    {
-      id: 2,
-      referencia: 'SEN-DHT11',
-      nombre: 'Sensor DHT11',
-      tipo: 'CONSUMIBLE',
-      cantidad: 30,
-      estado: 'Prestado',
-      fechaAdquisicion: '2025-01-10'
-    },
-    {
-      id: 3,
-      referencia: 'MCU-ESP32',
-      nombre: 'ESP32',
-      tipo: 'NO_CONSUMIBLE',
-      cantidad: 3,
-      estado: 'Dado de baja',
-      fechaAdquisicion: '2024-10-02'
-    }
-  ];
+  
+  private components: ElectronicComponent[] = [...MOCK_COMPONENTS];
 
   constructor() {}
 
-  getDevices(): Observable<Device[]> {
-    return of([...this.devices]);
+  getElectronicComponent(): Observable<ElectronicComponent[]> {
+    return of([...this.components]);
   }
 
-  addDevice(device: Device): Observable<Device> {
-    const id = this.devices.length ? Math.max(...this.devices.map(d => d.id)) + 1 : 1;
-    const nuevo: Device = { ...device, id };
-    this.devices.push(nuevo);
+  addElectronicComponent(device: ElectronicComponent): Observable<ElectronicComponent> {
+    const id = this.components.length ? Math.max(...this.components.map(d => d.id)) + 1 : 1;
+    const nuevo: ElectronicComponent = { ...device, id };
+    this.components.push(nuevo);
     return of(nuevo);
   }
 
-  updateDevice(id: number, updatedDevice: Device): Observable<Device> {
-    const index = this.devices.findIndex(d => d.id === id);
+  updateElectronicComponent(id: number, updatedElectronicComponent: ElectronicComponent): Observable<ElectronicComponent> {
+    const index = this.components.findIndex(d => d.id === id);
     if (index !== -1) {
-      this.devices[index] = { ...updatedDevice, id};
-      return of(this.devices[index]);
+      this.components[index] = { ...updatedElectronicComponent, id};
+      return of(this.components[index]);
     }
-    return of(updatedDevice);
+    return of(updatedElectronicComponent);
   }
 
-  deleteDevice(id: number): Observable<void> {
-    this.devices = this.devices.filter(d => d.id !== id);
+  deleteElectronicComponent(id: number): Observable<void> {
+    this.components = this.components.filter(d => d.id !== id);
     return of(void 0);
   }
 }

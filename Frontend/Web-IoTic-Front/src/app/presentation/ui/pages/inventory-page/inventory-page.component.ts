@@ -1,24 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Device, EstadoItem, InventoryService, TipoItem } from '../../../../services/inventory.service';
 import { FilterInventoryPipe } from '../../../../pipes/filter-inventory-pipe';
-
-interface PrestamoForm {
-  deviceId: number | null;
-  usuario: string;
-  cantidad: number;
-  tipo: 'PRESTAMO' | 'DEVOLUCION';
-}
-
-interface RegistroPrestamo {
-  id: number;              // identificador del préstamo
-  deviceId: number;
-  usuario: string;
-  cantidad: number;
-  fecha: string;
-  devuelto: boolean;
-}
+import { InventoryService } from '../../../../services/inventory.service';
+import { ElectronicComponent, EstadoFisico } from '../../../../models/electronicComponent.model';
+import { LoanService } from '../../../../services/loan.service';
+import { PrestamoForm, RegistroPrestamo } from '../../../../models/prestamo.model';
 
 @Component({
   selector: 'app-inventory-page',
@@ -29,254 +16,210 @@ interface RegistroPrestamo {
 })
 
 export class InventoryPageComponent implements OnInit {
-  devices: Device[] = [];
-
-  registrosPrestamos: RegistroPrestamo[] = [];
-
-  prestamosPendientes: RegistroPrestamo[] = [];
-
-  // filtros
+  components: ElectronicComponent[] = [];
   filtro = { nombre: '', estado: '' };
-  estados: EstadoItem[] = ['Prestado', 'Disponible', 'Dado de baja'];
-  tipos: TipoItem[] = ['CONSUMIBLE', 'NO_CONSUMIBLE'];
+  estados: EstadoFisico[] = ['Excelente', 'Bueno', 'Regular', 'Defectuoso', 'Dañado', 'En mantenimiento', 'Obsoleto'];
 
-  // modal agregar/editar
-  @ViewChild('modal') modalRef!: ElementRef<HTMLDialogElement>;
-  editando = false;
-  form: Device = this.resetDevice();
-
-  constructor(private inventoryService: InventoryService) { }
-
-  ngOnInit(): void {
-    this.loadDevices();
-  }
-
-  // cargar
-  loadDevices(): void {
-    this.inventoryService.getDevices().subscribe({
-      next: data => (this.devices = data),
-      error: err => console.error('Error al cargar dispositivos:', err)
-    });
-  }
-
-  // helpers
-  resetDevice(): Device {
+  resetElectronicComponent(): ElectronicComponent {
     return {
       id: 0,
-      referencia: '',
-      nombre: '',
-      tipo: 'NO_CONSUMIBLE',
+      numSerie: '',
+      descripcion: '',
       cantidad: 0,
-      estado: 'Disponible',
-      fechaAdquisicion: new Date().toISOString().slice(0, 10),
+      ubicacion: '',
+      estadoFisico: 'Excelente',
+      estadoAdministrativo: 'Disponible',
+      observacion: '',
+      imagenArticulo: '',
     };
   }
 
-  // modal
-  abrirModal(): void {
-    this.editando = false;
-    this.form = this.resetDevice();
-    const modal = document.querySelector('dialog') as HTMLDialogElement;
-    console.log('Modal encontrado:', modal);
-    if (modal) {
-      modal.showModal();
-      console.log('Intentando abrir modal...');
-    } else {
-      console.warn('❌ No se encontró el elemento <dialog>');
-    }
+
+  form: ElectronicComponent = this.resetElectronicComponent();
+  editando = false;
+
+  prestamoForm: PrestamoForm = { electronicComponentId: null, usuario: '', cantidad: 1, tipo: 'PRESTAMO' };
+  prestamosPendientes: RegistroPrestamo[] = [];
+
+  toastVisible = false;
+  toastMessage = '';
+
+  @ViewChild('modal') modalRef!: ElementRef<HTMLDialogElement>;
+  @ViewChild('prestamoModal') prestamoModalRef!: ElementRef<HTMLDialogElement>;
+
+  constructor(private inventoryService: InventoryService, private loanService: LoanService) { }
+
+  ngOnInit(): void {
+    this.loadElectronicComponents();
+  }
+
+  loadElectronicComponents(): void {
+    this.inventoryService.getElectronicComponent().subscribe({
+      next: data => this.components = data,
+      error: err => console.error('Error al cargar:', err)
+    });
+  }
+
+  abrirModal(d?: ElectronicComponent): void {
+    this.editando = !!d;
+    this.form = d ? { ...d } : this.resetElectronicComponent();
+    this.modalRef.nativeElement.showModal();
   }
 
   cerrarModal(): void {
-    const modal = document.querySelector('dialog') as HTMLDialogElement;
-    if (modal && modal.open) modal.close();
-  }
-
-  editar(d: Device): void {
-    this.editando = true;
-    this.form = { ...d };
-    const modal = document.querySelector('dialog') as HTMLDialogElement;
-    if (modal) modal.showModal();
+    this.modalRef.nativeElement.close();
   }
 
   guardar(): void {
+    const obs = this.editando
+      ? this.inventoryService.updateElectronicComponent(this.form.id, this.form)
+      : this.inventoryService.addElectronicComponent(this.form);
 
-    if (this.editando) {
-      this.inventoryService.updateDevice(this.form.id, this.form).subscribe({
-        next: upd => {
-          const i = this.devices.findIndex(x => x.id === upd.id);
-          if (i !== -1) this.devices[i] = upd;
-          this.cerrarModal();
-        },
-        error: err => console.error('Error al actualizar:', err)
-      });
-    } else {
-      this.inventoryService.addDevice(this.form).subscribe({
-        next: nuevo => {
-          this.devices.push(nuevo);
-          this.cerrarModal();
-        },
-        error: err => console.error('Error al agregar:', err)
-      });
-    }
+    obs.subscribe({
+      next: () => {
+        this.loadElectronicComponents();
+        this.cerrarModal();
+      },
+      error: err => console.error('Error al guardar:', err)
+    });
   }
 
   eliminar(id: number): void {
-    this.inventoryService.deleteDevice(id).subscribe({
-      next: () => (this.devices = this.devices.filter(d => d.id !== id)),
+    this.inventoryService.deleteElectronicComponent(id).subscribe({
+      next: () => this.loadElectronicComponents(),
       error: err => console.error('Error al eliminar:', err)
     });
   }
 
-  registrarBaja(d: Device): void {
-    // versión simple: marcar como "Dado de baja" y cantidad=0
-    const actualizado: Device = { ...d, estado: 'Dado de baja', cantidad: 0 };
-    this.inventoryService.updateDevice(d.id, actualizado).subscribe({
-      next: upd => {
-        const i = this.devices.findIndex(x => x.id === upd.id);
-        if (i !== -1) this.devices[i] = upd;
-      },
-      error: err => console.error('Error al dar de baja:', err)
-    });
-  }
-
-  // préstamo/devolución
-  @ViewChild('prestamoModal') prestamoModalRef!: ElementRef<HTMLDialogElement>;
-  prestamoForm: PrestamoForm = { deviceId: null, usuario: '', cantidad: 1, tipo: 'PRESTAMO' };
-
-  abrirPrestamoModal(d: Device, tipo: 'PRESTAMO' | 'DEVOLUCION') {
-    this.prestamoForm = { deviceId: d.id, usuario: '', cantidad: 1, tipo };
-    if (tipo === 'DEVOLUCION') {
-      this.prestamosPendientes = this.registrosPrestamos.filter(r => r.deviceId === d.id && !r.devuelto);
-    }
+  abrirPrestamoModal(d: ElectronicComponent, tipo: 'PRESTAMO' | 'DEVOLUCION') {
+    this.prestamoForm = { electronicComponentId: d.id, usuario: '', cantidad: 1, tipo };
+    this.prestamosPendientes = this.loanService.obtenerPendientesPorComponente(d.id);
     this.prestamoModalRef.nativeElement.showModal();
   }
+
+  procesarPrestamoDevolucion() {
+    const { tipo, electronicComponentId, cantidad } = this.prestamoForm;
+    const componente = this.components.find(c => c.id === electronicComponentId);
+    if (!componente) return;
+
+    if (tipo === 'PRESTAMO') {
+      if (componente.cantidad < cantidad) {
+        this.mostrarToast('❌ No hay suficientes unidades disponibles');
+        return;
+      }
+
+      // 🔹 Reducir cantidad
+      componente.cantidad -= cantidad;
+
+      this.loanService.registrarPrestamo(this.prestamoForm, componente).subscribe(() => {
+        this.actualizarEstadoSegunCantidad(componente);
+        this.mostrarToast('✅ Préstamo registrado correctamente');
+        this.cerrarPrestamoModal();
+      });
+
+    } else {
+      //  Procesar devoluciones
+      const pendientes = this.loanService.obtenerPendientesPorComponente(componente.id);
+      pendientes.forEach(p => this.loanService.marcarDevuelto(p));
+
+      //  Aumentar cantidad
+      componente.cantidad += pendientes.reduce((acc, p) => acc + p.cantidad, 0);
+      if (componente.cantidad < 0) componente.cantidad = 0; // seguridad
+
+      this.actualizarEstadoSegunCantidad(componente);
+      this.mostrarToast('✅ Devolución procesada correctamente');
+      this.cerrarPrestamoModal();
+    }
+  }
+
 
   cerrarPrestamoModal() {
     this.prestamoModalRef.nativeElement.close();
   }
 
-  procesarPrestamoDevolucion() {
-    const { deviceId, usuario, cantidad, tipo } = this.prestamoForm;
-    if (!deviceId || !usuario.trim() || cantidad <= 0) {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-
-    const device = this.devices.find(d => d.id === deviceId);
-    if (!device) return;
-
-    if (tipo === 'PRESTAMO') {
-      if (device.cantidad < cantidad) {
-        alert('No hay suficientes unidades disponibles.');
-        return;
-      }
-      const actualizado: Device = {
-        ...device,
-        cantidad: device.cantidad - cantidad,
-        estado: device.cantidad - cantidad > 0 ? 'Disponible' : 'Prestado'
-      };
-      this.inventoryService.updateDevice(device.id, actualizado).subscribe({
-        next: (upd) => {
-          const i = this.devices.findIndex(x => x.id === upd.id);
-          if (i !== -1) this.devices[i] = upd;
-          this.cerrarPrestamoModal();
-          const nuevoPrestamo: RegistroPrestamo = {
-            id: Date.now(),
-            deviceId: device.id,
-            usuario,
-            cantidad,
-            fecha: new Date().toISOString().slice(0, 10),
-            devuelto: false
-          };
-          this.registrosPrestamos.push(nuevoPrestamo);
-          this.mostrarToast(`✅ ${tipo === 'PRESTAMO' ? 'Préstamo registrado' : 'Devolución procesada'} correctamente`);
-        }
-      });
-    } else if (tipo === 'DEVOLUCION') {
-      const actualizado: Device = {
-        ...device,
-        cantidad: device.cantidad + cantidad,
-        estado: 'Disponible'
-      };
-      this.inventoryService.updateDevice(device.id, actualizado).subscribe({
-        next: (upd) => {
-          const i = this.devices.findIndex(x => x.id === upd.id);
-          if (i !== -1) this.devices[i] = upd;
-          this.cerrarPrestamoModal();
-          this.mostrarToast(`✅ ${tipo === 'DEVOLUCION' ? 'Préstamo registrado' : 'Devolución procesada'} correctamente`);
-        }
-      });
-    }
-  }
-
-  // Toast
-  toastVisible = false;
-  toastMessage = '';
-
-  mostrarToast(mensaje: string) {
-    this.toastMessage = mensaje;
+  mostrarToast(msg: string) {
+    this.toastMessage = msg;
     this.toastVisible = true;
-    setTimeout(() => (this.toastVisible = false), 3000); // se oculta a los 3s
+    setTimeout(() => (this.toastVisible = false), 3000);
   }
 
-  //  Resumen general
+  darDeBaja(c: ElectronicComponent): void {
+    const actualizado: ElectronicComponent = {
+      ...c,
+      estadoAdministrativo: 'Dado de baja'
+    };
+
+    this.inventoryService.updateElectronicComponent(c.id, actualizado).subscribe({
+      next: () => {
+        this.loadElectronicComponents();
+        this.mostrarToast('📉 Componente dado de baja');
+      },
+      error: err => console.error('Error al dar de baja:', err)
+    });
+  }
+
+  private actualizarEstadoSegunCantidad(componente: ElectronicComponent): void {
+    if (componente.cantidad === 0) {
+      componente.estadoAdministrativo = 'Prestado';
+    } else {
+      componente.estadoAdministrativo = 'Disponible';
+    }
+
+    this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
+      next: () => this.loadElectronicComponents(),
+      error: err => console.error('Error al actualizar estado:', err)
+    });
+  }
+
+
+  trackByComponent(index: number, item: ElectronicComponent): number {
+    return item.id;
+  }
+
+  trackByPrestamo(index: number, item: RegistroPrestamo): number {
+    return item.id;
+  }
+
+  marcarDevuelto(p: RegistroPrestamo): void {
+    this.loanService.marcarDevuelto(p).subscribe({
+      next: (updated) => {
+        // 1) Actualizar la cantidad del componente
+        const compId = (updated as any).electronicComponentId ?? (updated as any).electronicComponentId ?? p.electronicComponentId ?? p.electronicComponentId;
+        const componente = this.components.find(c => c.id === compId);
+        if (componente) {
+          componente.cantidad = (componente.cantidad ?? 0) + (updated.cantidad ?? p.cantidad ?? 0);
+          this.actualizarEstadoSegunCantidad(componente);
+        }
+
+        // 2) Refrescar lista local (cambiar referencia para disparar change detection)
+        this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
+
+        this.mostrarToast(`✅ Devolución registrada para ${updated.usuario ?? p.usuario}`);
+      },
+      error: (err) => {
+        console.error('Error marcando devolución:', err);
+        this.mostrarToast('❌ No se pudo marcar la devolución');
+      }
+    });
+  }
+
+
   get totalItems(): number {
-    return this.devices.length;
+    return this.components.length;
   }
 
   get totalDisponibles(): number {
-    return this.devices.filter(d => d.estado === 'Disponible').length;
+    return this.components.filter(c => c.estadoAdministrativo === 'Disponible').length;
   }
 
   get totalPrestados(): number {
-    return this.devices.filter(d => d.estado === 'Prestado').length; // cuando haya préstamos
+    return this.components.filter(
+      c => c.estadoAdministrativo === 'Prestado' || c.estadoAdministrativo === 'Asignado'
+    ).length;
   }
 
   get totalBaja(): number {
-    return this.devices.filter(d => d.estado === 'Dado de baja').length;
+    return this.components.filter(c => c.estadoAdministrativo === 'Dado de baja').length;
   }
-
-  getCantidadDisponible(device: Device): number {
-    // Usa la cantidad real en el dispositivo (ya actualizada)
-    return device.cantidad;
-  }
-
-  getCantidadPrestada(device: Device): number {
-    // Suma todas las cantidades no devueltas de este dispositivo
-    return this.registrosPrestamos
-      .filter(p => p.deviceId === device.id && !p.devuelto)
-      .reduce((acc, p) => acc + p.cantidad, 0);
-  }
-
-  marcarDevuelto(p: RegistroPrestamo) {
-    const device = this.devices.find(d => d.id === p.deviceId);
-    if (!device) return;
-
-    // actualizar préstamo
-    p.devuelto = true;
-
-    // actualizar cantidad en inventario
-    const actualizado: Device = {
-      ...device,
-      cantidad: device.cantidad + p.cantidad,
-      estado: 'Disponible'
-    };
-
-    this.inventoryService.updateDevice(device.id, actualizado).subscribe({
-      next: (upd) => {
-        const i = this.devices.findIndex(x => x.id === upd.id);
-        if (i !== -1) this.devices[i] = upd;
-        this.prestamosPendientes = this.registrosPrestamos.filter(r => r.deviceId === p.deviceId && !r.devuelto);
-        // refrescar lista
-        this.prestamosPendientes = this.registrosPrestamos.filter(r => r.deviceId === device.id && !r.devuelto);
-        // si ya no quedan pendientes, cerrar modal
-        if (this.prestamosPendientes.length === 0) {
-          setTimeout(() => this.cerrarPrestamoModal(), 1000);
-        }
-      }
-    });
-    this.loadDevices();
-  }
-
 
 }

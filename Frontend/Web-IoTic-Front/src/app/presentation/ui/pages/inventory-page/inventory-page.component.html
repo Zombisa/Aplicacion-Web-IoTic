@@ -1,10 +1,11 @@
 <div class="inventory-container">
   <h2 class="title">
     <span class="cube">📦</span>
-    Inventario de Dispositivos
+    Inventario de Componentes Electrónicos
   </h2>
 
-  <!--  Resumen -->
+  <!--  Resumen general -->
+  <
   <div class="summary">
     <div class="card">
       <h4>Total Ítems</h4>
@@ -24,63 +25,79 @@
     </div>
   </div>
 
-  <!-- Filtros -->
+  <!--  Filtros -->
   <div class="filters">
-    <input [(ngModel)]="filtro.nombre" placeholder="Buscar por nombre o referencia" />
+    <input [(ngModel)]="filtro.nombre" placeholder="Buscar por referencia o descripción" />
 
     <select [(ngModel)]="filtro.estado">
       <option value="">Todos los estados</option>
-      @for (e of estados; track e) {
-      <option [value]="e">{{ e }}</option>
-      }
+
+      <optgroup label="Estado físico">
+        @for (e of estados; track e) {
+        <option [value]="e">{{ e }}</option>
+        } @empty {
+        <option disabled>— Sin estados —</option>
+        }
+      </optgroup>
+
+      <optgroup label="Estado administrativo">
+        <option value="Disponible">Disponible</option>
+        <option value="Prestado">Prestado</option>
+        <option value="Asignado">Asignado</option>
+        <option value="Dado de baja">Dado de baja</option>
+      </optgroup>
     </select>
+
     <button class="btn-primary" (click)="abrirModal()">➕ Agregar</button>
   </div>
 
-  <!-- Tabla -->
+  <!--  Tabla de componentes -->
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Ref.</th>
-          <th>Nombre</th>
-          <th>Tipo</th>
-          <th class="num">Disp.</th>
-          <th class="num">Prest.</th>
-          <th>Estado</th>
+          <th>Número de Serie</th>
+          <th>Descripción</th>
+          <th>Cantidad</th>
+          <th>Ubicación</th>
+          <th>Estado físico</th>
+          <th>Estado administrativo</th>
           <th class="acciones">Acciones</th>
         </tr>
       </thead>
+
       <tbody>
-        @for (d of devices | filterInventory : filtro; track d.referencia) {
+        @for (c of components | filterInventory : filtro; track c.id) {
         <tr>
-          <td>{{ d.referencia }}</td>
-          <td>
-            <div class="nombre">
-              <div class="n">{{ d.nombre }}</div>
-            </div>
-          </td>
-          <td>{{ d.tipo === 'CONSUMIBLE' ? 'Consumible' : 'No consumible' }}</td>
-          <td class="num">{{ getCantidadDisponible(d) }}</td>
-          <td class="num">{{ getCantidadPrestada(d) }}</td>
+          <td>{{ c.numSerie }}</td>
+          <td>{{ c.descripcion }}</td>
+          <td>{{ c.cantidad }}</td>
+          <td>{{ c.ubicacion }}</td>
+          <td>{{ c.estadoFisico }}</td>
           <td>
             <span
-              class="estado"
+              class="estadoAdministrativo"
               [ngClass]="{
-                prestado: d.estado === 'Prestado',
-                disponible: d.estado === 'Disponible',
-                baja: d.estado === 'Dado de baja'
+                disponible: c.estadoAdministrativo === 'Disponible',
+                prestado:
+                  c.estadoAdministrativo === 'Prestado' || c.estadoAdministrativo === 'Asignado',
+                baja: c.estadoAdministrativo === 'Dado de baja'
               }"
             >
-              {{ d.estado }}
+              {{ c.estadoAdministrativo }}
             </span>
           </td>
+
           <td class="acciones">
-            <button title="Editar" (click)="editar(d)">✏️</button>
-            <button title="Préstamo" (click)="abrirPrestamoModal(d, 'PRESTAMO')">📤</button>
-            <button title="Devolución" (click)="abrirPrestamoModal(d, 'DEVOLUCION')">📥</button>
-            <button title="Dar de baja" (click)="registrarBaja(d)">📉</button>
-            <button title="Eliminar" class="danger" (click)="eliminar(d.id)">🗑️</button>
+            <button title="Editar" (click)="abrirModal(c)">✏️</button>
+            <button title="Registrar préstamo" (click)="abrirPrestamoModal(c, 'PRESTAMO')">
+              📤
+            </button>
+            <button title="Registrar devolución" (click)="abrirPrestamoModal(c, 'DEVOLUCION')">
+              📥
+            </button>
+            <button title="Dar de baja" (click)="darDeBaja(c)">📉</button>
+            <button title="Eliminar" class="danger" (click)="eliminar(c.id)">🗑️</button>
           </td>
         </tr>
         }
@@ -89,32 +106,25 @@
   </div>
 </div>
 
+<!--  Toast de notificación -->
 <div class="toast" *ngIf="toastVisible">
   {{ toastMessage }}
 </div>
 
-<!--  Modal Agregar/Editar -->
+<!--  Modal Agregar / Editar -->
 <dialog #modal>
   <form method="dialog" class="modal">
-    <h3>{{ editando ? 'Editar' : 'Agregar' }} ítem</h3>
+    <h3>{{ editando ? 'Editar' : 'Agregar' }} componente</h3>
 
     <div class="grid">
       <label>
-        <span>Referencia</span>
-        <input [(ngModel)]="form.referencia" name="referencia" required />
+        <span>Número de serie</span>
+        <input [(ngModel)]="form.numSerie" name="numSerie" required />
       </label>
 
       <label>
-        <span>Nombre</span>
-        <input [(ngModel)]="form.nombre" name="nombre" required />
-      </label>
-
-      <label>
-        <span>Tipo</span>
-        <select [(ngModel)]="form.tipo" name="tipo">
-          <option value="CONSUMIBLE">Consumible</option>
-          <option value="NO_CONSUMIBLE">No consumible</option>
-        </select>
+        <span>Descripción</span>
+        <input [(ngModel)]="form.descripcion" name="descripcion" required />
       </label>
 
       <label>
@@ -123,15 +133,20 @@
       </label>
 
       <label>
-        <span>Estado</span>
-        <select [(ngModel)]="form.estado" name="estado">
+        <span>Ubicación</span>
+        <input [(ngModel)]="form.ubicacion" name="ubicacion" />
+      </label>
+
+      <label>
+        <span>Estado físico</span>
+        <select [(ngModel)]="form.estadoFisico" name="estadoFisico">
           <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
         </select>
       </label>
 
       <label>
-        <span>Fecha adquisición</span>
-        <input type="date" [(ngModel)]="form.fechaAdquisicion" name="fechaAdquisicion" />
+        <span>Observaciones</span>
+        <textarea [(ngModel)]="form.observacion" name="observacion"></textarea>
       </label>
     </div>
 
@@ -142,14 +157,18 @@
   </form>
 </dialog>
 
+<!--  Modal Préstamo / Devolución -->
 <dialog #prestamoModal class="modal-prestamo">
   <h3>
     {{ prestamoForm.tipo === 'PRESTAMO' ? 'Registrar préstamo' : 'Registrar devolución' }}
   </h3>
 
-  <!-- Si es préstamo -->
-  @if (prestamoForm.tipo === 'PRESTAMO') {
-  <form (ngSubmit)="procesarPrestamoDevolucion()" class="form-prestamo">
+  <!--  Préstamo -->
+  <form
+    *ngIf="prestamoForm.tipo === 'PRESTAMO'"
+    (ngSubmit)="procesarPrestamoDevolucion()"
+    class="form-prestamo"
+  >
     <label>Usuario:</label>
     <input type="text" [(ngModel)]="prestamoForm.usuario" name="usuario" required />
 
@@ -161,27 +180,20 @@
       <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cancelar</button>
     </div>
   </form>
-}
 
+  <!--  Devolución -->
+  <div *ngIf="prestamoForm.tipo === 'DEVOLUCION'" class="devolucion-lista">
+    <p *ngIf="prestamosPendientes.length === 0">No hay préstamos pendientes.</p>
 
-  <!-- Si es devolución -->
-  @if (prestamoForm.tipo === 'DEVOLUCION') {
-  <div class="devolucion-lista">
-    @if (prestamosPendientes.length === 0) {
-    <p>No hay préstamos pendientes.</p>
-    } @if (prestamosPendientes.length > 0) {
-    <ul>
-      @for (p of prestamosPendientes; track p.id) {
-      <li>
+    <ul *ngIf="prestamosPendientes.length > 0">
+      <li *ngFor="let p of prestamosPendientes; trackBy: trackByPrestamo">
         <strong>{{ p.usuario }}</strong> — {{ p.cantidad }} unidad(es) — {{ p.fecha }}
         <button (click)="marcarDevuelto(p)">✅ Devuelto</button>
       </li>
-      }
     </ul>
-    }
+
     <div class="botones">
       <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cerrar</button>
     </div>
   </div>
-  }
 </dialog>
