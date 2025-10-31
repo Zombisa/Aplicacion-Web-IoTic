@@ -33,7 +33,7 @@
       <option value="">Todos los estados</option>
 
       <optgroup label="Estado físico">
-        @for (e of estados; track e) {
+        @for (e of estadosFisicos; track e) {
         <option [value]="e">{{ e }}</option>
         } @empty {
         <option disabled>— Sin estados —</option>
@@ -41,10 +41,11 @@
       </optgroup>
 
       <optgroup label="Estado administrativo">
-        <option value="Disponible">Disponible</option>
-        <option value="Prestado">Prestado</option>
-        <option value="Asignado">Asignado</option>
-        <option value="Dado de baja">Dado de baja</option>
+        @for (e of estadosAdministrativos; track e) {
+        <option [value]="e">{{ e }}</option>
+        } @empty {
+        <option disabled>— Sin estados —</option>
+        }
       </optgroup>
     </select>
 
@@ -140,7 +141,14 @@
       <label>
         <span>Estado físico</span>
         <select [(ngModel)]="form.estadoFisico" name="estadoFisico">
-          <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+          <option *ngFor="let e of estadosFisicos" [value]="e">{{ e }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Estado administrativo</span>
+        <select [(ngModel)]="form.estadoAdministrativo" name="estadoAdministrativo">
+          <option *ngFor="let e of estadosAdministrativos" [value]="e">{{ e }}</option>
         </select>
       </label>
 

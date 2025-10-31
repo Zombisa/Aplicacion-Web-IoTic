@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterInventoryPipe } from '../../../../pipes/filter-inventory-pipe';
 import { InventoryService } from '../../../../services/inventory.service';
-import { ElectronicComponent, EstadoFisico } from '../../../../models/electronicComponent.model';
+import { ElectronicComponent, EstadoAdministrativo, EstadoFisico } from '../../../../models/electronicComponent.model';
 import { LoanService } from '../../../../services/loan.service';
 import { PrestamoForm, RegistroPrestamo } from '../../../../models/prestamo.model';
 
@@ -18,7 +18,8 @@ import { PrestamoForm, RegistroPrestamo } from '../../../../models/prestamo.mode
 export class InventoryPageComponent implements OnInit {
   components: ElectronicComponent[] = [];
   filtro = { nombre: '', estado: '' };
-  estados: EstadoFisico[] = ['Excelente', 'Bueno', 'Regular', 'Defectuoso', 'Dañado', 'En mantenimiento', 'Obsoleto'];
+  estadosFisicos: EstadoFisico[] = ['Excelente', 'Bueno', 'Regular', 'Defectuoso', 'Dañado', 'En mantenimiento', 'Obsoleto'];
+  estadosAdministrativos: EstadoAdministrativo[] = ['Disponible', 'Prestado', 'Reservado', 'Asignado', 'Dado de baja'];
 
   resetElectronicComponent(): ElectronicComponent {
     return {
