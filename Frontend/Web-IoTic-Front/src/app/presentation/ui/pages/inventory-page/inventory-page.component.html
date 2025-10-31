@@ -1,207 +1,411 @@
-<div class="inventory-container">
-  <h2 class="title">
-    <span class="cube">📦</span>
-    Inventario de Componentes Electrónicos
-  </h2>
+<!-- Contenido principal -->
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header con icono de Bootstrap -->
+      <div class="d-flex align-items-center mb-4">
+        <i class="bi bi-box-seam display-6 text-primary me-3"></i>
+        <h1 class="h2 mb-0 text-primary fw-bold">Inventario de Componentes Electrónicos</h1>
+      </div>
 
-  <!--  Resumen general -->
-  <
-  <div class="summary">
-    <div class="card">
-      <h4>Total Ítems</h4>
-      <p>{{ totalItems }}</p>
+      <!-- Tarjetas de resumen con Bootstrap -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <h5 class="card-title text-muted small text-uppercase fw-semibold">Total Ítems</h5>
+              <p class="card-text display-6 fw-bold text-dark">{{ totalItems }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card border-0 shadow-sm h-100 border-top border-primary border-3">
+            <div class="card-body text-center">
+              <h5 class="card-title text-muted small text-uppercase fw-semibold">Disponibles</h5>
+              <p class="card-text display-6 fw-bold text-primary">{{ totalDisponibles }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card border-0 shadow-sm h-100 border-top border-warning border-3">
+            <div class="card-body text-center">
+              <h5 class="card-title text-muted small text-uppercase fw-semibold">Prestados</h5>
+              <p class="card-text display-6 fw-bold text-warning">{{ totalPrestados }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card border-0 shadow-sm h-100 border-top border-danger border-3">
+            <div class="card-body text-center">
+              <h5 class="card-title text-muted small text-uppercase fw-semibold">Dado de baja</h5>
+              <p class="card-text display-6 fw-bold text-danger">{{ totalBaja }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros con Bootstrap -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+              <label for="buscarInput" class="form-label fw-semibold">Buscar por referencia o descripción</label>
+              <input 
+                id="buscarInput"
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="filtro.nombre" 
+                placeholder="Ingrese término de búsqueda..."
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="estadoSelect" class="form-label fw-semibold">Filtrar por estado</label>
+              <select id="estadoSelect" class="form-select" [(ngModel)]="filtro.estado">
+                <option value="">Todos los estados</option>
+                <optgroup label="Estado físico">
+                  @for (e of estadosFisicos; track e) {
+                  <option [value]="e">{{ e }}</option>
+                  } @empty {
+                  <option disabled>— Sin estados —</option>
+                  }
+                </optgroup>
+                <optgroup label="Estado administrativo">
+                  @for (e of estadosAdministrativos; track e) {
+                  <option [value]="e">{{ e }}</option>
+                  } @empty {
+                  <option disabled>— Sin estados —</option>
+                  }
+                </optgroup>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" (click)="abrirModal()">
+                <i class="bi bi-plus-circle me-2"></i> Agregar Componente
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla con Bootstrap -->
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Número de Serie</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Ubicación</th>
+                  <th scope="col">Estado físico</th>
+                  <th scope="col">Estado administrativo</th>
+                  <th scope="col" class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (c of components | filterInventory : filtro; track c.id) {
+                <tr>
+                  <td class="fw-semibold">{{ c.numSerie }}</td>
+                  <td>{{ c.descripcion }}</td>
+                  <td>
+                    <span class="badge bg-light text-dark fs-6">{{ c.cantidad }}</span>
+                  </td>
+                  <td>{{ c.ubicacion }}</td>
+                  <td>{{ c.estadoFisico }}</td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': c.estadoAdministrativo === 'Disponible',
+                        'bg-warning': c.estadoAdministrativo === 'Prestado' || c.estadoAdministrativo === 'Asignado',
+                        'bg-danger': c.estadoAdministrativo === 'Dado de baja'
+                      }"
+                    >
+                      {{ c.estadoAdministrativo }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center gap-1">
+                      <button 
+                        class="btn btn-sm btn-outline-primary" 
+                        title="Editar" 
+                        (click)="abrirModal(c)"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-warning" 
+                        title="Registrar préstamo" 
+                        (click)="abrirPrestamoModal(c, 'PRESTAMO')"
+                      >
+                        <i class="bi bi-box-arrow-up"></i>
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-info" 
+                        title="Registrar devolución" 
+                        (click)="abrirPrestamoModal(c, 'DEVOLUCION')"
+                      >
+                        <i class="bi bi-box-arrow-in-down"></i>
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-secondary" 
+                        title="Dar de baja" 
+                        (click)="darDeBaja(c)"
+                      >
+                        <i class="bi bi-arrow-down"></i>
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-danger" 
+                        title="Eliminar" 
+                        (click)="eliminar(c.id)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card available">
-      <h4>Disponibles</h4>
-      <p>{{ totalDisponibles }}</p>
-    </div>
-    <div class="card borrowed">
-      <h4>Prestados</h4>
-      <p>{{ totalPrestados }}</p>
-    </div>
-    <div class="card low">
-      <h4>Dado de baja</h4>
-      <p>{{ totalBaja }}</p>
-    </div>
-  </div>
-
-  <!--  Filtros -->
-  <div class="filters">
-    <input [(ngModel)]="filtro.nombre" placeholder="Buscar por referencia o descripción" />
-
-    <select [(ngModel)]="filtro.estado">
-      <option value="">Todos los estados</option>
-
-      <optgroup label="Estado físico">
-        @for (e of estadosFisicos; track e) {
-        <option [value]="e">{{ e }}</option>
-        } @empty {
-        <option disabled>— Sin estados —</option>
-        }
-      </optgroup>
-
-      <optgroup label="Estado administrativo">
-        @for (e of estadosAdministrativos; track e) {
-        <option [value]="e">{{ e }}</option>
-        } @empty {
-        <option disabled>— Sin estados —</option>
-        }
-      </optgroup>
-    </select>
-
-    <button class="btn-primary" (click)="abrirModal()">➕ Agregar</button>
-  </div>
-
-  <!--  Tabla de componentes -->
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Número de Serie</th>
-          <th>Descripción</th>
-          <th>Cantidad</th>
-          <th>Ubicación</th>
-          <th>Estado físico</th>
-          <th>Estado administrativo</th>
-          <th class="acciones">Acciones</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (c of components | filterInventory : filtro; track c.id) {
-        <tr>
-          <td>{{ c.numSerie }}</td>
-          <td>{{ c.descripcion }}</td>
-          <td>{{ c.cantidad }}</td>
-          <td>{{ c.ubicacion }}</td>
-          <td>{{ c.estadoFisico }}</td>
-          <td>
-            <span
-              class="estadoAdministrativo"
-              [ngClass]="{
-                disponible: c.estadoAdministrativo === 'Disponible',
-                prestado:
-                  c.estadoAdministrativo === 'Prestado' || c.estadoAdministrativo === 'Asignado',
-                baja: c.estadoAdministrativo === 'Dado de baja'
-              }"
-            >
-              {{ c.estadoAdministrativo }}
-            </span>
-          </td>
-
-          <td class="acciones">
-            <button title="Editar" (click)="abrirModal(c)">✏️</button>
-            <button title="Registrar préstamo" (click)="abrirPrestamoModal(c, 'PRESTAMO')">
-              📤
-            </button>
-            <button title="Registrar devolución" (click)="abrirPrestamoModal(c, 'DEVOLUCION')">
-              📥
-            </button>
-            <button title="Dar de baja" (click)="darDeBaja(c)">📉</button>
-            <button title="Eliminar" class="danger" (click)="eliminar(c.id)">🗑️</button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
   </div>
 </div>
 
-<!--  Toast de notificación -->
-<div class="toast" *ngIf="toastVisible">
-  {{ toastMessage }}
-</div>
-
-<!--  Modal Agregar / Editar -->
-<dialog #modal>
-  <form method="dialog" class="modal">
-    <h3>{{ editando ? 'Editar' : 'Agregar' }} componente</h3>
-
-    <div class="grid">
-      <label>
-        <span>Número de serie</span>
-        <input [(ngModel)]="form.numSerie" name="numSerie" required />
-      </label>
-
-      <label>
-        <span>Descripción</span>
-        <input [(ngModel)]="form.descripcion" name="descripcion" required />
-      </label>
-
-      <label>
-        <span>Cantidad</span>
-        <input type="number" [(ngModel)]="form.cantidad" name="cantidad" min="0" />
-      </label>
-
-      <label>
-        <span>Ubicación</span>
-        <input [(ngModel)]="form.ubicacion" name="ubicacion" />
-      </label>
-
-      <label>
-        <span>Estado físico</span>
-        <select [(ngModel)]="form.estadoFisico" name="estadoFisico">
-          <option *ngFor="let e of estadosFisicos" [value]="e">{{ e }}</option>
-        </select>
-      </label>
-
-      <label>
-        <span>Estado administrativo</span>
-        <select [(ngModel)]="form.estadoAdministrativo" name="estadoAdministrativo">
-          <option *ngFor="let e of estadosAdministrativos" [value]="e">{{ e }}</option>
-        </select>
-      </label>
-
-      <label>
-        <span>Observaciones</span>
-        <textarea [(ngModel)]="form.observacion" name="observacion"></textarea>
-      </label>
-    </div>
-
-    <div class="modal-actions">
-      <button type="button" (click)="guardar()" class="btn-primary">Guardar</button>
-      <button type="button" (click)="cerrarModal()">Cancelar</button>
-    </div>
-  </form>
-</dialog>
-
-<!--  Modal Préstamo / Devolución -->
-<dialog #prestamoModal class="modal-prestamo">
-  <h3>
-    {{ prestamoForm.tipo === 'PRESTAMO' ? 'Registrar préstamo' : 'Registrar devolución' }}
-  </h3>
-
-  <!--  Préstamo -->
-  <form
-    *ngIf="prestamoForm.tipo === 'PRESTAMO'"
-    (ngSubmit)="procesarPrestamoDevolucion()"
-    class="form-prestamo"
+<!-- Toast de Bootstrap (SIN DUPLICADOS) -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div 
+    *ngIf="showToast"
+    class="toast show" 
+    [class.bg-success]="toastType === 'success'"
+    [class.bg-danger]="toastType === 'error'" 
+    [class.bg-info]="toastType === 'info'"
+    role="alert" 
+    aria-live="assertive" 
+    aria-atomic="true"
   >
-    <label>Usuario:</label>
-    <input type="text" [(ngModel)]="prestamoForm.usuario" name="usuario" required />
-
-    <label>Cantidad:</label>
-    <input type="number" [(ngModel)]="prestamoForm.cantidad" name="cantidad" min="1" required />
-
-    <div class="botones">
-      <button type="submit" class="btn-primary">Prestar</button>
-      <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cancelar</button>
+    <div class="toast-header" [class.text-white]="toastType !== 'info'">
+      <i 
+        class="bi me-2" 
+        [class.bi-check-circle]="toastType === 'success'"
+        [class.bi-exclamation-circle]="toastType === 'error'"
+        [class.bi-info-circle]="toastType === 'info'"
+      ></i>
+      <strong class="me-auto">Sistema de Inventario</strong>
+      <small>Ahora</small>
+      <button type="button" class="btn-close" (click)="showToast = false" aria-label="Close"></button>
     </div>
-  </form>
-
-  <!--  Devolución -->
-  <div *ngIf="prestamoForm.tipo === 'DEVOLUCION'" class="devolucion-lista">
-    <p *ngIf="prestamosPendientes.length === 0">No hay préstamos pendientes.</p>
-
-    <ul *ngIf="prestamosPendientes.length > 0">
-      <li *ngFor="let p of prestamosPendientes; trackBy: trackByPrestamo">
-        <strong>{{ p.usuario }}</strong> — {{ p.cantidad }} unidad(es) — {{ p.fecha }}
-        <button (click)="marcarDevuelto(p)">✅ Devuelto</button>
-      </li>
-    </ul>
-
-    <div class="botones">
-      <button type="button" (click)="cerrarPrestamoModal()" class="btn-cancelar">Cerrar</button>
+    <div class="toast-body" [class.text-white]="toastType !== 'info'">
+      {{ toastMessage }}
     </div>
   </div>
-</dialog>
+</div>
+
+<!-- Modal Agregar/Editar con Bootstrap -->
+<div 
+  class="modal fade" 
+  [class.show]="showComponentModal" 
+  [style.display]="showComponentModal ? 'block' : 'none'"
+  tabindex="-1"
+  aria-labelledby="componentModalLabel" 
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="componentModalLabel">
+          {{ editando ? 'Editar' : 'Agregar' }} Componente
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="numSerie" class="form-label">Número de serie <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="numSerie" 
+                [(ngModel)]="form.numSerie" 
+                name="numSerie" 
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="descripcion" 
+                [(ngModel)]="form.descripcion" 
+                name="descripcion" 
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="cantidad" class="form-label">Cantidad <span class="text-danger">*</span></label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="cantidad" 
+                [(ngModel)]="form.cantidad" 
+                name="cantidad" 
+                min="0"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="ubicacion" class="form-label">Ubicación</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="ubicacion" 
+                [(ngModel)]="form.ubicacion" 
+                name="ubicacion"
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="estadoFisico" class="form-label">Estado físico</label>
+              <select 
+                class="form-select" 
+                id="estadoFisico" 
+                [(ngModel)]="form.estadoFisico" 
+                name="estadoFisico"
+              >
+                <option *ngFor="let e of estadosFisicos" [value]="e">{{ e }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="estadoAdministrativo" class="form-label">Estado administrativo</label>
+              <select 
+                class="form-select" 
+                id="estadoAdministrativo" 
+                [(ngModel)]="form.estadoAdministrativo" 
+                name="estadoAdministrativo"
+              >
+                <option *ngFor="let e of estadosAdministrativos" [value]="e">{{ e }}</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="observacion" class="form-label">Observaciones</label>
+              <textarea 
+                class="form-control" 
+                id="observacion" 
+                rows="3" 
+                [(ngModel)]="form.observacion" 
+                name="observacion"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Préstamo/Devolución con Bootstrap -->
+<div 
+  class="modal fade" 
+  [class.show]="showLoanModal" 
+  [style.display]="showLoanModal ? 'block' : 'none'"
+  tabindex="-1"
+  aria-labelledby="prestamoModalLabel" 
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="prestamoModalLabel">
+          {{ prestamoForm.tipo === 'PRESTAMO' ? 'Registrar Préstamo' : 'Registrar Devolución' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarPrestamoModal()" aria-label="Close"></button>
+      </div>
+      
+      <!-- Formulario de Préstamo -->
+      <form 
+        *ngIf="prestamoForm.tipo === 'PRESTAMO'" 
+        (ngSubmit)="procesarPrestamoDevolucion()"
+      >
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="usuario" class="form-label">Usuario <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="usuario" 
+              [(ngModel)]="prestamoForm.usuario" 
+              name="usuario" 
+              required
+              placeholder="Nombre del usuario"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="cantidadPrestamo" class="form-label">Cantidad <span class="text-danger">*</span></label>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="cantidadPrestamo" 
+              [(ngModel)]="prestamoForm.cantidad" 
+              name="cantidad" 
+              min="1" 
+              required
+              [max]="getMaxCantidadPrestamo()"
+            />
+            <div class="form-text" *ngIf="getMaxCantidadPrestamo()">
+              Máximo disponible: {{ getMaxCantidadPrestamo() }} unidades
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarPrestamoModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Prestar</button>
+        </div>
+      </form>
+      
+      <!-- Lista de Devoluciones -->
+      <div *ngIf="prestamoForm.tipo === 'DEVOLUCION'">
+        <div class="modal-body">
+          <p *ngIf="prestamosPendientes.length === 0" class="text-muted text-center">
+            No hay préstamos pendientes.
+          </p>
+          
+          <div *ngIf="prestamosPendientes.length > 0" class="list-group">
+            <div 
+              *ngFor="let p of prestamosPendientes; trackBy: trackByPrestamo" 
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <strong>{{ p.usuario }}</strong><br>
+                <small class="text-muted">{{ p.cantidad }} unidad(es) - {{ p.fecha }}</small>
+              </div>
+              <button 
+                class="btn btn-success btn-sm" 
+                (click)="marcarDevuelto(p)"
+              >
+                <i class="bi bi-check-lg"></i> Devuelto
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarPrestamoModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop para modales -->
+<div 
+  *ngIf="showComponentModal || showLoanModal" 
+  class="modal-backdrop fade show"
+  (click)="showComponentModal ? cerrarModal() : cerrarPrestamoModal()"
+></div>
