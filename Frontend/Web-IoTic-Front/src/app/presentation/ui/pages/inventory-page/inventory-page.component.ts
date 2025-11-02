@@ -16,9 +16,38 @@ import { PrestamoForm, RegistroPrestamo } from '../../../../models/prestamo.mode
 })
 export class InventoryPageComponent implements OnInit {
   components: ElectronicComponent[] = [];
-  filtro = { nombre: '', estado: '' };
+  filtro = { nombre: '', estadoFisico: '', estadoAdministrativo: '' };
   estadosFisicos: EstadoFisico[] = ['Excelente', 'Bueno', 'Regular', 'Defectuoso', 'Dañado', 'En mantenimiento', 'Obsoleto'];
   estadosAdministrativos: EstadoAdministrativo[] = ['Disponible', 'Prestado', 'Reservado', 'Asignado', 'Dado de baja'];
+  
+  // Getter para obtener los componentes filtrados
+  get componentesFiltrados(): ElectronicComponent[] {
+    return this.components.filter(d => {
+      const nombre = (this.filtro?.nombre || '').toLowerCase().trim();
+      const estadoFisico = (this.filtro?.estadoFisico || '').trim();
+      const estadoAdministrativo = (this.filtro?.estadoAdministrativo || '').trim();
+
+      // Filtro de texto general
+      const coincideTexto = !nombre || 
+        (d.descripcion?.toLowerCase().includes(nombre) ||
+         d.numSerie?.toLowerCase().includes(nombre) ||
+         d.ubicacion?.toLowerCase().includes(nombre) ||
+         d.observacion?.toLowerCase().includes(nombre));
+
+      // Filtro de estado físico
+      const coincideEstadoFisico = !estadoFisico || d.estadoFisico === estadoFisico;
+
+      // Filtro de estado administrativo
+      const coincideEstadoAdministrativo = !estadoAdministrativo || d.estadoAdministrativo === estadoAdministrativo;
+
+      return coincideTexto && coincideEstadoFisico && coincideEstadoAdministrativo;
+    });
+  }
+  
+  // Verificar si hay filtros activos
+  get hayFiltros(): boolean {
+    return !!(this.filtro.nombre || this.filtro.estadoFisico || this.filtro.estadoAdministrativo);
+  }
 
   // Variables para controlar modales de Bootstrap
   showComponentModal = false;
@@ -170,7 +199,7 @@ export class InventoryPageComponent implements OnInit {
 
   private procesarPrestamo(componente: ElectronicComponent): void {
     if (componente.cantidad < this.prestamoForm.cantidad) {
-      this.mostrarToast('No hay suficientes unidades disponibles', 'error');
+      this.mostrarToast('No hay suficientes unidades disponibles para el préstamo', 'error');
       return;
     }
 
@@ -179,19 +208,30 @@ export class InventoryPageComponent implements OnInit {
       return;
     }
 
-    componente.cantidad -= this.prestamoForm.cantidad;
+    const cantidadPrestada = this.prestamoForm.cantidad;
+    componente.cantidad -= cantidadPrestada;
 
     this.loanService.registrarPrestamo(this.prestamoForm, componente).subscribe({
-      next: () => {
-        this.actualizarEstadoSegunCantidad(componente);
-        this.mostrarToast('Préstamo registrado correctamente', 'success');
-        this.cerrarPrestamoModal();
+      next: (prestamo) => {
+        this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
+          next: () => {
+            this.loadElectronicComponents();
+            this.actualizarEstadoSegunCantidad(componente);
+            this.mostrarToast(`Préstamo de ${cantidadPrestada} unidad(es) registrado correctamente para ${this.prestamoForm.usuario}`, 'success');
+            this.cerrarPrestamoModal();
+          },
+          error: (err) => {
+            console.error('Error al actualizar componente:', err);
+            componente.cantidad += cantidadPrestada; // Revertir
+            this.mostrarToast('Error al actualizar el inventario', 'error');
+          }
+        });
       },
       error: err => {
         console.error('Error al registrar préstamo:', err);
-        this.mostrarToast('Error al registrar el préstamo', 'error');
+        this.mostrarToast('Error al registrar el préstamo. Por favor, intente nuevamente', 'error');
         // Revertir cambios en caso de error
-        componente.cantidad += this.prestamoForm.cantidad;
+        componente.cantidad += cantidadPrestada;
       }
     });
   }
@@ -204,14 +244,43 @@ export class InventoryPageComponent implements OnInit {
       return;
     }
 
-    pendientes.forEach(p => this.loanService.marcarDevuelto(p));
-
     const cantidadTotal = pendientes.reduce((acc, p) => acc + p.cantidad, 0);
-    componente.cantidad += cantidadTotal;
+    let procesados = 0;
+    let errores = 0;
 
-    this.actualizarEstadoSegunCantidad(componente);
-    this.mostrarToast('Devolución procesada correctamente', 'success');
-    this.cerrarPrestamoModal();
+    pendientes.forEach(p => {
+      this.loanService.marcarDevuelto(p).subscribe({
+        next: () => {
+          procesados++;
+          if (procesados + errores === pendientes.length) {
+            if (errores === 0) {
+              componente.cantidad += cantidadTotal;
+              this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
+                next: () => {
+                  this.loadElectronicComponents();
+                  this.actualizarEstadoSegunCantidad(componente);
+                  this.mostrarToast(`Devolución de ${cantidadTotal} unidad(es) procesada correctamente`, 'success');
+                  this.cerrarPrestamoModal();
+                },
+                error: (err) => {
+                  console.error('Error al actualizar componente:', err);
+                  this.mostrarToast('Error al actualizar el inventario', 'error');
+                }
+              });
+            } else {
+              this.mostrarToast(`Devolución parcial: ${procesados} de ${pendientes.length} préstamos procesados`, 'error');
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error al marcar devolución:', err);
+          errores++;
+          if (procesados + errores === pendientes.length) {
+            this.mostrarToast('Error al procesar algunas devoluciones', 'error');
+          }
+        }
+      });
+    });
   }
 
   marcarDevuelto(prestamo: RegistroPrestamo): void {
@@ -221,16 +290,29 @@ export class InventoryPageComponent implements OnInit {
         const componente = this.components.find(c => c.id === compId);
         
         if (componente) {
-          componente.cantidad = (componente.cantidad ?? 0) + (updated.cantidad ?? prestamo.cantidad ?? 0);
-          this.actualizarEstadoSegunCantidad(componente);
+          const cantidadDevolver = updated.cantidad ?? prestamo.cantidad ?? 0;
+          componente.cantidad = (componente.cantidad ?? 0) + cantidadDevolver;
+          
+          this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
+            next: () => {
+              this.loadElectronicComponents();
+              this.actualizarEstadoSegunCantidad(componente);
+              this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
+              this.mostrarToast(`Devolución de ${cantidadDevolver} unidad(es) registrada correctamente para ${updated.usuario ?? prestamo.usuario}`, 'success');
+            },
+            error: (err) => {
+              console.error('Error al actualizar componente:', err);
+              this.mostrarToast('Error al actualizar el inventario', 'error');
+            }
+          });
+        } else {
+          this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
+          this.mostrarToast(`Devolución registrada para ${updated.usuario ?? prestamo.usuario}`, 'success');
         }
-
-        this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
-        this.mostrarToast(`Devolución registrada para ${updated.usuario ?? prestamo.usuario}`, 'success');
       },
       error: (err) => {
         console.error('Error marcando devolución:', err);
-        this.mostrarToast('No se pudo marcar la devolución', 'error');
+        this.mostrarToast('No se pudo registrar la devolución. Por favor, intente nuevamente', 'error');
       }
     });
   }
@@ -272,11 +354,17 @@ export class InventoryPageComponent implements OnInit {
   mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = mensaje;
     this.toastType = tipo;
-    this.showToast = true;
+    this.showToast = false; // Resetea primero para reiniciar animación
     
+    // Usa setTimeout para asegurar que el cambio se detecte
     setTimeout(() => {
-      this.showToast = false;
-    }, 4000);
+      this.showToast = true;
+      
+      // Auto-ocultar después de 5 segundos
+      setTimeout(() => {
+        this.showToast = false;
+      }, 5000);
+    }, 10);
   }
 
   // Getters para las propiedades computadas
