@@ -33,7 +33,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
             return Response({"error": "El item no existe"}, status=404)
 
         # Validación para ítems devolutivos y consumibles
-        if item.cantidad_disponible <= 0:
+        if item.cantidad_prestada == 1:
             return Response({"error": "No hay unidades disponibles de este ítem"}, status=400)
 
         # Registrar el préstamo
@@ -45,8 +45,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         )
 
         # Actualizar cantidades
-        item.cantidad_disponible -= 1
-        item.cantidad_prestada += 1
+        item.cantidad_disponible = 0
+        item.cantidad_prestada = 1
+        item.estadoAdministrativo = 'prestado'
         item.save()
 
         serializer = PrestamoSerializer(prestamo)
@@ -65,8 +66,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
 
         # Actualizar inventario
         item = prestamo.item
-        item.cantidad_disponible += 1
-        item.cantidad_prestada -= 1
+        item.cantidad_disponible = 1
+        item.cantidad_prestada = 0
+        item.estadoAdministrativo = 'disponible'
         item.save()
 
         return Response({"message": "Ítem devuelto correctamente"}, status=200)

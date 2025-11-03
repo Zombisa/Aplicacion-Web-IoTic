@@ -1,13 +1,16 @@
 {
 	"info": {
-		"_postman_id": "e72179d6-e607-427e-8d95-5a411508be0c",
+		"_postman_id": "a50a7156-46b0-48fa-a6a8-6707b4cfe728",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40286637"
+		"_exporter_id": "38361461"
 	},
 	"item": [
 		{
 			"name": "Consultar inventario",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -21,6 +24,15 @@
 				},
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://127.0.0.1:8000/api/inventario/inventario/",
 					"protocol": "http",
@@ -58,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"nombre\": \"nombre\",\r\n    \"tipo\": \"devolutivo\",\r\n    \"cantidad_total\": 20,\r\n    \"cantidad_disponible\": 15\r\n}",
+					"raw": "{\r\n  \"numeroSerieActivo\": 15,\r\n  \"descripcionArticulo\": \"arduino\",\r\n  \"ubicacion\": \"Salon 101\",\r\n  \"estadoFisico\": \"excelente\",\r\n  \"observacion\": \"Sin caja, se deja dentro de caja 1\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,6 +126,139 @@
 						"api",
 						"inventario",
 						"prestamos",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Añadir prestamo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre_persona\": \"Juan Gómez\",\r\n  \"item_id\": 2,\r\n  \"fecha_devolucion\": null\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"prestamos",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "consultar préstamo especifico",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre_persona\": \"Pipe Gómez\",\r\n  \"item_id\": 1,\r\n  \"fecha_devolucion\": null\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/prestamos/3/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"prestamos",
+						"3",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Devolver préstamo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/inventario/prestamos/2/devolver/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventario",
+						"prestamos",
+						"2",
+						"devolver",
 						""
 					]
 				}

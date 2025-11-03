@@ -6,28 +6,16 @@ class InventarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventario
         fields = '__all__'
-        read_only_fields = ['cantidad_prestada']
-
-    def validate(self, data):
-        cantidad_total = data.get('cantidad_total', self.instance.cantidad_total if self.instance else None)
-        cantidad_disponible = data.get('cantidad_disponible', self.instance.cantidad_disponible if self.instance else None)
-
-        if cantidad_disponible > cantidad_total:
-            raise serializers.ValidationError("La cantidad disponible no puede ser mayor que la cantidad total.")
-
-        return data
 
     def create(self, validated_data):
-        validated_data['cantidad_prestada'] = validated_data['cantidad_total'] - validated_data['cantidad_disponible']
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        # Si actualizan cantidades, recalculamos prestados
-        if 'cantidad_total' in validated_data or 'cantidad_disponible' in validated_data:
-            cantidad_total = validated_data.get('cantidad_total', instance.cantidad_total)
-            cantidad_disponible = validated_data.get('cantidad_disponible', instance.cantidad_disponible)
-
-            validated_data['cantidad_prestada'] = cantidad_total - cantidad_disponible
+        cantidad_prestada = validated_data.get('cantidad_prestada', instance.cantidad_prestada)
+        if(cantidad_prestada == 1):
+            validated_data['estadoAdministrativo'] = 'prestado'
+        else:
+            validated_data['estadoAdministrativo'] = 'disponible'
 
         return super().update(instance, validated_data)
 
@@ -38,6 +26,8 @@ class PrestamoSerializer(serializers.ModelSerializer):
         source='item',
         write_only=True
     )
+    
+    item = InventarioSerializer(read_only=True)
 
     class Meta:
         model = Prestamo

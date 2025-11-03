@@ -5,7 +5,7 @@ class PrestamoService:
 
     @staticmethod
     def validar_prestamo(inventario: Inventario):
-        if inventario.cantidad_disponible <= 0:
+        if inventario.cantidad_prestada == 1:
             raise ValidationError("No hay unidades disponibles para préstamo.")
 
     @staticmethod
@@ -16,8 +16,8 @@ class PrestamoService:
 
         prestamo = Prestamo.objects.create(**data)
 
-        inventario.cantidad_prestada += 1
-        inventario.cantidad_disponible = inventario.cantidad_total - inventario.cantidad_prestada
+        inventario.cantidad_prestada = 1
+        inventario.cantidad_disponible = 0
         inventario.save()
 
         return prestamo
@@ -32,8 +32,8 @@ class PrestamoService:
         prestamo.estado = nuevo_estado
         prestamo.save()
 
-        inventario.cantidad_prestada -= 1
-        inventario.cantidad_disponible = inventario.cantidad_total - inventario.cantidad_prestada
+        inventario.cantidad_prestada = 0
+        inventario.cantidad_disponible = 1
         inventario.save()
 
         return prestamo
