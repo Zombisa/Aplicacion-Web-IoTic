@@ -3,6 +3,7 @@ export interface PrestamoForm {
   usuario: string;
   cantidad: number;
   tipo: 'PRESTAMO' | 'DEVOLUCION';
+  diasPrestamo?: number;
 }
 
 export interface RegistroPrestamo {
@@ -10,6 +11,10 @@ export interface RegistroPrestamo {
   electronicComponentId: number;
   usuario: string;
   cantidad: number;
-  fecha: string;
+  fechaPrestamo: string;
+  fechaFinalizacion: string;
+  fechaDevolucion?: string;
+  diasPrestamo: number;
   devuelto: boolean;
+  vencido: boolean;
 }
