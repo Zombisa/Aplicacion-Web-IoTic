@@ -48,6 +48,25 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 src/app/environment
+
+# =========================
+# Firebase - Archivos sensibles
+# =========================
+# Archivos de configuración de Firebase
+**/firebase/environment/
+**/environment/environment.prod.ts
+**/environment/environment.ts
+# Configuración de Firebase
+.firebaserc
+firebase.json
+.firebase/
+# Claves y credenciales de Firebase
+firebase-adminsdk-*.json
+serviceAccountKey.json
+google-services.json
+GoogleService-Info.plist
+# Archivos de autenticación
+**/services/authService.ts
 # =========================
 # IDEs / SO
 # =========================
