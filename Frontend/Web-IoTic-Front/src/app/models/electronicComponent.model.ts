@@ -1,5 +1,5 @@
-export type EstadoFisico = 'Excelente' | 'Bueno' | 'Regular' | 'Defectuoso' | 'Dañado' | 'En mantenimiento' | 'Obsoleto';
-export type EstadoAdministrativo = 'Disponible' | 'Prestado' | 'Reservado' |'Asignado' |'Dado de baja';
+export type EstadoFisico = 'Excelente' | 'Bueno' | 'Dañado';
+export type EstadoAdministrativo = 'Disponible' | 'Prestado' |'Dado de baja' | 'No prestable';
 
 export interface ElectronicComponent {
   id: number;

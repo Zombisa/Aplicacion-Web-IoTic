@@ -1,25 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FilterInventoryPipe } from '../../../../pipes/filter-inventory-pipe';
 import { InventoryService } from '../../../../services/inventory.service';
 import { ElectronicComponent, EstadoAdministrativo, EstadoFisico } from '../../../../models/electronicComponent.model';
-import { LoanService } from '../../../../services/loan.service';
 import { PrestamoForm, RegistroPrestamo } from '../../../../models/prestamo.model';
 
 @Component({
   selector: 'app-inventory-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterInventoryPipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './inventory-page.component.html',
   styleUrls: ['./inventory-page.component.css']
 })
 export class InventoryPageComponent implements OnInit {
   components: ElectronicComponent[] = [];
   filtro = { nombre: '', estadoFisico: '', estadoAdministrativo: '' };
-  estadosFisicos: EstadoFisico[] = ['Excelente', 'Bueno', 'Regular', 'Defectuoso', 'Dañado', 'En mantenimiento', 'Obsoleto'];
-  estadosAdministrativos: EstadoAdministrativo[] = ['Disponible', 'Prestado', 'Reservado', 'Asignado', 'Dado de baja'];
-  
+  estadosFisicos: EstadoFisico[] = ['Excelente', 'Bueno', 'Dañado'];
+  estadosAdministrativos: EstadoAdministrativo[] = ['Disponible', 'Prestado', 'Dado de baja', 'No prestable'];
+
   // Getter para obtener los componentes filtrados
   get componentesFiltrados(): ElectronicComponent[] {
     return this.components.filter(d => {
@@ -28,11 +26,11 @@ export class InventoryPageComponent implements OnInit {
       const estadoAdministrativo = (this.filtro?.estadoAdministrativo || '').trim();
 
       // Filtro de texto general
-      const coincideTexto = !nombre || 
+      const coincideTexto = !nombre ||
         (d.descripcion?.toLowerCase().includes(nombre) ||
-         d.numSerie?.toLowerCase().includes(nombre) ||
-         d.ubicacion?.toLowerCase().includes(nombre) ||
-         d.observacion?.toLowerCase().includes(nombre));
+          d.numSerie?.toLowerCase().includes(nombre) ||
+          d.ubicacion?.toLowerCase().includes(nombre) ||
+          d.observacion?.toLowerCase().includes(nombre));
 
       // Filtro de estado físico
       const coincideEstadoFisico = !estadoFisico || d.estadoFisico === estadoFisico;
@@ -43,7 +41,7 @@ export class InventoryPageComponent implements OnInit {
       return coincideTexto && coincideEstadoFisico && coincideEstadoAdministrativo;
     });
   }
-  
+
   // Verificar si hay filtros activos
   get hayFiltros(): boolean {
     return !!(this.filtro.nombre || this.filtro.estadoFisico || this.filtro.estadoAdministrativo);
@@ -52,22 +50,30 @@ export class InventoryPageComponent implements OnInit {
   // Variables para controlar modales de Bootstrap
   showComponentModal = false;
   showLoanModal = false;
-  
+  showReportModal = false;
+
   // Variables para toast
   toastMessage = '';
   showToast = false;
-  toastType: 'success' | 'error' | 'info' = 'info';
+  toastType: 'success' | 'error' | 'info' | 'warning' = 'info';
+
+  // Datos para reportes
+  reportePrestamos: RegistroPrestamo[] = [];
+  componentesNoPrestables: ElectronicComponent[] = [];
 
   form: ElectronicComponent = this.resetElectronicComponent();
   editando = false;
 
-  prestamoForm: PrestamoForm = { electronicComponentId: null, usuario: '', cantidad: 1, tipo: 'PRESTAMO' };
+  prestamoForm: PrestamoForm = {
+    electronicComponentId: null,
+    usuario: '',
+    cantidad: 1,
+    tipo: 'PRESTAMO',
+    diasPrestamo: 7
+  };
   prestamosPendientes: RegistroPrestamo[] = [];
 
-  constructor(
-    private inventoryService: InventoryService, 
-    private loanService: LoanService
-  ) { }
+  constructor(private inventoryService: InventoryService) { }
 
   ngOnInit(): void {
     this.loadElectronicComponents();
@@ -88,7 +94,7 @@ export class InventoryPageComponent implements OnInit {
   }
 
   loadElectronicComponents(): void {
-    this.inventoryService.getElectronicComponent().subscribe({
+    this.inventoryService.getElectronicComponents().subscribe({
       next: data => this.components = data,
       error: err => {
         console.error('Error al cargar:', err);
@@ -97,7 +103,8 @@ export class InventoryPageComponent implements OnInit {
     });
   }
 
-  // Métodos para modales
+  // ==================== MÉTODOS DE MODALES ====================
+
   abrirModal(componente?: ElectronicComponent): void {
     this.editando = !!componente;
     this.form = componente ? { ...componente } : this.resetElectronicComponent();
@@ -111,30 +118,37 @@ export class InventoryPageComponent implements OnInit {
   }
 
   abrirPrestamoModal(componente: ElectronicComponent, tipo: 'PRESTAMO' | 'DEVOLUCION'): void {
-    this.prestamoForm = { 
-      electronicComponentId: componente.id, 
-      usuario: '', 
-      cantidad: 1, 
-      tipo 
+    this.prestamoForm = {
+      electronicComponentId: componente.id,
+      usuario: '',
+      cantidad: 1,
+      tipo,
+      diasPrestamo: 7
     };
-    this.prestamosPendientes = this.loanService.obtenerPendientesPorComponente(componente.id);
+
+    // Cargar préstamos pendientes usando el servicio unificado
+    this.inventoryService.obtenerPrestamosPendientesPorComponente(componente.id).subscribe({
+      next: prestamos => this.prestamosPendientes = prestamos,
+      error: err => console.error('Error al cargar préstamos pendientes:', err)
+    });
+
     this.showLoanModal = true;
   }
 
   cerrarPrestamoModal(): void {
     this.showLoanModal = false;
-    this.prestamoForm = { electronicComponentId: null, usuario: '', cantidad: 1, tipo: 'PRESTAMO' };
+    this.prestamoForm = {
+      electronicComponentId: null,
+      usuario: '',
+      cantidad: 1,
+      tipo: 'PRESTAMO',
+      diasPrestamo: 7
+    };
     this.prestamosPendientes = [];
   }
 
-  // Método para obtener la cantidad máxima disponible para préstamo
-  getMaxCantidadPrestamo(): number {
-    if (!this.prestamoForm.electronicComponentId) return 0;
-    const componente = this.components.find(c => c.id === this.prestamoForm.electronicComponentId);
-    return componente ? componente.cantidad : 0;
-  }
+  // ==================== MÉTODOS DE COMPONENTES ====================
 
-  // Métodos de guardado
   guardar(): void {
     if (!this.validarFormulario()) {
       this.mostrarToast('Por favor, complete todos los campos requeridos', 'error');
@@ -150,7 +164,7 @@ export class InventoryPageComponent implements OnInit {
         this.loadElectronicComponents();
         this.cerrarModal();
         this.mostrarToast(
-          `Componente ${this.editando ? 'actualizado' : 'agregado'} correctamente`, 
+          `Componente ${this.editando ? 'actualizado' : 'agregado'} correctamente`,
           'success'
         );
       },
@@ -180,143 +194,6 @@ export class InventoryPageComponent implements OnInit {
     }
   }
 
-  // Métodos de préstamos y devoluciones
-  procesarPrestamoDevolucion(): void {
-    const { tipo, electronicComponentId, cantidad, usuario } = this.prestamoForm;
-    const componente = this.components.find(c => c.id === electronicComponentId);
-    
-    if (!componente) {
-      this.mostrarToast('Componente no encontrado', 'error');
-      return;
-    }
-
-    if (tipo === 'PRESTAMO') {
-      this.procesarPrestamo(componente);
-    } else {
-      this.procesarDevolucion(componente);
-    }
-  }
-
-  private procesarPrestamo(componente: ElectronicComponent): void {
-    if (componente.cantidad < this.prestamoForm.cantidad) {
-      this.mostrarToast('No hay suficientes unidades disponibles para el préstamo', 'error');
-      return;
-    }
-
-    if (!this.prestamoForm.usuario.trim()) {
-      this.mostrarToast('Por favor, ingrese el nombre del usuario', 'error');
-      return;
-    }
-
-    const cantidadPrestada = this.prestamoForm.cantidad;
-    componente.cantidad -= cantidadPrestada;
-
-    this.loanService.registrarPrestamo(this.prestamoForm, componente).subscribe({
-      next: (prestamo) => {
-        this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
-          next: () => {
-            this.loadElectronicComponents();
-            this.actualizarEstadoSegunCantidad(componente);
-            this.mostrarToast(`Préstamo de ${cantidadPrestada} unidad(es) registrado correctamente para ${this.prestamoForm.usuario}`, 'success');
-            this.cerrarPrestamoModal();
-          },
-          error: (err) => {
-            console.error('Error al actualizar componente:', err);
-            componente.cantidad += cantidadPrestada; // Revertir
-            this.mostrarToast('Error al actualizar el inventario', 'error');
-          }
-        });
-      },
-      error: err => {
-        console.error('Error al registrar préstamo:', err);
-        this.mostrarToast('Error al registrar el préstamo. Por favor, intente nuevamente', 'error');
-        // Revertir cambios en caso de error
-        componente.cantidad += cantidadPrestada;
-      }
-    });
-  }
-
-  private procesarDevolucion(componente: ElectronicComponent): void {
-    const pendientes = this.loanService.obtenerPendientesPorComponente(componente.id);
-    
-    if (pendientes.length === 0) {
-      this.mostrarToast('No hay préstamos pendientes para este componente', 'info');
-      return;
-    }
-
-    const cantidadTotal = pendientes.reduce((acc, p) => acc + p.cantidad, 0);
-    let procesados = 0;
-    let errores = 0;
-
-    pendientes.forEach(p => {
-      this.loanService.marcarDevuelto(p).subscribe({
-        next: () => {
-          procesados++;
-          if (procesados + errores === pendientes.length) {
-            if (errores === 0) {
-              componente.cantidad += cantidadTotal;
-              this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
-                next: () => {
-                  this.loadElectronicComponents();
-                  this.actualizarEstadoSegunCantidad(componente);
-                  this.mostrarToast(`Devolución de ${cantidadTotal} unidad(es) procesada correctamente`, 'success');
-                  this.cerrarPrestamoModal();
-                },
-                error: (err) => {
-                  console.error('Error al actualizar componente:', err);
-                  this.mostrarToast('Error al actualizar el inventario', 'error');
-                }
-              });
-            } else {
-              this.mostrarToast(`Devolución parcial: ${procesados} de ${pendientes.length} préstamos procesados`, 'error');
-            }
-          }
-        },
-        error: (err) => {
-          console.error('Error al marcar devolución:', err);
-          errores++;
-          if (procesados + errores === pendientes.length) {
-            this.mostrarToast('Error al procesar algunas devoluciones', 'error');
-          }
-        }
-      });
-    });
-  }
-
-  marcarDevuelto(prestamo: RegistroPrestamo): void {
-    this.loanService.marcarDevuelto(prestamo).subscribe({
-      next: (updated) => {
-        const compId = (updated as any).electronicComponentId ?? prestamo.electronicComponentId;
-        const componente = this.components.find(c => c.id === compId);
-        
-        if (componente) {
-          const cantidadDevolver = updated.cantidad ?? prestamo.cantidad ?? 0;
-          componente.cantidad = (componente.cantidad ?? 0) + cantidadDevolver;
-          
-          this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
-            next: () => {
-              this.loadElectronicComponents();
-              this.actualizarEstadoSegunCantidad(componente);
-              this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
-              this.mostrarToast(`Devolución de ${cantidadDevolver} unidad(es) registrada correctamente para ${updated.usuario ?? prestamo.usuario}`, 'success');
-            },
-            error: (err) => {
-              console.error('Error al actualizar componente:', err);
-              this.mostrarToast('Error al actualizar el inventario', 'error');
-            }
-          });
-        } else {
-          this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== updated.id);
-          this.mostrarToast(`Devolución registrada para ${updated.usuario ?? prestamo.usuario}`, 'success');
-        }
-      },
-      error: (err) => {
-        console.error('Error marcando devolución:', err);
-        this.mostrarToast('No se pudo registrar la devolución. Por favor, intente nuevamente', 'error');
-      }
-    });
-  }
-
   darDeBaja(componente: ElectronicComponent): void {
     if (confirm('¿Está seguro de que desea dar de baja este componente?')) {
       const actualizado: ElectronicComponent = {
@@ -337,37 +214,206 @@ export class InventoryPageComponent implements OnInit {
     }
   }
 
-  private actualizarEstadoSegunCantidad(componente: ElectronicComponent): void {
-    if (componente.cantidad === 0) {
-      componente.estadoAdministrativo = 'Prestado';
+  // ==================== MÉTODOS DE PRÉSTAMOS ====================
+
+  procesarPrestamoDevolucion(): void {
+    const { tipo } = this.prestamoForm;
+
+    if (tipo === 'PRESTAMO') {
+      this.procesarPrestamo();
     } else {
-      componente.estadoAdministrativo = 'Disponible';
+      this.procesarDevolucion();
+    }
+  }
+
+  private procesarPrestamo(): void {
+    if (!this.validarPrestamoForm()) {
+      return;
     }
 
-    this.inventoryService.updateElectronicComponent(componente.id, componente).subscribe({
-      next: () => this.loadElectronicComponents(),
-      error: err => console.error('Error al actualizar estado:', err)
+    this.inventoryService.registrarPrestamo(this.prestamoForm).subscribe({
+      next: (prestamo) => {
+        this.loadElectronicComponents(); // Recargar para reflejar cambios en cantidad
+        const mensaje = `Préstamo de ${this.prestamoForm.cantidad} unidad(es) registrado para ${this.prestamoForm.usuario}. Fecha límite: ${prestamo.fechaFinalizacion}`;
+        this.mostrarToast(mensaje, 'success');
+        this.cerrarPrestamoModal();
+      },
+      error: err => this.mostrarToast(err.message, 'error')
     });
   }
 
-  // Métodos para toast
-  mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'info' = 'info'): void {
+  private procesarDevolucion(): void {
+    if (this.prestamosPendientes.length === 0) {
+      this.mostrarToast('No hay préstamos pendientes para este componente', 'info');
+      return;
+    }
+
+    // Procesar todas las devoluciones pendientes
+    const procesamientos = this.prestamosPendientes.map(prestamo =>
+      this.inventoryService.marcarDevuelto(prestamo.id)
+    );
+
+    let procesados = 0;
+    let errores = 0;
+
+    procesamientos.forEach(observable => {
+      observable.subscribe({
+        next: () => {
+          procesados++;
+          if (procesados + errores === this.prestamosPendientes.length) {
+            if (errores === 0) {
+              this.loadElectronicComponents(); // Recargar para reflejar cambios
+              this.mostrarToast(`Devolución de ${procesados} préstamo(s) procesada correctamente`, 'success');
+              this.cerrarPrestamoModal();
+            } else {
+              this.mostrarToast(`Devolución parcial: ${procesados} de ${this.prestamosPendientes.length} préstamos procesados`, 'warning');
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error al marcar devolución:', err);
+          errores++;
+          if (procesados + errores === this.prestamosPendientes.length) {
+            this.mostrarToast('Error al procesar algunas devoluciones', 'error');
+          }
+        }
+      });
+    });
+  }
+
+  marcarDevuelto(prestamo: RegistroPrestamo): void {
+    this.inventoryService.marcarDevuelto(prestamo.id).subscribe({
+      next: () => {
+        this.loadElectronicComponents(); // Recargar para reflejar cambios
+        this.prestamosPendientes = this.prestamosPendientes.filter(x => x.id !== prestamo.id);
+        this.mostrarToast(`Devolución registrada para ${prestamo.usuario}`, 'success');
+      },
+      error: (err) => {
+        console.error('Error marcando devolución:', err);
+        this.mostrarToast('No se pudo registrar la devolución', 'error');
+      }
+    });
+  }
+
+  private validarPrestamoForm(): boolean {
+    if (!this.prestamoForm.usuario.trim()) {
+      this.mostrarToast('Por favor, ingrese el nombre del usuario', 'error');
+      return false;
+    }
+
+    if (!this.prestamoForm.diasPrestamo || this.prestamoForm.diasPrestamo <= 0) {
+      this.mostrarToast('Por favor, ingrese un número válido de días de préstamo', 'error');
+      return false;
+    }
+
+    const componente = this.components.find(c => c.id === this.prestamoForm.electronicComponentId);
+    if (!componente) {
+      this.mostrarToast('Componente no encontrado', 'error');
+      return false;
+    }
+
+    if (!this.puedeSerPrestado(componente)) {
+      this.mostrarToast('Este componente no puede ser prestado', 'error');
+      return false;
+    }
+
+    if (componente.cantidad < this.prestamoForm.cantidad) {
+      this.mostrarToast('No hay suficientes unidades disponibles para el préstamo', 'error');
+      return false;
+    }
+
+    return true;
+  }
+
+  // Método para obtener la fecha actual formateada
+  getFechaActual(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  // Método para calcular la fecha límite basada en los días de préstamo
+  calcularFechaLimite(): string {
+    if (!this.prestamoForm.diasPrestamo) return '';
+
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + this.prestamoForm.diasPrestamo);
+    return fecha.toISOString().slice(0, 10);
+  }
+
+  // Método para obtener información del componente actual
+  getComponenteActual(): ElectronicComponent | null {
+    if (!this.prestamoForm.electronicComponentId) return null;
+    return this.components.find(c => c.id === this.prestamoForm.electronicComponentId) || null;
+  }
+  // ==================== MÉTODOS DE REPORTES ====================
+
+  abrirReporteModal(): void {
+    this.inventoryService.obtenerReporteInventario().subscribe({
+      next: (reporte) => {
+        this.reportePrestamos = reporte.prestamosActivos;
+        this.componentesNoPrestables = reporte.componentesNoPrestables;
+        this.showReportModal = true;
+      },
+      error: err => {
+        console.error('Error al cargar reporte:', err);
+        this.mostrarToast('Error al cargar el reporte', 'error');
+      }
+    });
+  }
+
+  cerrarReporteModal(): void {
+    this.showReportModal = false;
+    this.reportePrestamos = [];
+    this.componentesNoPrestables = [];
+  }
+
+  // ==================== MÉTODOS AUXILIARES ====================
+
+  puedeSerPrestado(componente: ElectronicComponent): boolean {
+    return componente.estadoAdministrativo !== 'No prestable' &&
+      componente.estadoAdministrativo !== 'Dado de baja' &&
+      componente.cantidad > 0;
+  }
+
+  getMaxCantidadPrestamo(): number {
+    if (!this.prestamoForm.electronicComponentId) return 0;
+    const componente = this.components.find(c => c.id === this.prestamoForm.electronicComponentId);
+    return componente ? componente.cantidad : 0;
+  }
+
+  getEstadoPrestamo(prestamo: RegistroPrestamo): string {
+    if (prestamo.devuelto) return 'Devuelto';
+    if (prestamo.vencido) return 'Vencido';
+    return 'En préstamo';
+  }
+
+  getClaseEstadoPrestamo(prestamo: RegistroPrestamo): string {
+    if (prestamo.devuelto) return 'bg-success';
+    if (prestamo.vencido) return 'bg-danger';
+    return 'bg-warning';
+  }
+
+  getComponenteNombre(componenteId: number): string {
+    const componente = this.components.find(c => c.id === componenteId);
+    return componente ? componente.descripcion : 'Componente no encontrado';
+  }
+
+  // ==================== MÉTODOS DE TOAST ====================
+
+  mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'info' | 'warning' = 'info'): void {
     this.toastMessage = mensaje;
     this.toastType = tipo;
-    this.showToast = false; // Resetea primero para reiniciar animación
-    
-    // Usa setTimeout para asegurar que el cambio se detecte
+    this.showToast = false;
+
     setTimeout(() => {
       this.showToast = true;
-      
-      // Auto-ocultar después de 5 segundos
       setTimeout(() => {
         this.showToast = false;
       }, 5000);
     }, 10);
   }
 
-  // Getters para las propiedades computadas
+  // ==================== GETTERS COMPUTADOS ====================
+
   get totalItems(): number {
     return this.components.length;
   }
@@ -377,16 +423,19 @@ export class InventoryPageComponent implements OnInit {
   }
 
   get totalPrestados(): number {
-    return this.components.filter(
-      c => c.estadoAdministrativo === 'Prestado' || c.estadoAdministrativo === 'Asignado'
-    ).length;
+    return this.components.filter(c => c.estadoAdministrativo === 'Prestado').length;
   }
 
   get totalBaja(): number {
     return this.components.filter(c => c.estadoAdministrativo === 'Dado de baja').length;
   }
 
-  // TrackBy functions
+  get totalNoPrestables(): number {
+    return this.components.filter(c => c.estadoAdministrativo === 'No prestable').length;
+  }
+
+  // ==================== TRACKBY FUNCTIONS ====================
+
   trackByComponent(index: number, item: ElectronicComponent): number {
     return item.id;
   }
