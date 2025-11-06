@@ -5,17 +5,13 @@ class Inventario(models.Model):
     ESTADO_FISICO_CHOICES = (
         ('excelente', 'Excelente'),
         ('bueno', 'Bueno'),
-        ('regular', 'Regular'),
-        ('defectuoso', 'Defectuoso'),
         ('dañado', 'Dañado'),
-        ('en mantenimiento', 'En mantenimiento'),
-        ('obsoleto', 'Obsoleto'),
     )
     
     ESTADO_ADMINISTRATIVO_CHOICES = (
         ('disponible', 'Disponible'),
         ('prestado', 'Prestado'),
-        ('asignado', 'Asignado'),
+        ('no prestable', 'No prestable'),
         ('dado de baja', 'Dado de baja'),
     )
     
@@ -42,7 +38,7 @@ class Prestamo(models.Model):
     nombre_persona = models.CharField(max_length=100, default="Desconocido")
     item = models.ForeignKey(Inventario, on_delete=models.PROTECT, related_name='prestamos')
     fecha_prestamo = models.DateTimeField(auto_now_add=True)
-    fecha_devolucion = models.DateTimeField(null=True, blank=True)
+    fecha_devolucion = models.DateTimeField()
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='prestado')
 
     def __str__(self):
