@@ -10,5 +10,5 @@ import { Header } from '../../templates/header/header';
   styleUrl: './home-page.css'
 })
 export class HomePage {
-  
+  public welcomeMessage: string = '¡Bienvenido! Únete a nuestra comunidad y accede a experiencias exclusivas. Regístrate ahora y da el primer paso hacia nuevas oportunidades.';
 }

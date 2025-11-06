@@ -1,18 +1,14 @@
 .header-container {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
   align-items: center;
   background-color: #fff;
-  padding: 10px ;
+
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-   width: clamp(320px, 88vw, 1600px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  width: clamp(320px, 88vw, 1600px);
+  /* No necesitas position: fixed aquí ya que está en el wrapper */
 }
-
 .nav-item {
   display: flex;
   align-items: center;
@@ -21,7 +17,6 @@
   width: 10rem;
   cursor: pointer;
   border-radius: 30px;
-  padding: 6px 12px;
   color: #333;
   transition: all 0.25s ease;
   height: 100%;
