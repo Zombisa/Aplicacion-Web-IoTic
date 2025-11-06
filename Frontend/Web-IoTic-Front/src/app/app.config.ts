@@ -1,6 +1,6 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, PLATFORM_ID, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
+
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -12,9 +12,12 @@ import { environment } from './environment/environment';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
+    // Solo inicializar Firebase en el navegador, no en SSR
+    ...(typeof window !== 'undefined' ? [
+      provideFirebaseApp(() => initializeApp(environment.firebase)),
+      provideFirestore(() => getFirestore()),
+      provideAuth(() => getAuth()),
+    ] : []),
     provideHttpClient(
       withInterceptorsFromDi() // Si necesitas interceptores clásicos
     ),

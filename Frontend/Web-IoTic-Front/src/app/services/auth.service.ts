@@ -1,26 +1,36 @@
-import { Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, firstValueFrom, from } from 'rxjs';
+import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environment/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
 
-  constructor(private afAuth: Auth, private firestore: Firestore, private http: HttpClient, private injector: Injector) {
-    authState(this.afAuth).subscribe(async (user) => {
-      this.currentUserSubject.next(user);
-      if (user) {
-        const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'usuarios', user.uid)));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
+  constructor(
+    @Optional() private afAuth: Auth, 
+    @Optional() private firestore: Firestore, 
+    private http: HttpClient, 
+    private injector: Injector,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Solo inicializar Firebase en el navegador
+    if (isPlatformBrowser(this.platformId) && this.afAuth) {
+      authState(this.afAuth).subscribe(async (user) => {
+        this.currentUserSubject.next(user);
+        if (user && this.firestore) {
+          const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'usuarios', user.uid)));
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+          }
+        } else {
         }
-      } else {
-      }
-    });
+      });
+    }
   }
   /**
    * Maneja el inicio de sesión del usuario con correo y contraseña.
@@ -28,6 +38,9 @@ export class AuthService {
    * @param password contraseña del usuario 
    */
   async login(email: string, password: string) {
+    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+      throw new Error('Authentication is not available on server side');
+    }
     await runInInjectionContext(this.injector, async () => {
       await signInWithEmailAndPassword(this.afAuth, email, password);
     });
@@ -74,6 +87,9 @@ export class AuthService {
    * @returns Un observable que emite los claims personalizados del usuario autenticado, o null si no hay ninguno.
    */
   getUserClaims(): Observable<{ [key: string]: any } | null> {
+    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+      return EMPTY;
+    }
     return this.currentUser.pipe(
       filter((user): user is User => !!user),
       switchMap(user => from(getIdTokenResult(user, true))),
@@ -85,6 +101,9 @@ export class AuthService {
    * @returns Una promesa que resuelve con el token de ID, o null si no hay usuario autenticado.
    */
   async getToken(): Promise<string | null> {
+    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+      return null;
+    }
     const immediateUser = await this.afAuth.currentUser;
     if (immediateUser) {
       return immediateUser.getIdToken(true);
@@ -109,6 +128,9 @@ export class AuthService {
   * Cierra la sesión del usuario actualmente autenticado.
   */
   logout() {
+    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+      return Promise.resolve();
+    }
     return signOut(this.afAuth);
   }
   
