@@ -1,166 +1,94 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { MOCK_COMPONENTS } from '../mocks/electronicComponent.mock';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, from, map, switchMap, throwError } from 'rxjs';
+import { environment } from '../environment/environment';
 import { ElectronicComponent } from '../models/electronicComponent.model';
-import { RegistroPrestamo, PrestamoForm } from '../models/prestamo.model';
+import { AuthService } from './auth.service';
+import { ItemDTO } from '../models/DTO/ItemDTO';
+import { ItemDTOPeticion } from '../models/Peticion/ItemDTOPeticion';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  
-  private components: ElectronicComponent[] = [...MOCK_COMPONENTS];
-  private prestamos: RegistroPrestamo[] = [];
+  private apiUrl = 'http://localhost:8000/api/';
 
-  constructor() {
-    this.cargarPrestamosDesdeLocalStorage();
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+  private getAuthHeaders(): Observable<HttpHeaders> {
+    return from(this.authService.getToken()).pipe(
+      map(token => {
+        if (!token) {
+          throw new Error('No se pudo obtener el token de autenticación');
+        }
+        return new HttpHeaders({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+      })
+    );
   }
 
-  // ==================== MÉTODOS DE COMPONENTES ====================
-
-  getElectronicComponents(): Observable<ElectronicComponent[]> {
-    return of([...this.components]);
-  }
-
-  getElectronicComponent(id: number): Observable<ElectronicComponent | null> {
-    const component = this.components.find(d => d.id === id);
-    return of(component ? { ...component } : null);
-  }
-
-  addElectronicComponent(device: ElectronicComponent): Observable<ElectronicComponent> {
-    const id = this.components.length ? Math.max(...this.components.map(d => d.id)) + 1 : 1;
-    const nuevo: ElectronicComponent = { ...device, id };
-    this.components.push(nuevo);
-    return of(nuevo);
+  getElectronicComponent(): Observable<ItemDTO[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.get<ItemDTO[]>(`${this.apiUrl}inventario/inventario/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al obtener componentes:', error);
+        return throwError(() => error);
+      })
+    );
+    }
+addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        // Remover el id si existe (el backend lo asignará)
+        return this.http.post<ItemDTO>(`${this.apiUrl}inventario/inventario/`, device, { headers });
+      }),
+      catchError(error => {
+        console.error('Error al agregar componente:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   updateElectronicComponent(id: number, updatedElectronicComponent: ElectronicComponent): Observable<ElectronicComponent> {
-    const index = this.components.findIndex(d => d.id === id);
-    if (index !== -1) {
-      this.components[index] = { ...updatedElectronicComponent, id };
-      return of(this.components[index]);
-    }
-    return throwError(() => new Error('Componente no encontrado'));
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        // Remover el id del objeto para evitar conflictos
+        const { id: componentId, ...componentData } = updatedElectronicComponent;
+        return this.http.put<ElectronicComponent>(`${this.apiUrl}inventario/inventario/${id}/`, componentData, { headers });
+      }),
+      catchError(error => {
+        console.error('Error al actualizar componente:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   deleteElectronicComponent(id: number): Observable<void> {
-    this.components = this.components.filter(d => d.id !== id);
-    return of(void 0);
-  }
-
-  // ==================== MÉTODOS DE PRÉSTAMOS ====================
-
-  registrarPrestamo(form: PrestamoForm): Observable<RegistroPrestamo> {
-    const component = this.components.find(c => c.id === form.electronicComponentId);
-    
-    if (!component) {
-      return throwError(() => new Error('Componente no encontrado'));
-    }
-
-    const nuevo: RegistroPrestamo = {
-      id: Date.now(),
-      electronicComponentId: form.electronicComponentId!,
-      usuario: form.usuario,
-      cantidad: form.cantidad,
-      fechaPrestamo: new Date().toISOString().slice(0, 10),
-      fechaFinalizacion: this.calcularFechaFinalizacion(form.diasPrestamo || 7),
-      diasPrestamo: form.diasPrestamo || 7,
-      devuelto: false,
-      vencido: false
-    };
-
-    this.prestamos.push(nuevo);
-    this.persistirPrestamos();
-    return of(nuevo);
-  }
-
-  marcarDevuelto(prestamoId: number): Observable<RegistroPrestamo> {
-    const idx = this.prestamos.findIndex(x => x.id === prestamoId);
-    if (idx === -1) {
-      return throwError(() => new Error('Préstamo no encontrado'));
-    }
-
-    const actualizado = { 
-      ...this.prestamos[idx], 
-      devuelto: true,
-      fechaDevolucion: new Date().toISOString().slice(0, 10)
-    };
-    
-    this.prestamos[idx] = actualizado;
-    this.persistirPrestamos();
-    return of(actualizado);
-  }
-
-  obtenerPrestamosPendientesPorComponente(componentId: number): Observable<RegistroPrestamo[]> {
-    const pendientes = this.prestamos.filter(r => 
-      r.electronicComponentId === componentId && !r.devuelto
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.delete<void>(`${this.apiUrl}inventario/inventario/${id}/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al eliminar componente:', error);
+        return throwError(() => error);
+      })
     );
-    return of([...pendientes]);
   }
 
-  obtenerTodosLosPrestamos(): Observable<RegistroPrestamo[]> {
-    return of([...this.prestamos]);
-  }
-
-  obtenerPrestamosActivos(): Observable<RegistroPrestamo[]> {
-    const activos = this.prestamos.filter(p => !p.devuelto);
-    return of([...activos]);
-  }
-
-  // ==================== MÉTODOS DE REPORTES ====================
-
-  obtenerReporteInventario(): Observable<{
-    componentes: ElectronicComponent[],
-    prestamosActivos: RegistroPrestamo[],
-    componentesNoPrestables: ElectronicComponent[]
-  }> {
-    const prestamosActivos = this.prestamos.filter(p => !p.devuelto);
-    const componentesNoPrestables = this.components.filter(c => 
-      c.estadoAdministrativo === 'No prestable'
+  // Método adicional para obtener un componente específico por ID
+  getElectronicComponentById(id: number): Observable<ElectronicComponent> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.get<ElectronicComponent>(`${this.apiUrl}inventario/inventario/${id}/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al obtener componente por ID:', error);
+        return throwError(() => error);
+      })
     );
-
-    return of({
-      componentes: [...this.components],
-      prestamosActivos: [...prestamosActivos],
-      componentesNoPrestables: [...componentesNoPrestables]
-    });
-  }
-
-  // ==================== MÉTODOS PRIVADOS ====================
-
-  private calcularFechaFinalizacion(diasPrestamo: number): string {
-    const fecha = new Date();
-    fecha.setDate(fecha.getDate() + diasPrestamo);
-    return fecha.toISOString().slice(0, 10);
-  }
-
-  private cargarPrestamosDesdeLocalStorage(): void {
-    try {
-      const stored = localStorage.getItem('prestamos');
-      if (stored) {
-        this.prestamos = JSON.parse(stored);
-        this.actualizarEstadosVencimiento();
-      }
-    } catch (error) {
-      console.error('Error al cargar préstamos desde localStorage:', error);
-    }
-  }
-
-  private actualizarEstadosVencimiento(): void {
-    const hoy = new Date().toISOString().slice(0, 10);
-    
-    this.prestamos.forEach(prestamo => {
-      if (!prestamo.devuelto && prestamo.fechaFinalizacion < hoy) {
-        prestamo.vencido = true;
-      }
-    });
-    
-    this.persistirPrestamos();
-  }
-
-  private persistirPrestamos(): void {
-    try {
-      localStorage.setItem('prestamos', JSON.stringify(this.prestamos));
-    } catch (error) {
-      console.error('Error al guardar préstamos en localStorage:', error);
-    }
   }
 }

@@ -1,168 +1,37 @@
-/* CSS mejorado con variables y complementando Bootstrap */
-:root {
-  --primary-color: #4f46e5;
-  --primary-light: #6b5cf0;
-  --success-color: #198754;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --light-bg: #f8f9fa;
-  --border-radius: 0.75rem;
-  --box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.08);
-  --transition: all 0.3s ease;
+.banner-primary{
+  background-color: var(--color-secondary-light);
+  height: 60vh;
+}
+.title{
+  font-family: "Roboto", sans-serif;
+  font: 600;
+  font-size: clamp(1rem, 3rem, 5rem);
+  color: var(--color-primary);
 }
 
-/* Estilos generales */
-body {
-  font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f5f7fb;
-  color: #333;
+.divider{
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-text-secondary);
 }
-
-/* Mejoras para las tarjetas */
-.card {
-  border-radius: var(--border-radius);
-  transition: var(--transition);
-  border: none;
+.text{
+  font-family: "Roboto", sans-serif;
 }
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Personalización de la tabla */
-.table > :not(caption) > * > * {
-  padding: 0.75rem 0.5rem;
-}
-
-.table-hover tbody tr:hover {
-  background-color: rgba(79, 70, 229, 0.04);
-}
-
-/* Mejora para badges de estado */
-.badge {
-  font-size: 0.75rem;
-  padding: 0.35em 0.65em;
-}
-
-/* Botones con transición suave */
-.btn {
-  transition: var(--transition);
-  border-radius: 0.5rem;
-  font-weight: 500;
-}
-
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-}
-
-/* Mejoras para inputs y selects */
-.form-control, .form-select {
-  border-radius: 0.5rem;
-  border: 1px solid #dee2e6;
-  transition: var(--transition);
-}
-
-.form-control:focus, .form-select:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.15);
-}
-
-/* Personalización del modal */
-.modal-content {
-  border-radius: var(--border-radius);
-  border: none;
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-}
-
-.modal-header {
-  border-bottom: 1px solid #e9ecef;
-  padding: 1rem 1.5rem;
-}
-
-.modal-footer {
-  border-top: 1px solid #e9ecef;
-  padding: 1rem 1.5rem;
-}
-
-/* Responsividad adicional */
-@media (max-width: 768px) {
-  .display-6 {
-    font-size: 1.75rem;
-  }
+.resume{
   
-  .btn-group-vertical .btn {
-    margin-bottom: 0.25rem;
-  }
-  
-  .table-responsive {
-    font-size: 0.875rem;
-  }
 }
-
-/* Animaciones suaves */
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+.dark-card{
+  padding: 5rem;
+  background-color: var(--color-primary);
+  color: white;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.text-card{
+  min-width: 70%;
 }
-
-/* Efectos de hover para elementos interactivos */
-.list-group-item {
-  transition: var(--transition);
+.titleOption{
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
 }
-
-.list-group-item:hover {
-  background-color: var(--light-bg);
-}
-
-/* Estilos para elementos vacíos */
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #6c757d;
-}
-
-.empty-state i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  display: block;
-}
-
-/* Estilos para Toast */
-.fade-in-toast {
-  animation: slideInToast 0.3s ease-out;
-}
-
-@keyframes slideInToast {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.toast {
-  border: none;
-  border-radius: 0.5rem;
-}
-
-.toast-header {
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-}
-
-.toast-body {
-  padding: 0.75rem 1rem;
-}
-
-.border-bottom-light {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+.textOption{
+  color: var(--color-secondary-dark)
 }

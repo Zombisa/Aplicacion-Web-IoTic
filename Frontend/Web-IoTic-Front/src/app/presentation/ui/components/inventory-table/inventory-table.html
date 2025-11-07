@@ -1,0 +1,41 @@
+<div class="table-responsive mt-4">
+  <table class="table table-striped table-hover align-middle text-center">
+    <thead class="table-primary">
+      <tr>
+        <th>N° Serie</th>
+        <th>Descripción</th>
+        <th>Cant. Disponible</th>
+        <th>Ubicación</th>
+        <th>Estado Administrativo</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of inventoryData">
+        <td>{{ item.numeroSerieActivo }}</td>
+        <td>{{ item.descripcionArticulo }}</td>
+        <td>{{ item.cantidad_disponible }}</td>
+        <td>{{ item.ubicacion }}</td>
+        <td>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-success': item.estadoAdministrativo === 'disponible',
+              'bg-warning text-dark': item.estadoAdministrativo === 'prestado',
+              'bg-secondary': item.estadoAdministrativo === 'asignado',
+              'bg-danger': item.estadoAdministrativo === 'dado de baja'
+            }"
+          >
+            {{ item.estadoAdministrativo }}
+          </span>
+        </td>
+        
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="inventoryData.length === 0" class="text-center text-muted py-3">
+    No hay elementos en el inventario.
+  </div>
+</div>
