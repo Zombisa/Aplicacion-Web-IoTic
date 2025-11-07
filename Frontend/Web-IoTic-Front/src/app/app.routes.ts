@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { InventoryPageComponent } from './presentation/ui/pages/inventory-page/inventory-page.component';
 import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
+import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 
 export const routes: Routes = [
 
@@ -16,5 +17,6 @@ export const routes: Routes = [
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
-     {path:'inventario/add-item', component: AddItem}
+     {path:'inventario/add-item', component: AddItem},
+     {path: 'inventario/add-loan', component: AddLoan}
 ];

@@ -1,0 +1,12 @@
+.banner-primary{
+  background-color: var(--color-primary);
+  height: 50vh;
+}
+.title{
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
+    color: var(--color-secondary);
+}

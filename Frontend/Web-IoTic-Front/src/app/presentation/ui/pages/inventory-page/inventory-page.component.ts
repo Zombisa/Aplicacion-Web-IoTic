@@ -33,7 +33,7 @@ export class InventoryPageComponent implements OnInit {
       key: 'prestamo',
       title: 'Añadammos un prestamo',
       description: 'En esta seccion podras pedir un prestamo.',
-      route: '/inventario/prestamo'
+      route: 'add-loan'
     },
   ];
   public inventoryData: ItemDTO[] = [];

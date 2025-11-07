@@ -1,0 +1,102 @@
+.banner-primary{
+  background-color: var(--color-secondary-light);
+  height: 116vh;
+}
+.title{
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
+}
+.form-back{
+    background-color: white;
+    height: 50rem;
+    width: 50rem;
+    
+}
+
+
+.form-label {
+    color: var(--color-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.is-valid {
+    border-color: #198754 !important;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+/* Mejoras responsive */
+@media (max-width: 576px) {
+  .banner-primary .title {
+    font-size: 1.8rem !important;
+  }
+  
+  .form-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  .card {
+    margin: 0 0.5rem;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  .banner-primary .title {
+    font-size: 2.2rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .form-control-md-lg {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .form-select-md-lg {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* Inputs y labels responsive */
+.form-label.small {
+  font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .form-label.small {
+    font-size: 1rem;
+  }
+}
+
+/* Botones responsive */
+@media (max-width: 576px) {
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem !important;
+  }
+}
