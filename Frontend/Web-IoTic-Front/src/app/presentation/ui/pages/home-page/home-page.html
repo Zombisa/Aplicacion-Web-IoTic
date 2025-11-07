@@ -2,7 +2,7 @@
   <div class="header-wrapper">
     <app-header></app-header>
   </div>
-  <div class="container-fluid d-flex align-items-center    py-5 mb-4 banner-primary" >
+  <div class="container-fluid d-flex align-items-center    py-5  banner-primary mb-2" >
     <div class=" row d-flex justify-content-center align-items-center ">
       <div class=" col-md-6  d-flex " id="title-banner-home"> 
           <h1 class="text-white " id="title-home">
@@ -15,10 +15,45 @@
     </div>
      
   </div>
-  <div class="responsive-img">
-    <img src="https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg" alt="Descripción de la imagen">
-  </div>
-  <section class="container-fluid d-flex flex-column align-items-center  my-5 px-3">
-    <p class="text-center">{{welcomeMessage}}</p>
+  
+  <section class="container-fluid d-flex flex-column align-items-center px-3 sectionWelcome">
+    <div id="welcomeCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <!-- Indicadores del carrusel -->
+      <div class="carousel-indicators">
+        <button *ngFor="let mensaje of mensajes; let i = index" 
+                type="button" 
+                data-bs-target="#welcomeCarousel" 
+                [attr.data-bs-slide-to]="i" 
+                [class.active]="i === 0"
+                [attr.aria-label]="'Slide ' + (i + 1)">
+        </button>
+      </div>
+      
+      <div class="carousel-inner text-center d-flex align-items-center">
+        <div *ngFor="let mensaje of mensajes; let i = index" 
+             class="carousel-item"
+             [class.active]="i === 0">
+          <p class=" textWelcome">{{ mensaje }}</p>
+        </div>
+      </div>
+      
+    </div>
   </section>
+
+<section class="py-5 registro-fotografico">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-6">
+        <h2 class="display-4  mb-3">Registro Fotográfico</h2>
+        <div class="divider mx-auto"></div>
+      </div>
+      <div class="col-6">
+        <p class="lead text-muted fw-bold">Momentos destacados de nuestro grupo de investigación, moementos que siempre quedan guardados en nuestra memoria</p>
+        <div class="divider mx-auto"></div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
 </div>

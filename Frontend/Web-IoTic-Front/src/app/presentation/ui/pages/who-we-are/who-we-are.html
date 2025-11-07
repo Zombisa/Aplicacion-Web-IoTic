@@ -1,0 +1,38 @@
+<div class="who-we-are-container">
+    <div class="header-wrapper">
+        <app-header></app-header>
+    </div>
+    <h1 id="title">¿Quienes somos?</h1>
+   <section class="container-fluid d-flex flex-column align-items-center px-3 sectionWhoAre">
+    <div id="WhoAreCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <!-- Indicadores del carrusel -->
+      <div class="carousel-indicators">
+        <button *ngFor="let mensaje of textCarrousel; let i = index" 
+                type="button" 
+                data-bs-target="#welcomeCarousel" 
+                [attr.data-bs-slide-to]="i" 
+                [class.active]="i === 0"
+                [attr.aria-label]="'Slide ' + (i + 1)">
+        </button>
+      </div>
+      
+      <div class="carousel-inner text-center d-flex align-items-center">
+        <div class="row">
+            <div class="col-md-3" *ngFor="let mensaje of textCarrousel; let i = index" 
+                class="carousel-item"
+                [class.active]="i === 0">
+                <p class=" textWelcome">{{ mensaje }}</p>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3" *ngFor="let mensaje2 of titleCarrousel; let i = index" 
+                class="carousel-item"
+                [class.active]="i === 0">
+                <p class=" textWelcome">{{ mensaje2}}</p>
+            </div>
+        </div>
+        
+      </div>
+      
+    </div>
+  </section>
+</div>

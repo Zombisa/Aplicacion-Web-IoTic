@@ -21,7 +21,7 @@
 
 .banner-primary{
   background-color: var(--color-primary);
-  height: 70vh;
+  height: 90vh;
 }
 
 #title-banner-home{
@@ -33,6 +33,15 @@ h1{
 }
 #title-home{
   padding-left: 2vh;
+  font-family: "Roboto", sans-serif;
+}
+.textWelcome{
+  font-size: clamp(1rem, 1.5rem, 2rem);
+  font-weight: 400;
+  display: flex;
+   font-family: "Roboto", sans-serif;
+   padding-left: 4rem;
+   padding-right: 4rem;
 }
 .responsive-img {
   width: 100%;
@@ -41,9 +50,9 @@ h1{
   border-radius: 20px;
 }
 
-/* ✅ ACTUALIZADO: Imagen después del banner, ancho completo, altura reducida */
 .responsive-img {
-  height: 50vh; /* Mitad de la altura de la ventana */
+  width: 50%;
+  height: 50%;
   margin-left: calc(-50vw + 50%); /* Centrar y expandir fuera del contenedor */
   overflow: hidden;
   border-radius: 0; /* Sin bordes redondeados para ancho completo */
@@ -51,11 +60,8 @@ h1{
 }
 
 .responsive-img img {
-  aspect-ratio: 1 / 1; /* o 1 / 1 si quieres cuadrado */
   width: 100%;
-  height: 80%; /* Doble altura para mostrar solo la mitad */
   object-fit: cover;
-   transform: scale(0.9); 
   object-position: center top; /* Mostrar la parte superior de la imagen */
   display: block;
   transform: translateY(-25%); /* Ajustar posición vertical para centrar mejor */
@@ -71,4 +77,19 @@ h1{
   height: 200%;
   object-position: center bottom;
   transform: translateY(-50%);
+}
+
+.sectionWelcome {
+  padding: 5rem;
+  height: 40vh;
+  background-color: var(--color-secondary-light);
+  /* Centrado del contenido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ Contenedor interno del carrusel */
+.sectionWelcome .carousel-inner {
+  height: 20rem; /* altura fija del área del texto */
 }

@@ -7,7 +7,7 @@
   /* Colores secundarios */
   --color-secondary: #F3A537;
   --color-secondary-dark: #545b62;
-  --color-secondary-light: #ECF4F1;
+  --color-secondary-light: #ccd3d0;
   
   /* Colores de estado */
   --color-success: #28a745;
@@ -27,3 +27,11 @@
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.header-wrapper {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  /* Remover display: flex, justify-content, align-items */
+}
