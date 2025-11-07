@@ -1,6 +1,188 @@
 <div class="header-wrapper">
     <app-header></app-header>
 </div>
-<section>
+<section class="banner-primary">
+    <div class="d-flex justify-content-center align-items-center py-3 py-md-5">
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <h1 class="title text-center">Añadir Item</h1>
+        </div>
+    </div>
     
+    <!-- Contenedor responsive mejorado -->
+    <div class="container-fluid px-3 px-md-4 form-container py-3 py-md-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-lg rounded-4 p-3 p-md-4 border-0">
+                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                        
+                        <!-- Número de Serie Activo -->
+                        <div class="mb-3">
+                            <label for="numeroSerieActivo" class="form-label fw-semibold small">
+                                Número de Serie Activo <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="number"
+                                id="numeroSerieActivo"
+                                class="form-control form-control-sm form-control-md-lg"
+                                [class.is-invalid]="itemForm.get('numeroSerieActivo')?.invalid && itemForm.get('numeroSerieActivo')?.touched"
+                                [class.is-valid]="itemForm.get('numeroSerieActivo')?.valid && itemForm.get('numeroSerieActivo')?.touched"
+                                formControlName="numeroSerieActivo"
+                                placeholder="Ingrese el número de serie"
+                                min="1"
+                            />
+                            <div class="invalid-feedback" *ngIf="itemForm.get('numeroSerieActivo')?.invalid && itemForm.get('numeroSerieActivo')?.touched">
+                                <small *ngIf="itemForm.get('numeroSerieActivo')?.errors?.['required']">
+                                    El número de serie es obligatorio
+                                </small>
+                                <small *ngIf="itemForm.get('numeroSerieActivo')?.errors?.['min']">
+                                    El número de serie debe ser mayor a 0
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Descripción del Artículo -->
+                        <div class="mb-3">
+                            <label for="descripcionArticulo" class="form-label fw-semibold small">
+                                Descripción del Artículo <span class="text-danger">*</span>
+                            </label>
+                            <textarea
+                                id="descripcionArticulo"
+                                class="form-control form-control-sm form-control-md-lg"
+                                [class.is-invalid]="itemForm.get('descripcionArticulo')?.invalid && itemForm.get('descripcionArticulo')?.touched"
+                                [class.is-valid]="itemForm.get('descripcionArticulo')?.valid && itemForm.get('descripcionArticulo')?.touched"
+                                formControlName="descripcionArticulo"
+                                placeholder="Describa el artículo..."
+                                rows="2"
+                                class="d-block d-md-none"
+                            ></textarea>
+                            <textarea
+                                id="descripcionArticuloMd"
+                                class="form-control d-none d-md-block"
+                                [class.is-invalid]="itemForm.get('descripcionArticulo')?.invalid && itemForm.get('descripcionArticulo')?.touched"
+                                [class.is-valid]="itemForm.get('descripcionArticulo')?.valid && itemForm.get('descripcionArticulo')?.touched"
+                                formControlName="descripcionArticulo"
+                                placeholder="Describa el artículo..."
+                                rows="3"
+                            ></textarea>
+                            <div class="invalid-feedback" *ngIf="itemForm.get('descripcionArticulo')?.invalid && itemForm.get('descripcionArticulo')?.touched">
+                                <small *ngIf="itemForm.get('descripcionArticulo')?.errors?.['required']">
+                                    La descripción es obligatoria
+                                </small>
+                                <small *ngIf="itemForm.get('descripcionArticulo')?.errors?.['minlength']">
+                                    La descripción debe tener al menos 10 caracteres
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Ubicación -->
+                        <div class="mb-3">
+                            <label for="ubicacion" class="form-label fw-semibold small">
+                                Ubicación <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="ubicacion"
+                                class="form-control form-control-sm form-control-md-lg"
+                                [class.is-invalid]="itemForm.get('ubicacion')?.invalid && itemForm.get('ubicacion')?.touched"
+                                [class.is-valid]="itemForm.get('ubicacion')?.valid && itemForm.get('ubicacion')?.touched"
+                                formControlName="ubicacion"
+                                placeholder="Ej: Lab A, Oficina 201..."
+                            />
+                            <div class="invalid-feedback" *ngIf="itemForm.get('ubicacion')?.invalid && itemForm.get('ubicacion')?.touched">
+                                <small *ngIf="itemForm.get('ubicacion')?.errors?.['required']">
+                                    La ubicación es obligatoria
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Estado Físico -->
+                        <div class="mb-3">
+                            <label for="estadoFisico" class="form-label fw-semibold small">
+                                Estado Físico <span class="text-danger">*</span>
+                            </label>
+                            <select
+                                id="estadoFisico"
+                                class="form-select form-select-sm form-select-md-lg"
+                                [class.is-invalid]="itemForm.get('estadoFisico')?.invalid && itemForm.get('estadoFisico')?.touched"
+                                [class.is-valid]="itemForm.get('estadoFisico')?.valid && itemForm.get('estadoFisico')?.touched"
+                                formControlName="estadoFisico"
+                            >
+                                <option value="">Seleccione estado</option>
+                                <option value="excelente">Excelente</option>
+                                <option value="bueno">Bueno</option>
+                                <option value="dañado">Dañado</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="itemForm.get('estadoFisico')?.invalid && itemForm.get('estadoFisico')?.touched">
+                                <small *ngIf="itemForm.get('estadoFisico')?.errors?.['required']">
+                                    Debe seleccionar un estado físico
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Observación -->
+                        <div class="mb-3 mb-md-4">
+                            <label for="observacion" class="form-label fw-semibold small">
+                                Observación <span class="text-danger">*</span>
+                            </label>
+                            <textarea
+                                id="observacion"
+                                class="form-control form-control-sm form-control-md-lg d-block d-md-none"
+                                [class.is-invalid]="itemForm.get('observacion')?.invalid && itemForm.get('observacion')?.touched"
+                                [class.is-valid]="itemForm.get('observacion')?.valid && itemForm.get('observacion')?.touched"
+                                formControlName="observacion"
+                                placeholder="Observaciones..."
+                                rows="2"
+                            ></textarea>
+                            <textarea
+                                id="observacionMd"
+                                class="form-control d-none d-md-block"
+                                [class.is-invalid]="itemForm.get('observacion')?.invalid && itemForm.get('observacion')?.touched"
+                                [class.is-valid]="itemForm.get('observacion')?.valid && itemForm.get('observacion')?.touched"
+                                formControlName="observacion"
+                                placeholder="Observaciones adicionales..."
+                                rows="3"
+                            ></textarea>
+                            <div class="invalid-feedback" *ngIf="itemForm.get('observacion')?.invalid && itemForm.get('observacion')?.touched">
+                                <small *ngIf="itemForm.get('observacion')?.errors?.['required']">
+                                    La observación es obligatoria
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje de éxito/error -->
+                        <div *ngIf="showSuccess" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            {{ successMessage }}
+                            <button type="button" class="btn-close" (click)="hideMessages()"></button>
+                        </div>
+
+                        <div *ngIf="showError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ errorMessage }}
+                            <button type="button" class="btn-close" (click)="hideMessages()"></button>
+                        </div>
+
+                        <!-- Botones responsive -->
+                        <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1"
+                                (click)="resetForm()"
+                            >
+                                Limpiar
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="btn btn-primary px-3 px-md-4 order-1 order-sm-2"
+                                [disabled]="itemForm.invalid || isLoading"
+                            >
+                                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                                {{ isLoading ? 'Guardando...' : 'Guardar Item' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

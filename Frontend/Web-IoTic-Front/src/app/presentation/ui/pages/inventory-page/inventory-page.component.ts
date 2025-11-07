@@ -27,7 +27,7 @@ export class InventoryPageComponent implements OnInit {
       key: 'agregar',
       title: 'Agreguemos un nuevo item',
       description: 'En esta seccion podras agregar un nuevo item al inventario.',
-      route: '/inventario/agregar'
+      route: 'add-item'
     },
     {
       key: 'prestamo',

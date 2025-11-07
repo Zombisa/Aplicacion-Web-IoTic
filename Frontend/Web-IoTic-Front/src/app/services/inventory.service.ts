@@ -43,7 +43,7 @@ export class InventoryService {
 addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        // Remover el id si existe (el backend lo asignará)
+        console.log("itema a guardar: " + device);
         return this.http.post<ItemDTO>(`${this.apiUrl}inventario/inventario/`, device, { headers });
       }),
       catchError(error => {
