@@ -8,6 +8,7 @@ import { InventoryPageComponent } from './presentation/ui/pages/inventory-page/i
 import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
+import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 
 export const routes: Routes = [
 
@@ -18,5 +19,6 @@ export const routes: Routes = [
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path:'inventario/add-item', component: AddItem},
-     {path: 'inventario/add-loan', component: AddLoan}
+     {path: 'inventario/add-loan', component: AddLoan},
+     {path: 'inventario/view-item/:id', component: ViewLoanItem}
 ];

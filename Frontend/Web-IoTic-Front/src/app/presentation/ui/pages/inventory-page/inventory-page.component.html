@@ -5,6 +5,17 @@
     <section class="page-title d-flex flex-column align-items-center">
       <h1 class="title">Inventario</h1>
       <p class=" text">{{messageWelcome}}</p>
+      <section class="resume container-fluid d-flex justify-content-center align-items-center">
+        <div class="row d-flex justify-content-center align-items-center">
+          <div *ngFor="let item of resumeArray; let i = index" class="col-md-3 col-sm-6 p-3 conte">
+            <div class=" text-center p-4 shadow-sm rounded">
+              <h4 class="text-capitalize">{{ item.key | titlecase }}</h4>
+              <p class="display-6 fw-bold">{{ item.value }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </section>
   </div>
 <section class="container-fluid dark-card">
@@ -21,18 +32,8 @@
     </div>
   </div>
 </section>
-<section class="resume container-fluid d-flex justify-content-center align-items-center">
-    <div class="row d-flex justify-content-center align-items-center">
-      <div *ngFor="let item of resumeArray; let i = index" class="col-md-3 col-sm-6 p-3 conte">
-        <div class=" text-center p-4 shadow-sm rounded">
-          <h4 class="text-capitalize">{{ item.key | titlecase }}</h4>
-          <p class="display-6 fw-bold">{{ item.value }}</p>
-        </div>
-      </div>
-    </div>
-</section>
 
 <section>
-  <app-inventory-table [inventoryData]="inventoryData"></app-inventory-table>
+  <app-inventory-table class="mt-4" [inventoryData]="inventoryData"></app-inventory-table>
 </section>
 

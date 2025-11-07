@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { IoanService } from '../../../../services/ioan.service';
+import { LoanService } from '../../../../services/Loan.service';
 import { InventoryService } from '../../../../services/inventory.service';
 import { Header } from '../../templates/header/header';
 import { IoanPeticion } from '../../../../models/Peticion/IoanPeticion';
-import { LoanDTO } from '../../../../models/DTO/IoanDTO';
+import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 
 @Component({
   selector: 'app-add-loan',
@@ -25,7 +25,7 @@ export class AddLoan implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private ioanService: IoanService,
+    private loanService: LoanService,
     private inventoryService: InventoryService
   ) {}
 
@@ -41,59 +41,68 @@ export class AddLoan implements OnInit {
       fecha_devolucion: [null]
     });
   }
+loadAvailableItems(): void {
+  this.inventoryService.getElectronicComponent().subscribe({
+    next: (items) => {
+      this.availableItems = items;
+    },
+    error: (error: unknown) => {
+      console.error('Error al cargar los items:', error);
+    }
+  });
+}
 
-  loadAvailableItems() {
-    this.inventoryService.getElectronicComponent().subscribe({
-      next: (items) => {
-        this.availableItems = items;
+onSubmit(): void {
+  if (this.loanForm.valid) {
+    this.isLoading = true;
+
+    const formValue = this.loanForm.value;
+
+    const loanData: IoanPeticion = {
+      nombre_persona: formValue.nombre_persona,
+      item_id: Number(formValue.item_id),
+      fecha_devolucion: formValue.fecha_devolucion || null
+    };
+
+    console.log('📦 Datos del préstamo a enviar:', loanData);
+
+    this.loanService.createLoan(loanData).subscribe({
+      next: (response: LoanDTO) => {
+        console.log('✅ Respuesta del servidor:', response);
+        this.isLoading = false;
+        this.showSuccess = true;
+        this.successMessage = 'Préstamo creado exitosamente.';
+        this.resetForm();
       },
-      error: (error) => {
-        console.error('Error al cargar items:', error);
+      error: (error: unknown) => {
+        console.error('❌ Error completo:', error);
+        this.isLoading = false;
+        this.showError = true;
+
+        // Si sabes que viene con estructura { error: { message: string } }
+        if (typeof error === 'object' && error && 'error' in error) {
+          const err = error as { error?: { message?: string } };
+          this.errorMessage = `Error al crear el préstamo: ${err.error?.message || 'Error desconocido'}`;
+        } else {
+          this.errorMessage = 'Error inesperado al crear el préstamo.';
+        }
       }
     });
+  } else {
+    Object.keys(this.loanForm.controls).forEach(key => {
+      this.loanForm.get(key)?.markAsTouched();
+    });
   }
+}
 
-  onSubmit() {
-    if (this.loanForm.valid) {
-      this.isLoading = true;
-      
-      const formValue = this.loanForm.value;
-      const loanData: IoanPeticion = {
-        nombre_persona: formValue.nombre_persona,
-        item_id: Number(formValue.item_id),
-        fecha_devolucion: formValue.fecha_devolucion || null
-      };
-
-      console.log("Datos del préstamo a enviar:", loanData);
-
-      this.ioanService.createLoan(loanData).subscribe({
-        next: (response: LoanDTO) => {
-          console.log("Respuesta del servidor:", response);
-          this.isLoading = false;
-          this.showSuccess = true;
-          this.successMessage = 'Préstamo creado exitosamente';
-          this.resetForm();
-        },
-        error: (error) => {
-          console.error("Error completo:", error);
-          this.isLoading = false;
-          this.showError = true;
-          this.errorMessage = `Error al crear el préstamo: ${error.error?.message || error.message}`;
-        }
-      });
-    } else {
-      Object.keys(this.loanForm.controls).forEach(key => {
-        this.loanForm.get(key)?.markAsTouched();
-      });
-    }
-  }
-
-  resetForm() {
+  // 🔹 Limpia el formulario
+  resetForm(): void {
     this.loanForm.reset();
     this.hideMessages();
   }
 
-  hideMessages() {
+  // 🔹 Oculta los mensajes de éxito/error
+  hideMessages(): void {
     this.showSuccess = false;
     this.showError = false;
   }

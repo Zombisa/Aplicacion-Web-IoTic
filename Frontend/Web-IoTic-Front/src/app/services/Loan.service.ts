@@ -2,13 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
-import { LoanDTO } from '../models/DTO/IoanDTO';
+import { LoanDTO } from '../models/DTO/LoanDTO';
 import { IoanPeticion } from '../models/Peticion/IoanPeticion';
 
 @Injectable({
   providedIn: 'root'
 })
-export class IoanService {
+export class LoanService {
   private apiUrl = 'http://localhost:8000/api/';
 
   constructor(
@@ -44,6 +44,21 @@ export class IoanService {
     );
   }
     /**
+   * Obtener préstamo por ID
+   */
+  getLoanById(id: number): Observable<LoanDTO> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.get<LoanDTO>(`${this.apiUrl}inventario/prestamos/1/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al obtener préstamo por ID:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+    /**
    * Crear un nuevo préstamo
    */
   createLoan(loanData: IoanPeticion): Observable<LoanDTO> {
@@ -59,5 +74,22 @@ export class IoanService {
         return throwError(() => error);
       })
     );
+
   }
+   returnLoan(id: number): Observable<LoanDTO> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const url = `${this.apiUrl}inventario/prestamos/${id}/devolver/`;
+        console.log(`Marcando préstamo ${id} como devuelto...`);
+        return this.http.put<LoanDTO>(url, {}, { headers });
+      }),
+      catchError(error => {
+        console.error('Error al marcar préstamo como devuelto:', error);
+        console.error('Status:', error.status);
+        console.error('Error body:', error.error);
+        return throwError(() => error);
+      })
+    );
+  }
+  
 }
