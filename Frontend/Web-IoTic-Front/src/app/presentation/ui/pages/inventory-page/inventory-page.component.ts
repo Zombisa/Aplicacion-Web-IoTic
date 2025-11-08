@@ -31,9 +31,15 @@ export class InventoryPageComponent implements OnInit {
     },
     {
       key: 'prestamo',
-      title: 'Añadammos un prestamo',
+      title: 'Añadamos un prestamo',
       description: 'En esta seccion podras pedir un prestamo.',
       route: 'add-loan'
+    },
+    {
+      key: 'listar_prestamos',
+      title: 'Ver prestamos vigentes',
+      description: 'En esta seccion podras listar los prestamos vigentess.',
+      route: 'view-item/1'
     },
   ];
   public inventoryData: ItemDTO[] = [];

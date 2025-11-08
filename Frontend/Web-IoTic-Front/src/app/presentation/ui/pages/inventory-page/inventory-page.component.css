@@ -1,12 +1,13 @@
 .banner-primary{
-  background-color: var(--color-secondary-light);
+  background-color: var(--color-primary);
   height: 70vh;
 }
 .title{
+  margin-top: 10rem;
   font-family: "Roboto", sans-serif;
   font: 600;
   font-size: clamp(1rem, 3rem, 5rem);
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .divider{
@@ -16,9 +17,11 @@
 }
 .text{
   font-family: "Roboto", sans-serif;
+  color: white;
 }
 .resume{
-  
+  color: white;
+  border-color: white;
 }
 .dark-card{
   padding: 5rem;
