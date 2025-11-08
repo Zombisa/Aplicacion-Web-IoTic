@@ -38,7 +38,7 @@ class Prestamo(models.Model):
     nombre_persona = models.CharField(max_length=100, default="Desconocido")
     item = models.ForeignKey(Inventario, on_delete=models.PROTECT, related_name='prestamos')
     fecha_prestamo = models.DateTimeField(auto_now_add=True)
-    fecha_devolucion = models.DateTimeField()
+    fecha_devolucion = models.DateTimeField(blank=True, null=True)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='prestado')
 
     def __str__(self):

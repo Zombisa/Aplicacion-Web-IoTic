@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     # Django REST
     'rest_framework',
+    'corsheaders',
 
     # Microservicios
     'apps.usuarios_roles',
@@ -62,9 +63,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     #"apps.usuarios_roles.middleware.firebase_auth_middleware",
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",  # frontend Angular
+]
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
