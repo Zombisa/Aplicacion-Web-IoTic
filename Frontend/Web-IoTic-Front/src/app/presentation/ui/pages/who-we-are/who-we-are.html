@@ -2,15 +2,15 @@
     <div class="header-wrapper">
         <app-header></app-header>
     </div>
-    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
-      <h1 class="title">¿Quienes somos?</h1>
-
+    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center   smooth-animation">
+      <h1 class="title animate-fadeInUp">¿Quienes somos?</h1>
     </div>
    
     <section class="container-fluid d-flex flex-column align-items-center sectionWhoAre">
       <div class="row container-fluid section-info-company">
         <div
-          class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block"
+          class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-fadeInUp smooth-animation"
+          [class]="'animate-delay-' + (i * 200 + 100)"
           *ngFor="let item of options; let i = index"
           [id]="item.title === 'Visión' ? 'mision-col' : null"
         >
@@ -31,28 +31,29 @@
       </div>
     </section>
 
-    <section class="section-objetives container-fluid s">
+    <section class="section-objetives container-fluid s animate-zoomIn animate-delay-400 smooth-animation">
       <div>
-        <h2 class=" subtitle-secundary text-center mb-5">Nuestros Objetivos</h2>
-
+        <h2 class="subtitle-secundary text-center mb-5">Nuestros Objetivos</h2>
       </div>
       <div class="container-fluid d-flex justify-content-center align-items-center">
         <div class="row container-fluid d-flex justify-content-center align-items-center section-objetives">
           <div
-            class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives"
-            *ngFor="let objetivo of objetivos"
+            class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives animate-slideInRight smooth-animation"
+            [class]="'animate-delay-' + (i * 100 + 500)"
+            *ngFor="let objetivo of objetivos; let i = index"
           >
             <h3 class="title-objective mb-2">{{ objetivo.title }}</h3>
-            <p class="description-objective  description-objetives">
+            <p class="description-objective description-objetives">
               {{ objetivo.description }}
             </p>
           </div>
         </div>
       </div>
     </section>
-    <section class="container-fluid section-history d-flex flex-column align-items-start">
+
+    <section class="container-fluid section-history d-flex flex-column align-items-start animate-slideInLeft animate-delay-300 smooth-animation">
         <div class="">
-          <h2 class=" text-center mb-5" id="subtitle_history">Historia</h2>
+          <h2 class="text-center mb-5" id="subtitle_history">Historia</h2>
         </div>
         
         <div>
@@ -61,5 +62,4 @@
           </p>
         </div>
     </section>
-
 </div>

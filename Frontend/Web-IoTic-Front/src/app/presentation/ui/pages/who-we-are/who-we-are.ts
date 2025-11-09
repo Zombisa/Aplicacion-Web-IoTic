@@ -1,18 +1,20 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { Header } from '../../templates/header/header';
 import { time } from 'console';
 import { deserialize } from 'v8';
 import { title } from 'process';
 import { HttpClient } from '@angular/common/http';
 
+
 @Component({
   selector: 'app-who-we-are',
   imports: [CommonModule, Header],
   templateUrl: './who-we-are.html',
-  styleUrl: './who-we-are.css'
+  styleUrl: './who-we-are.css',
 })
-export class WhoWeAre implements OnInit{
+export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
+    private observer!: IntersectionObserver;
     public options: any = [
     {
       title: 'Misión',
@@ -65,15 +67,66 @@ export class WhoWeAre implements OnInit{
   
   ]
   history: string = '';
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
-   this.http.get('assets/historia.txt', { responseType: 'text' })
-      .subscribe((data) => {
-        this.history = data;
-      });
-  }
   objectKeys = Object.keys;
 
+
+  constructor(
+    private http: HttpClient,
+    private elementRef: ElementRef,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+
+  ngOnInit(): void {
+    this.http
+      .get('assets/historia.txt', { responseType: 'text' })
+      .subscribe((data) => (this.history = data));
+  }
+
+  ngAfterViewInit(): void {
+    // Solo ejecuta animaciones si está en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupScrollAnimations();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  private setupScrollAnimations(): void {
+    // Verifica también por si acaso
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const options = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const element = entry.target as HTMLElement;
+          element.classList.add('animate-visible');
+
+          // Para animaciones escalonadas
+          if (element.classList.contains('staggered')) {
+            this.addStaggeredAnimation(element);
+          }
+        }
+      });
+    }, options);
+
+    // Observar los elementos animables
+    const animatedElements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((element: Element) => this.observer.observe(element));
+  }
+
+  private addStaggeredAnimation(container: HTMLElement): void {
+    const children = container.querySelectorAll('.stagger-item');
+    children.forEach((child, index) => {
+      setTimeout(() => child.classList.add('animate-visible'), index * 200);
+    });
+  }
 }
