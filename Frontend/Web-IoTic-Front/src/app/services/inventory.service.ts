@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, from, map, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, from, map, retry, switchMap, throwError, timer } from 'rxjs';
 import { environment } from '../environment/environment';
 import { ElectronicComponent } from '../models/electronicComponent.model';
 import { AuthService } from './auth.service';
@@ -10,6 +10,8 @@ import { ItemDTOPeticion } from '../models/Peticion/ItemDTOPeticion';
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private apiUrl = 'http://localhost:8000/api/';
+  private readonly MAX_RETRIES = 3;
+  private readonly RETRY_DELAY = 1000; // 1 segundo
 
   constructor(
     private http: HttpClient,
@@ -17,18 +19,32 @@ export class InventoryService {
   ) {}
   private getAuthHeaders(): Observable<HttpHeaders> {
     return from(this.authService.getToken()).pipe(
-      map(token => {
-        if (!token) {
-          throw new Error('No se pudo obtener el token de autenticación');
+      // Reintentar 3 veces antes de fallar
+      retry({
+        count: this.MAX_RETRIES,
+        delay: (error, retryCount) => {
+          console.warn(`Intento ${retryCount + 1}/${this.MAX_RETRIES} para obtener token...`);
+          return timer(this.RETRY_DELAY);
         }
+      }),
+      // Validar que el token exista
+      map(token => {
+        if (!token || token.trim() === '') {
+          throw new Error('Token de autenticación vacío o inválido');
+        }
+        
         return new HttpHeaders({
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         });
+      }),
+      // Manejo de errores final
+      catchError(error => {
+        console.error('Error crítico al obtener headers de autenticación:', error);
+        return throwError(() => new Error('No se pudo obtener autenticación después de varios intentos. Por favor, inicia sesión nuevamente.'));
       })
     );
   }
-
   getElectronicComponent(): Observable<ItemDTO[]> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => 

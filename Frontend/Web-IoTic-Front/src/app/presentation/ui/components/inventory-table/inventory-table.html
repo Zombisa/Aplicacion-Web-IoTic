@@ -1,41 +1,112 @@
-<div class="table-responsive mt-4">
-  <table class="table table-striped table-hover align-middle text-center">
-    <thead class="">
-      <tr>
-        <th>N° Serie</th>
-        <th>Descripción</th>
-        <th>Cant. Disponible</th>
-        <th>Ubicación</th>
-        <th>Estado Administrativo</th>
-      </tr>
-    </thead>
+<div class="inventory-container">
+  <!-- Sección de Filtros -->
+  <div class="filters-section">
+    <div class="filters-header">
+      <h3>Filtros de Búsqueda</h3>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="filteredData.length < inventoryData.length">
+        Limpiar Filtros
+      </button>
+    </div>
 
-    <tbody>
-      <tr *ngFor="let item of inventoryData">
-        <td>{{ item.numeroSerieActivo }}</td>
-        <td>{{ item.descripcionArticulo }}</td>
-        <td>{{ item.cantidad_disponible }}</td>
-        <td>{{ item.ubicacion }}</td>
-        <td>
-          <span
-            class="badge"
-            [ngClass]="{
-              'bg-success': item.estadoAdministrativo === 'disponible',
-              'bg-warning text-dark': item.estadoAdministrativo === 'prestado',
-              'bg-secondary': item.estadoAdministrativo === 'asignado',
-              'bg-danger': item.estadoAdministrativo === 'dado de baja'
-            }"
-          >
-            {{ item.estadoAdministrativo }}
-          </span>
-        </td>
-        
-      </tr>
-    </tbody>
-  </table>
+    <div class="filters-grid">
+      <!-- Búsqueda por texto -->
+      <div class="filter-group">
+        <label for="searchText">Buscar:</label>
+        <input
+          type="text"
+          id="searchText"
+          [(ngModel)]="filters.searchText"
+          (input)="applyFilters()"
+          placeholder="Descripcción, serie o observación..."
+          class="filter-input"
+        />
+      </div>
 
-  <!-- Mensaje si no hay datos -->
-  <div *ngIf="inventoryData.length === 0" class="text-center text-muted py-3">
-    No hay elementos en el inventario.
+      <!-- Filtro de Ubicación -->
+      <div class="filter-group">
+        <label for="ubicacion">Ubicación:</label>
+        <select
+          id="ubicacion"
+          [(ngModel)]="filters.ubicacion"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todas las ubicaciones</option>
+          <option *ngFor="let location of locations" [value]="location">
+            {{ location }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro de Estado Físico -->
+      <div class="filter-group">
+        <label for="estadoFisico">Estado Físico:</label>
+        <select
+          id="estadoFisico"
+          [(ngModel)]="filters.estadoFisico"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosFisicos" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro de Estado Administrativo -->
+      <div class="filter-group">
+        <label for="estadoAdministrativo">Estado Administrativo:</label>
+        <select
+          id="estadoAdministrativo"
+          [(ngModel)]="filters.estadoAdministrativo"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosAdministrativos" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Información de resultados -->
+    <div class="results-info">
+      Mostrando <strong>{{ getResultsCount() }}</strong> de <strong>{{ inventoryData.length }}</strong> elementos
+    </div>
   </div>
+
+  <!-- Tabla de Inventario -->
+  <div class="table-wrapper">
+    <table class="inventory-table" >
+      <thead>
+        <tr>
+          <th>Serie</th>
+          <th>Descripción</th>
+          <th>Disponible</th>
+          <th>Prestada</th>
+          <th>Ubicación</th>
+          <th>Estado Físico</th>
+          <th>Estado Admin</th>
+          <th>Observación</th>
+          <th>Fecha Registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredData" class="table-row">
+          <td>{{ item.numeroSerieActivo }}</td>
+          <td>{{ item.descripcionArticulo }}</td>
+          <td class="text-center">{{ item.cantidad_disponible }}</td>
+          <td class="text-center">{{ item.cantidad_prestada }}</td>
+          <td>{{ item.ubicacion }}</td>
+          <td><span class="badge" [ngClass]="'badge-' + item.estadoFisico.toLowerCase()">{{ item.estadoFisico }}</span></td>
+          <td><span class="badge" [ngClass]="'badge-' + item.estadoAdministrativo.toLowerCase()">{{ item.estadoAdministrativo }}</span></td>
+          <td>{{ item.observacion || '-' }}</td>
+          <td>{{ item.fecha_registro | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    
 </div>

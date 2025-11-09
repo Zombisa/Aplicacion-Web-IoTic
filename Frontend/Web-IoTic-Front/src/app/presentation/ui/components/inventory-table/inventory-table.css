@@ -1,23 +1,224 @@
-.table-responsive {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding-left: 7rem;
-  padding-right: 7rem;
-  padding-top: 7rem;
-
+.inventory-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
 }
 
-table {
+/* ========================================
+   SECCIÓN DE FILTROS
+   ======================================== */
+
+.filters-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.filters-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.btn-clear {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-clear:hover {
+  background-color: #c82333;
+}
+
+/* Grid de filtros */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filter-input,
+.filter-select {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Información de resultados */
+.results-info {
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* ========================================
+   TABLA DE INVENTARIO
+   ======================================== */
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
   background-color: white;
 }
 
-th {
+.inventory-table thead {
+  background-color: #202136;
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.inventory-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.inventory-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+.table-row:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+.table-row:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Badges para estados */
+.badge {
+  padding: 0.35rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-.badge {
-  font-size: 0.85rem;
-  padding: 0.5em 0.75em;
-  border-radius: 10px;
+.badge-bueno {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-regular {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge-malo {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.badge-disponible {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.badge-prestado {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.badge-dañado {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Mensaje de sin resultados */
+.no-results {
+  padding: 2rem;
+  text-align: center;
+  background-color: white;
+  color: #999;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-results p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .inventory-container {
+    padding: 1rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-table {
+    font-size: 0.8rem;
+  }
+
+  .inventory-table th,
+  .inventory-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 }
