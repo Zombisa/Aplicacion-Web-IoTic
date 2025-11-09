@@ -1,65 +1,68 @@
 <div class="who-we-are-container">
-    <div class="header-wrapper">
-        <app-header></app-header>
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- Banner principal -->
+  <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
+    <h1 class="title">¿Quiénes somos?</h1>
+  </div>
+ 
+  <!-- Sección Misión, Visión, Valores -->
+  <section class="container-fluid d-flex flex-column align-items-center sectionWhoAre">
+    <div class="row container-fluid section-info-company">
+      <div
+        class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-on-scroll animate-fadeInUp"
+        *ngFor="let item of options; let i = index"
+        [id]="item.title === 'Visión' ? 'mision-col' : null"
+      >
+        <div class="d-flex flex-column justify-content-center align-items-start mb-5">
+          <h2 class="subtitle mb-4">{{ item.title }}</h2>
+
+          <p *ngIf="typeof(item.description) === 'string'" class="description-items-company">
+            {{ item.description }}
+          </p>
+
+          <ul *ngIf="typeof(item.description) === 'object'" class="description-items-company">
+            <li *ngFor="let key of objectKeys(item.description)">
+              <strong>{{ key }}:</strong> {{ item.description[key] }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center   smooth-animation">
-      <h1 class="title animate-fadeInUp">¿Quienes somos?</h1>
+  </section>
+
+  <!-- Sección Objetivos -->
+  <section class="section-objetives container-fluid">
+    <div>
+      <h2 class="subtitle-secundary text-center mb-5 animate-on-scroll animate-fadeInUp">Nuestros Objetivos</h2>
     </div>
-   
-    <section class="container-fluid d-flex flex-column align-items-center sectionWhoAre">
-      <div class="row container-fluid section-info-company">
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+      <div class="row container-fluid d-flex justify-content-center align-items-center section-objetives">
         <div
-          class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-fadeInUp smooth-animation"
-          [class]="'animate-delay-' + (i * 200 + 100)"
-          *ngFor="let item of options; let i = index"
-          [id]="item.title === 'Visión' ? 'mision-col' : null"
+          class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives animate-on-scroll animate-slideInRight"
+          *ngFor="let objetivo of objetivos; let i = index"
         >
-          <div class="d-flex flex-column justify-content-center align-items-start mb-5">
-            <h2 class="subtitle mb-4">{{ item.title }}</h2>
-
-            <p *ngIf="typeof item.description === 'string'" class="description-items-company">
-              {{ item.description }}
-            </p>
-
-            <ul *ngIf="typeof item.description === 'object'" class="description-items-company">
-              <li *ngFor="let key of objectKeys(item.description)">
-                <strong>{{ key }}</strong> {{ item.description[key] }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-objetives container-fluid s animate-zoomIn animate-delay-400 smooth-animation">
-      <div>
-        <h2 class="subtitle-secundary text-center mb-5">Nuestros Objetivos</h2>
-      </div>
-      <div class="container-fluid d-flex justify-content-center align-items-center">
-        <div class="row container-fluid d-flex justify-content-center align-items-center section-objetives">
-          <div
-            class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives animate-slideInRight smooth-animation"
-            [class]="'animate-delay-' + (i * 100 + 500)"
-            *ngFor="let objetivo of objetivos; let i = index"
-          >
-            <h3 class="title-objective mb-2">{{ objetivo.title }}</h3>
-            <p class="description-objective description-objetives">
-              {{ objetivo.description }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container-fluid section-history d-flex flex-column align-items-start animate-slideInLeft animate-delay-300 smooth-animation">
-        <div class="">
-          <h2 class="text-center mb-5" id="subtitle_history">Historia</h2>
-        </div>
-        
-        <div>
-          <p id="description-history">
-            {{ history }}
+          <h3 class="title-objective mb-2">{{ objetivo.title }}</h3>
+          <p class="description-objective description-objetives">
+            {{ objetivo.description }}
           </p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Historia -->
+  <section class="container-fluid section-history d-flex flex-column align-items-start animate-on-scroll animate-slideInLeft">
+    <div>
+      <h2 class="text-center mb-5" id="subtitle_history">Historia</h2>
+    </div>
+    
+    <div>
+      <p id="description-history">
+        {{ history }}
+      </p>
+    </div>
+  </section>
 </div>

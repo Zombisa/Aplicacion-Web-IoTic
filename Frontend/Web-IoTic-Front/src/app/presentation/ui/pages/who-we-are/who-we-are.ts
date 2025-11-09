@@ -70,6 +70,7 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
   objectKeys = Object.keys;
 
 
+
   constructor(
     private http: HttpClient,
     private elementRef: ElementRef,
@@ -96,37 +97,39 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
   }
 
   private setupScrollAnimations(): void {
-    // Verifica también por si acaso
     if (typeof IntersectionObserver === 'undefined') return;
 
     const options = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.15, // Se activa cuando el 15% del elemento es visible
+      rootMargin: '0px 0px -100px 0px', // Se activa un poco antes de que sea totalmente visible
     };
 
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
-          element.classList.add('animate-visible');
-
-          // Para animaciones escalonadas
-          if (element.classList.contains('staggered')) {
-            this.addStaggeredAnimation(element);
-          }
+          
+          // Agregar la clase que dispara la animación
+          element.classList.add('is-visible');
+          
+          // Opcional: dejar de observar después de que se anime
+          this.observer?.unobserve(element);
         }
       });
     }, options);
 
-    // Observar los elementos animables
+    // Observar todos los elementos con la clase animate-on-scroll
     const animatedElements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach((element: Element) => this.observer.observe(element));
+    animatedElements.forEach((element: Element) => {
+      this.observer?.observe(element);
+    });
   }
 
-  private addStaggeredAnimation(container: HTMLElement): void {
-    const children = container.querySelectorAll('.stagger-item');
-    children.forEach((child, index) => {
-      setTimeout(() => child.classList.add('animate-visible'), index * 200);
-    });
+  // Método para acceder a Object.keys en el template
+
+
+  // Método para usar typeof en el template
+  typeof(value: any): string {
+    return typeof value;
   }
 }

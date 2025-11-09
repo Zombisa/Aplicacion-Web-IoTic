@@ -36,7 +36,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   /* Remover display: flex, justify-content, align-items */
 }
 
-/* Keyframes para las animaciones */
+/* ========================================
+   ANIMACIONES - Keyframes
+   ======================================== */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -70,25 +73,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    opacity: 1;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -100,59 +84,42 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
-/* Clases de animación */
-.animate-fadeInUp {
-  animation: fadeInUp 2s ease-out forwards;
+/* ========================================
+   ESTADOS INICIALES
+   ======================================== */
+
+.animate-on-scroll {
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
-.animate-slideInLeft {
+/* ========================================
+   CLASES DE ANIMACIÓN ACTIVAS
+   ======================================== */
+
+.animate-on-scroll.animate-fadeInUp.is-visible {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-slideInLeft.is-visible {
   animation: slideInLeft 0.8s ease-out forwards;
 }
 
-.animate-slideInRight {
+.animate-on-scroll.animate-slideInRight.is-visible {
   animation: slideInRight 0.8s ease-out forwards;
 }
 
-.animate-bounceIn {
-  animation: bounceIn 1s ease-out forwards;
-}
-
-.animate-zoomIn {
+.animate-on-scroll.animate-zoomIn.is-visible {
   animation: zoomIn 0.6s ease-out forwards;
 }
 
-/* Delays para efectos escalonados */
-.animate-delay-100 {
-  animation-delay: 0.1s;
-}
+/* ========================================
+   BANNER PRINCIPAL
+   ======================================== */
 
-.animate-delay-200 {
-  animation-delay: 0.2s;
-}
-
-.animate-delay-300 {
-  animation-delay: 0.3s;
-}
-
-.animate-delay-400 {
-  animation-delay: 0.4s;
-}
-
-.animate-delay-500 {
-  animation-delay: 0.5s;
-}
-
-/* Estados iniciales para evitar flash */
-.animate-fadeInUp,
-.animate-slideInLeft,
-.animate-slideInRight,
-.animate-bounceIn,
-.animate-zoomIn {
+.banner-primary .title {
+  animation: fadeInUp 1s ease-out forwards;
   opacity: 0;
-}
-
-/* Configuración para animaciones más suaves */
-.smooth-animation {
-  will-change: transform, opacity;
-  backface-visibility: hidden;
+  animation-delay: 0.2s;
 }
