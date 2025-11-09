@@ -4,8 +4,9 @@ import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../environment/environment';
+
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
