@@ -9,6 +9,7 @@ import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
+import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
 
 export const routes: Routes = [
 
@@ -20,5 +21,6 @@ export const routes: Routes = [
      {path: 'who-we-are', component: WhoWeAre},
      {path:'inventario/add-item', component: AddItem},
      {path: 'inventario/add-loan', component: AddLoan},
-     {path: 'inventario/view-item/:id', component: ViewLoanItem}
+     {path: 'inventario/view-item/:id', component: ViewLoanItem},
+     {path: 'productivity', component: ProductivityPage}
 ];

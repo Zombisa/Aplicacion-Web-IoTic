@@ -1,0 +1,46 @@
+.banner-primary{
+    height: 55vh;
+    background-color: var(--color-secondary-light);
+    
+}
+.block-text-primary {
+  padding-left: 2rem; /* valor por defecto en pantallas pequeñas */
+}
+.divider{
+    height: 3px;
+    width: 15rem;
+    background-color: var(--color-secondary-dark);
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+.section-banner{
+    color: var(--color-primary);
+    height: 30vh;
+}
+.section-banner p{
+    font-size: clamp(3vh, 4vh, 5vh);
+}
+
+.section-options{
+    background-color: var(--color-secondary-light);
+}
+.block-options{
+    width: 80%;
+    margin-top: 3rem;
+}
+
+.card-route {
+    height: 15rem;
+    background-color: var(--color-primary);
+    color: aliceblue;
+}
+.card-route h3{
+    font-size: clamp(1rem, 1.2rem, 1.5rem);
+}
+/* A partir de cierto ancho (por ejemplo 992px = pantallas grandes) */
+@media (min-width: 992px) {
+  .block-text-primary {
+    padding-left: 8rem;
+    
+  }
+}
