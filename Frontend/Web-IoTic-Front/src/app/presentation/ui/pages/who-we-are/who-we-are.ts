@@ -5,6 +5,7 @@ import { time } from 'console';
 import { deserialize } from 'v8';
 import { title } from 'process';
 import { HttpClient } from '@angular/common/http';
+import { ScrollAnimationServices } from '../../../../services/scroll-animation.service';
 
 
 @Component({
@@ -74,7 +75,8 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
   constructor(
     private http: HttpClient,
     private elementRef: ElementRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+     private scrollAnimations: ScrollAnimationServices
   ) {}
 
   ngOnInit(): void {
@@ -86,50 +88,14 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
   ngAfterViewInit(): void {
     // Solo ejecuta animaciones si está en el navegador
     if (isPlatformBrowser(this.platformId)) {
-      this.setupScrollAnimations();
+      this.scrollAnimations.observeElements(this.elementRef.nativeElement);
     }
   }
 
   ngOnDestroy(): void {
     if (this.observer) {
-      this.observer.disconnect();
+       this.scrollAnimations.disconnect();
     }
   }
 
-  private setupScrollAnimations(): void {
-    if (typeof IntersectionObserver === 'undefined') return;
-
-    const options = {
-      threshold: 0.15, // Se activa cuando el 15% del elemento es visible
-      rootMargin: '0px 0px -100px 0px', // Se activa un poco antes de que sea totalmente visible
-    };
-
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const element = entry.target as HTMLElement;
-          
-          // Agregar la clase que dispara la animación
-          element.classList.add('is-visible');
-          
-          // Opcional: dejar de observar después de que se anime
-          this.observer?.unobserve(element);
-        }
-      });
-    }, options);
-
-    // Observar todos los elementos con la clase animate-on-scroll
-    const animatedElements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach((element: Element) => {
-      this.observer?.observe(element);
-    });
-  }
-
-  // Método para acceder a Object.keys en el template
-
-
-  // Método para usar typeof en el template
-  typeof(value: any): string {
-    return typeof value;
-  }
 }

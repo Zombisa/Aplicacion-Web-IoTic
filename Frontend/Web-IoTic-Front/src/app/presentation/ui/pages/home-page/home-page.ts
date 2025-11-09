@@ -1,7 +1,8 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, Inject, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Header } from '../../templates/header/header';
+import { ScrollAnimationServices } from '../../../../services/scroll-animation.service';
 declare var bootstrap: any;
 
 @Component({
@@ -10,8 +11,13 @@ declare var bootstrap: any;
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
-export class HomePage implements AfterViewInit{
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+export class HomePage implements AfterViewInit, AfterViewInit, OnDestroy{
+
+      private observer!: IntersectionObserver;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private scrollAnimations: ScrollAnimationServices,
+    private elementRef: ElementRef,
+     ) {}
+
     public mensajes: string[] = [
     '¡Bienvenido! Únete a nuestra comunidad y accede a experiencias exclusivas. Regístrate ahora y da el primer paso hacia nuevas oportunidades.',
     'Desde el año 2000 un grupo de profesores del Departamento de Sistemas de la Universidad del Cauca asignados al naciente Programa de Ingeniería de Sistemas, unieron sus intereses para conformar lo que ahora es el Grupo de tecnologías de la Información',
@@ -41,5 +47,14 @@ export class HomePage implements AfterViewInit{
       }
     }, 10);
   }
+  if (isPlatformBrowser(this.platformId)) {
+      this.scrollAnimations.observeElements(this.elementRef.nativeElement);
+    }
 }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+       this.scrollAnimations.disconnect();
+    }
+  }
 }
