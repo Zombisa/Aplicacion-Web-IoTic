@@ -15,7 +15,7 @@ def crear_usuario(data):
         uid_firebase = user_record.uid
 
         # Asignar rol (claim) en Firebase
-        auth.set_custom_user_claims(uid_firebase, {'role': data['rol'].nombre})
+        asignar_rol_firebase(uid_firebase, data['rol'].nombre)
 
         # 2. Guardar usuario en PostgreSQL
         usuario = Usuario.objects.create(
@@ -72,3 +72,15 @@ def crear_usuario(data):
 
         # Re-lanzar la excepción para que la vista maneje la respuesta
         raise Exception(f"Error al crear usuario: {str(e)}")
+    
+    
+def asignar_rol_firebase(uid_firebase, rol_nombre):
+    """
+    Asigna un rol al usuario modificando sus custom claims en Firebase.
+    """
+    try:
+        auth.set_custom_user_claims(uid_firebase, {"role": rol_nombre})
+        return True
+    except Exception as e:
+        print(f"Error asignando rol: {e}")
+        return False
