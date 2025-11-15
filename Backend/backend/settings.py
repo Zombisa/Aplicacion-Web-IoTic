@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # Microservicios
     'apps.usuarios_roles',
     'apps.inventario',
+    'apps.informacion',
 ]
 
 MIDDLEWARE = [

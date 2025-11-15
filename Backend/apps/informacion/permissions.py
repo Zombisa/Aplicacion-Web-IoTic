@@ -1,0 +1,34 @@
+from rest_framework.response import Response
+from firebase_admin import auth
+from rest_framework import status
+
+class verificarToken():
+    def validarRol(request):
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return Response({'error': 'Token no proporcionado'}, status=status.HTTP_401_UNAUTHORIZED)
+        token = auth_header.split(' ')[1]
+        
+        try:
+            # Verificar token y obtener datos del usuario actual
+            decoded_token = auth.verify_id_token(token)
+            role = decoded_token.get('role')
+            
+            if role != 'admin' and role != 'mentor':
+                return None
+            return True
+        except Exception as e:
+            return Response({'error': 'Token inválido o expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    def obtenerUID(request):
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return None
+        token = auth_header.split(' ')[1]
+        
+        try:
+            decoded_token = auth.verify_id_token(token)
+            uid = decoded_token.get('user_id')
+            return uid
+        except Exception as e:
+            return None
