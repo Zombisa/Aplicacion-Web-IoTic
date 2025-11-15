@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Usuario, Rol
+from .services import crear_usuario, asignar_rol_firebase
 from .serializers import UsuarioSerializer, RolSerializer
 
 from django.views.decorators.csrf import csrf_exempt
@@ -94,3 +95,19 @@ def crear_usuario_admin(request):
         return Response({'error': f'Error al crear usuario: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': f'Error al asignar rol: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def asignar_rol(request):
+    uid = request.data.get("uid")
+    rol = request.data.get("rol")
+
+    if not uid or not rol:
+        return Response({"error": "uid y rol son requeridos"}, status=400)
+
+    exito = asignar_rol_firebase(uid, rol)
+
+    if not exito:
+        return Response({"error": "No se pudo asignar el rol"}, status=500)
+
+    return Response({"message": f"Rol '{rol}' asignado correctamente al usuario {uid}"})

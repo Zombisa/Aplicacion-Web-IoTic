@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a50a7156-46b0-48fa-a6a8-6707b4cfe728",
+		"_postman_id": "86a78b62-0988-4042-9e03-c0d395367a3b",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38361461"
+		"_exporter_id": "40286637"
 	},
 	"item": [
 		{
@@ -37,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/inventario/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -49,8 +49,7 @@
 							"path": [
 								"api",
 								"inventario",
-								"inventario",
-								""
+								"items"
 							]
 						}
 					},
@@ -73,7 +72,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"numeroSerieActivo\": 13878,\r\n  \"descripcionArticulo\": \"taza\",\r\n  \"ubicacion\": \"Salon 101\",\r\n  \"estadoFisico\": \"excelente\",\r\n  \"observacion\": \"Sin caja, se deja dentro de caja 1\"\r\n}\r\n",
+							"raw": "{\r\n    \"descripcion\": \"Osciloscopio Tektronix 100MHz\",\r\n    \"estado_fisico\": \"Bueno\",\r\n    \"estado_admin\": \"Disponible\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +80,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/inventario/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -93,7 +92,7 @@
 							"path": [
 								"api",
 								"inventario",
-								"inventario",
+								"items",
 								""
 							]
 						}
@@ -117,7 +116,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"estadoAdministrativo\" : \"dado de baja\"\r\n}\r\n",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -125,7 +124,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/inventario/7/darDeBaja/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/dar-baja/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -137,9 +136,9 @@
 							"path": [
 								"api",
 								"inventario",
-								"inventario",
-								"7",
-								"darDeBaja",
+								"items",
+								"1",
+								"dar-baja",
 								""
 							]
 						}
@@ -163,7 +162,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ubicacion\": \"Afuera del Salon 101\",\r\n  \"observacion\": \"Se quemo\"\r\n}",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Dañado\",\r\n  \"estado_admin\": \"No prestar\",\r\n  \"observacion\": \"Se quemo\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,7 +170,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/inventario/1/actualizar/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -183,9 +182,8 @@
 							"path": [
 								"api",
 								"inventario",
-								"inventario",
-								"1",
-								"actualizar",
+								"items",
+								"2",
 								""
 							]
 						}
@@ -208,7 +206,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/inventario/7/eliminar/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -220,9 +218,8 @@
 							"path": [
 								"api",
 								"inventario",
-								"inventario",
-								"7",
-								"eliminar",
+								"items",
+								"1",
 								""
 							]
 						}
@@ -286,7 +283,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre_persona\": \"Sweet Johson\",\r\n  \"item_id\": 6,\r\n  \"fecha_devolucion\": \"2025-11-10\"\r\n}\r\n",
+							"raw": "{\r\n  \"item_id\": 1,\r\n  \"nombre_persona\": \"Juan Pérez\",\r\n  \"cedula\": \"1234567890\",\r\n  \"telefono\": \"3001234567\",\r\n  \"correo\": \"juan@mail.com\",\r\n  \"direccion\": \"Calle 123\",\r\n  \"fecha_limite\": \"2025-11-30T12:00:00Z\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -336,7 +333,7 @@
 							"raw": "{\r\n  \"nombre_persona\": \"Pipe Gómez\",\r\n  \"item_id\": 1,\r\n  \"fecha_devolucion\": null\r\n}\r\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/3/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -349,7 +346,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"3",
+								"1",
 								""
 							]
 						}
@@ -381,7 +378,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/4/devolver/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/devolver/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -394,8 +391,44 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"4",
+								"1",
 								"devolver",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar histórico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/historico/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"historico",
 								""
 							]
 						}
@@ -408,35 +441,23 @@
 			"name": "Roles",
 			"item": [
 				{
-					"name": "asignar rol por admin",
+					"name": "asignar rol",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1YTAwNWU5N2NiMWU0MjczMDBlNTJjZGQ1MGYwYjM2Y2Q4MDYyOWIiLCJ0eXAiOiJKV1QifQ.eyJyb2xlIjoiYWRtaW4iLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaW90aWMtc2VtaWxsZXJvIiwiYXVkIjoiaW90aWMtc2VtaWxsZXJvIiwiYXV0aF90aW1lIjoxNzYwMzc1MzAxLCJ1c2VyX2lkIjoiOUV1M0tHTGVhaWhhcnhVSUs5WXpZcWVMVnZsMSIsInN1YiI6IjlFdTNLR0xlYWloYXJ4VUlLOVl6WXFlTFZ2bDEiLCJpYXQiOjE3NjAzNzUzMDEsImV4cCI6MTc2MDM3ODkwMSwiZW1haWwiOiJhZG1pbkBwcnVlYmEuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImFkbWluQHBydWViYS5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.d-MqvDbURICyHDrlPBN5fl1ss3kvMpI16RELeNhBnwt-Cd7ppavBp2_5h88RSAvgqYjN2zZhupPZsJAVH8VBbebrZCYFwn2M_J6qmizTWYL1mHD7Oq_yOZ4mQ1iRCeu_NZAPPWXuA9ZOtHYvblRnL4easU_eZbW7dEcLM2M8KZA8VIEtOoZaOa8xho74QRwu4Fntq7GhlmzUn3sLkZDdGvoCbZBhjkF1iy0kxoFGOS-3G9voPk0s0Kn26Wpklg_qh_DqwjhdLkxrMbmMDXwfzcqhJUXr_8nD5do2cZANJ2njt2fzVDdTlADwCMkFecBWev2saqpWQ0ZcFnniU-jKkQ",
-								"description": "token del admin",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1YTAwNWU5N2NiMWU0MjczMDBlNTJjZGQ1MGYwYjM2Y2Q4MDYyOWIiLCJ0eXAiOiJKV1QifQ.eyJyb2xlIjoibWVudG9yIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2FwbGljYWNpb24td2ViLWlvdGljIiwiYXVkIjoiYXBsaWNhY2lvbi13ZWItaW90aWMiLCJhdXRoX3RpbWUiOjE3NjAwNzkzMDcsInVzZXJfaWQiOiJiWFRiYkpwTGczZVNXNWE5R1JlTTJrWmw4SnUyIiwic3ViIjoiYlhUYmJKcExnM2VTVzVhOUdSZU0ya1psOEp1MiIsImlhdCI6MTc2MDA3OTMwNywiZXhwIjoxNzYwMDgyOTA3LCJlbWFpbCI6Impob2FuQGNvcnJlby5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiamhvYW5AY29ycmVvLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.dQBrrezq46AtAL0L-PVi0o7w8SGBFhmwmIWzqPASPiiBsr1mYEROjAaNNPucdBdslmLVCZZVpBYY7zw72F9kpcpsm9vhQVErPq77GLnDkO8D5iCqMgttYKzKR5y9uX1j7twkHxSFFBPCsSfrUTdFEoyKiBWW-hH32pHIPUQlk8V7WE3mVEQjE2RJHTolg1IkzihJHX72tGjP_Wh-LiZbQDU5CgkezQAHYwjI4MUgW1AjZPTFFjR_qXdkk2wmVU-xEMnndZhWe18r7IQmC_VNPdUtkDi6Xd5LZE9kItR5DX8d-eEf3uOXKSCe4TFhdAVT1BQEGSR4FqMA52aLKfAOuQ",
-								"description": "token de mentor, (token invalido)",
-								"type": "text",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"miguel\",\r\n  \"apellido\": \"niño\",\r\n  \"email\": \"miguel@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"role\": \"mentor\"\r\n}\r\n",
+							"raw": "{\r\n  \"uid\": \"admin2@prueba.com\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -444,7 +465,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/crear_usuario_admin/",
+							"raw": "http://127.0.0.1:8000/api/usuarios/asignar_rol/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -455,7 +476,8 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"crear_usuario_admin",
+								"usuarios",
+								"asignar_rol",
 								""
 							]
 						}
