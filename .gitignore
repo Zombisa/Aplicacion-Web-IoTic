@@ -69,3 +69,4 @@ Thumbs.db
 firebase-key.json
 /Backend/apps/inventario/migrations
 /Backend/apps/usuarios_roles/migrations
+/Backend/apps/informacion/migrations
