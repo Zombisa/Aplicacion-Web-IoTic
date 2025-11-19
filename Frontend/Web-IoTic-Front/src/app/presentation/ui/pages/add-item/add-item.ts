@@ -55,7 +55,11 @@ itemForm!: FormGroup;
         this.isLoading = false;
         this.showSuccess = true;
         this.successMessage = 'Item agregado exitosamente';
-        this.resetForm();
+        setTimeout(() => {
+          this.hideMessages();
+        }, 5000);
+        this.clearFormOnly();
+        
       },
       error: (error) => {
         console.error("Error completo:", error);
@@ -70,14 +74,22 @@ itemForm!: FormGroup;
     });
   }
 }
-
+  private clearFormOnly(): void {
+    this.itemForm.reset();
+    Object.keys(this.itemForm.controls).forEach(key => {
+      this.itemForm.get(key)?.markAsUntouched();
+      this.itemForm.get(key)?.markAsPristine();
+    });
+  }
   resetForm() {
     this.itemForm.reset();
     this.hideMessages();
   }
 
-  hideMessages() {
+    hideMessages() {
     this.showSuccess = false;
     this.showError = false;
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 }

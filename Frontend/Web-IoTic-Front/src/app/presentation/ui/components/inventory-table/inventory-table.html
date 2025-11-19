@@ -76,7 +76,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredData" class="table-row">
+        <tr *ngFor="let item of  paginatedData()" class="table-row">
           <td>{{ item.serial }}</td>
           <td>{{ item.descripcion }}</td>
           <td>{{ item.estado_fisico }}</td>
@@ -86,6 +86,13 @@
         </tr>
       </tbody>
     </table>
+    <div class="pagination-container p-2">
+      <button (click)="previousPage()" class="button-arrow" [disabled]="currentPage === 1">  &lt; </button>
+
+      <span>{{ currentPage }} de {{ totalPages() }}</span>
+
+      <button (click)="nextPage()" class="button-arrow" [disabled]="currentPage === totalPages()">  &gt; </button>
+    </div>
 
     
 </div>
