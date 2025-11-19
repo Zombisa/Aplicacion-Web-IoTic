@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, from, map, retry, switchMap, throwError, timer } from 'rxjs';
 import { environment } from '../environment/environment';
-import { ElectronicComponent } from '../models/electronicComponent.model';
 import { AuthService } from './auth.service';
 import { ItemDTO } from '../models/DTO/ItemDTO';
 import { ItemDTOPeticion } from '../models/Peticion/ItemDTOPeticion';
@@ -60,7 +59,7 @@ addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
         console.log("itema a guardar: " + device);
-        return this.http.post<ItemDTO>(`${this.apiUrl}inventario/inventario/`, device, { headers });
+        return this.http.post<ItemDTO>(`${this.apiUrl}inventario/items/masivo/`, device, { headers });
       }),
       catchError(error => {
         console.error('Error al agregar componente:', error);
@@ -69,12 +68,10 @@ addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
     );
   }
 
-  updateElectronicComponent(id: number, updatedElectronicComponent: ElectronicComponent): Observable<ElectronicComponent> {
+  updateElectronicComponent(id: number, updatedElectronicComponent: ItemDTOPeticion): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        // Remover el id del objeto para evitar conflictos
-        const { id: componentId, ...componentData } = updatedElectronicComponent;
-        return this.http.put<ElectronicComponent>(`${this.apiUrl}inventario/inventario/${id}/`, componentData, { headers });
+        return this.http.put<ItemDTO>(`${this.apiUrl}inventario/inventario/${id}/`, updatedElectronicComponent, { headers });
       }),
       catchError(error => {
         console.error('Error al actualizar componente:', error);
@@ -96,10 +93,10 @@ addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
   }
 
   // Método adicional para obtener un componente específico por ID
-  getElectronicComponentById(id: number): Observable<ElectronicComponent> {
+  getElectronicComponentById(id: number): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => 
-        this.http.get<ElectronicComponent>(`${this.apiUrl}inventario/inventario/${id}/`, { headers })
+        this.http.get<ItemDTO>(`${this.apiUrl}inventario/inventario/${id}/`, { headers })
       ),
       catchError(error => {
         console.error('Error al obtener componente por ID:', error);

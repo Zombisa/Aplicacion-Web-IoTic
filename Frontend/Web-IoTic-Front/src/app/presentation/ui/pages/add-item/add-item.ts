@@ -30,11 +30,11 @@ itemForm!: FormGroup;
 
   initializeForm() {
     this.itemForm = this.fb.group({
-      numeroSerieActivo: ['', [Validators.required, Validators.min(1)]],
-      descripcionArticulo: ['', [Validators.required, Validators.minLength(10)]],
-      ubicacion: ['', [Validators.required]],
-      estadoFisico: ['', [Validators.required]],
-      observacion: ['', [Validators.required]]
+      descripcion: ['', [Validators.required, Validators.minLength(10)]],
+      estado_fisico: ['', [Validators.required]],
+      estado_admin: ['', [Validators.required]],
+      observacion: [''],
+      cantidad: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -42,13 +42,11 @@ itemForm!: FormGroup;
   if (this.itemForm.valid) {
     this.isLoading = true;
     
-    // Convertir numeroSerieActivo a número explícitamente
-    const formValue = this.itemForm.value;
+   const formValue = this.itemForm.value;
     const itemData: ItemDTOPeticion = {
       ...formValue,
-      numeroSerieActivo: Number(formValue.numeroSerieActivo)
+      observacion: formValue.observacion || '' // Garantizar string vacío
     };
-
     console.log("Datos a enviar:", JSON.stringify(itemData, null, 2));
 
     this.inventoryService.addElectronicComponent(itemData).subscribe({

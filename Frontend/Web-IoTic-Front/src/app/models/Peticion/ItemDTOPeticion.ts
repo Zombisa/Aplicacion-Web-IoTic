@@ -1,7 +1,7 @@
 export interface ItemDTOPeticion {
-  numeroSerieActivo: number;
-  descripcionArticulo: string;
-  ubicacion: string;
-  estadoFisico: string;
+  descripcion: string;
+  estado_fisico: string;
+  estado_admin: string;
   observacion: string;
+  cantidad: number;
 }
