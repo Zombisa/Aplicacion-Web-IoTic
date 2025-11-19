@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
 import { LoanDTO } from '../models/DTO/LoanDTO';
-import { IoanPeticion } from '../models/Peticion/IoanPeticion';
+import { LoanPeticion } from '../models/Peticion/LoanPeticion';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +61,7 @@ export class LoanService {
     /**
    * Crear un nuevo préstamo
    */
-  createLoan(loanData: IoanPeticion): Observable<LoanDTO> {
+  createLoan(loanData: LoanPeticion): Observable<LoanDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
         console.log("Préstamo a crear:", JSON.stringify(loanData, null, 2));

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LoanService } from '../../../../services/Loan.service';
 import { InventoryService } from '../../../../services/inventory.service';
 import { Header } from '../../templates/header/header';
-import { IoanPeticion } from '../../../../models/Peticion/IoanPeticion';
+import { LoanPeticion } from '../../../../models/Peticion/LoanPeticion';
 import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 
 @Component({
@@ -58,7 +58,7 @@ onSubmit(): void {
 
     const formValue = this.loanForm.value;
 
-    const loanData: IoanPeticion = {
+    const loanData: LoanPeticion = {
       nombre_persona: formValue.nombre_persona,
       item_id: Number(formValue.item_id),
       fecha_devolucion: formValue.fecha_devolucion || null
