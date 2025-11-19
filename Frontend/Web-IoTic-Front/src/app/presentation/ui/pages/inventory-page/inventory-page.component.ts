@@ -66,16 +66,16 @@ export class InventoryPageComponent implements OnInit {
 
   // Contadores según estado
   this.resume.disponibles = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'disponible'
+    item => item.estado_admin.toLowerCase() === 'disponible'
   ).length;
 
   this.resume.prestados = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'prestado'
+    item => item.estado_fisico.toLowerCase() === 'prestado'
   ).length;
 
   this.resume.dados_De_Baja = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'dado de baja' ||
-            item.estadoAdministrativo.toLowerCase() === 'dañado'
+    item => item.estado_fisico.toLowerCase() === 'dado de baja' ||
+            item.estado_admin.toLowerCase() === 'dañado'
   ).length;
 }
 

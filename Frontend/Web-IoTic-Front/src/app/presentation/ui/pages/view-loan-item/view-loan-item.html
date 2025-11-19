@@ -69,28 +69,21 @@
                       <div class="row" *ngIf="loanData.item; else noItemData">
                           <div class="col-12 mb-3">
                               <label class="form-label fw-bold text-muted">Número de Serie:</label>
-                              <p class="fs-5 mb-0 text-primary fw-bold">{{ loanData.item.numeroSerieActivo }}</p>
+                              <p class="fs-5 mb-0 text-primary fw-bold">{{ loanData.item.serial }}</p>
                           </div>
                           <div class="col-12 mb-3">
                               <label class="form-label fw-bold text-muted">Descripción:</label>
-                              <p class="mb-0">{{ loanData.item.descripcionArticulo }}</p>
-                          </div>
-                          <div class="col-md-6 mb-3">
-                              <label class="form-label fw-bold text-muted">Ubicación:</label>
-                              <p class="mb-0">
-                                  <i class="fas fa-map-marker-alt me-2 text-danger"></i>
-                                  {{ loanData.item.ubicacion }}
-                              </p>
+                              <p class="mb-0">{{ loanData.item.descripcion }}</p>
                           </div>
                           <div class="col-md-6 mb-3">
                               <label class="form-label fw-bold text-muted">Estado Físico:</label>
                               <span class="badge" 
                                     [ngClass]="{
-                                      'bg-success': loanData.item.estadoFisico === 'excelente',
-                                      'bg-info': loanData.item.estadoFisico === 'bueno',
-                                      'bg-danger': loanData.item.estadoFisico === 'dañado'
+                                      'bg-success': loanData.item.estado_fisico === 'excelente',
+                                      'bg-info': loanData.item.estado_fisico=== 'bueno',
+                                      'bg-danger': loanData.item.estado_fisico === 'dañado'
                                     }">
-                                  {{ loanData.item.estadoFisico | titlecase }}
+                                  {{ loanData.item.estado_fisico | titlecase }}
                               </span>
                           </div>
                           <div class="col-12" *ngIf="loanData.item.observacion">

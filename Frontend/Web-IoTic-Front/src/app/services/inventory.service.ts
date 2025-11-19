@@ -48,7 +48,7 @@ export class InventoryService {
   getElectronicComponent(): Observable<ItemDTO[]> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => 
-        this.http.get<ItemDTO[]>(`${this.apiUrl}inventario/inventario/`, { headers })
+        this.http.get<ItemDTO[]>(`${this.apiUrl}inventario/items`, { headers })
       ),
       catchError(error => {
         console.error('Error al obtener componentes:', error);
