@@ -34,6 +34,6 @@
 </section>
 
 <section>
-  <app-inventory-table class="mt-4" [inventoryData]="inventoryData"></app-inventory-table>
+  <app-inventory-table class="mt-4" [inventoryData]="inventoryData" (itemSelected)="onItemSelected($event)" ></app-inventory-table>
 </section>
 

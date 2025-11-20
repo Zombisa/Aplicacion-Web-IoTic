@@ -10,6 +10,8 @@ import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
+import { ViewItem } from './presentation/ui/pages/view-item/view-item';
+import { VectorValue } from '@angular/fire/firestore';
 
 export const routes: Routes = [
 
@@ -20,7 +22,8 @@ export const routes: Routes = [
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path:'inventario/add-item', component: AddItem},
-     {path: 'inventario/add-loan', component: AddLoan},
-     {path: 'inventario/view-item/:id', component: ViewLoanItem},
-     {path: 'productivity', component: ProductivityPage}
+     {path: 'inventario/add-loan/:id', component: AddLoan},
+     {path: 'inventario/view-item/:id', component: ViewItem},
+     {path: 'productivity', component: ProductivityPage},
+
 ];

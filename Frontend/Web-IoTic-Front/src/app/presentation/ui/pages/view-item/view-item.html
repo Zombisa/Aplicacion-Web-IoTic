@@ -1,0 +1,67 @@
+<div class="header-wrapper">
+  <app-header></app-header>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 p-0">
+
+      <div class="banner-primary d-flex justify-content-center align-items-center flex-column">
+        <h1 class="title">Revisemos el item</h1>
+        <p class="text-help">Detalles y estado actual del registro</p>
+      </div>
+
+      <div class="container-fluid mt-4 d-flex justify-content-center align-items-center">
+        <div class="card item-card shadow-lg rounded-4 p-3 p-md-4 border-0">
+
+          <div class="mb-4">
+            <h3 class="title-card">Descripción</h3>
+            <p class="text-card-item">{{ item.descripcion }}</p>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="title-card">Estados</h3>
+            <div class="row g-3 section-estados">
+                
+                <div class="col-12 col-lg-6 ">
+                    <h4 class="text-state-subtitle">Estado físico</h4>
+                    <div class="box-state">
+                        <p>{{ item.estado_fisico }}</p>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-lg-6 ">
+                    <h4 class="text-state-subtitle">Estado administrativo</h4>
+                    <div class="col-12 col-lg-6 box-state"
+                       [ngClass]="{ 'warning-state': item.estado_admin=== 'Prestado' }">
+                        <p>{{ item.estado_admin }}</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="title-card">Observación</h3>
+            <p class="text-card-item"> {{ item.observacion }}</p>
+          </div>
+
+          <div>
+            <h3 class="title-card">Fecha registro del item</h3>
+            <p class="text-card-item">{{ item.fecha_registro }}</p>
+          </div>
+
+          <div class="d-flex justify-content-center align-items-center mt-4 flex-row g">
+            <button class="btn">Editar</button>
+            <button class="btn">Dar en préstamo</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-12 d-flex justify-content-center align-items-center mt-4">
+      <div></div>
+    </div>
+  </div>
+</div>

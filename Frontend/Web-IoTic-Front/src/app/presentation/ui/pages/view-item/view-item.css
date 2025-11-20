@@ -1,0 +1,44 @@
+.banner-primary{
+    background-color: var(--color-primary);
+    height: 40rem;
+}
+.title{
+    color: var(--color-secondary);
+
+}
+.text-help{
+    color: white;
+    margin-top: 1px;
+    font-weight: 300;
+}
+.item-card{
+  position: relative;
+  z-index: 1;
+  margin-top: -10rem;
+  width: 100%;
+  max-width: 60rem;
+}
+.title-card{
+    color: var(--color-primary);
+    padding: 2.5rem 2.5rem 0 2.5rem;
+}
+.text-card-item{
+    font-weight: 200;
+    padding: 0 2.5rem 0 2.5rem;
+}
+.section-estados{
+    padding: 0 2.5rem 0 2.5rem;
+}
+.text-state-subtitle{
+    font-size: 1rem;
+    font-weight: 300;
+}
+.box-state{
+    background: linear-gradient(90deg, #829CE3, transparent);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: 15rem;
+}
+.warning-state{
+     background: linear-gradient(90deg, var(--color-secondary), transparent);
+}

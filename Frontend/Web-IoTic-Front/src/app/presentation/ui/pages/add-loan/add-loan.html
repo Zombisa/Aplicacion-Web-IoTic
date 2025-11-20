@@ -9,9 +9,11 @@
 
   <div class="container-fluid px-3 px-md-4 form-container py-3 py-md-5">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-5">
         <div class="card shadow-lg rounded-4 p-3 p-md-4 border-0">
-
+          <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
+            <h5 class="card-title mb-3">Informacion de la persona</h5>
+          </div>
           <form [formGroup]="loanForm" (ngSubmit)="onSubmit()" novalidate>
             
             <!-- Nombre de la persona -->
@@ -31,34 +33,16 @@
                 El nombre es obligatorio (mínimo 3 caracteres)
               </div>
             </div>
-
-            <!-- ID del Item -->
-            <div class="mb-3">
-              <label for="item_id" class="form-label fw-semibold small">
-                ID del Item <span class="text-danger">*</span>
-              </label>
-              <select
-                id="item_id"
-                formControlName="item_id"
-                class="form-select"
-                [class.is-invalid]="loanForm.get('item_id')?.invalid && loanForm.get('item_id')?.touched">
-                <option value="">Seleccione un item</option>
-                <option *ngFor="let item of availableItems" [value]="item.id">
-                  {{ item.descripcionArticulo }} ({{ item.numeroSerieActivo }})
-                </option>
-              </select>
-              <div class="invalid-feedback">Debe seleccionar un item.</div>
-            </div>
-
+       
             <!-- Fecha devolución -->
             <div class="mb-3">
-              <label for="fecha_devolucion" class="form-label fw-semibold small">
-                Fecha de devolución (opcional)
+              <label for="fecha_limite" class="form-label fw-semibold small">
+                Fecha de devolución esperada
               </label>
               <input
                 type="date"
-                id="fecha_devolucion"
-                formControlName="fecha_devolucion"
+                id="fecha_limite"
+                formControlName="fecha_limite"
                 class="form-control"
               />
             </div>
@@ -83,6 +67,15 @@
               </button>
             </div>
           </form>
+
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-6">
+        <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
+          <h5 class="card-title mb-3">Informacion item</h5>
+        </div>
+        <div class="card shadow-lg rounded-4 p-3 p-md-4 border-0 mt-4 mt-md-0">
+          
 
         </div>
       </div>

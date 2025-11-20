@@ -1,5 +1,9 @@
 export interface LoanPeticion{
-        nombre_persona: string;
         item_id: number;
-        fecha_devolucion: string | null;
+        nombre_persona: string;
+        cedula: string;
+        telefono: string;
+        correo: string;
+        direccion: string;
+        fecha_limite: string; 
 }

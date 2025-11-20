@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoanService } from '../../../../services/Loan.service';
@@ -6,6 +6,8 @@ import { InventoryService } from '../../../../services/inventory.service';
 import { Header } from '../../templates/header/header';
 import { LoanPeticion } from '../../../../models/Peticion/LoanPeticion';
 import { LoanDTO } from '../../../../models/DTO/LoanDTO';
+import { ItemDTO } from '../../../../models/DTO/ItemDTO';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-loan',
@@ -15,21 +17,32 @@ import { LoanDTO } from '../../../../models/DTO/LoanDTO';
   styleUrls: ['./add-loan.css']
 })
 export class AddLoan implements OnInit {
-  loanForm!: FormGroup;
+  
   isLoading = false;
   showSuccess = false;
   showError = false;
+
+  loanForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
-  availableItems: any[] = [];
+  availableItems: ItemDTO[] = [];
+  itemId!: number;
 
   constructor(
     private fb: FormBuilder,
     private loanService: LoanService,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private route: ActivatedRoute
   ) {}
 
+  /**
+   * Inicialización del componente
+   * Obtiene el id de la url
+   * Inicializa el formulario
+   * Carga los items disponibles
+   */
   ngOnInit() {
+    this.itemId = Number(this.route.snapshot.paramMap.get('id'));
     this.initializeForm();
     this.loadAvailableItems();
   }
@@ -38,7 +51,6 @@ export class AddLoan implements OnInit {
     this.loanForm = this.fb.group({
       nombre_persona: ['', [Validators.required, Validators.minLength(3)]],
       item_id: ['', [Validators.required]],
-      fecha_devolucion: [null]
     });
   }
 loadAvailableItems(): void {
@@ -58,11 +70,7 @@ onSubmit(): void {
 
     const formValue = this.loanForm.value;
 
-    const loanData: LoanPeticion = {
-      nombre_persona: formValue.nombre_persona,
-      item_id: Number(formValue.item_id),
-      fecha_devolucion: formValue.fecha_devolucion || null
-    };
+    const loanData: LoanPeticion = this.loanForm.getRawValue();
 
     console.log('📦 Datos del préstamo a enviar:', loanData);
 
@@ -78,8 +86,6 @@ onSubmit(): void {
         console.error('❌ Error completo:', error);
         this.isLoading = false;
         this.showError = true;
-
-        // Si sabes que viene con estructura { error: { message: string } }
         if (typeof error === 'object' && error && 'error' in error) {
           const err = error as { error?: { message?: string } };
           this.errorMessage = `Error al crear el préstamo: ${err.error?.message || 'Error desconocido'}`;
@@ -94,6 +100,7 @@ onSubmit(): void {
     });
   }
 }
+ 
 
   // 🔹 Limpia el formulario
   resetForm(): void {

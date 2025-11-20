@@ -96,7 +96,7 @@ addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
   getElectronicComponentById(id: number): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => 
-        this.http.get<ItemDTO>(`${this.apiUrl}inventario/inventario/${id}/`, { headers })
+        this.http.get<ItemDTO>(`${this.apiUrl}inventario/items/1/`, { headers })
       ),
       catchError(error => {
         console.error('Error al obtener componente por ID:', error);

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class InventoryTable implements OnInit, OnChanges {
   /** Datos de inventario recibidos como entrada */
   @Input() inventoryData: ItemDTO[] = [];
-  
+  @Output() itemSelected = new EventEmitter<number>();
 
   filteredData: ItemDTO[] = [];
   filters = {
@@ -112,5 +112,10 @@ export class InventoryTable implements OnInit, OnChanges {
       this.currentPage--;
     }
   }
-
+  /**
+   * Emitir el item seleccionado al componente padre
+   */
+  selectItem(item: ItemDTO) {
+    this.itemSelected.emit(item.id);
+  }
 }

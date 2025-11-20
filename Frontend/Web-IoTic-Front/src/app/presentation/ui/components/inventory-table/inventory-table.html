@@ -76,7 +76,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of  paginatedData()" class="table-row">
+        <tr *ngFor="let item of  paginatedData()" class="table-row" (click)="selectItem(item)">
           <td>{{ item.serial }}</td>
           <td>{{ item.descripcion }}</td>
           <td>{{ item.estado_fisico }}</td>

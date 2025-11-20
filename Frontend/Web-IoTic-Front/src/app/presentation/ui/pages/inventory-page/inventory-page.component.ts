@@ -4,7 +4,9 @@ import { Header } from '../../templates/header/header';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { InventoryService } from '../../../../services/inventory.service';
 import { InventoryTable } from '../../components/inventory-table/inventory-table';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Route, RouterLink, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-inventory-page',
@@ -44,22 +46,24 @@ export class InventoryPageComponent implements OnInit {
   ];
   public inventoryData: ItemDTO[] = [];
 
-  constructor(private inventoryService: InventoryService) { }
+  constructor(private inventoryService: InventoryService,
+    private router: Router
+  ) { }
   ngOnInit(): void {
     this.loadInventoryData();
   }
   loadInventoryData() {
   console.log('Cargando datos del inventario desde el componente.');
-  this.inventoryService.getElectronicComponent().subscribe({
-    next: (data: ItemDTO[]) => {
-      this.inventoryData = data;
-      this.updateResume();
-    },
-    error: (err) => {
-      console.error('Error al cargar los datos del inventario:', err);
-    }
-  });
-}
+    this.inventoryService.getElectronicComponent().subscribe({
+      next: (data: ItemDTO[]) => {
+        this.inventoryData = data;
+        this.updateResume();
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del inventario:', err);
+      }
+    });
+  }
  updateResume() {
   // Total de ítems en el inventario
   this.resume.total_items = this.inventoryData.length;
@@ -91,5 +95,11 @@ export class InventoryPageComponent implements OnInit {
 
       return { key: formattedKey, value };
     });
+  }
+  /**
+   * Navegando al item seleccionado
+   */
+  onItemSelected(itemId: number) {
+    this.router.navigate([`inventario/view-item/${itemId}`]);
   }
 }
