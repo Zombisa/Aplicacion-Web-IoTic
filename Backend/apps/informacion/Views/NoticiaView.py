@@ -25,7 +25,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error': 'No autorizado. Solo los administradores o mentores realizar esta accion.'},
+            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['put'], url_path='editar_noticia')
@@ -42,7 +42,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error': 'No autorizado. Solo los administradores o mentores realizar esta accion.'},
+            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
     @action(detail=True, methods=['delete'], url_path='eliminar_noticia')
@@ -56,7 +56,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             noticia.delete()
             return Response({'Noticia eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response({'error': 'No autorizado. Solo los administradores o mentores realizar esta accion.'},
+            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
     @action(detail=False, methods=['get'], url_path='listar_noticias')
@@ -66,5 +66,5 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             serializer = NoticiaSerializer(noticias, many=True)
             return Response(serializer.data)
         else:
-            return Response({'error': 'No autorizado. Solo los administradores o mentores realizar esta accion.'},
+            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)

@@ -2,19 +2,19 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from apps.informacion.Models.Evento import Evento
-from apps.informacion.Serializers.EventoSerializer import EventoSerializer
 from apps.usuarios_roles.models import Usuario
 from apps.informacion.permissions import verificarToken
+from apps.informacion.Models.TrabajoEventos import TrabajoEventos
+from apps.informacion.Serializers.TrabajoEventosSerializer import TrabajoEventosSerializer
 
-class EventoViewSet(viewsets.ModelViewSet):
-    queryset = Evento.objects.all()
-    serializer_class = EventoSerializer
+class TrabajoEventosViewSet(viewsets.ModelViewSet):
+    queryset = TrabajoEventos.objects.all()
+    serializer_class = TrabajoEventosSerializer
 
-    @action(detail=False, methods=['post'], url_path='publicar_evento')
-    def publicar_evento(self, request):
+    @action(detail=False, methods=['post'], url_path='agregar_trabajo_evento')
+    def agregar_trabajo_evento(self, request):
         if verificarToken.validarRol(request) is True:
-            serializer = EventoSerializer(data=request.data)
+            serializer = TrabajoEventosSerializer(data=request.data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
                 try:
@@ -27,16 +27,16 @@ class EventoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-
-    @action(detail=True, methods=['put'], url_path='editar_evento')
-    def editar_evento(self, request, pk):
+    
+    @action(detail=True, methods=['put'], url_path='editar_trabajo_evento')
+    def editar_trabajo_evento(self, request, pk):
         if verificarToken.validarRol(request) is True:
             try:
-                evento = Evento.objects.get(pk=pk)
-            except Evento.DoesNotExist:
-                return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+                trabajo_evento = TrabajoEventos.objects.get(pk=pk)
+            except TrabajoEventos.DoesNotExist:
+                return Response({'error': 'Trabajo en evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-            serializer = EventoSerializer(evento, data=request.data, partial=True)
+            serializer = TrabajoEventosSerializer(trabajo_evento, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -44,26 +44,26 @@ class EventoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-
-    @action(detail=True, methods=['delete'], url_path='eliminar_evento')
-    def eliminar_evento(self, request, pk):
+    
+    @action(detail=True, methods=['delete'], url_path='eliminar_trabajo_evento')
+    def eliminar_trabajo_evento(self, request, pk):
         if verificarToken.validarRol(request) is True:
             try:
-                evento = Evento.objects.get(pk=pk)
-            except Evento.DoesNotExist:
-                return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+                trabajo_evento = TrabajoEventos.objects.get(pk=pk)
+            except TrabajoEventos.DoesNotExist:
+                return Response({'error': 'Trabajo en evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-            evento.delete()
-            return Response({'Evento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
+            trabajo_evento.delete()
+            return Response({'Trabajo en evento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=False, methods=['get'], url_path='listar_eventos')
-    def listar_eventos(self, request):
+    @action(detail=False, methods=['get'], url_path='listar_trabajos_eventos')
+    def listar_trabajos_eventos(self, request):
         if verificarToken.validarRol(request) is True:
-            eventos = Evento.objects.all()
-            serializer = EventoSerializer(eventos, many=True)
+            trabajos_eventos = TrabajoEventos.objects.all()
+            serializer = TrabajoEventosSerializer(trabajos_eventos, many=True)
             return Response(serializer.data)
         else:
             return Response({'error': 'Token expirado o invalido.'},

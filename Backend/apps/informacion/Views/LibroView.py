@@ -2,19 +2,19 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from apps.informacion.Models.Evento import Evento
-from apps.informacion.Serializers.EventoSerializer import EventoSerializer
 from apps.usuarios_roles.models import Usuario
 from apps.informacion.permissions import verificarToken
+from apps.informacion.Models.Libro import Libro
+from apps.informacion.Serializers.LibroSerializer import LibroSerializer
 
-class EventoViewSet(viewsets.ModelViewSet):
-    queryset = Evento.objects.all()
-    serializer_class = EventoSerializer
+class LibroViewSet(viewsets.ModelViewSet):
+    queryset = Libro.objects.all()
+    serializer_class = LibroSerializer
 
-    @action(detail=False, methods=['post'], url_path='publicar_evento')
-    def publicar_evento(self, request):
+    @action(detail=False, methods=['post'], url_path='agregar_libro')
+    def agregar_libro(self, request):
         if verificarToken.validarRol(request) is True:
-            serializer = EventoSerializer(data=request.data)
+            serializer = LibroSerializer(data=request.data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
                 try:
@@ -27,16 +27,16 @@ class EventoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-
-    @action(detail=True, methods=['put'], url_path='editar_evento')
-    def editar_evento(self, request, pk):
+        
+    @action(detail=True, methods=['put'], url_path='editar_libro')
+    def editar_libro(self, request, pk):
         if verificarToken.validarRol(request) is True:
             try:
-                evento = Evento.objects.get(pk=pk)
-            except Evento.DoesNotExist:
-                return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+                libro = Libro.objects.get(pk=pk)
+            except Libro.DoesNotExist:
+                return Response({'error': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-            serializer = EventoSerializer(evento, data=request.data, partial=True)
+            serializer = LibroSerializer(libro, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -44,26 +44,26 @@ class EventoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-
-    @action(detail=True, methods=['delete'], url_path='eliminar_evento')
-    def eliminar_evento(self, request, pk):
+    
+    @action(detail=True, methods=['delete'], url_path='eliminar_libro')
+    def eliminar_libro(self, request, pk):
         if verificarToken.validarRol(request) is True:
             try:
-                evento = Evento.objects.get(pk=pk)
-            except Evento.DoesNotExist:
-                return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+                libro = Libro.objects.get(pk=pk)
+            except Libro.DoesNotExist:
+                return Response({'error': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-            evento.delete()
-            return Response({'Evento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
+            libro.delete()
+            return Response({'Libro eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-    
-    @action(detail=False, methods=['get'], url_path='listar_eventos')
-    def listar_eventos(self, request):
+        
+    @action(detail=False, methods=['get'], url_path='listar_libros')
+    def listar_libros(self, request):
         if verificarToken.validarRol(request) is True:
-            eventos = Evento.objects.all()
-            serializer = EventoSerializer(eventos, many=True)
+            libros = Libro.objects.all()
+            serializer = LibroSerializer(libros, many=True)
             return Response(serializer.data)
         else:
             return Response({'error': 'Token expirado o invalido.'},

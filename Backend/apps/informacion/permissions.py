@@ -14,11 +14,16 @@ class verificarToken():
             decoded_token = auth.verify_id_token(token)
             role = decoded_token.get('role')
             
-            if role != 'admin' and role != 'mentor':
-                return None
+            if role not in ['admin', 'mentor']:
+                return Response(
+                    {'error': 'No tienes permisos para realizar esta acción'}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
             return True
-        except Exception as e:
-            return Response({'error': 'Token inválido o expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+        except auth.InvalidIdTokenError:
+            return None
+        except auth.ExpiredIdTokenError:
+            return None
     
     def obtenerUID(request):
         auth_header = request.headers.get('Authorization')
