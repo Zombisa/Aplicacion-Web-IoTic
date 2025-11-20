@@ -19,7 +19,6 @@ class Inventario(models.Model):
     ESTADO_ADMIN_CHOICES = [
         ('Disponible', 'Disponible'),
         ('Prestado', 'Prestado'),
-        ('Reservado', 'Reservado'),
         ('No prestar', 'No prestar'),
     ]
 
