@@ -84,6 +84,35 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
+/* ========================================
+   ESTADOS INICIALES
+   ======================================== */
+
+.animate-on-scroll {
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* ========================================
+   CLASES DE ANIMACIÓN ACTIVAS
+   ======================================== */
+
+.animate-on-scroll.animate-fadeInUp.is-visible {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-slideInLeft.is-visible {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-slideInRight.is-visible {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-zoomIn.is-visible {
+  animation: zoomIn 0.6s ease-out forwards;
+}
 
 /* ========================================
    BANNER PRINCIPAL
@@ -93,7 +122,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   animation: fadeInUp 1s ease-out forwards;
   opacity: 0;
   animation-delay: 0.2s;
-}
-html, body {
-  scroll-behavior: auto !important;
 }
