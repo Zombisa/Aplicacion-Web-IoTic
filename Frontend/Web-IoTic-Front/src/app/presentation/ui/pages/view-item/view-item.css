@@ -38,9 +38,26 @@
     border-radius: 20px;
     padding: 0.5rem 1rem;
     width: 15rem;
+    height: 5rem;
+}
+.box-state p{
+    background-color: white;
+    height: 2rem;
+    border-radius: 10px;
+    margin: 0;
+    width: 80%;
+    padding-left: 1rem;
+    padding-top: 4px;
 }
 .warning-state{
      background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+.warning-state-no-loan{
+     background: linear-gradient(90deg, var(--color-secondary-dark), transparent);
+}
+
+.section-buttons{
+    padding: 3.5rem;
 }
 #btn-guardar{
     color: white;

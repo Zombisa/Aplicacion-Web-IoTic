@@ -25,15 +25,16 @@
                 
                 <div class="col-12 col-lg-6 ">
                     <h4 class="text-state-subtitle">Estado físico</h4>
-                    <div class="box-state">
+                    <div class="box-state d-flex  align-items-center">
                         <p>{{ item?.estado_fisico }}</p>
                     </div>
                 </div>
                 
                 <div class="col-12 col-lg-6 ">
                     <h4 class="text-state-subtitle">Estado administrativo</h4>
-                    <div class="col-12 col-lg-6 box-state"
-                       [ngClass]="{ 'warning-state': item?.estado_admin=== 'Prestado' }">
+                    <div class=" box-state  d-flex  align-items-center"
+                       [ngClass]="{ 'warning-state': item?.estado_admin=== 'Prestado',
+                       'warning-state-no-loan':  item?.estado_admin === 'No prestar' }">
                         <p>{{ item?.estado_admin }}</p>
                     </div>
                 </div>
@@ -50,7 +51,7 @@
             <p class="text-card-item">{{ item?.fecha_registro }}</p>
           </div>
 
-          <div class="row gap-5 justify-content-center align-items-center mt-4 ">
+          <div class="row gap-5 justify-content-center align-items-center mt-4 section-buttons">
             <button id="btn-editar">Editar</button>
             <button id="btn-guardar" (click)="goToLoan()">Dar en préstamo</button>
           </div>
