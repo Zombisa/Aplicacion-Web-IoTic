@@ -1,0 +1,46 @@
+.form-item{
+    padding: 1rem;
+    width: 100%;
+}
+.text-card-item{
+    font-weight: 200;
+    padding: 0 2.5rem 0 2.5rem;
+}
+.section-estados{
+    margin-top: 2rem2;
+}
+.text-state-subtitle{
+    font-size: 1rem;
+    font-weight: 300;
+}
+.box-state{
+    background: linear-gradient(90deg, #829CE3, transparent);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: 15rem;
+    height: 5rem;
+}
+.box-state p{
+    background-color: white;
+    height: 2rem;
+    border-radius: 10px;
+    margin: 0;
+    width: 80%;
+    padding-left: 1rem;
+    padding-top: 4px;
+}
+.warning-state{
+     background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+.warning-state-no-loan{
+     background: linear-gradient(90deg, var(--color-secondary-dark), transparent);
+}
+.bad-warning{
+     background: linear-gradient(90deg, var(--color-danger), transparent);
+}
+
+
+.personality-camp{
+    margin-bottom: 3rem;
+    background-color: aliceblue;
+}

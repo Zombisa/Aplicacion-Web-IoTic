@@ -9,14 +9,14 @@
     font-weight: 300;
     font-family: "Roboto", sans-serif;
 }
-.form-back{
-    background-color: white;
-    height: 50rem;
-    width: 50rem;
-    
+
+
+.form-container{
+  width: 50rem;
 }
-
-
+.card{
+  height: 40rem;
+}
 .form-label {
     color: var(--color-primary);
 }
@@ -55,6 +55,7 @@
   }
   
   .form-container {
+    width: 100%;
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
   }
@@ -67,6 +68,12 @@
 @media (min-width: 576px) and (max-width: 768px) {
   .banner-primary .title {
     font-size: 2.2rem !important;
+  }
+    
+  .form-container {
+    width: 100%;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
   }
 }
 

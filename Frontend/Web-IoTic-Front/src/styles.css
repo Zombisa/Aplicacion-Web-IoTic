@@ -193,7 +193,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .input-line {
   width: 100%;
   border: none;
-  border-bottom: 2px solid #969696;
+  border-bottom: 1px solid #cfcfcf;
   padding: 0.8rem 0 0.2rem 0; /* espacio para label */
   font-size: 1rem;
   outline: none;
@@ -215,7 +215,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   position: absolute;
   left: 0;
   top: 0.8rem; /* posición inicial sobre el input */
-  font-weight: 600;
+  font-weight: 800;
+
   pointer-events: none;
   transition: all 0.3s ease;
   transform: translateY(5px); /* label baja */
@@ -225,16 +226,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .input-line:focus + label,
 .input-line:not(:placeholder-shown) + label {
   transform: translateY(-30px); /* label vuelve arriba */
-  font-size: 0.65rem;       /* opcional: tamaño más pequeño */
+  font-size: 0.75rem;       /* opcional: tamaño más pequeño */
 }
 
 /* Estilo general de advertencias */
 .invalid-feedback {
     display: block;               
     font-size: 0.875rem;          
-    color: #dc3545;               
+    
     background-color: #ffe6e6;    
-    border-left: 3px solid #dc3545;
     padding: 0.5rem 0.75rem;      
     border-radius: 5px;           
     margin-top: 0.25rem;          

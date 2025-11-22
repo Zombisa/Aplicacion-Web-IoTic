@@ -1,53 +1,67 @@
 
-  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="needs-validation p-4" novalidate>
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="needs-validation form-item" novalidate>
     <!-- Descripción -->
-    <div class="mb-3 input-container">
-      <input type="text" class="input-line" formControlName="descripcion" placeholder=" ">
+    <div class=" mt-2 input-container personality-camp">
+      <input type="text" class="input-line " formControlName="descripcion" placeholder=" ">
       <label>Descripción <span class="text-danger">*</span></label>
       <div class="invalid-feedback" *ngIf="itemForm.get('descripcion')?.invalid && itemForm.get('descripcion')?.touched">
         <small *ngIf="itemForm.get('descripcion')?.errors?.['required']">La descripción es obligatoria</small>
         <small *ngIf="itemForm.get('descripcion')?.errors?.['minlength']">Debe tener al menos 10 caracteres</small>
       </div>
     </div>
+    <div class="row g-3 section-estados mt2">
+        <!-- Estado físico -->
+        <div class="col-12 col-md-6">
+            <h4 class="text-state-subtitle">Estado físico</h4>
+            <div class="box-state d-flex align-items-center"
+                [ngClass]="{ 
+                'warning-state': itemForm.get('estado_fisico')?.value === 'Bueno',
+                'bad-warning': itemForm.get('estado_fisico')?.value === 'Dañado' 
+                }">
+                <select class="form-select mt-2" formControlName="estado_fisico">
+                <option value="">Seleccione estado</option>
+                <option value="Excelente">Excelente</option>
+                <option value="Bueno">Bueno</option>
+                <option value="Dañado">Dañado</option>
+                </select>
+            </div>
 
-    <!-- Estado físico -->
-    <div class="mb-4 mt-4">
-      <label>Estado Físico <span class="text-danger">*</span></label>
-        <select class="form-select " formControlName="estado_fisico">
-        <option value="">Seleccione estado</option>
-        <option value="Excelente">Excelente</option>
-        <option value="Bueno">Bueno</option>
-        <option value="Dañado">Dañado</option>
-      </select>
-      
-      <div class="invalid-feedback" *ngIf="itemForm.get('estado_fisico')?.invalid && itemForm.get('estado_fisico')?.touched">
-        Debe seleccionar un estado físico
-      </div>
+            <div class="invalid-feedback" *ngIf="itemForm.get('estado_fisico')?.invalid && itemForm.get('estado_fisico')?.touched">
+            Debe seleccionar un estado físico
+            </div>
+        </div>
+
+        <!-- Estado administrativo -->
+        <div class="col-12 col-md-6">
+            <h4 class="text-state-subtitle">Estado administrativo</h4>
+            <div class="box-state d-flex align-items-center"
+                [ngClass]="{ 
+                'bad-warning': itemForm.get('estado_admin')?.value === 'Prestado',
+                'warning-state-no-loan': itemForm.get('estado_admin')?.value === 'No prestar' 
+                }">
+                <select class="form-select mt-2" formControlName="estado_admin">
+                <option value="">Seleccione estado</option>
+                <option value="Disponible">Disponible</option>
+                <option value="Prestado">Prestado</option>
+                <option value="No prestar">No prestar</option>
+                </select>
+            </div>
+         
+            <div class="invalid-feedback" *ngIf="itemForm.get('estado_admin')?.invalid && itemForm.get('estado_admin')?.touched">
+            Debe seleccionar un estado administrativo
+            </div>
+        </div>
     </div>
 
-    <!-- Estado administrativo -->
-    <div class="mb-4 mt-4">
-      <label>Estado Administrativo <span class="text-danger">*</span></label>
-        <select class="form-select " formControlName="estado_admin">
-        <option value="">Seleccione estado</option>
-        <option value="Disponible">Disponible</option>
-        <option value="Prestado">Prestado</option>
-        <option value="No prestar">No prestar</option>
-      </select>
-      
-      <div class="invalid-feedback" *ngIf="itemForm.get('estado_admin')?.invalid && itemForm.get('estado_admin')?.touched">
-        Debe seleccionar un estado administrativo
-      </div>
-    </div>
-
+    
     <!-- Observación -->
-    <div class="mb-3 input-container ">
+    <div class="input-container personality-camp ">
       <input type="text" class="input-line" formControlName="observacion" placeholder=" ">
       <label>Observación (Opcional)</label>
     </div>
 
     <!-- Cantidad -->
-    <div class="mb-3 input-container">
+    <div class=" input-container personality-camp">
       <input type="number" class="input-line" formControlName="cantidad" placeholder=" " min="1">
       <label>Cantidad <span class="text-danger">*</span></label>
       <div class="invalid-feedback" *ngIf="itemForm.get('cantidad')?.invalid && itemForm.get('cantidad')?.touched">
