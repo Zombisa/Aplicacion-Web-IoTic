@@ -1,39 +1,43 @@
-<div class="header-wrapper">
-  <app-header></app-header>
-</div>
-  <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
-    <section class="page-title d-flex flex-column align-items-center">
-      <h1 class="title">Inventario</h1>
-      <p class=" text">{{messageWelcome}}</p>
-      <section class="resume container-fluid d-flex justify-content-center align-items-center">
-        <div class="row d-flex justify-content-center align-items-center">
-          <div *ngFor="let item of resumeArray; let i = index" class="col-md-3 col-sm-6 p-3 conte">
-            <div class=" text-center p-4 shadow-sm rounded">
-              <h4 class="text-capitalize">{{ item.key | titlecase }}</h4>
-              <p class="display-6 fw-bold">{{ item.value }}</p>
+<app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
+      <section class="page-title d-flex flex-column align-items-center">
+        <h1 class="title">Inventario</h1>
+        <p class=" text">{{messageWelcome}}</p>
+        <section class="resume container-fluid d-flex justify-content-center align-items-center">
+          <div class="row d-flex justify-content-center align-items-center">
+            <div *ngFor="let item of resumeArray; let i = index" class="col-md-3 col-sm-6 p-3 conte">
+              <div class=" text-center p-4 shadow-sm rounded">
+                <h4 class="text-capitalize">{{ item.key | titlecase }}</h4>
+                <p class="display-6 fw-bold">{{ item.value }}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-    </section>
-  </div>
-<section class="container-fluid dark-card">
-  <div>
-    <div class="" *ngFor="let opt of options">
-      <div class="divider"></div>
-      <div class="container-fluid text-center d-flex flex-column flex-lg-row justify-content-lg-around align-items-center p-3">
-        <div class="d-flex flex-column align-items-center align-items-lg-start text-card mb-3 mb-lg-0">
-          <h5 class="titleOption">{{ opt.title }}</h5>
-          <p class="textOption">{{ opt.description }}</p>
+      </section>
+    </div>
+  <section class="container-fluid dark-card">
+    <div>
+      <div class="" *ngFor="let opt of options">
+        <div class="divider"></div>
+        <div class="container-fluid text-center d-flex flex-column flex-lg-row justify-content-lg-around align-items-center p-3">
+          <div class="d-flex flex-column align-items-center align-items-lg-start text-card mb-3 mb-lg-0">
+            <h5 class="titleOption">{{ opt.title }}</h5>
+            <p class="textOption">{{ opt.description }}</p>
+          </div>
+          <a [routerLink]="opt.route" class="btn btn-outline-light p-3 ">Pulsa aqui</a>
         </div>
-        <a [routerLink]="opt.route" class="btn btn-outline-light p-3 ">Pulsa aqui</a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section>
-  <app-inventory-table class="mt-4" [inventoryData]="inventoryData" (itemSelected)="onItemSelected($event)" ></app-inventory-table>
-</section>
+  <section>
+    <app-inventory-table class="mt-4" [inventoryData]="inventoryData" (itemSelected)="onItemSelected($event)" ></app-inventory-table>
+  </section>
 
+
+</div>

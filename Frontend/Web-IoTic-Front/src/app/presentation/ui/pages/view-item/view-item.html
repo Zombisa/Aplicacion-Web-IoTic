@@ -52,20 +52,18 @@
             <h3 class="title-card">Fecha registro del item</h3>
             <p class="text-card-item">{{ item?.fecha_registro }}</p>
           </div>
-
-          <div class="row gap-5 justify-content-center align-items-center mt-4 section-buttons">
-            <button id="btn-editar">Editar</button>
-            <button id="btn-guardar" (click)="goToLoan()" [disabled]="item?.estado_fisico === 'Dañado' || item?.estado_admin === 'Prestado'"
->Dar en préstamo</button>
+          <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 section-buttons">
+            <button class="btn-outline-secondary">Editar</button>
+            <button class="btn-primary" 
+                    (click)="goToLoan()" 
+                    [disabled]="item?.estado_fisico === 'Dañado' || item?.estado_admin === 'Prestado'">
+              Dar en préstamo
+            </button>
           </div>
-
         </div>
       </div>
 
     </div>
 
-    <div class="col-12 d-flex justify-content-center align-items-center mt-4">
-      <div></div>
-    </div>
   </div>
 </div>

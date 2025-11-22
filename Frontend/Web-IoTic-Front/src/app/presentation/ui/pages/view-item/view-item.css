@@ -60,28 +60,7 @@
 }
 
 .section-buttons{
-    padding: 3.5rem;
-}
-#btn-guardar{
-    color: white;
-    background-color: var(--color-primary);
-    border-radius: 10px;
-    width: 24rem;
-    height: 3rem;
-}
-
-#btn-editar{
-    color: var(--color-primary);
-    border: 3px solid var(--color-primary);
-    background-color: #f6f9ff;
-    border-radius: 10px;
-    width: 24rem;
-    height: 3rem;
-}
-
-#btn-guardar:disabled {
-  background-color: #b3b3b3;   /* Gris */
-  border-color: transparent;
-  cursor: not-allowed;
-  opacity: 0.7;
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem;
 }

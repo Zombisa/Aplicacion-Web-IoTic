@@ -6,12 +6,14 @@ import { InventoryService } from '../../../../services/inventory.service';
 import { InventoryTable } from '../../components/inventory-table/inventory-table';
 import { Route, RouterLink, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
+import { LoadingService } from '../../../../services/loading.service';
+import { LoadingPage } from '../../components/loading-page/loading-page';
 
 
 @Component({
   selector: 'app-inventory-page',
   standalone: true,
-  imports: [CommonModule, Header, InventoryTable, RouterModule],
+  imports: [CommonModule, Header, InventoryTable, RouterModule, LoadingPage],
   templateUrl: './inventory-page.component.html',
   styleUrls: ['./inventory-page.component.css']
 })
@@ -47,23 +49,33 @@ export class InventoryPageComponent implements OnInit {
   public inventoryData: ItemDTO[] = [];
 
   constructor(private inventoryService: InventoryService,
+    public loadingService: LoadingService,
     private router: Router
   ) { }
+
   ngOnInit(): void {
     this.loadInventoryData();
   }
+  /**
+   * Carga los datos del inventario desde el servicio y actualiza el resumen.
+   */
   loadInventoryData() {
-  console.log('Cargando datos del inventario desde el componente.');
+    this.loadingService.show();
+    console.log('Cargando datos del inventario desde el componente.');
     this.inventoryService.getElectronicComponent().subscribe({
       next: (data: ItemDTO[]) => {
         this.inventoryData = data;
         this.updateResume();
+        this.loadingService.hide();
       },
       error: (err) => {
         console.error('Error al cargar los datos del inventario:', err);
       }
     });
   }
+  /**
+   * Actualiza el resumen del inventario basado en los datos cargados.
+   */
  updateResume() {
   // Total de ítems en el inventario
   this.resume.total_items = this.inventoryData.length;

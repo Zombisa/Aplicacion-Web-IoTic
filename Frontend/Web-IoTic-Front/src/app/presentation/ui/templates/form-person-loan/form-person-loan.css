@@ -1,9 +1,17 @@
-.btn-primary {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+
+.card{
+    height: 100%;
+}
+.form-wrapper {
+  width: 100%;
+  max-width: 500px;  /* evita que se hagan gigantes */
+  margin: 0 auto;    /* centra horizontalmente */
 }
 
-.btn-primary:hover {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary);
+
+
+.section-buttons{
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem;
 }

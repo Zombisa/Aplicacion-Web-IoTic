@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoanService } from '../../../../services/Loan.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, SelectMultipleControlValueAccessor, Validators } from '@angular/forms';
 import { LoanPeticion } from '../../../../models/Peticion/LoanPeticion';
 import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 import { CommonModule } from '@angular/common';
 import { fechaFuturaValidator } from '../../../../validators/fecha-futura-vaidators';
+import { timeEnd } from 'node:console';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-person-loan',
@@ -22,8 +24,10 @@ export class FormPersonLoan implements OnInit {
   loanForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
+
   constructor(
     private loanService: LoanService,
+    private router: Router,
     private fb: FormBuilder,) { } 
   ngOnChanges() {
     console.log("📥 idItem recibido:", this.idItem);
@@ -58,7 +62,9 @@ export class FormPersonLoan implements OnInit {
       this.buttonDissabled = true;
       this.showSuccess = true;
       this.successMessage = 'Préstamo creado exitosamente.';
-      
+      setTimeout(() => {
+        this.router.navigate(['/inventario']); // Cambia la ruta según tu app
+      }, 1500);
       
     },
     error: (error: unknown) => {
@@ -86,9 +92,9 @@ initializeForm() {
       nombre_persona: ['', [Validators.required, Validators.minLength(3)]],
       item_id: [this.idItem],
       cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      telefono: ['', [ Validators.pattern(/^\d{10}$/)]],
-      correo: ['', [Validators.email]],
-      direccion: [''],
+      telefono: ['', [ Validators.pattern(/^\d{10}$/), Validators.required]],
+      correo: ['', [Validators.email, Validators.required]],
+      direccion: ['', Validators.required],
       fecha_limite: ['', [Validators.required, fechaFuturaValidator]],
     });
   }
