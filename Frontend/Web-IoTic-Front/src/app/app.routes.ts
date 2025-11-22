@@ -8,10 +8,9 @@ import { InventoryPageComponent } from './presentation/ui/pages/inventory-page/i
 import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
-import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
 import { ViewItem } from './presentation/ui/pages/view-item/view-item';
-import { VectorValue } from '@angular/fire/firestore';
+import { ItemAvailableGuard } from './guards/item-available-guard';
 
 export const routes: Routes = [
 
@@ -22,7 +21,7 @@ export const routes: Routes = [
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path:'inventario/add-item', component: AddItem},
-     {path: 'inventario/add-loan/:id', component: AddLoan},
+     {path: 'inventario/add-loan/:id', component: AddLoan, canActivate: [ItemAvailableGuard]},
      {path: 'inventario/view-item/:id', component: ViewItem},
      {path: 'productivity', component: ProductivityPage},
 

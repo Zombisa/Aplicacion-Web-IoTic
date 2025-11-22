@@ -24,7 +24,7 @@ export class ScrollAnimationServices {
     const elements = container.querySelectorAll('.animate-on-scroll');
     elements.forEach(el => this.observer!.observe(el));
   }
-
+  
   disconnect(): void {
     this.observer?.disconnect();
   }
