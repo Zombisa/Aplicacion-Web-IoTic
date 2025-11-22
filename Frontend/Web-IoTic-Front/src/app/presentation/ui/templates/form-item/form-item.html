@@ -61,7 +61,7 @@
     </div>
 
     <!-- Cantidad -->
-    <div class=" input-container personality-camp">
+    <div class=" input-container personality-camp" *ngIf="mode === 'create'">
       <input type="number" class="input-line" formControlName="cantidad" placeholder=" " min="1">
       <label>Cantidad <span class="text-danger">*</span></label>
       <div class="invalid-feedback" *ngIf="itemForm.get('cantidad')?.invalid && itemForm.get('cantidad')?.touched">

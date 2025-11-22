@@ -61,7 +61,7 @@ export class ViewItem implements OnInit {
    */
   goToEdit(): void{
     console.log('Navegando a la página de edición del item con ID:', this.itemId);
-    this.router.navigate(['/edit-item', this.itemId]);
+    this.router.navigate(['inventario/edit-item', this.itemId]);
   }
   goToLoan(): void{
     console.log('Navegando a la página de edición del item con ID:', this.itemId);

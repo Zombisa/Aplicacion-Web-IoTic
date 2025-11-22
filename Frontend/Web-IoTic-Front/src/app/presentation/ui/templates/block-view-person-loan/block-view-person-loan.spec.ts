@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddItem } from './add-item';
+import { BlockViewPersonLoan } from './block-view-person-loan';
 
-describe('AddItem', () => {
-  let component: AddItem;
-  let fixture: ComponentFixture<AddItem>;
+describe('BlockViewPersonLoan', () => {
+  let component: BlockViewPersonLoan;
+  let fixture: ComponentFixture<BlockViewPersonLoan>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddItem]
+      imports: [BlockViewPersonLoan]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddItem);
+    fixture = TestBed.createComponent(BlockViewPersonLoan);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

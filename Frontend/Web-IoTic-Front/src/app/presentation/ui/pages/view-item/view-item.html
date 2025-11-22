@@ -55,7 +55,9 @@
               <p class="text-card-item">{{ item?.fecha_registro }}</p>
             </div>
             <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 section-buttons">
-              <button class="btn-outline-secondary">Editar</button>
+              <button class="btn-outline-secondary"
+              (click)="goToEdit()"
+               >Editar</button>
               <button class="btn-primary" 
                       (click)="goToLoan()" 
                       [disabled]="item?.estado_fisico === 'Dañado' || item?.estado_admin === 'Prestado'">

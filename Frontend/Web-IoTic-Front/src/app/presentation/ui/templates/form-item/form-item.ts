@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItemDTOPeticion } from '../../../../models/Peticion/ItemDTOPeticion';
 import { CommonModule } from '@angular/common';
+import { ItemDTOUpdate } from '../../../../models/Peticion/ItemDTOUpdate';
+import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 
 @Component({
   selector: 'app-form-item',
@@ -9,18 +11,17 @@ import { CommonModule } from '@angular/common';
   templateUrl: './form-item.html',
   styleUrl: './form-item.css'
 })
-export class FormItem {
+export class FormItem implements OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
-  @Input() item?: ItemDTOPeticion;
+  @Input() item?: ItemDTO;
 
   @Output() submitted = new EventEmitter<ItemDTOPeticion>();
 
   itemForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
-
-  ngOnInit() {
-    this.itemForm = this.fb.group({
+  ngOnChanges(changes: SimpleChanges): void {
+      this.itemForm = this.fb.group({
       descripcion: [this.item?.descripcion || '', [Validators.required, Validators.minLength(10)]],
       estado_fisico: [this.item?.estado_fisico || '', Validators.required],
       estado_admin: [this.item?.estado_admin || '', Validators.required],
@@ -28,6 +29,9 @@ export class FormItem {
       cantidad: [1, [Validators.required, Validators.min(1)]]
     });
   }
+ 
+
+
 
   onSubmit() {
     if (this.itemForm.invalid) {

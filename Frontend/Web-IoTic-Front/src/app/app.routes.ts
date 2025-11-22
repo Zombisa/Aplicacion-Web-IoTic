@@ -11,6 +11,7 @@ import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
 import { ViewItem } from './presentation/ui/pages/view-item/view-item';
 import { ItemAvailableGuard } from './guards/item-available-guard';
+import { EditItem } from './presentation/ui/pages/edit-item/edit-item';
 
 export const routes: Routes = [
 
@@ -23,6 +24,7 @@ export const routes: Routes = [
      {path:'inventario/add-item', component: AddItem},
      {path: 'inventario/add-loan/:id', component: AddLoan, canActivate: [ItemAvailableGuard]},
      {path: 'inventario/view-item/:id', component: ViewItem},
+     {path: 'inventario/edit-item/:id', component: EditItem},
      {path: 'productivity', component: ProductivityPage},
 
 ];

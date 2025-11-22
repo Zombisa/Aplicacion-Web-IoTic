@@ -71,7 +71,7 @@ addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
   updateElectronicComponent(id: number, updatedElectronicComponent: ItemDTOPeticion): Observable<ItemDTO> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        return this.http.put<ItemDTO>(`${this.apiUrl}inventario/inventario/${id}/`, updatedElectronicComponent, { headers });
+        return this.http.put<ItemDTO>(`${this.apiUrl}inventario/items/${id}/`, updatedElectronicComponent, { headers });
       }),
       catchError(error => {
         console.error('Error al actualizar componente:', error);
