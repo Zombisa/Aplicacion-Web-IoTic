@@ -9,11 +9,12 @@ import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { ActivatedRoute } from '@angular/router';
 import { FormPersonLoan } from '../../templates/form-person-loan/form-person-loan';
+import { BlockViewItem } from '../../templates/block-view-item/block-view-item';
 
 @Component({
   selector: 'app-add-loan',
   standalone: true,
-  imports: [CommonModule, Header, FormPersonLoan],
+  imports: [CommonModule, Header, FormPersonLoan, BlockViewItem],
   templateUrl: './add-loan.html',
   styleUrls: ['./add-loan.css']
 })
