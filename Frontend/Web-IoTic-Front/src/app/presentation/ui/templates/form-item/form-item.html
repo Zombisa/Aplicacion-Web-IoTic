@@ -1,0 +1,66 @@
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="needs-validation p-4" novalidate>
+    <!-- Descripción -->
+    <div class="mb-3 input-container">
+      <input type="text" class="input-line" formControlName="descripcion" placeholder=" ">
+      <label>Descripción <span class="text-danger">*</span></label>
+      <div class="invalid-feedback" *ngIf="itemForm.get('descripcion')?.invalid && itemForm.get('descripcion')?.touched">
+        <small *ngIf="itemForm.get('descripcion')?.errors?.['required']">La descripción es obligatoria</small>
+        <small *ngIf="itemForm.get('descripcion')?.errors?.['minlength']">Debe tener al menos 10 caracteres</small>
+      </div>
+    </div>
+
+    <!-- Estado físico -->
+    <div class="mb-4 mt-4">
+      <label>Estado Físico <span class="text-danger">*</span></label>
+        <select class="form-select " formControlName="estado_fisico">
+        <option value="">Seleccione estado</option>
+        <option value="Excelente">Excelente</option>
+        <option value="Bueno">Bueno</option>
+        <option value="Dañado">Dañado</option>
+      </select>
+      
+      <div class="invalid-feedback" *ngIf="itemForm.get('estado_fisico')?.invalid && itemForm.get('estado_fisico')?.touched">
+        Debe seleccionar un estado físico
+      </div>
+    </div>
+
+    <!-- Estado administrativo -->
+    <div class="mb-4 mt-4">
+      <label>Estado Administrativo <span class="text-danger">*</span></label>
+        <select class="form-select " formControlName="estado_admin">
+        <option value="">Seleccione estado</option>
+        <option value="Disponible">Disponible</option>
+        <option value="Prestado">Prestado</option>
+        <option value="No prestar">No prestar</option>
+      </select>
+      
+      <div class="invalid-feedback" *ngIf="itemForm.get('estado_admin')?.invalid && itemForm.get('estado_admin')?.touched">
+        Debe seleccionar un estado administrativo
+      </div>
+    </div>
+
+    <!-- Observación -->
+    <div class="mb-3 input-container ">
+      <input type="text" class="input-line" formControlName="observacion" placeholder=" ">
+      <label>Observación (Opcional)</label>
+    </div>
+
+    <!-- Cantidad -->
+    <div class="mb-3 input-container">
+      <input type="number" class="input-line" formControlName="cantidad" placeholder=" " min="1">
+      <label>Cantidad <span class="text-danger">*</span></label>
+      <div class="invalid-feedback" *ngIf="itemForm.get('cantidad')?.invalid && itemForm.get('cantidad')?.touched">
+        <small *ngIf="itemForm.get('cantidad')?.errors?.['required']">La cantidad es obligatoria</small>
+        <small *ngIf="itemForm.get('cantidad')?.errors?.['min']">Debe ser mayor que 0</small>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end">
+      <button type="button" class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1" (click)="resetForm()">Limpiar</button>
+      <button type="submit" class="btn btn-primary px-3 px-md-4 order-1 order-sm-2" [disabled]="itemForm.invalid ">
+        {{ mode === 'create' ? 'Agregar Item' : 'Guardar Cambios' }}    
+      </button>
+    </div>
+  </form>
