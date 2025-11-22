@@ -1,12 +1,14 @@
 .banner-primary{
-  background-color: var(--color-secondary-light);
-  height: 116vh;
+  background-color: var(--color-secondary);
+  height: 60vh;
+
 }
 .title{
+    color: white;
     margin-top: 10rem;
     margin-bottom: 2rem;
     font-size: 3rem;
-    font-weight: 300;
+    font-weight: 600;
     font-family: "Roboto", sans-serif;
 }
 .form-back{
@@ -15,7 +17,10 @@
     width: 50rem;
     
 }
-
+.form-container{
+  position: relative;
+  z-index: 2;
+}
 
 .form-label {
     color: var(--color-primary);
@@ -27,15 +32,6 @@
     box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
 }
 
-.btn-primary {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-}
-
-.btn-primary:hover {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary);
-}
 
 .text-primary {
     color: var(--color-primary) !important;
@@ -57,6 +53,7 @@
   .form-container {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+      
   }
   
   .card {

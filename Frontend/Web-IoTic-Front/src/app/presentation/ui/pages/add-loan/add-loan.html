@@ -1,82 +1,20 @@
 <div class="header-wrapper">
   <app-header></app-header>
 </div>
-
 <section class="banner-primary">
   <div class="d-flex justify-content-center align-items-center py-3 py-md-5">
-    <h1 class="title text-center">Registrar Préstamo</h1>
+    <h1 class="title text-center">Registrar un préstamo</h1>
   </div>
-
   <div class="container-fluid px-3 px-md-4 form-container py-3 py-md-5">
     <div class="row justify-content-center">
       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-5">
-        <div class="card shadow-lg rounded-4 p-3 p-md-4 border-0">
-          <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
-            <h5 class="card-title mb-3">Informacion de la persona</h5>
-          </div>
-          <form [formGroup]="loanForm" (ngSubmit)="onSubmit()" novalidate>
-            
-            <!-- Nombre de la persona -->
-            <div class="mb-3">
-              <label for="nombre_persona" class="form-label fw-semibold small">
-                Nombre de la persona <span class="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                id="nombre_persona"
-                formControlName="nombre_persona"
-                class="form-control"
-                placeholder="Ingrese el nombre del solicitante"
-                [class.is-invalid]="loanForm.get('nombre_persona')?.invalid && loanForm.get('nombre_persona')?.touched"
-              />
-              <div class="invalid-feedback" *ngIf="loanForm.get('nombre_persona')?.invalid && loanForm.get('nombre_persona')?.touched">
-                El nombre es obligatorio (mínimo 3 caracteres)
-              </div>
-            </div>
-       
-            <!-- Fecha devolución -->
-            <div class="mb-3">
-              <label for="fecha_limite" class="form-label fw-semibold small">
-                Fecha de devolución esperada
-              </label>
-              <input
-                type="date"
-                id="fecha_limite"
-                formControlName="fecha_limite"
-                class="form-control"
-              />
-            </div>
-
-            <!-- Mensajes -->
-            <div *ngIf="showSuccess" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-              {{ successMessage }}
-              <button type="button" class="btn-close" (click)="hideMessages()"></button>
-            </div>
-
-            <div *ngIf="showError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-              {{ errorMessage }}
-              <button type="button" class="btn-close" (click)="hideMessages()"></button>
-            </div>
-
-            <!-- Botones -->
-            <div class="d-flex justify-content-end gap-2">
-              <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">Limpiar</button>
-              <button type="submit" class="btn btn-primary" [disabled]="loanForm.invalid || isLoading">
-                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                {{ isLoading ? 'Guardando...' : 'Guardar Préstamo' }}
-              </button>
-            </div>
-          </form>
-
-        </div>
+        <app-form-person-loan [idItem]="itemId"></app-form-person-loan>
       </div>
       <div class="col-12 col-md-6 col-lg-6">
         <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
           <h5 class="card-title mb-3">Informacion item</h5>
         </div>
         <div class="card shadow-lg rounded-4 p-3 p-md-4 border-0 mt-4 mt-md-0">
-          
-
         </div>
       </div>
     </div>
