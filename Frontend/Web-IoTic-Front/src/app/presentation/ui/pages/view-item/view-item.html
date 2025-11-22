@@ -16,7 +16,7 @@
 
           <div class="mb-4">
             <h3 class="title-card">Descripción</h3>
-            <p class="text-card-item">{{ item.descripcion }}</p>
+            <p class="text-card-item">{{ item?.descripcion }}</p>
           </div>
 
           <div class="mb-4">
@@ -26,15 +26,15 @@
                 <div class="col-12 col-lg-6 ">
                     <h4 class="text-state-subtitle">Estado físico</h4>
                     <div class="box-state">
-                        <p>{{ item.estado_fisico }}</p>
+                        <p>{{ item?.estado_fisico }}</p>
                     </div>
                 </div>
                 
                 <div class="col-12 col-lg-6 ">
                     <h4 class="text-state-subtitle">Estado administrativo</h4>
                     <div class="col-12 col-lg-6 box-state"
-                       [ngClass]="{ 'warning-state': item.estado_admin=== 'Prestado' }">
-                        <p>{{ item.estado_admin }}</p>
+                       [ngClass]="{ 'warning-state': item?.estado_admin=== 'Prestado' }">
+                        <p>{{ item?.estado_admin }}</p>
                     </div>
                 </div>
             </div>
@@ -42,17 +42,17 @@
 
           <div class="mb-4">
             <h3 class="title-card">Observación</h3>
-            <p class="text-card-item"> {{ item.observacion }}</p>
+            <p class="text-card-item"> {{ item?.observacion }}</p>
           </div>
 
           <div>
             <h3 class="title-card">Fecha registro del item</h3>
-            <p class="text-card-item">{{ item.fecha_registro }}</p>
+            <p class="text-card-item">{{ item?.fecha_registro }}</p>
           </div>
 
-          <div class="d-flex justify-content-center align-items-center mt-4 flex-row g">
-            <button class="btn">Editar</button>
-            <button class="btn">Dar en préstamo</button>
+          <div class="row gap-5 justify-content-center align-items-center mt-4 ">
+            <button id="btn-editar">Editar</button>
+            <button id="btn-guardar" (click)="goToLoan()">Dar en préstamo</button>
           </div>
 
         </div>

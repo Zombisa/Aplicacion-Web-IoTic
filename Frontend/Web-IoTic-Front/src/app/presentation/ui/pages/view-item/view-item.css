@@ -42,3 +42,19 @@
 .warning-state{
      background: linear-gradient(90deg, var(--color-secondary), transparent);
 }
+#btn-guardar{
+    color: white;
+    background-color: var(--color-primary);
+    border-radius: 10px;
+    width: 24rem;
+    height: 3rem;
+}
+
+#btn-editar{
+    color: var(--color-primary);
+    border: 3px solid var(--color-primary);
+    background-color: #f6f9ff;
+    border-radius: 10px;
+    width: 24rem;
+    height: 3rem;
+}

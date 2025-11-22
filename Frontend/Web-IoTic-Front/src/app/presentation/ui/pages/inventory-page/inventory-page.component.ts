@@ -100,6 +100,7 @@ export class InventoryPageComponent implements OnInit {
    * Navegando al item seleccionado
    */
   onItemSelected(itemId: number) {
-    this.router.navigate([`inventario/view-item/${itemId}`]);
+    console.log("Navegando al item con ID:", itemId);
+    this.router.navigate(['/inventario/view-item', itemId ]);
   }
 }

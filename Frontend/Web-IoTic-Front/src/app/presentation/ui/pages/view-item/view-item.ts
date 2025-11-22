@@ -15,29 +15,34 @@ import { InventoryService } from '../../../../services/inventory.service';
 export class ViewItem implements OnInit {
 
   private itemId!: number;  
-  public item!: ItemDTO;
-  constructor(private inventoryService: InventoryService,
-    private router: ActivatedRoute,
-    private route: Router
-  ){}
+  public item?: ItemDTO;
+  constructor(
+    private inventoryService: InventoryService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
   /**
    * Inicialización del componente
    * Obtiene el id de la url
    */
   ngOnInit(): void {
-    this.router.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe(params => {
       this.itemId = Number(params.get('id'));
+      console.log('ID del item obtenido de la URL:', this.itemId);
       this.getItemById();
     });
   }
+
   /**
    * Obtener el item por ID
    * @Returns void no retorna el item pero si lo guarda dentro de la variable del componente
    */
   getItemById(): void {
+    console.log('Obteniendo el item con ID:', this.itemId);
     this.inventoryService.getElectronicComponentById(this.itemId).subscribe({
       next: (item) => {
         this.item = item;
+        console.log('Item obtenido:', this.item);
       },
       error: (error) => {
         console.error('Error al obtener el item:', error);
@@ -49,7 +54,10 @@ export class ViewItem implements OnInit {
    */
   goToEdit(): void{
     console.log('Navegando a la página de edición del item con ID:', this.itemId);
-    this.route.navigate(['/edit-item', this.itemId]);
+    this.router.navigate(['/edit-item', this.itemId]);
   }
-
+  goToLoan(): void{
+    console.log('Navegando a la página de edición del item con ID:', this.itemId);
+    this.router.navigate(['inventario/add-loan', this.itemId]);
+  }
 }

@@ -116,6 +116,7 @@ export class InventoryTable implements OnInit, OnChanges {
    * Emitir el item seleccionado al componente padre
    */
   selectItem(item: ItemDTO) {
+    console.log("Item seleccionado:", item);
     this.itemSelected.emit(item.id);
   }
 }

@@ -8,10 +8,18 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { environment } from './environment/environment';
+import { withInMemoryScrolling } from '@angular/router';
+
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(routes),
+ providers: [
+    provideRouter(
+      routes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'top',
+        anchorScrolling: 'enabled'
+      })
+    ),
     // Solo inicializar Firebase en el navegador, no en SSR
     ...(typeof window !== 'undefined' ? [
       provideFirebaseApp(() => initializeApp(environment.firebase)),
