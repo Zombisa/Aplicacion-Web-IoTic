@@ -40,7 +40,7 @@ export class InventoryService {
   }
 
   deleteElectronicComponent(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}inventario/inventario/${id}/`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}inventario/items/${id}/`).pipe(
       catchError(error => {
         console.error('Error al eliminar componente:', error);
         return throwError(() => error);

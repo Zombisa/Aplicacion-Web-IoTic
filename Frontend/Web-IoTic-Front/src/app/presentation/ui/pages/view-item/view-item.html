@@ -15,7 +15,10 @@
 
         <div class="container-fluid mt-4 d-flex justify-content-center align-items-center">
           <div class="card item-card shadow-lg rounded-4 p-3 p-md-4 border-0">
-
+                    <button class="btn-danger"
+              (click)="confirmDelete()">
+                 <i class="bi bi-trash "></i>
+              </button>
             <div class="mb-4">
               <h3 class="title-card">Descripción</h3>
               <p class="text-card-item">{{ item?.descripcion }}</p>
@@ -71,5 +74,18 @@
 
     </div>
   </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <app-confirmation-modal
+    [isVisible]="showDeleteModal"
+    title="Confirmar eliminación"
+    message="¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    confirmButtonClass="btn-danger"
+    icon="fas fa-exclamation-triangle"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()">
+  </app-confirmation-modal>
 
 </div>

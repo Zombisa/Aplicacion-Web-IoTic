@@ -24,7 +24,7 @@ export class InventoryPageComponent implements OnInit {
     total_items: 0,
     disponibles: 0,
     prestados: 0,
-    dados_De_Baja: 0
+    dañados: 0
   };
   public options = [
     {
@@ -32,12 +32,6 @@ export class InventoryPageComponent implements OnInit {
       title: 'Agreguemos un nuevo item',
       description: 'En esta seccion podras agregar un nuevo item al inventario.',
       route: 'add-item'
-    },
-    {
-      key: 'prestamo',
-      title: 'Añadamos un prestamo',
-      description: 'En esta seccion podras pedir un prestamo.',
-      route: 'add-loan'
     },
     {
       key: 'listar_prestamos',
@@ -86,12 +80,11 @@ export class InventoryPageComponent implements OnInit {
   ).length;
 
   this.resume.prestados = this.inventoryData.filter(
-    item => item.estado_fisico.toLowerCase() === 'prestado'
+    item => item.estado_admin.toLowerCase() === 'prestado'
   ).length;
 
-  this.resume.dados_De_Baja = this.inventoryData.filter(
-    item => item.estado_fisico.toLowerCase() === 'dado de baja' ||
-            item.estado_admin.toLowerCase() === 'dañado'
+  this.resume.dañados = this.inventoryData.filter(
+    item => item.estado_admin === 'Dañado'
   ).length;
 }
 

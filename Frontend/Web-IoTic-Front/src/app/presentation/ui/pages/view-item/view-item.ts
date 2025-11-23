@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryService } from '../../../../services/inventory.service';
 import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
+import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
 
 @Component({
   selector: 'app-view-item',
-  imports: [CommonModule, Header, LoadingPage],
+  imports: [CommonModule, Header, LoadingPage, ConfirmationModal],
   templateUrl: './view-item.html',
   styleUrl: './view-item.css'
 })
@@ -18,6 +19,8 @@ export class ViewItem implements OnInit {
 
   private itemId!: number;  
   public item?: ItemDTO;
+  public showDeleteModal = false;
+
   constructor(
     private inventoryService: InventoryService,
     private activatedRoute: ActivatedRoute,
@@ -63,8 +66,45 @@ export class ViewItem implements OnInit {
     console.log('Navegando a la página de edición del item con ID:', this.itemId);
     this.router.navigate(['inventario/edit-item', this.itemId]);
   }
+  
   goToLoan(): void{
-    console.log('Navegando a la página de edición del item con ID:', this.itemId);
+    console.log('Navegando a la página de préstamo del item con ID:', this.itemId);
     this.router.navigate(['inventario/add-loan', this.itemId]);
+  }
+  
+  /**
+   * Mostrar modal de confirmación para eliminar item
+   */
+  confirmDelete(): void {
+    this.showDeleteModal = true;
+  }
+  
+  /**
+   * Ejecutar eliminación del item tras confirmación
+   */
+  onDeleteConfirmed(): void {
+    this.loadingService.show();
+    console.log('Eliminando item con ID:', this.itemId);
+    
+    this.inventoryService.deleteElectronicComponent(this.itemId).subscribe({
+      next: () => {
+        console.log('Item eliminado exitosamente');
+        this.loadingService.hide();
+        this.router.navigate(['/inventario']);
+      },
+      error: (error) => {
+        console.error('Error al eliminar el item:', error);
+        this.loadingService.hide();
+        // TODO: Mostrar mensaje de error al usuario
+      }
+    });  
+  }
+  
+  /**
+   * Cancelar eliminación del item
+   */
+  onDeleteCancelled(): void {
+    this.showDeleteModal = false;
+    console.log('Eliminación cancelada');
   }
 }

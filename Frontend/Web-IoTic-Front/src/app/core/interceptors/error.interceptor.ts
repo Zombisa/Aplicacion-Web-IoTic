@@ -2,12 +2,14 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 /**
  * Interceptor para manejo global de errores HTTP
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const authService = inject(AuthService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -15,7 +17,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       switch (error.status) {
         case 401:
-          console.warn('🔐 Token expirado o inválido - Redirigiendo al login');
+          console.warn('🔐 Token expirado o inválido - Invalidando cache y redirigiendo al login');
+          
+          // Invalidar cache del token
+          authService.invalidateTokenCache();
+          
           // Limpiar localStorage si existe
           if (typeof localStorage !== 'undefined') {
             localStorage.removeItem('token');

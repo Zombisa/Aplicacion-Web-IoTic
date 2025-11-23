@@ -1,0 +1,39 @@
+<!-- Modal Overlay -->
+<div 
+  *ngIf="isVisible" 
+  class="modal-overlay" 
+  (click)="onBackdropClick($event)"
+>
+  <!-- Modal Container -->
+  <div class="modal-container" >
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <i [class]="icon" [ngClass]="confirmButtonClass.includes('danger') ? 'text-danger' : 'text-warning'"></i>
+      <h4 class="modal-title">{{ title }}</h4>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <p class="modal-message">{{ message }}</p>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn btn-outline-secondary me-2"
+        (click)="onCancel()"
+      >
+        {{ cancelText }}
+      </button>
+      <button 
+        type="button" 
+        [class]="'btn ' + confirmButtonClass"
+        (click)="onConfirm()"
+      >
+        <i class="fas fa-check me-2"></i>
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>
