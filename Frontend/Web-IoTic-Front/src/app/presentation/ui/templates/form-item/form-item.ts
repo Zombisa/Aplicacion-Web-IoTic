@@ -13,12 +13,13 @@ import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 export class FormItem implements OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() item?: ItemDTO;
-  @Input() isLoading: boolean = false;
+
 
   @Output() submitted = new EventEmitter<ItemDTOPeticion>();
   @Output() formReset = new EventEmitter<void>();
 
   itemForm!: FormGroup;
+  public  isLoan: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.initializeForm();
@@ -49,7 +50,11 @@ export class FormItem implements OnChanges {
         observacion: this.item.observacion || '',
         cantidad: 1
       });
+      if(this.item.estado_admin === 'Prestado'){
+        this.isLoan = true;
+      }
     }
+
   }
 
   onSubmit(): void {
