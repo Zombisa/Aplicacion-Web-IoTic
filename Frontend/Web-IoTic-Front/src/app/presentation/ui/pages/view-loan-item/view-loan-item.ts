@@ -31,7 +31,7 @@ export class ViewLoanItem {
       const idParam = params.get('id');
       if (idParam) {
         this.itemId = Number(idParam);
-        this.loadLoanData();
+
       } else {
         this.showError = true;
         this.errorMessage = 'ID de item no proporcionado en la URL.';
@@ -39,20 +39,6 @@ export class ViewLoanItem {
     });
   }
 
-  loadLoanData(): void {
-    this.loanService.getLoanById(this.itemId).subscribe({
-      next: (data: LoanDTO) => {
-        this.loanData = data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.showError = true;
-        this.isLoading = false;
-        this.errorMessage = 'Error al cargar el préstamo: ' + (error.error?.message || error.message);
-        console.error(error);
-      }
-    });
-  }
   markAsReturned() {
     if (this.loanData && this.loanData.id) {
       const returnData = {

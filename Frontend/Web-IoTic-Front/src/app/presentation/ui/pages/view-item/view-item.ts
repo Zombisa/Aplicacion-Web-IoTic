@@ -8,10 +8,12 @@ import { InventoryService } from '../../../../services/inventory.service';
 import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
+import { BlockViewPersonLoan } from '../../templates/block-view-person-loan/block-view-person-loan';
+import { LoanDTOConsultById } from '../../../../models/DTO/LoanDTOConsultById';
 
 @Component({
   selector: 'app-view-item',
-  imports: [CommonModule, Header, LoadingPage, ConfirmationModal],
+  imports: [CommonModule, Header, LoadingPage, ConfirmationModal, BlockViewPersonLoan],
   templateUrl: './view-item.html',
   styleUrl: './view-item.css'
 })
@@ -20,11 +22,13 @@ export class ViewItem implements OnInit {
   private itemId!: number;  
   public item?: ItemDTO;
   public showDeleteModal = false;
+  public loanData?: LoanDTOConsultById;
 
   constructor(
     private inventoryService: InventoryService,
     private activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
+    private loanService: LoanService,
     private router: Router
   ) {}
   /**
@@ -37,6 +41,7 @@ export class ViewItem implements OnInit {
       this.itemId = Number(params.get('id'));
       console.log('ID del item obtenido de la URL:', this.itemId);
       this.getItemById();
+      this.getLoanDataById();
     });
   }
 
@@ -58,6 +63,20 @@ export class ViewItem implements OnInit {
       }
     })  
     
+  };
+  getLoanDataById(): void { 
+    this.loadingService.show();
+    console.log('Obteniendo el préstamo del item con ID:', this.itemId);
+    this.loanService.getLoanById(this.itemId).subscribe({
+      next: (loanData) => {
+        this.loanData = loanData;
+        console.log('Préstamo obtenido:', this.loanData);
+        this.loadingService.hide();
+      },
+      error: (error) => {
+        console.error('Error al obtener el préstamo:', error);
+      }
+    })  
   };
   /**
    * Navegar a la página de edición del item

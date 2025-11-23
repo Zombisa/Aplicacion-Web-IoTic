@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
 import { LoanDTO } from '../models/DTO/LoanDTO';
 import { LoanPeticion } from '../models/Peticion/LoanPeticion';
+import { LoanDTOConsultById } from '../models/DTO/LoanDTOConsultById';
 
 @Injectable({
   providedIn: 'root'
@@ -46,10 +47,10 @@ export class LoanService {
     /**
    * Obtener préstamo por ID
    */
-  getLoanById(id: number): Observable<LoanDTO> {
+  getLoanById(id: number): Observable<LoanDTOConsultById> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => 
-        this.http.get<LoanDTO>(`${this.apiUrl}inventario/prestamos/1/`, { headers })
+        this.http.get<LoanDTOConsultById>(`${this.apiUrl}inventario/prestamos/` + id, { headers })
       ),
       catchError(error => {
         console.error('Error al obtener préstamo por ID:', error);

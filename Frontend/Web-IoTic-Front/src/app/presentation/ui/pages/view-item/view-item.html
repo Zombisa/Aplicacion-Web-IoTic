@@ -57,13 +57,13 @@
               <h3 class="title-card">Fecha registro del item</h3>
               <p class="text-card-item">{{ item?.fecha_registro }}</p>
             </div>
-            <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 section-buttons">
+            <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 section-buttons">
               <button class="btn-outline-secondary"
               (click)="goToEdit()"
                >Editar</button>
               <button class="btn-primary" 
                       (click)="goToLoan()" 
-                      [disabled]="item?.estado_fisico === 'Dañado' || item?.estado_admin === 'Prestado'">
+                     *ngIf="item?.estado_fisico !== 'Dañado' && item?.estado_admin !== 'Prestado' && item?.estado_admin !== 'No prestar'">
                 Dar en préstamo
               </button>
             </div>
@@ -71,8 +71,14 @@
         </div>
 
       </div>
-
+    <div class="section-loan-data d-flex align-items-center  justify-content-center mt-5 mb-5">
+      <app-block-view-person-loan
+        [loanData]="loanData"
+        *ngIf="loanData">
+      </app-block-view-person-loan>
     </div>
+    </div>
+    
   </div>
 
   <!-- Modal de confirmación para eliminar -->

@@ -1,1 +1,59 @@
-<p>block-view-person-loan works!</p>
+<div class="row g-3 card p-3">
+    <div class="row g-3 ">
+        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center img-person-loan">
+            <i class="bi bi-person "></i>
+        </div>
+
+        <div class="col-12 col-md-8 d-flex p-4  gap-2 block-info-person">
+            <div class="d-flex flex-column gap-2 w-100">
+                <div class="d-flex flex-column">
+                <span class="fw-bold">Nombre:</span>
+                <span>{{ loanData?.nombre_persona }}</span>
+                </div>
+                <div class="d-flex flex-column">
+                <span class="fw-bold">Cédula:</span>
+                <span>{{ loanData?.cedula }}</span>
+                </div>
+                <div class="d-flex flex-column">
+                <span class="fw-bold">Teléfono:</span>
+                <span>{{ loanData?.telefono }}</span>
+                </div>
+                <div class="d-flex flex-column">
+                <span class="fw-bold">Correo:</span>
+                <span>{{ loanData?.correo }}</span>
+                </div>
+                <div class="d-flex flex-column">
+                <span class="fw-bold">Dirección:</span>
+                <span>{{ loanData?.direccion }}</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+  <!-- Icono + info personal (lado a lado en desktop) -->
+  
+
+  <!-- Info del préstamo (DEBAJO y ocupando 100% del width) -->
+  <div class="col-12 mt-3 pt-3 border-top">
+    <div class="d-flex justify-content-between">
+      <span class="fw-bold">Fecha préstamo:</span>
+      <span>{{ loanData?.fecha_prestamo }}</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <span class="fw-bold">Fecha límite:</span>
+      <span>{{ loanData?.fecha_limite }}</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <span class="fw-bold">Fecha devolución:</span>
+      <span>{{ loanData?.fecha_devolucion || '—' }}</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <span class="fw-bold">Estado:</span>
+      <span>{{ loanData?.estado }}</span>
+    </div>
+  </div>
+  <div>
+    <button class="btn-primary">Devolver item</button>
+  </div>
+
+</div>
