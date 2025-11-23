@@ -37,7 +37,7 @@ export class InventoryPageComponent implements OnInit {
       key: 'listar_prestamos',
       title: 'Ver prestamos vigentes',
       description: 'En esta seccion podras listar los prestamos vigentess.',
-      route: 'view-item/1'
+      route: 'history'
     },
   ];
   public inventoryData: ItemDTO[] = [];

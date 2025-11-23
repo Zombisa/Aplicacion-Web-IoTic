@@ -25,7 +25,11 @@ export const authInterceptor: HttpInterceptorFn = (
 
   // Verificar si la URL está excluida
   const isExcluded = excludedUrls.some(url => req.url.includes(url));
+    console.log('Interceptando:', req.url);
+    console.log('¿Excluida?:', isExcluded);
+  
   if (isExcluded) {
+
     return next(req);
   }
 

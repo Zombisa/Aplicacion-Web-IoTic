@@ -59,6 +59,10 @@ export class LoanService {
     );
   }
 
+  getLoansCurrent(): Observable<LoanDTO[]> {
+      return this.http.get<LoanDTO[]>(`${this.apiUrl}inventario/prestamos/activos/` )
+  }
+
     /**
    * Crear un nuevo préstamo
    */
