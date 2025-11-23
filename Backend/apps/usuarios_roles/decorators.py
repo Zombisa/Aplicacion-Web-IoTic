@@ -52,7 +52,7 @@ def verificar_token(view_func):
         # Guardar objetos en request
         request.user_local = usuario
         request.user_firebase = decoded
-        request.user_role = role_claim   # ← AHORA SÍ SE DEFINE
+        request.user_role = role_claim
 
         return view_func(request, *args, **kwargs)
 

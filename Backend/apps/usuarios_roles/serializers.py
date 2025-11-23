@@ -9,8 +9,6 @@ class RolSerializer(serializers.ModelSerializer):
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    print(">>> USANDO ESTE SERIALIZER <<<")
-
     rol = serializers.CharField(source="rol.nombre", read_only=True)
     rol_id = serializers.PrimaryKeyRelatedField(
         queryset=Rol.objects.all(),
