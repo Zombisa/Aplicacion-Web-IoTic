@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnChanges, ViewChild } from '@angular/core';
 import { ItemDTOPeticion } from '../../../../models/Peticion/ItemDTOPeticion';
 import { InventoryService } from '../../../../services/inventory.service';
 import { FormItem } from '../../templates/form-item/form-item';

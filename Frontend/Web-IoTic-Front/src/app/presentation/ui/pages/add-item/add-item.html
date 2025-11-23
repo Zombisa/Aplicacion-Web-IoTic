@@ -28,7 +28,9 @@
                     <app-form-item
                         #itemFormComponent
                         [mode]="'create'"
-                        (submitted)="handleSubmit($event)">
+                        [isLoading]="isLoading"
+                        (submitted)="handleSubmit($event)"
+                        (formReset)="hideMessages()">
                     </app-form-item>
                 </div>
             </div>

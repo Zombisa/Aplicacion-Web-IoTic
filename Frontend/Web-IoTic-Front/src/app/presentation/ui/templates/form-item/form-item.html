@@ -32,7 +32,7 @@
         </div>
 
         <!-- Estado administrativo -->
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6" *ngIf="mode === 'create'">
             <h4 class="text-state-subtitle">Estado administrativo</h4>
             <div class="box-state d-flex align-items-center"
                 [ngClass]="{ 

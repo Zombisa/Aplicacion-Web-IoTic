@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItemDTOPeticion } from '../../../../models/Peticion/ItemDTOPeticion';
 import { CommonModule } from '@angular/common';
-import { ItemDTOUpdate } from '../../../../models/Peticion/ItemDTOUpdate';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 
 @Component({
@@ -14,36 +13,61 @@ import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 export class FormItem implements OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() item?: ItemDTO;
+  @Input() isLoading: boolean = false;
 
   @Output() submitted = new EventEmitter<ItemDTOPeticion>();
+  @Output() formReset = new EventEmitter<void>();
 
   itemForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.initializeForm();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-      this.itemForm = this.fb.group({
-      descripcion: [this.item?.descripcion || '', [Validators.required, Validators.minLength(10)]],
-      estado_fisico: [this.item?.estado_fisico || '', Validators.required],
-      estado_admin: [this.item?.estado_admin || '', Validators.required],
-      observacion: [this.item?.observacion || ''],
+    if (changes['item'] && this.item) {
+      this.populateForm();
+    }
+  }
+
+  private initializeForm(): void {
+    this.itemForm = this.fb.group({
+      descripcion: ['', [Validators.required, Validators.minLength(10)]],
+      estado_fisico: ['', Validators.required],
+      estado_admin: ['', Validators.required],
+      observacion: [''],
       cantidad: [1, [Validators.required, Validators.min(1)]]
     });
   }
- 
 
+  private populateForm(): void {
+    if (this.item) {
+      this.itemForm.patchValue({
+        descripcion: this.item.descripcion || '',
+        estado_fisico: this.item.estado_fisico || '',
+        estado_admin: this.item.estado_admin || '',
+        observacion: this.item.observacion || '',
+        cantidad: 1
+      });
+    }
+  }
 
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched();
       return;
     }
 
-    const data: ItemDTOPeticion = this.itemForm.value;
-    this.submitted.emit(data); // el padre maneja la llamada al servicio y los mensajes
+    const formValue = this.itemForm.value;
+    const data: ItemDTOPeticion = {
+      ...formValue,
+      observacion: formValue.observacion || ''
+    };
+    
+    this.submitted.emit(data);
   }
 
-  resetForm() {
+  resetForm(): void {
     this.itemForm.reset({
       descripcion: '',
       estado_fisico: '',
@@ -51,5 +75,6 @@ export class FormItem implements OnChanges {
       observacion: '',
       cantidad: 1
     });
+    this.formReset.emit();
   }
 }

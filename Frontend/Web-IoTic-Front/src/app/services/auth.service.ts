@@ -1,6 +1,6 @@
 import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY } from 'rxjs';
+import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY, timeout } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
@@ -38,14 +38,24 @@ export class AuthService {
    * @param email correo electrónico del usuario
    * @param password contraseña del usuario 
    */
-  async login(email: string, password: string) {
-    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
-      throw new Error('Authentication is not available on server side');
+    async login(email: string, password: string) {
+      if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+        throw new Error('Authentication is not available on server side');
+      }
+
+      await runInInjectionContext(this.injector, async () => {
+        const userCredential = await signInWithEmailAndPassword(this.afAuth, email, password);
+
+        // Esperar a que el currentUserSubject emita
+        await firstValueFrom(
+          this.currentUser.pipe(
+            filter(u => u !== null),
+            timeout(5000)
+          )
+        );
+      });
     }
-    await runInInjectionContext(this.injector, async () => {
-      await signInWithEmailAndPassword(this.afAuth, email, password);
-    });
-  }
+
   /**
    * Consulta al backend los datos del usuario actualmente autenticado.
    * @returns Los datos del usuario actual obtenidos desde el backend
@@ -102,19 +112,43 @@ export class AuthService {
    * @returns Una promesa que resuelve con el token de ID, o null si no hay usuario autenticado.
    */
   async getToken(): Promise<string | null> {
-    if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+    try {
+      if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
+        console.log('🚫 No está en navegador o Auth no está disponible');
+        return null;
+      }
+
+      // Primero intentar obtener el usuario inmediatamente
+      const immediateUser = this.afAuth.currentUser;
+      if (immediateUser) {
+        console.log('👤 Usuario inmediato encontrado, obteniendo token...');
+        const token = await immediateUser.getIdToken(true);
+        console.log('🔑 Token obtenido exitosamente:', token ? 'Sí' : 'No');
+        return token;
+      }
+
+      // Si no hay usuario inmediato, esperar por el observable con timeout
+      console.log('⏳ Esperando usuario del observable...');
+      const user = await firstValueFrom(
+        this.currentUser.pipe(
+          filter((u): u is User => u !== null),
+          timeout(3000) // 3 segundos timeout
+        )
+      );
+
+      if (user) {
+        console.log('👤 Usuario del observable encontrado, obteniendo token...');
+        const token = await user.getIdToken(true);
+        console.log('🔑 Token del observable obtenido:', token ? 'Sí' : 'No');
+        return token;
+      }
+
+      console.warn('⚠️ No se encontró usuario autenticado');
+      return null;
+    } catch (error) {
+      console.error('❌ Error obteniendo token:', error);
       return null;
     }
-    const immediateUser = await this.afAuth.currentUser;
-    if (immediateUser) {
-      return immediateUser.getIdToken(true);
-    }
-    const user = await firstValueFrom(
-      this.currentUser.pipe(
-        filter((u): u is User => u !== null)
-      )
-    );
-    return user.getIdToken(true);
   }
   /**
    * 
@@ -134,6 +168,36 @@ export class AuthService {
     }
     return signOut(this.afAuth);
   }
-  
+  /**
+   * Método de debug para verificar el estado de autenticación
+   */
+  async debugAuthState(): Promise<void> {
+    console.log('=== DEBUG AUTH STATE ===');
+    console.log('Platform Browser:', isPlatformBrowser(this.platformId));
+    console.log('Auth Service:', !!this.afAuth);
+    console.log('Firestore Service:', !!this.firestore);
+    
+    if (this.afAuth) {
+      const currentUser = this.afAuth.currentUser;
+      console.log('Current User:', currentUser ? 'Sí' : 'No');
+      
+      if (currentUser) {
+        console.log('User UID:', currentUser.uid);
+        console.log('User Email:', currentUser.email);
+        
+        try {
+          const token = await currentUser.getIdToken();
+          console.log('Token disponible:', !!token);
+          console.log('Token length:', token ? token.length : 0);
+          console.log('Token preview:', token ? token.substring(0, 50) + '...' : 'N/A');
+        } catch (error) {
+          console.error('Error obteniendo token:', error);
+        }
+      }
+    }
+    
+    console.log('CurrentUserSubject value:', this.currentUserSubject.value ? 'Sí' : 'No');
+    console.log('=== END DEBUG ===');
+  }
 
 }

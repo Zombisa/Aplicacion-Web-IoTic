@@ -4,7 +4,7 @@
 <section class="banner-primary">
     <div class="d-flex justify-content-center align-items-center py-3 py-md-5">
         <div class="d-flex justify-content-center align-items-center flex-column">
-            <h1 class="title text-center">Añadir Item</h1>
+            <h1 class="title text-center">Editemos el item</h1>
         </div>
     </div>
     
@@ -25,12 +25,14 @@
                         {{ errorMessage }}
                         <button type="button" class="btn-close" (click)="hideMessages()"></button>
                     </div>
-                    <app-form-item
-                        #itemFormComponent
-                        [mode]="'edit'"
-                        [item]="item"
-                        (submitted)="handleSubmit($event)">
-                    </app-form-item>
+                    <div class="section-edit-item">
+                        <app-form-item
+                            #itemFormComponent
+                            [mode]="'edit'"
+                            [item]="item"
+                            (submitted)="handleSubmit($event)">
+                        </app-form-item>
+                    </div>
                 </div>
             </div>
         </div>
