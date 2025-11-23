@@ -61,7 +61,7 @@ class Prestamo(models.Model):
         ('Devuelto', 'Devuelto'),
     ]
 
-    item = models.ForeignKey(Inventario, on_delete=models.CASCADE, related_name='prestamos')
+    item = models.ForeignKey(Inventario, on_delete=models.PROTECT, related_name='prestamos')
 
     # Datos del solicitante
     nombre_persona = models.CharField(max_length=100, default="nombre")

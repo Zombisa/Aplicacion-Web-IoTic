@@ -1,113 +1,111 @@
-from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Usuario, Rol
-from .services import crear_usuario, asignar_rol_firebase
-from .serializers import UsuarioSerializer, RolSerializer
 
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from firebase_admin import auth
-from .decorators import verificar_token
-import json
-from rest_framework.decorators import api_view
-from .services import crear_usuario
+from django.shortcuts import get_object_or_404
 
-class RolViewSet(viewsets.ModelViewSet):
-    queryset = Rol.objects.all()
-    serializer_class = RolSerializer
+from .models import Usuario, Rol
+from .serializers import UsuarioSerializer, RolSerializer
+from .services import asignar_rol_firebase
+from .decorators import verificar_roles
 
-"""
-class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
-"""
 
-@api_view(['POST'])
-def crear_usuario_admin(request):
-    """
-    Endpoint protegido: solo los administradores pueden crear usuarios.
-    """
-    # Obtener el token del encabezado Authorization
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return Response({'error': 'Token no proporcionado'}, status=status.HTTP_401_UNAUTHORIZED)
+# ======================================================
+# LISTAR USUARIOS
+# ======================================================
+@api_view(["GET"])
+def listar_usuarios(request):
+    usuarios = Usuario.objects.all()
+    serializer = UsuarioSerializer(usuarios, many=True)
+    return Response(serializer.data)
 
-    token = auth_header.split(' ')[1]
 
+# ======================================================
+# CREAR USUARIO (Firebase + PostgreSQL)
+# ======================================================
+@api_view(["POST"])
+def crear_usuario(request):
+    data = request.data
+
+    required_fields = ["email", "contrasena", "nombre", "apellido", "rol"]
+    for field in required_fields:
+        if field not in data:
+            return Response({"error": f"'{field}' es requerido"}, status=400)
+
+    # Validar rol
+    rol = get_object_or_404(Rol, nombre=data["rol"])
+
+    # Crear usuario en Firebase
     try:
-        # Verificar token y obtener datos del usuario actual
-        decoded_token = auth.verify_id_token(token)
-        role = decoded_token.get('role')
-
-        # Solo los administradores pueden asignar roles
-        if role != 'admin':
-            return Response({'error': 'No autorizado. Solo los administradores pueden crear usuarios.'},
-                            status=status.HTTP_403_FORBIDDEN)
-
-        # Obtener los datos enviados en el body
-        uid_destino = request.data.get('uid')
-        nombre = request.data.get('nombre')
-        apellido = request.data.get('apellido')
-        email = request.data.get('email')
-        contrasena = request.data.get('contrasena')
-        nuevo_rol = request.data.get('role')
-
-
-        if not all([nombre, apellido, email, contrasena, nuevo_rol]):
-            return Response({'error': 'Todos los campos son obligatorios.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # obtener rol
-        try:
-            rol_obj = Rol.objects.get(nombre=nuevo_rol)
-        except Rol.DoesNotExist:
-            return Response({'error': f'El rol "{nuevo_rol}" no existe en la base de datos.'},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        # Llamando a la funcion de services.py
-        usuario = crear_usuario({
-            'nombre': nombre,
-            'apellido': apellido,
-            'email': email,
-            'contrasena': contrasena,
-            'rol': rol_obj
-        })
-
-        #Responder al cliente
-        return Response({
-            'message': 'Usuario creado correctamente.',
-            'usuario': {
-                'id': usuario.id,
-                'nombre': usuario.nombre,
-                'apellido': usuario.apellido,
-                'email': usuario.email,
-                'rol': usuario.rol.nombre
-            }
-        }, status=status.HTTP_201_CREATED)
-
-    except auth.EmailAlreadyExistsError:
-        return Response({'error': 'El correo ya está registrado en Firebase.'}, status=status.HTTP_400_BAD_REQUEST)
-    except auth.InvalidIdTokenError:
-        return Response({'error': 'Token inválido.'}, status=status.HTTP_401_UNAUTHORIZED)
-    except auth.ExpiredIdTokenError:
-        return Response({'error': 'Token expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+        user_record = auth.create_user(
+            email=data["email"],
+            password=data["contrasena"]
+        )
     except Exception as e:
-        return Response({'error': f'Error al crear usuario: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        return Response({'error': f'Error al asignar rol: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": f"Error en Firebase: {str(e)}"}, status=400)
+
+    # Guardar en PostgreSQL
+    usuario = Usuario.objects.create(
+        uid_firebase=user_record.uid,
+        nombre=data["nombre"],
+        apellido=data["apellido"],
+        email=data["email"],
+        contrasena="",
+        rol=rol,
+        estado=True
+    )
+
+    # Asignar custom claim
+    asignar_rol_firebase(user_record.uid, rol.nombre)
+
+    return Response(UsuarioSerializer(usuario).data, status=201)
 
 
+# ======================================================
+# LISTAR ROLES
+# ======================================================
+@api_view(["GET"])
+def listar_roles(request):
+    roles = Rol.objects.all()
+    serializer = RolSerializer(roles, many=True)
+    return Response(serializer.data)
+
+
+# ======================================================
+# ASIGNAR ROL A UN USUARIO EXISTENTE
+# ======================================================
 @api_view(["POST"])
 def asignar_rol(request):
     uid = request.data.get("uid")
-    rol = request.data.get("rol")
+    rol_name = request.data.get("rol")
 
-    if not uid or not rol:
+    if not uid or not rol_name:
         return Response({"error": "uid y rol son requeridos"}, status=400)
 
-    exito = asignar_rol_firebase(uid, rol)
+    try:
+        usuario = Usuario.objects.get(uid_firebase=uid)
+    except Usuario.DoesNotExist:
+        return Response({"error": "Usuario no existe en la base de datos"}, status=404)
 
-    if not exito:
-        return Response({"error": "No se pudo asignar el rol"}, status=500)
+    # validar rol
+    try:
+        rol = Rol.objects.get(nombre=rol_name)
+    except Rol.DoesNotExist:
+        return Response({"error": "El rol no existe"}, status=404)
 
-    return Response({"message": f"Rol '{rol}' asignado correctamente al usuario {uid}"})
+    # actualizar en BD
+    usuario.rol = rol
+    usuario.save()
+
+    # actualizar en Firebase
+    asignar_rol_firebase(uid, rol.name)
+
+    return Response({"message": f"Rol '{rol_name}' asignado a {uid}"})
+
+
+@api_view(["POST"])
+@verificar_roles(["admin"])
+def sincronizar_firebase(request):
+    exec(open("apps/usuarios_roles/scripts/sincronizar_firebase.py").read())
+    return Response({"message": "Sincronización completa"})

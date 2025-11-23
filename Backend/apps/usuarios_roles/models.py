@@ -18,7 +18,7 @@ class Usuario(models.Model):
     contrasena = models.CharField(max_length=200)
     fechaRegistro = models.DateField(auto_now_add=True)
     estado = models.BooleanField(default=True)
-    rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = 'usuario'

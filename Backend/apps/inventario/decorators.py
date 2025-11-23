@@ -1,41 +1,92 @@
 from functools import wraps
 from firebase_admin import auth
 from django.http import JsonResponse
+from apps.usuarios_roles.models import Usuario, Rol
 
-def verificar_token(roles_permitidos=None):
-    """
-    roles_permitidos: lista opcional. Ej:
-      @method_decorator(verificar_token(["admin"]), name='dispatch')
-    """
+
+# ======================================================
+#   VERIFICAR TOKEN Y SINCRONIZAR USUARIO
+# ======================================================
+
+def verificar_token(view_func):
+    @wraps(view_func)
+    def wrapped(request, *args, **kwargs):
+
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return JsonResponse({"error": "Token no proporcionado"}, status=401)
+
+        token = auth_header.split(" ")[1]
+
+        try:
+            decoded = auth.verify_id_token(token)
+        except Exception as e:
+            return JsonResponse({"error": f"Token inválido: {str(e)}"}, status=401)
+
+        uid = decoded.get("uid")
+        email = decoded.get("email")
+        role_claim = (decoded.get("role") or "usuario").lower().strip()
+
+        # ------------------------------
+        #  Sincronizar usuario en BD
+        # ------------------------------
+        usuario, creado = Usuario.objects.get_or_create(
+            uid_firebase=uid,
+            defaults={
+                "email": email,
+                "nombre": email.split("@")[0],
+                "apellido": "",
+                "contrasena": "",
+                "estado": True,
+            }
+        )
+
+        # Asignar rol si existe
+        try:
+            rol_obj = Rol.objects.get(nombre__iexact=role_claim)
+            usuario.rol = rol_obj
+            usuario.save()
+        except Rol.DoesNotExist:
+            pass
+
+        # Guardar objetos en request
+        request.user_local = usuario
+        request.user_firebase = decoded
+        request.user_role = role_claim   # ← AHORA SÍ SE DEFINE
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapped
+
+
+
+# ======================================================
+#   VERIFICAR ROLES
+# ======================================================
+
+def verificar_roles(roles_permitidos):
+    roles_permitidos = [r.lower().strip() for r in roles_permitidos]
+
     def decorator(view_func):
         @wraps(view_func)
-        def wrapped_view(request, *args, **kwargs):
-            auth_header = request.headers.get("Authorization")
+        def wrapped(request, *args, **kwargs):
 
-            if not auth_header or not auth_header.startswith("Bearer "):
-                return JsonResponse({"error": "No se proporcionó un token válido"}, status=401)
+            # Leer rol del token
+            token_role = getattr(request, "user_role", "").lower().strip()
 
-            token = auth_header.split(" ")[1]
+            # Leer rol de BD
+            db_role = ""
+            if hasattr(request, "user_local") and request.user_local.rol:
+                db_role = request.user_local.rol.nombre.lower().strip()
 
-            try:
-                decoded_token = auth.verify_id_token(token)
-                request.user_firebase = decoded_token
-            except auth.ExpiredIdTokenError:
-                return JsonResponse({"error": "Token expirado"}, status=401)
-            except auth.InvalidIdTokenError:
-                return JsonResponse({"error": "Token inválido"}, status=401)
-            except Exception:
-                return JsonResponse({"error": "No se pudo validar el token"}, status=401)
-
-            if roles_permitidos:
-                user_role = decoded_token.get("role")
-                if user_role not in roles_permitidos:
-                    return JsonResponse(
-                        {"error": f"Permisos insuficientes. Este recurso requiere los roles: {roles_permitidos}"},
-                        status=403
-                    )
+            if token_role not in roles_permitidos and db_role not in roles_permitidos:
+                return JsonResponse({
+                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos}",
+                    "token_role": token_role,
+                    "db_role": db_role
+                }, status=403)
 
             return view_func(request, *args, **kwargs)
 
-        return wrapped_view
+        return wrapped
     return decorator

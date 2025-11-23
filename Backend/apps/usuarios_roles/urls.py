@@ -1,13 +1,13 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import RolViewSet, crear_usuario_admin, asignar_rol
-from django.urls import path, include
+from .views import listar_usuarios, crear_usuario, listar_roles, asignar_rol, sincronizar_firebase
 
 router = DefaultRouter()
-#router.register(r'crear_usuario_admin', crear_usuario_admin)
-router.register(r'roles', RolViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('crear_usuario_admin/', crear_usuario_admin, name='crear_usuario_admin'),
-    path('asignar_rol/', asignar_rol, name='asignar_rol'),
+    path('', listar_usuarios, name='listar_usuarios'),
+    path('crear/', crear_usuario, name='crear_usuario'),
+    path('roles/', listar_roles, name='listar_roles'),
+    path('asignar-rol/', asignar_rol, name='asignar_rol'),
+    path('sincronizar/', sincronizar_firebase, name='sincronizar'),
 ]

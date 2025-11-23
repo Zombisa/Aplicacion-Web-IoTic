@@ -9,12 +9,26 @@ class RolSerializer(serializers.ModelSerializer):
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    rol = RolSerializer(read_only=True)  # Muestra rol como objeto
+    print(">>> USANDO ESTE SERIALIZER <<<")
+
+    rol = serializers.CharField(source="rol.nombre", read_only=True)
     rol_id = serializers.PrimaryKeyRelatedField(
-        queryset=Rol.objects.all(), source="rol", write_only=True
+        queryset=Rol.objects.all(),
+        source="rol",      
+        write_only=True
     )
 
     class Meta:
         model = Usuario
-        fields = ["id", "nombre", "apellido", "email", "contrasena",
-                  "fechaRegistro", "estado", "rol", "rol_id"]
+        fields = [
+            "id",
+            "uid_firebase",
+            "nombre",
+            "apellido",
+            "email",
+            "contrasena",
+            "fechaRegistro",
+            "estado",
+            "rol",      
+            "rol_id"    
+        ]
