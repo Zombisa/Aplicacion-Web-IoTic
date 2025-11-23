@@ -140,7 +140,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .btn-primary{
     color: white;
     background-color: var(--color-primary);
-    border-radius: 10px;
+    border-radius: 20px;
     width: 50%;
     height: 3rem;
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
@@ -159,7 +159,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
     background-color: #f6f9ff;
-    border-radius: 10px;
+    border-radius: 20px;
     width: 50%;
     height: 3rem;
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;

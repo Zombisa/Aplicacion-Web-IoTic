@@ -2,7 +2,7 @@ import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optio
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY, timeout } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
+import {Firestore, doc, collection,  setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 
 import { isPlatformBrowser } from '@angular/common';
@@ -28,53 +28,38 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId) && this.afAuth) {
       authState(this.afAuth).subscribe(async (user) => {
         this.currentUserSubject.next(user);
-        if (user && this.firestore) {
-          const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'usuarios', user.uid)));
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-          }
-        } else {
-        }
       });
     }
   }
   /**
    * Maneja el inicio de sesión del usuario con correo y contraseña.
-   * @param email correo electrónico del usuario
-   * @param password contraseña del usuario 
    */
   async login(email: string, password: string) {
     if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
       throw new Error('Authentication is not available on server side');
     }
 
-    // Limpiar cache antes del login
     this.clearTokenCache();
 
     await runInInjectionContext(this.injector, async () => {
       const userCredential = await signInWithEmailAndPassword(this.afAuth, email, password);
 
-      // Esperar a que el currentUserSubject emita el nuevo usuario
       await firstValueFrom(
         this.currentUser.pipe(
           filter(u => u !== null),
           timeout(5000)
         )
       );
-
-      console.log('✅ Login exitoso para:', userCredential.user.email);
     });
   }
 
   /**
    * Consulta al backend los datos del usuario actualmente autenticado.
-   * @returns Los datos del usuario actual obtenidos desde el backend
    */
   async fetchCurrentUserFromBackend() {
     const token = await this.getToken();
-    console.log('Token obtenido de Firebase:', token); 
-  
     const url = `${environment.apiUrl}/auth/me`;
+    
     if (token) {
       return firstValueFrom(
         this.http.get(url, {
@@ -82,7 +67,7 @@ export class AuthService {
         })
       );
     }
-    console.warn('No se obtuvo token, enviando sin Authorization header');
+    
     return firstValueFrom(this.http.get(url));
   }
   /**
@@ -119,39 +104,31 @@ export class AuthService {
   }
   /**
    * Obtiene el token de ID del usuario autenticado con cache inteligente
-   * - Usa cache mientras el token no esté próximo a expirar
-   * - Evita múltiples llamadas concurrentes a Firebase
-   * - Refresca automáticamente tokens expirados
    */
   async getToken(): Promise<string | null> {
     if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
-      console.log('🚫 No está en navegador o Auth no disponible');
       return null;
     }
 
     const now = Date.now();
     
-    // 1. Verificar cache válido (30 segundos antes de expirar)
-    if (this.cachedToken && this.tokenExpiry && now < (this.tokenExpiry - 30000)) {
-      console.log('💾 Usando token cacheado válido');
+    // Si tenemos un token válido en cache (con 5 minutos de margen), lo usamos
+    if (this.cachedToken && this.tokenExpiry && now < (this.tokenExpiry - 300000)) {
       return this.cachedToken;
     }
 
-    // 2. Si ya hay una petición en curso, esperarla (evita múltiples llamadas)
+    // Si ya hay una petición en curso, esperarla
     if (this.tokenPromise) {
-      console.log('⏳ Esperando petición de token en curso...');
       return this.tokenPromise;
     }
 
-    // 3. Crear nueva petición de token
-    console.log('🔄 Obteniendo nuevo token de Firebase...');
+    // Crear nueva petición de token
     this.tokenPromise = this.fetchFreshToken();
 
     try {
       const token = await this.tokenPromise;
       return token;
     } finally {
-      // Limpiar la promesa al completar (exitosa o con error)
       this.tokenPromise = null;
     }
   }
@@ -161,11 +138,9 @@ export class AuthService {
    */
   private async fetchFreshToken(): Promise<string | null> {
     try {
-      // Obtener usuario actual
       let user = this.afAuth.currentUser;
       
       if (!user) {
-        console.log('👤 Usuario no encontrado inmediatamente, esperando...');
         user = await firstValueFrom(
           this.currentUser.pipe(
             filter((u): u is User => u !== null),
@@ -175,26 +150,18 @@ export class AuthService {
       }
 
       if (!user) {
-        console.warn('⚠️ No hay usuario autenticado');
         this.clearTokenCache();
         return null;
       }
 
-      // Obtener token con información de expiración
-      console.log('🔑 Obteniendo token del usuario:', user.uid);
-      const idTokenResult = await user.getIdTokenResult(true); // force refresh
+      const idTokenResult = await user.getIdTokenResult(false);
       
-      // Actualizar cache
       this.cachedToken = idTokenResult.token;
       this.tokenExpiry = new Date(idTokenResult.expirationTime).getTime();
-      
-      console.log('✅ Token obtenido y cacheado exitosamente');
-      console.log('📅 Expira en:', new Date(this.tokenExpiry).toLocaleString());
       
       return this.cachedToken;
 
     } catch (error) {
-      console.error('❌ Error obteniendo token fresco:', error);
       this.clearTokenCache();
       return null;
     }
@@ -213,18 +180,17 @@ export class AuthService {
    * Invalida el token cache manualmente (útil en logout o errores 401)
    */
   public invalidateTokenCache(): void {
-    console.log('🗑️ Cache de token invalidado manualmente');
     this.clearTokenCache();
   }
 
   /**
-   * Verifica si el token actual está próximo a expirar (menos de 2 minutos)
+   * Verifica si el token actual está próximo a expirar (menos de 5 minutos)
    */
   public isTokenNearExpiry(): boolean {
     if (!this.tokenExpiry) return true;
     const now = Date.now();
-    const twoMinutes = 2 * 60 * 1000;
-    return now > (this.tokenExpiry - twoMinutes);
+    const fiveMinutes = 5 * 60 * 1000;
+    return now > (this.tokenExpiry - fiveMinutes);
   }
   /**
    * 
@@ -243,10 +209,7 @@ export class AuthService {
       return Promise.resolve();
     }
     
-    // Limpiar cache antes del logout
     this.clearTokenCache();
-    console.log('🚪 Cerrando sesión y limpiando cache...');
-    
     return signOut(this.afAuth);
   }
   /**
