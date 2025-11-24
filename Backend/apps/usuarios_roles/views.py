@@ -100,7 +100,7 @@ def asignar_rol(request):
     usuario.save()
 
     # Actualizar en Firebase
-    asignar_rol_firebase(uid, rol.nombre)   # ← CORRECTO
+    asignar_rol_firebase(uid, rol.nombre)
 
     return Response({"message": f"Rol '{rol.nombre}' asignado a {uid}"})
 

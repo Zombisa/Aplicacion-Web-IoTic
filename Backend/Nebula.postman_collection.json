@@ -3391,7 +3391,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"María\",\r\n  \"apellido\": \"González\",\r\n  \"email\": \"maria@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"role\": \"mentor\"\r\n}",
+							"raw": "{\r\n  \"nombre\": \"Jane\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"jdoe@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3399,7 +3399,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/crear_usuario_admin/",
+							"raw": "http://127.0.0.1:8000/api/usuarios/crear/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3411,7 +3411,7 @@
 							"path": [
 								"api",
 								"usuarios",
-								"crear_usuario_admin",
+								"crear",
 								""
 							]
 						}
