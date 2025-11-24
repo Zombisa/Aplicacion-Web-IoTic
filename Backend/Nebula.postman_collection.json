@@ -3288,7 +3288,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/asignar_rol/",
+							"raw": "http://127.0.0.1:8000/api/usuarios/asignar-rol/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3300,7 +3300,7 @@
 							"path": [
 								"api",
 								"usuarios",
-								"asignar_rol",
+								"asignar-rol",
 								""
 							]
 						}

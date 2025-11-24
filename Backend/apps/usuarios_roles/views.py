@@ -83,25 +83,27 @@ def asignar_rol(request):
     if not uid or not rol_name:
         return Response({"error": "uid y rol son requeridos"}, status=400)
 
+    # Buscar usuario
     try:
         usuario = Usuario.objects.get(uid_firebase=uid)
     except Usuario.DoesNotExist:
         return Response({"error": "Usuario no existe en la base de datos"}, status=404)
 
-    # validar rol
+    # Buscar rol
     try:
         rol = Rol.objects.get(nombre=rol_name)
     except Rol.DoesNotExist:
         return Response({"error": "El rol no existe"}, status=404)
 
-    # actualizar en BD
+    # Actualizar en base de datos
     usuario.rol = rol
     usuario.save()
 
-    # actualizar en Firebase
-    asignar_rol_firebase(uid, rol.name)
+    # Actualizar en Firebase
+    asignar_rol_firebase(uid, rol.nombre)   # ← CORRECTO
 
-    return Response({"message": f"Rol '{rol_name}' asignado a {uid}"})
+    return Response({"message": f"Rol '{rol.nombre}' asignado a {uid}"})
+
 
 
 @api_view(["POST"])
