@@ -8,8 +8,7 @@ from django.shortcuts import get_object_or_404
 from .models import Usuario, Rol
 from .serializers import UsuarioSerializer, RolSerializer
 from .services import asignar_rol_firebase
-from .decorators import verificar_roles
-
+from .decorators import verificar_roles, verificar_token
 
 # ======================================================
 # LISTAR USUARIOS
@@ -76,6 +75,8 @@ def listar_roles(request):
 # ASIGNAR ROL A UN USUARIO EXISTENTE
 # ======================================================
 @api_view(["POST"])
+@verificar_token
+@verificar_roles(["admin"])
 def asignar_rol(request):
     uid = request.data.get("uid")
     rol_name = request.data.get("rol")
@@ -107,6 +108,7 @@ def asignar_rol(request):
 
 
 @api_view(["POST"])
+@verificar_token
 @verificar_roles(["admin"])
 def sincronizar_firebase(request):
     exec(open("apps/usuarios_roles/scripts/sincronizar_firebase.py").read())
