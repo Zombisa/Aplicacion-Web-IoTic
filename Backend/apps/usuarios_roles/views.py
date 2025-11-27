@@ -113,3 +113,91 @@ def asignar_rol(request):
 def sincronizar_firebase(request):
     exec(open("apps/usuarios_roles/scripts/sincronizar_firebase.py").read())
     return Response({"message": "Sincronización completa"})
+
+
+# Actualizar usuario
+@api_view(["PUT", "PATCH"])
+@verificar_token
+@verificar_roles(["admin"])
+def actualizar_usuario(request, usuario_id):
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+    except Usuario.DoesNotExist:
+        return Response({"error": "Usuario no encontrado"}, status=404)
+    
+    data = request.data
+    
+    # Actualizar campos si están presentes
+    if "nombre" in data:
+        usuario.nombre = data["nombre"]
+    if "apellido" in data:
+        usuario.apellido = data["apellido"]
+    if "email" in data:
+        usuario.email = data["email"]
+    if "rol" in data:
+        try:
+            rol = Rol.objects.get(nombre=data["rol"])
+            usuario.rol = rol
+            # Actualizar custom claim en Firebase
+            if usuario.uid_firebase:
+                asignar_rol_firebase(usuario.uid_firebase, rol.nombre)
+        except Rol.DoesNotExist:
+            return Response({"error": "El rol no existe"}, status=400)
+    
+    usuario.save()
+    serializer = UsuarioSerializer(usuario)
+    return Response(serializer.data)
+
+#activar o desactivar usuario
+@api_view(["PATCH"])
+@verificar_token
+@verificar_roles(["admin"])
+def cambiar_estado_usuario(request, usuario_id):
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+    except Usuario.DoesNotExist:
+        return Response({"error": "Usuario no encontrado"}, status=404)
+    
+    # Cambiar estado
+    usuario.estado = not usuario.estado
+    usuario.save()
+    
+    # Si se desactiva, también desactivar en Firebase
+    if usuario.uid_firebase and not usuario.estado:
+        try:
+            auth.update_user(usuario.uid_firebase, disabled=True)
+        except Exception as e:
+            print(f"Error al desactivar usuario en Firebase: {e}")
+    elif usuario.uid_firebase and usuario.estado:
+        try:
+            auth.update_user(usuario.uid_firebase, disabled=False)
+        except Exception as e:
+            print(f"Error al activar usuario en Firebase: {e}")
+    
+    serializer = UsuarioSerializer(usuario)
+    return Response(serializer.data)
+
+
+#eliminar usuario
+@api_view(["DELETE"])
+@verificar_token
+@verificar_roles(["admin"])
+def eliminar_usuario(request, usuario_id):
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+    except Usuario.DoesNotExist:
+        return Response({"error": "Usuario no encontrado"}, status=404)
+    
+    uid_firebase = usuario.uid_firebase
+    
+    # Eliminar de PostgreSQL
+    usuario.delete()
+    
+    # Eliminar de Firebase si existe
+    if uid_firebase:
+        try:
+            auth.delete_user(uid_firebase)
+        except Exception as e:
+            print(f"Error al eliminar usuario de Firebase: {e}")
+    
+    return Response({"message": "Usuario eliminado correctamente"}, status=200)
