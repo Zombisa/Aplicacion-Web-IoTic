@@ -1,0 +1,100 @@
+<div class="users-container">
+  <!-- Sección de Filtros -->
+  <div class="filters-section">
+    <div class="filters-header">
+      <h3>Filtros de Búsqueda</h3>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="filteredData.length < usersData.length">
+        Limpiar Filtros
+      </button>
+    </div>
+
+    <div class="filters-grid">
+      <!-- Búsqueda por texto -->
+      <div class="filter-group">
+        <label for="searchText">Buscar:</label>
+        <input
+          type="text"
+          id="searchText"
+          [(ngModel)]="filters.searchText"
+          (input)="applyFilters()"
+          placeholder="Nombre, apellido o email..."
+          class="filter-input"
+        />
+      </div>
+
+      <!-- Filtro de Rol -->
+      <div class="filter-group">
+        <label for="rol">Rol:</label>
+        <select
+          id="rol"
+          [(ngModel)]="filters.rol"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todos los roles</option>
+          <option *ngFor="let rol of roles" [value]="rol">
+            {{ rol }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Información de resultados -->
+    <div class="results-info">
+      Mostrando <strong>{{ getResultsCount() }}</strong> de <strong>{{ usersData.length }}</strong> usuarios
+    </div>
+  </div>
+
+  <!-- Lista de Usuarios -->
+  <div class="users-list">
+    <div 
+      *ngFor="let user of paginatedData()" 
+      class="user-item"
+      [class.selected]="isSelected(user)"
+    >
+      <div class="user-content" (click)="selectUser(user)">
+        <div class="user-icon">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="user-info">
+          <div class="user-name">{{ user.nombre }} {{ user.apellido }}</div>
+          <div class="user-role">{{ user.rol }}</div>
+          <div class="user-status" [class.inactive]="!user.estado">
+            {{ user.estado ? 'Activo' : 'Inactivo' }}
+          </div>
+        </div>
+      </div>
+      <div class="user-actions" (click)="$event.stopPropagation()">
+        <button 
+          class="btn-action-icon" 
+          [title]="user.estado ? 'Desactivar' : 'Activar'"
+          (click)="onToggleStatus(user)"
+        >
+          <mat-icon>{{ user.estado ? 'block' : 'check_circle' }}</mat-icon>
+        </button>
+        <button 
+          class="btn-action-icon" 
+          title="Editar"
+          (click)="onEdit(user)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button 
+          class="btn-action-icon btn-delete" 
+          title="Eliminar"
+          (click)="onDelete(user)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container p-2">
+    <button (click)="previousPage()" class="button-arrow" [disabled]="currentPage === 1"> &lt; </button>
+    <span>{{ currentPage }} de {{ totalPages() }}</span>
+    <button (click)="nextPage()" class="button-arrow" [disabled]="currentPage === totalPages()"> &gt; </button>
+  </div>
+</div>
+

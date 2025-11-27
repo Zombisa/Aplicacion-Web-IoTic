@@ -13,6 +13,8 @@ import { ViewItem } from './presentation/ui/pages/view-item/view-item';
 import { ItemAvailableGuard } from './guards/item-available-guard';
 import { EditItem } from './presentation/ui/pages/edit-item/edit-item';
 import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-history-loan';
+import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
+import { AdminGuard } from './guards/admin-guard-guard';
 
 export const routes: Routes = [
 
@@ -28,5 +30,6 @@ export const routes: Routes = [
      {path: 'inventario/edit-item/:id', component: EditItem},
      {path: 'inventario/history', component: ViewHistoryLoan},
      {path: 'productivity', component: ProductivityPage},
+     {path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard]},
 
 ];

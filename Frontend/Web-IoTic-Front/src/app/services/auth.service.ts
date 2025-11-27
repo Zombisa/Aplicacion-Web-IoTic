@@ -198,7 +198,12 @@ export class AuthService {
    */
   isAdmin(): Observable<boolean> {
         return this.getUserClaims().pipe(
-          map(claims => !!(claims && claims['admin'] === true))
+          map(claims => {
+            // El backend asigna el rol como {"role": "admin"} en los custom claims
+            const role = claims && claims['role'];
+            const isAdmin = role === 'admin';
+            return isAdmin;
+          })
         );
   }
   /**
