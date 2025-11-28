@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+//import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-confirmation-modal',

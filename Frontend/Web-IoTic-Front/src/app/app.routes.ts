@@ -9,6 +9,7 @@ import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
+import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 
 export const routes: Routes = [
 
