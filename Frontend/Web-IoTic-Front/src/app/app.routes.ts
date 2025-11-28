@@ -10,6 +10,8 @@ import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
+import { EvaluationCommitteesPage } from './presentation/ui/pages/publication-templates/evaluation-committees/list/evaluation-committees-page';
+import { EvaluationCommitteeCreatePage } from './presentation/ui/pages/publication-templates/evaluation-committees/form/create-page/evaluation-committee-create-page';
 
 export const routes: Routes = [
 
@@ -22,5 +24,7 @@ export const routes: Routes = [
      {path:'inventario/add-item', component: AddItem},
      {path: 'inventario/add-loan', component: AddLoan},
      {path: 'inventario/view-item/:id', component: ViewLoanItem},
-     {path: 'productivity', component: ProductivityPage}
-];
+     {path: 'productivity', component: ProductivityPage},
+     {path: 'publicaciones/comites', component: EvaluationCommitteesPage},
+     {path: 'publicaciones/comites/nuevo', component: EvaluationCommitteeCreatePage}
+];   
