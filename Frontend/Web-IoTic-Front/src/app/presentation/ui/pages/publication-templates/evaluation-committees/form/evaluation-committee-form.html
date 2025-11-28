@@ -1,0 +1,178 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="needs-validation" [class.was-validated]="form.touched">
+  <div class="row g-2">
+    <!-- Título -->
+    <div class="col-12">
+      <label for="titulo" class="form-label small fw-semibold text-custom-primary">Título *</label>
+      <input type="text" 
+             class="form-control form-control-sm" 
+             id="titulo"
+             formControlName="titulo" 
+             placeholder="Título de la participación"
+             [class.is-invalid]="form.get('titulo')?.touched && form.get('titulo')?.invalid">
+      <div class="invalid-feedback small" *ngIf="form.get('titulo')?.touched && form.get('titulo')?.errors?.['required']">
+        El título es requerido
+      </div>
+    </div>
+
+    <!-- País e Institución -->
+    <div class="col-md-6">
+      <label for="pais" class="form-label small fw-semibold text-custom-primary">País *</label>
+      <input type="text" 
+             class="form-control form-control-sm" 
+             id="pais"
+             formControlName="pais" 
+             placeholder="País donde se realizó"
+             [class.is-invalid]="form.get('pais')?.touched && form.get('pais')?.invalid">
+      <div class="invalid-feedback small" *ngIf="form.get('pais')?.touched && form.get('pais')?.errors?.['required']">
+        El país es requerido
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <label for="institucion" class="form-label small fw-semibold text-custom-primary">Institución *</label>
+      <input type="text" 
+             class="form-control form-control-sm" 
+             id="institucion"
+             formControlName="institucion" 
+             placeholder="Institución organizadora"
+             [class.is-invalid]="form.get('institucion')?.touched && form.get('institucion')?.invalid">
+      <div class="invalid-feedback small" *ngIf="form.get('institucion')?.touched && form.get('institucion')?.errors?.['required']">
+        La institución es requerida
+      </div>
+    </div>
+
+    <!-- Año y Tipo -->
+    <div class="col-md-6">
+      <label for="anio" class="form-label small fw-semibold text-custom-primary">Año *</label>
+      <input type="number" 
+             class="form-control form-control-sm" 
+             id="anio"
+             formControlName="anio" 
+             placeholder="Año de participación"
+             [class.is-invalid]="form.get('anio')?.touched && form.get('anio')?.invalid">
+      <div class="invalid-feedback small" *ngIf="form.get('anio')?.touched && form.get('anio')?.errors?.['required']">
+        El año es requerido
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <label for="tipoProductividad" class="form-label small fw-semibold text-custom-primary">Tipo de productividad *</label>
+      <input type="text" 
+             class="form-control form-control-sm" 
+             id="tipoProductividad"
+             formControlName="tipoProductividad" 
+             placeholder="Tipo de evaluación"
+             [class.is-invalid]="form.get('tipoProductividad')?.touched && form.get('tipoProductividad')?.invalid">
+      <div class="invalid-feedback small" *ngIf="form.get('tipoProductividad')?.touched && form.get('tipoProductividad')?.errors?.['required']">
+        El tipo es requerido
+      </div>
+    </div>
+
+    <!-- Licencia -->
+    <div class="col-12">
+      <label for="licencia" class="form-label small fw-semibold text-custom-primary">Licencia *</label>
+      <select class="form-select form-select-sm" 
+              id="licencia"
+              formControlName="licencia"
+              [class.is-invalid]="form.get('licencia')?.touched && form.get('licencia')?.invalid">
+        <option value="">Seleccione una licencia</option>
+        <option value="CC BY">CC BY</option>
+        <option value="CC BY-NC">CC BY-NC</option>
+        <option value="CC BY-ND">CC BY-ND</option>
+        <option value="CC BY-SA">CC BY-SA</option>
+        <option value="Copyright">Copyright</option>
+      </select>
+      <div class="invalid-feedback small" *ngIf="form.get('licencia')?.touched && form.get('licencia')?.errors?.['required']">
+        La licencia es requerida
+      </div>
+    </div>
+  </div>
+
+  <!-- Autores -->
+  <div class="mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0 small fw-semibold text-custom-primary">Autores *</h6>
+      <button type="button" 
+              class="btn btn-sm btn-outline-custom-primary"
+              (click)="addAutor()">
+        <i class="fas fa-plus me-1"></i>Agregar
+      </button>
+    </div>
+    
+    <div formArrayName="autores">
+      <div *ngFor="let a of autores.controls; let i = index" class="input-group input-group-sm mb-1">
+        <input type="text" 
+               class="form-control form-control-sm" 
+               [formControlName]="i" 
+               placeholder="Nombre del autor"
+               [class.is-invalid]="a.touched && a.invalid">
+        <button type="button" 
+                class="btn btn-outline-danger btn-sm" 
+                (click)="removeAutor(i)"
+                [disabled]="autores.length <= 1">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="invalid-feedback small" *ngIf="a.touched && a.errors?.['required']">
+          El nombre del autor es requerido
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Etiquetas GTI -->
+  <div class="mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0 small fw-semibold text-custom-primary">Etiquetas GTI</h6>
+      <button type="button" 
+              class="btn btn-sm btn-outline-secondary"
+              (click)="addEtiqueta()">
+        <i class="fas fa-plus me-1"></i>Agregar
+      </button>
+    </div>
+    
+    <div formArrayName="etiquetasGTI">
+      <div *ngFor="let e of etiquetasGTI.controls; let i = index" class="input-group input-group-sm mb-1">
+        <input type="text" 
+               class="form-control form-control-sm" 
+               [formControlName]="i" 
+               placeholder="Etiqueta GTI"
+               [class.is-invalid]="e.touched && e.invalid">
+        <button type="button" 
+                class="btn btn-outline-danger btn-sm" 
+                (click)="removeEtiqueta(i)">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="invalid-feedback small" *ngIf="e.touched && e.errors?.['required']">
+          La etiqueta es requerida
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="mt-4 pt-2 border-top">
+    <div class="d-flex gap-2 justify-content-end">
+      <button type="button" 
+              class="btn btn-sm btn-secondary" 
+              (click)="cancel.emit()">
+        <i class="fas fa-times me-1"></i>Cancelar
+      </button>
+      <button type="submit" 
+              class="btn btn-sm btn-custom-primary" 
+              [disabled]="form.invalid || disabled">
+        <i class="fas fa-save me-1"></i>
+        {{ initialValue ? 'Actualizar' : 'Crear' }} Participación
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div *ngIf="disabled" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex align-items-center justify-content-center rounded">
+    <div class="text-center">
+      <div class="spinner-border spinner-border-sm text-custom-primary" role="status">
+        <span class="visually-hidden">Guardando...</span>
+      </div>
+      <p class="mt-1 small text-custom-primary">Guardando...</p>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  position: relative; /* para el overlay de loading */
+}
+
+/* Colores base */
+.text-custom-primary {
+  color: #202136;
+}
+
+.text-custom-text {
+  color: #6E6E7C;
+}
+
+/* Inputs y selects pequeños pero suaves */
+.form-control-sm,
+.form-select-sm {
+  border-radius: 10px;
+  border-color: #CCD3D0;
+  box-shadow: none;
+  font-size: 0.85rem;
+}
+
+.form-control-sm:focus,
+.form-select-sm:focus {
+  border-color: #6E6E7C;
+  box-shadow: 0 0 0 0.12rem rgba(110, 110, 124, 0.35);
+}
+
+/* Labels compactos */
+.form-label {
+  margin-bottom: 0.25rem;
+}
+
+/* Agrupar errores chiquitos */
+.invalid-feedback.small {
+  font-size: 0.75rem;
+}
+
+/* Botón primario */
+.btn-custom-primary {
+  background-color: #6E6E7C;
+  border-color: #6E6E7C;
+  color: #ffffff;
+  border-radius: 999px;
+  padding-inline: 1.2rem;
+  font-weight: 500;
+}
+
+.btn-custom-primary:hover {
+  background-color: #202136;
+  border-color: #202136;
+}
+
+/* Botón outline primario (para "Agregar" autor) */
+.btn-outline-custom-primary {
+  border-color: #6E6E7C;
+  color: #6E6E7C;
+  border-radius: 999px;
+  padding-inline: 0.9rem;
+}
+
+.btn-outline-custom-primary:hover {
+  background-color: #6E6E7C;
+  color: #ffffff;
+}
+
+/* Badges / tags */
+.badge-custom-primary {
+  background-color: #F3A537;
+  color: #202136;
+  border-radius: 999px;
+}
+
+.bg-custom-secondary {
+  background-color: #CCD3D0;
+}
+
+/* Overlay de loading */
+.position-absolute {
+  border-radius: 18px;
+}
+
+/* Botón cancelar (de Bootstrap) un poco más suave */
+.btn-secondary {
+  border-radius: 999px;
+  background-color: #e4e7e5;
+  border-color: #d5dad7;
+  color: #202136;
+}
+
+.btn-secondary:hover {
+  background-color: #CCD3D0;
+  border-color: #CCD3D0;
+}

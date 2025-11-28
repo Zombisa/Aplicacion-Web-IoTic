@@ -1,0 +1,123 @@
+:host {
+  display: block;
+  background-color: #202136;
+  min-height: calc(100vh - 80px);
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.text-custom-primary {
+  color: #F3A537; 
+}
+
+.text-custom-text {
+  color: #CCD3D0;
+}
+
+.page-header-committees {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.page-subtitle-committees {
+  color: #CCD3D0;
+  font-size: 0.9rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+h1.text-custom-primary {
+  font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.card-custom {
+  border-radius: 16px;
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.page-title-committees {
+  color: #F3A537;
+  font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.25rem;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.badge-custom-primary {
+  background-color: #F3A537;
+  color: #202136;
+  border-radius: 999px;
+}
+
+/* Etiquetas GTI */
+.bg-custom-secondary {
+  background-color: #CCD3D0;
+}
+
+
+.btn-custom-primary {
+  background-color: #6E6E7C;
+  border-color: #6E6E7C;
+  color: #ffffff;
+  border-radius: 999px;
+  padding-inline: 1.2rem;
+  font-weight: 500;
+}
+
+.btn-custom-primary:hover {
+  background-color: #F3A537;
+  border-color: #F3A537;
+  color: #202136;
+}
+
+/* Outline para botón editar */
+.btn-outline-custom-primary {
+  border-color: #6E6E7C;
+  color: #6E6E7C;
+}
+
+.btn-outline-custom-primary:hover {
+  background-color: #6E6E7C;
+  color: #ffffff;
+}
+
+/* Estado vacío */
+.empty-state i {
+  color: #CCD3D0;
+}
+
+.empty-state h4 {
+  color: #ffffff;
+}
+
+/* Para pantallas grandes: botón a la derecha pero título centrado */
+@media (min-width: 992px) {
+  .page-header-committees {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-header-text {
+    flex: 1;
+    text-align: center;
+  }
+
+  .page-header-btn {
+    flex-shrink: 0;
+  }
+}

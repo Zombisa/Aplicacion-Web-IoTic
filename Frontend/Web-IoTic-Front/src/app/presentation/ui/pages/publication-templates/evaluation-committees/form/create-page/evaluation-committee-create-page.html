@@ -1,0 +1,22 @@
+<div class="container-fluid py-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-6"> 
+      <!-- Header -->
+      <div class="mb-3 text-center">
+        <h1 class="page-title-create">Nueva participación en comité de evaluación</h1>
+        <p class="page-subtitle-create">Complete la información de la nueva participación</p>
+      </div>
+
+      <!-- Formulario -->
+      <div class="card card-custom shadow-sm">
+        <div class="card-body p-3"> 
+          <app-evaluation-committee-form 
+            (save)="onSave($event)" 
+            (cancel)="onCancel()"
+            [disabled]="isLoading">
+          </app-evaluation-committee-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

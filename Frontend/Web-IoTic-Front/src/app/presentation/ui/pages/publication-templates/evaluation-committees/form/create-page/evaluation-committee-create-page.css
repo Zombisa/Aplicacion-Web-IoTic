@@ -1,0 +1,55 @@
+:host {
+  display: block;
+  background-color: #CCD3D0;
+  min-height: calc(100vh - 80px);
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+/* Títulos y textos del header */
+
+.page-title-create {
+  color: #202136;
+  font-size: clamp(1.8rem, 3.4vw, 2.3rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+
+.page-subtitle-create {
+  color: #6E6E7C;
+  font-size: 0.9rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.text-custom-primary {
+  color: #202136;
+}
+
+.text-custom-text {
+  color: #6E6E7C;
+}
+
+/* H1 del header (más tech) */
+h1.text-custom-primary {
+  font-size: clamp(1.4rem, 2.3vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* Card del formulario principal */
+.card-custom {
+  border-radius: 20px;
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 18px 40px rgba(32, 33, 54, 0.18);
+}
+
+/* Ajuste responsivo: un poco más de padding en pantallas grandes */
+@media (min-width: 992px) {
+  .card-custom .card-body {
+    padding: 1.75rem 2.5rem !important;
+  }
+}
