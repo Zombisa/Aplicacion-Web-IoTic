@@ -1,0 +1,132 @@
+<div class="card shadow-lg rounded-4 p-3 p-md-4 border-0">
+    <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
+    <h5 class="card-title mb-3">Informacion de la persona</h5>
+    </div>
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()" novalidate class="d-flex flex-column h-100 align-items-center justify-content-center">  
+        <div class="p-3 form-wrapper">                        <!-- Nombre de la persona -->
+            <div class="mb-4 input-container">
+                <input
+                type="text"
+                id="nombre_persona"
+                formControlName="nombre_persona"
+                class=" input-line"
+                placeholder=" "
+                [class.is-invalid]="loanForm.get('nombre_persona')?.invalid && loanForm.get('nombre_persona')?.touched"
+                />
+
+                <label for="nombre_persona" class=" small">
+                Nombre de la persona <span class="text-danger">*</span>
+                </label>
+                <div class="invalid-feedback" *ngIf="loanForm.get('nombre_persona')?.invalid && loanForm.get('nombre_persona')?.touched">
+                El nombre es obligatorio (mínimo 3 caracteres)
+                </div>
+            </div>
+
+            <div class="mb-3 input-container">
+
+                <input type="text"
+                id="cedula"
+                formControlName="cedula"
+                class=" input-line"
+                placeholder=" "
+                [class.is-invalid]="loanForm.get('cedula')?.invalid && loanForm.get('cedula')?.touched"
+                />
+                <label for="identificacion_persona" class="small">
+                Cedula<span class="text-danger">*</span>
+                </label>
+                <div class="invalid-feedback" *ngIf="loanForm.get('cedula')?.invalid && loanForm.get('cedula')?.touched">
+                La cédula es obligatoria (debe ser de 10 caracteres)
+                </div>
+            </div>
+
+            <div class="mb-4 input-container" >
+                <input type="text"
+                id="telefono"
+                formControlName="telefono"
+                class="input-line"
+                placeholder=" "
+                [class.is-invalid]="loanForm.get('telefono')?.invalid && loanForm.get('telefono')?.touched"
+                />
+
+                <label for="telefono" class="form-label fw-semibold small">
+                Teléfono<span class="text-danger">*</span>
+                </label>
+                <div class="invalid-feedback" *ngIf="loanForm.get('telefono')?.invalid && loanForm.get('telefono')?.touched">
+                El teléfono es obligatorio (debe ser de 10 caracteres)
+                </div>  
+            </div>
+
+            <div class="mb-4 input-container">
+                <input type="text" 
+                id="correo"
+                formControlName="correo"
+                class="input-line"
+                placeholder=" "
+                [class.is-invalid]="loanForm.get('correo')?.invalid && loanForm.get('correo')?.touched"
+                />
+                <label for="correo" class="form-label fw-semibold small">
+                    Correo electrónico<span class="text-danger">*</span>
+                </label>
+
+                <div class="invalid-feedback" *ngIf="loanForm.get('correo')?.invalid && loanForm.get('correo')?.touched">
+                El correo electrónico es obligatorio y debe tener un formato válido
+                </div>  
+            </div>
+
+            <div class="input-container">
+                <input type="text"
+                        id="direccion"
+                        formControlName="direccion"
+                        class="input-line"
+                        placeholder=" "  
+                        [class.is-invalid]="loanForm.get('direccion')?.invalid && loanForm.get('direccion')?.touched">
+                <label for="direccion" class="small">
+                    Dirección<span class="text-danger">*</span>
+                </label>
+                <div class="invalid-feedback" *ngIf="loanForm.get('direccion')?.invalid && loanForm.get('direccion')?.touched">
+                    La dirección es obligatoria 
+                </div>
+            </div>
+
+         <div class="input-container">
+            <input
+                type="date"
+                id="fecha_limite"
+                formControlName="fecha_limite"
+                class="input-line"
+                placeholder=" "  
+                [class.is-invalid]="loanForm.get('fecha_limite')?.invalid && loanForm.get('fecha_limite')?.touched">
+            <label for="fecha_limite">
+                Fecha esperada de devolución
+            </label>
+            <div class="invalid-feedback"
+                *ngIf="loanForm.get('fecha_limite')?.invalid && loanForm.get('fecha_limite')?.touched">
+                La fecha es obligatoria y debe ser futura
+            </div>
+        </div>
+
+            <!-- Fecha devolución -->
+            
+
+        </div>
+
+        <!-- Mensajes -->
+        <div *ngIf="showSuccess" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            {{ successMessage }}
+        </div>
+
+        <div *ngIf="showError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+            {{ errorMessage }}
+            <button type="button" class="btn-close" (click)="hideMessages()"></button>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 section-buttons" *ngIf="!showSuccess" >
+            <button type="button" class="btn-outline-secondary" (click)="resetForm()">Limpiar</button>
+            <button type="submit" class="btn-primary" [disabled]="loanForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Guardando...' : 'Guardar Préstamo' }}
+            </button>
+        </div>
+    </form>
+</div>

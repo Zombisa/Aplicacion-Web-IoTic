@@ -4,12 +4,16 @@ import { Header } from '../../templates/header/header';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { InventoryService } from '../../../../services/inventory.service';
 import { InventoryTable } from '../../components/inventory-table/inventory-table';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Route, RouterLink, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { LoadingService } from '../../../../services/loading.service';
+import { LoadingPage } from '../../components/loading-page/loading-page';
+
 
 @Component({
   selector: 'app-inventory-page',
   standalone: true,
-  imports: [CommonModule, Header, InventoryTable, RouterModule],
+  imports: [CommonModule, Header, InventoryTable, RouterModule, LoadingPage],
   templateUrl: './inventory-page.component.html',
   styleUrls: ['./inventory-page.component.css']
 })
@@ -20,7 +24,7 @@ export class InventoryPageComponent implements OnInit {
     total_items: 0,
     disponibles: 0,
     prestados: 0,
-    dados_De_Baja: 0
+    dañados: 0
   };
   public options = [
     {
@@ -30,52 +34,57 @@ export class InventoryPageComponent implements OnInit {
       route: 'add-item'
     },
     {
-      key: 'prestamo',
-      title: 'Añadamos un prestamo',
-      description: 'En esta seccion podras pedir un prestamo.',
-      route: 'add-loan'
-    },
-    {
       key: 'listar_prestamos',
       title: 'Ver prestamos vigentes',
       description: 'En esta seccion podras listar los prestamos vigentess.',
-      route: 'view-item/1'
+      route: 'history'
     },
   ];
   public inventoryData: ItemDTO[] = [];
 
-  constructor(private inventoryService: InventoryService) { }
+  constructor(private inventoryService: InventoryService,
+    public loadingService: LoadingService,
+    private router: Router
+  ) { }
+
   ngOnInit(): void {
     this.loadInventoryData();
   }
+  /**
+   * Carga los datos del inventario desde el servicio y actualiza el resumen.
+   */
   loadInventoryData() {
-  console.log('Cargando datos del inventario desde el componente.');
-  this.inventoryService.getElectronicComponent().subscribe({
-    next: (data: ItemDTO[]) => {
-      this.inventoryData = data;
-      this.updateResume();
-    },
-    error: (err) => {
-      console.error('Error al cargar los datos del inventario:', err);
-    }
-  });
-}
+    this.loadingService.show();
+    console.log('Cargando datos del inventario desde el componente.');
+    this.inventoryService.getElectronicComponent().subscribe({
+      next: (data: ItemDTO[]) => {
+        this.inventoryData = data;
+        this.updateResume();
+        this.loadingService.hide();
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del inventario:', err);
+      }
+    });
+  }
+  /**
+   * Actualiza el resumen del inventario basado en los datos cargados.
+   */
  updateResume() {
   // Total de ítems en el inventario
   this.resume.total_items = this.inventoryData.length;
 
   // Contadores según estado
   this.resume.disponibles = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'disponible'
+    item => item.estado_admin.toLowerCase() === 'disponible'
   ).length;
 
   this.resume.prestados = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'prestado'
+    item => item.estado_admin.toLowerCase() === 'prestado'
   ).length;
 
-  this.resume.dados_De_Baja = this.inventoryData.filter(
-    item => item.estadoAdministrativo.toLowerCase() === 'dado de baja' ||
-            item.estadoAdministrativo.toLowerCase() === 'dañado'
+  this.resume.dañados = this.inventoryData.filter(
+    item => item.estado_admin === 'Dañado'
   ).length;
 }
 
@@ -91,5 +100,12 @@ export class InventoryPageComponent implements OnInit {
 
       return { key: formattedKey, value };
     });
+  }
+  /**
+   * Navegando al item seleccionado
+   */
+  onItemSelected(itemId: number) {
+    console.log("Navegando al item con ID:", itemId);
+    this.router.navigate(['/inventario/view-item', itemId ]);
   }
 }

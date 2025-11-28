@@ -1,0 +1,49 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+  
+  <div class="page-container">
+    <div class="title-section">
+      <h1 class="page-title">Gestion de usuarios</h1>
+      <div class="title-divider"></div>
+    </div>
+
+    <section class="content-section">
+      <!-- Formulario de edición (se muestra cuando showEditForm es true) -->
+      <div *ngIf="showEditForm && selectedUserForEdit" class="edit-form-section">
+        <app-form-edit-user
+          [user]="selectedUserForEdit"
+          [roles]="roles"
+          (submitted)="onUpdateUser($event)"
+          (cancelled)="onCancelEdit()">
+        </app-form-edit-user>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <div *ngIf="!showEditForm">
+        <app-users-table 
+          [usersData]="usersData" 
+          (userSelected)="onUserSelected($event)"
+          (editUser)="onEditUser($event)"
+          (toggleStatus)="onToggleStatus($event)"
+          (deleteUser)="onDeleteUser($event)">
+        </app-users-table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <app-confirmation-modal
+    [isVisible]="showDeleteModal"
+    title="Eliminar Usuario"
+    [message]="userToDelete ? '¿Está seguro de que desea eliminar a ' + userToDelete.nombre + ' ' + userToDelete.apellido + '? Esta acción no se puede deshacer.' : ''"
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    confirmButtonClass="btn-danger"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()">
+  </app-confirmation-modal>
+</div>
+

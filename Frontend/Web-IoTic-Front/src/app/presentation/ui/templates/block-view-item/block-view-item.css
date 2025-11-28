@@ -1,0 +1,20 @@
+/**
+    clase a borrar, solo demostacion, no se debe de  usar
+*/
+.false-image{
+    height: 20rem;
+    width: 20rem;
+    background: green;
+}
+
+
+.divider{
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.233);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+.title-item{
+    font-size: 1.2rem;
+}

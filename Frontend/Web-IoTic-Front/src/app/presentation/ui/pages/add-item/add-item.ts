@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { ItemDTOPeticion } from '../../../../models/Peticion/ItemDTOPeticion';
 import { InventoryService } from '../../../../services/inventory.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Header } from '../../templates/header/header';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormItem } from '../../templates/form-item/form-item';
 
 @Component({
   selector: 'app-add-item',
-  imports: [CommonModule, Header, ReactiveFormsModule],
+  imports: [CommonModule, Header, FormItem],
   templateUrl: './add-item.html',
   styleUrl: './add-item.css'
 })
-export class AddItem  implements OnInit{
-itemForm!: FormGroup;
+export class AddItem implements OnInit {
+  @ViewChild('itemFormComponent') itemFormComponent!: FormItem;
+
   isLoading = false;
   showSuccess = false;
   showError = false;
@@ -20,66 +22,68 @@ itemForm!: FormGroup;
   errorMessage = '';
 
   constructor(
-    private fb: FormBuilder,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    this.initializeForm();
+  async ngOnInit() {
+    // Debug temporal para verificar autenticación
+    await this.authService.debugAuthState();
   }
 
-  initializeForm() {
-    this.itemForm = this.fb.group({
-      numeroSerieActivo: ['', [Validators.required, Validators.min(1)]],
-      descripcionArticulo: ['', [Validators.required, Validators.minLength(10)]],
-      ubicacion: ['', [Validators.required]],
-      estadoFisico: ['', [Validators.required]],
-      observacion: ['', [Validators.required]]
-    });
-  }
-
- onSubmit() {
-  if (this.itemForm.valid) {
+  /**
+   * Se encarga de manejar el evento submitted emitido por el componente hijo FormItem
+   * @param itemData Datos del item a agregar traídos desde el hijo FormItem
+   */
+  handleSubmit(itemData: ItemDTOPeticion) {
     this.isLoading = true;
-    
-    // Convertir numeroSerieActivo a número explícitamente
-    const formValue = this.itemForm.value;
-    const itemData: ItemDTOPeticion = {
-      ...formValue,
-      numeroSerieActivo: Number(formValue.numeroSerieActivo)
-    };
+    this.hideMessages();
 
-    console.log("Datos a enviar:", JSON.stringify(itemData, null, 2));
+    console.log("📤 Enviando item:", JSON.stringify(itemData, null, 2));
 
     this.inventoryService.addElectronicComponent(itemData).subscribe({
       next: (response) => {
-        console.log("Respuesta del servidor:", response);
+        console.log("✅ Respuesta del servidor:", response);
         this.isLoading = false;
         this.showSuccess = true;
         this.successMessage = 'Item agregado exitosamente';
-        this.resetForm();
+
+        // Resetear formulario después del éxito
+        this.itemFormComponent.resetForm();
+
+        // Auto-ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+          this.hideMessages();
+        }, 5000);
       },
       error: (error) => {
-        console.error("Error completo:", error);
+        console.error("❌ Error completo:", error);
         this.isLoading = false;
         this.showError = true;
-        this.errorMessage = `Error al agregar el item: ${error.error?.message || error.message}`;
+        
+        // Mejorar el mensaje de error
+        if (error.status === 401) {
+          this.errorMessage = 'Sesión expirada. Por favor, inicia sesión nuevamente.';
+        } else if (error.status === 400) {
+          this.errorMessage = `Datos inválidos: ${error.error?.message || 'Verifica los campos'}`;
+        } else if (error.status === 500) {
+          this.errorMessage = 'Error interno del servidor. Intenta nuevamente más tarde.';
+        } else {
+          this.errorMessage = `Error al agregar el item: ${error.error?.message || error.message}`;
+        }
+
+        // Auto-ocultar mensaje de error después de 8 segundos
+        setTimeout(() => {
+          this.hideMessages();
+        }, 8000);
       }
     });
-  } else {
-    Object.keys(this.itemForm.controls).forEach(key => {
-      this.itemForm.get(key)?.markAsTouched();
-    });
-  }
-}
-
-  resetForm() {
-    this.itemForm.reset();
-    this.hideMessages();
   }
 
   hideMessages() {
     this.showSuccess = false;
     this.showError = false;
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 }

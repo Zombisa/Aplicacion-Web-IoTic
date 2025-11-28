@@ -22,22 +22,7 @@
         />
       </div>
 
-      <!-- Filtro de Ubicación -->
-      <div class="filter-group">
-        <label for="ubicacion">Ubicación:</label>
-        <select
-          id="ubicacion"
-          [(ngModel)]="filters.ubicacion"
-          (change)="applyFilters()"
-          class="filter-select"
-        >
-          <option value="">Todas las ubicaciones</option>
-          <option *ngFor="let location of locations" [value]="location">
-            {{ location }}
-          </option>
-        </select>
-      </div>
-
+   
       <!-- Filtro de Estado Físico -->
       <div class="filter-group">
         <label for="estadoFisico">Estado Físico:</label>
@@ -82,11 +67,8 @@
     <table class="inventory-table" >
       <thead>
         <tr>
-          <th>Serie</th>
+          <th>Serial</th>
           <th>Descripción</th>
-          <th>Disponible</th>
-          <th>Prestada</th>
-          <th>Ubicación</th>
           <th>Estado Físico</th>
           <th>Estado Admin</th>
           <th>Observación</th>
@@ -94,19 +76,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredData" class="table-row">
-          <td>{{ item.numeroSerieActivo }}</td>
-          <td>{{ item.descripcionArticulo }}</td>
-          <td class="text-center">{{ item.cantidad_disponible }}</td>
-          <td class="text-center">{{ item.cantidad_prestada }}</td>
-          <td>{{ item.ubicacion }}</td>
-          <td><span class="badge" [ngClass]="'badge-' + item.estadoFisico.toLowerCase()">{{ item.estadoFisico }}</span></td>
-          <td><span class="badge" [ngClass]="'badge-' + item.estadoAdministrativo.toLowerCase()">{{ item.estadoAdministrativo }}</span></td>
+        <tr *ngFor="let item of  paginatedData()" class="table-row" (click)="selectItem(item)">
+          <td>{{ item.serial }}</td>
+          <td>{{ item.descripcion }}</td>
+          <td>{{ item.estado_fisico }}</td>
+          <td>{{ item.estado_admin }}</td>
           <td>{{ item.observacion || '-' }}</td>
           <td>{{ item.fecha_registro | date: 'dd/MM/yyyy' }}</td>
         </tr>
       </tbody>
     </table>
+    <div class="pagination-container p-2">
+      <button (click)="previousPage()" class="button-arrow" [disabled]="currentPage === 1">  &lt; </button>
+
+      <span>{{ currentPage }} de {{ totalPages() }}</span>
+
+      <button (click)="nextPage()" class="button-arrow" [disabled]="currentPage === totalPages()">  &gt; </button>
+    </div>
 
     
 </div>

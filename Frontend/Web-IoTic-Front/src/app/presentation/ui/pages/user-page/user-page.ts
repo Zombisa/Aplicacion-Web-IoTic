@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { AuthService } from '../../../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-page',
@@ -19,7 +20,13 @@ export class UserPage implements OnInit {
   constructor(public router: Router, private authService: AuthService) {}
   ngOnInit(): void {
     this.user$ = this.authService.currentUser;
-    this.isAdmin$ = this.authService.isAdmin();
+    this.isAdmin$ = this.authService.isAdmin().pipe(
+      startWith(false),
+      map(isAdmin => {
+        console.log('¿Es admin?:', isAdmin);
+        return isAdmin;
+      })
+    );
     this.user$.subscribe(user => {
       if (user) {
         console.log('Usuario autenticado:', user);

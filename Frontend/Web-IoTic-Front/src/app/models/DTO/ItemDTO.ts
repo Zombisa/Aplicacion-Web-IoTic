@@ -1,12 +1,9 @@
 export interface ItemDTO {
   id: number;
-  numeroSerieActivo: number;
-  descripcionArticulo: string;
-  cantidad_disponible: number;
-  cantidad_prestada: number;
-  ubicacion: string;
-  estadoFisico: string;
-  estadoAdministrativo: string;
-  observacion: string;
+  serial: string;
+  descripcion: string;
+  estado_fisico: string;
+  estado_admin: string;
   fecha_registro: string; 
+  observacion: string;
 }

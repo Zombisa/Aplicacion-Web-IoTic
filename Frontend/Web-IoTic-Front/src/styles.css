@@ -123,3 +123,126 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   opacity: 0;
   animation-delay: 0.2s;
 }
+
+/* ========================================
+   BANNER PRINCIPAL
+   Uso:
+   Los botones tienen tamaños variables con porcentajes
+   deben definicr una clase padre en el componente a aplicar para definir el ancho 
+   que la seccion debe ocupar, los botones se ajustaran a esa seccion automaticamente
+
+   btn-primray => Acciones primarias, guardar, enviar, hacer
+
+   btn-outline-secondary => Acciones secundarias: editar, devolver 
+   ======================================== */
+
+
+.btn-primary{
+    color: white;
+    background-color: var(--color-primary);
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-primary:hover {
+    background-color: var(--color-primary);
+    border-color: transparent;
+}
+.btn-primary:disabled {
+  background-color: #b3b3b3;   /* Gris */
+  border-color: transparent;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-outline-secondary{
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    background-color: #f6f9ff;
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-outline-secondary:hover{
+  background-color: #e6e7e9;
+}
+
+/* Media query para pantallas pequeñas (<576px) */
+@media (max-width: 575.98px) {
+    .btn-primary,
+    .btn-outline-secondary {
+        width: 100%;  /* Ocupa todo el ancho disponible */
+    }
+}
+
+
+/* ========================================
+   INPUTS
+   Uso:
+   los inputs tienen tamaños variables, deben crear una seccion o div en el padre para ajustar sus tamaños
+   ======================================== */
+/* Contenedor para input + label */
+.input-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Input */
+.input-line {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #cfcfcf;
+  padding: 0.8rem 0 0.2rem 0; /* espacio para label */
+  font-size: 1rem;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.3s;
+}
+
+.input-line:focus {
+  border-bottom-color: #1976d2;
+}
+
+.input-line::placeholder {
+  color: transparent; /* placeholder oculto */
+}
+
+/* Label */
+.input-container label {
+  color: var(--color-primary);
+  position: absolute;
+  left: 0;
+  top: 0.8rem; /* posición inicial sobre el input */
+  font-weight: 800;
+
+  pointer-events: none;
+  transition: all 0.3s ease;
+  transform: translateY(5px); /* label baja */
+}
+
+/* Cuando el input está enfocado o tiene texto */
+.input-line:focus + label,
+.input-line:not(:placeholder-shown) + label {
+  transform: translateY(-30px); /* label vuelve arriba */
+  font-size: 0.75rem;       /* opcional: tamaño más pequeño */
+}
+
+/* Estilo general de advertencias */
+.invalid-feedback {
+    display: block;               
+    font-size: 0.875rem;          
+    
+    background-color: #ffe6e6;    
+    padding: 0.5rem 0.75rem;      
+    border-radius: 5px;           
+    margin-top: 0.25rem;          
+    animation: fadeIn 0.3s ease-in-out; 
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,8 +1,8 @@
 import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY } from 'rxjs';
+import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY, timeout } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import {Firestore, doc, getDoc, collection, getDocs, setDoc} from '@angular/fire/firestore';
+import {Firestore, doc, collection,  setDoc} from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 
 import { isPlatformBrowser } from '@angular/common';
@@ -11,6 +11,11 @@ import { environment } from '../environment/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+  
+  // Cache del token para evitar llamadas innecesarias a Firebase
+  private cachedToken: string | null = null;
+  private tokenExpiry: number | null = null;
+  private tokenPromise: Promise<string | null> | null = null;
 
   constructor(
     @Optional() private afAuth: Auth, 
@@ -23,38 +28,38 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId) && this.afAuth) {
       authState(this.afAuth).subscribe(async (user) => {
         this.currentUserSubject.next(user);
-        if (user && this.firestore) {
-          const docSnap = await runInInjectionContext(this.injector, () => getDoc(doc(this.firestore, 'usuarios', user.uid)));
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-          }
-        } else {
-        }
       });
     }
   }
   /**
    * Maneja el inicio de sesión del usuario con correo y contraseña.
-   * @param email correo electrónico del usuario
-   * @param password contraseña del usuario 
    */
   async login(email: string, password: string) {
     if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
       throw new Error('Authentication is not available on server side');
     }
+
+    this.clearTokenCache();
+
     await runInInjectionContext(this.injector, async () => {
-      await signInWithEmailAndPassword(this.afAuth, email, password);
+      const userCredential = await signInWithEmailAndPassword(this.afAuth, email, password);
+
+      await firstValueFrom(
+        this.currentUser.pipe(
+          filter(u => u !== null),
+          timeout(5000)
+        )
+      );
     });
   }
+
   /**
    * Consulta al backend los datos del usuario actualmente autenticado.
-   * @returns Los datos del usuario actual obtenidos desde el backend
    */
   async fetchCurrentUserFromBackend() {
     const token = await this.getToken();
-    console.log('Token obtenido de Firebase:', token); 
-  
     const url = `${environment.apiUrl}/auth/me`;
+    
     if (token) {
       return firstValueFrom(
         this.http.get(url, {
@@ -62,7 +67,7 @@ export class AuthService {
         })
       );
     }
-    console.warn('No se obtuvo token, enviando sin Authorization header');
+    
     return firstValueFrom(this.http.get(url));
   }
   /**
@@ -98,23 +103,94 @@ export class AuthService {
     );
   }
   /**
-   * Obtiene el token de ID del usuario autenticado.
-   * @returns Una promesa que resuelve con el token de ID, o null si no hay usuario autenticado.
+   * Obtiene el token de ID del usuario autenticado con cache inteligente
    */
   async getToken(): Promise<string | null> {
     if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
       return null;
     }
-    const immediateUser = await this.afAuth.currentUser;
-    if (immediateUser) {
-      return immediateUser.getIdToken(true);
+
+    const now = Date.now();
+    
+    // Si tenemos un token válido en cache (con 5 minutos de margen), lo usamos
+    if (this.cachedToken && this.tokenExpiry && now < (this.tokenExpiry - 300000)) {
+      return this.cachedToken;
     }
-    const user = await firstValueFrom(
-      this.currentUser.pipe(
-        filter((u): u is User => u !== null)
-      )
-    );
-    return user.getIdToken(true);
+
+    // Si ya hay una petición en curso, esperarla
+    if (this.tokenPromise) {
+      return this.tokenPromise;
+    }
+
+    // Crear nueva petición de token
+    this.tokenPromise = this.fetchFreshToken();
+
+    try {
+      const token = await this.tokenPromise;
+      return token;
+    } finally {
+      this.tokenPromise = null;
+    }
+  }
+
+  /**
+   * Método privado para obtener un token fresco de Firebase
+   */
+  private async fetchFreshToken(): Promise<string | null> {
+    try {
+      let user = this.afAuth.currentUser;
+      
+      if (!user) {
+        user = await firstValueFrom(
+          this.currentUser.pipe(
+            filter((u): u is User => u !== null),
+            timeout(5000)
+          )
+        );
+      }
+
+      if (!user) {
+        this.clearTokenCache();
+        return null;
+      }
+
+      const idTokenResult = await user.getIdTokenResult(false);
+      
+      this.cachedToken = idTokenResult.token;
+      this.tokenExpiry = new Date(idTokenResult.expirationTime).getTime();
+      
+      return this.cachedToken;
+
+    } catch (error) {
+      this.clearTokenCache();
+      return null;
+    }
+  }
+
+  /**
+   * Limpia el cache del token
+   */
+  private clearTokenCache(): void {
+    this.cachedToken = null;
+    this.tokenExpiry = null;
+    this.tokenPromise = null;
+  }
+
+  /**
+   * Invalida el token cache manualmente (útil en logout o errores 401)
+   */
+  public invalidateTokenCache(): void {
+    this.clearTokenCache();
+  }
+
+  /**
+   * Verifica si el token actual está próximo a expirar (menos de 5 minutos)
+   */
+  public isTokenNearExpiry(): boolean {
+    if (!this.tokenExpiry) return true;
+    const now = Date.now();
+    const fiveMinutes = 5 * 60 * 1000;
+    return now > (this.tokenExpiry - fiveMinutes);
   }
   /**
    * 
@@ -122,18 +198,64 @@ export class AuthService {
    */
   isAdmin(): Observable<boolean> {
         return this.getUserClaims().pipe(
-          map(claims => !!(claims && claims['admin'] === true))
+          map(claims => {
+            // El backend asigna el rol como {"role": "admin"} en los custom claims
+            const role = claims && claims['role'];
+            const isAdmin = role === 'admin';
+            return isAdmin;
+          })
         );
   }
-  /*
-  * Cierra la sesión del usuario actualmente autenticado.
-  */
+  /**
+   * Cierra la sesión del usuario actualmente autenticado.
+   */
   logout() {
     if (!isPlatformBrowser(this.platformId) || !this.afAuth) {
       return Promise.resolve();
     }
+    
+    this.clearTokenCache();
     return signOut(this.afAuth);
   }
-  
+  /**
+   * Método de debug para verificar el estado de autenticación y cache
+   */
+  async debugAuthState(): Promise<void> {
+    console.log('=== DEBUG AUTH STATE ===');
+    console.log('Platform Browser:', isPlatformBrowser(this.platformId));
+    console.log('Auth Service:', !!this.afAuth);
+    console.log('Firestore Service:', !!this.firestore);
+    
+    // Estado del cache
+    console.log('--- Cache Estado ---');
+    console.log('Token en cache:', !!this.cachedToken);
+    console.log('Token expiry:', this.tokenExpiry ? new Date(this.tokenExpiry).toLocaleString() : 'N/A');
+    console.log('Promesa en curso:', !!this.tokenPromise);
+    console.log('Token próximo a expirar:', this.isTokenNearExpiry());
+    
+    if (this.afAuth) {
+      const currentUser = this.afAuth.currentUser;
+      console.log('--- Usuario Firebase ---');
+      console.log('Current User:', currentUser ? 'Sí' : 'No');
+      
+      if (currentUser) {
+        console.log('User UID:', currentUser.uid);
+        console.log('User Email:', currentUser.email);
+        
+        try {
+          const token = await this.getToken(); // Usar método con cache
+          console.log('Token disponible (con cache):', !!token);
+          console.log('Token length:', token ? token.length : 0);
+          console.log('Token preview:', token ? token.substring(0, 50) + '...' : 'N/A');
+        } catch (error) {
+          console.error('Error obteniendo token:', error);
+        }
+      }
+    }
+    
+    console.log('--- Observable Estado ---');
+    console.log('CurrentUserSubject value:', this.currentUserSubject.value ? 'Sí' : 'No');
+    console.log('=== END DEBUG ===');
+  }
 
 }

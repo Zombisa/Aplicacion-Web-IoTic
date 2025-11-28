@@ -1,0 +1,17 @@
+
+.card{
+    height: 100%;
+}
+.form-wrapper {
+  width: 100%;
+  max-width: 500px;  /* evita que se hagan gigantes */
+  margin: 0 auto;    /* centra horizontalmente */
+}
+
+
+
+.section-buttons{
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem;
+}
