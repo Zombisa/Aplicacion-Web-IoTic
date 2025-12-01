@@ -14,6 +14,7 @@ from apps.informacion.Views.JuradoView import JuradoViewSet
 from apps.informacion.Views.ProcesoTecnicaView import ProcesoTecnicaViewSet
 from apps.informacion.Views.TutoriaConcluidaView import TutoriaConcluidaViewSet
 from apps.informacion.Views.TutoriaEnMarchaView import TutoriaEnMarchaViewSet
+from apps.informacion.Views.GenerarUrlR2 import GenerarURLR2ViewSet
 
 router = DefaultRouter()
 router.register(r'noticias', NoticiaViewSet, basename='noticia')
@@ -30,6 +31,7 @@ router.register(r'jurados', JuradoViewSet, basename='jurado')
 router.register(r'procesosTecnicas', ProcesoTecnicaViewSet, basename='procesoTecnica')
 router.register(r'tutoriasConcluidas', TutoriaConcluidaViewSet, basename='tutoriaConcluida')
 router.register(r'tutoriasEnMarcha', TutoriaEnMarchaViewSet, basename='tutoriaEnMarcha')
+router.register(r'urlfirmada', GenerarURLR2ViewSet, basename='urlfirmada')
 
 urlpatterns = [
     path('', include(router.urls)),

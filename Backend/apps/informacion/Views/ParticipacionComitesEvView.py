@@ -6,6 +6,10 @@ from apps.usuarios_roles.models import Usuario
 from apps.informacion.permissions import verificarToken
 from apps.informacion.Models.ParticipacionComitesEv import ParticipacionComitesEv
 from apps.informacion.Serializers.ParticipacionComitesEvSerializer import ParticipacionComitesEvSerializer
+from django.conf import settings
+import uuid
+from backend.serviceCloudflare.R2Service import generar_url_firmada
+from backend.serviceCloudflare.R2Client import s3
 
 class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
     queryset = ParticipacionComitesEv.objects.all()
@@ -14,7 +18,15 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], url_path='agregar_comite_ev')
     def agregar_comite_ev(self, request):
         if verificarToken.validarRol(request) is True:
-            serializer = ParticipacionComitesEvSerializer(data=request.data)
+            data = request.data.copy()
+            # si existe file_path, construir la URL completa
+            file_path = data.pop("file_path", None)
+
+            if file_path:
+                # crear la URL usando tu dominio público del bucket
+                full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                data["image_r2"] = full_url
+            serializer = ParticipacionComitesEvSerializer(data=data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
                 try:
@@ -68,3 +80,35 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
+    def eliminar_imagen(self, request, pk):
+        ParticipacionComitesEv = self.get_object()
+
+        if not ParticipacionComitesEv.image_r2:
+            return Response({"message": "La Participacion en Comites de Evaluacion no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # extraer solo el nombre del archivo
+        file_path = ParticipacionComitesEv.image_r2.split("/")[-1]
+
+        try:
+            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
+        except Exception as e:
+            return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # actualizar campo image_r2 a None 
+        ParticipacionComitesEv.image_r2 = None
+        ParticipacionComitesEv.save()
+        return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'], url_path='listar-imagenes')
+    def listar_imagenes(self, request):
+        try:
+            response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
+            archivos = [obj['Key'] for obj in response.get('Contents', [])]
+            # Construir URLs públicas
+            urls = [f"{settings.R2_BUCKET_PATH}/{key}" for key in archivos]
+            return Response(urls)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

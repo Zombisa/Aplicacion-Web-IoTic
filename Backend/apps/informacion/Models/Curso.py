@@ -12,6 +12,7 @@ class Curso(models.Model):
     institucion = models.CharField(max_length=20)
     fechaPublicacion = models.DateField(auto_now_add=True)
     linkVideo = models.URLField(max_length=200, blank=True, null = True)    
+    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2
 
     class Meta:
         db_table = 'curso'

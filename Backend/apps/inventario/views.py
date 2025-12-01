@@ -125,7 +125,6 @@ class InventarioViewSet(viewsets.ModelViewSet):
         return Response(PrestamoSerializer(prestamos_vencidos, many=True).data)
 
 
-
 # ======================================================
 #  PRESTAMO VIEWSET
 # ======================================================

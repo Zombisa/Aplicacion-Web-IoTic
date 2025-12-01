@@ -13,6 +13,7 @@ class CapLibro(models.Model):
     codigoEditorial = models.IntegerField()
     propiedadIntelectual = models.CharField(max_length=200)
     autores = models.JSONField(default=list, blank=True) # lista de strings
+    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2 
     
     class Meta:
         db_table = 'capitulo_libro'

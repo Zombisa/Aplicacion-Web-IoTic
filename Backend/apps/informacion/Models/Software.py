@@ -21,6 +21,7 @@ class Software(models.Model):
     descripcionFuncional = models.CharField(max_length=500)
     propiedadIntelectual = models.CharField(max_length=200)
     fechaPublicacion = models.DateField(auto_now_add=True)
+    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2
     
     class Meta:
         db_table = 'software'

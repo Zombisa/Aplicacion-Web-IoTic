@@ -14,6 +14,7 @@ class TutoriaConcluida(models.Model):
     etiquetasGTI = models.JSONField(default=list, blank=True)
     licencia = models.CharField(max_length=50)
     fechaPublicacion = models.DateField(auto_now_add=True)
+    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2
     
     class Meta:
         db_table = 'tutorias_concluidas'
