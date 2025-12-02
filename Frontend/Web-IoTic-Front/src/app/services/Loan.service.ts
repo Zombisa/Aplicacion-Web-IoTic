@@ -60,7 +60,30 @@ export class LoanService {
   }
 
   getLoansCurrent(): Observable<LoanDTO[]> {
-      return this.http.get<LoanDTO[]>(`${this.apiUrl}inventario/prestamos/activos/` )
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.get<LoanDTO[]>(`${this.apiUrl}inventario/prestamos/activos/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al obtener préstamos activos:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Obtener préstamos vencidos
+   */
+  getOverdueLoans(): Observable<LoanDTO[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => 
+        this.http.get<LoanDTO[]>(`${this.apiUrl}inventario/prestamos/vencidos/`, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al obtener préstamos vencidos:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
     /**

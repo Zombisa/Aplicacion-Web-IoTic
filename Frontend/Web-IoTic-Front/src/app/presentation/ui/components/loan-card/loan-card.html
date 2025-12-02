@@ -1,0 +1,46 @@
+<div class="loan-card" [style.border-left-color]="getStatusColor()">
+  <div class="loan-card-content">
+    <!-- Información del Item y Persona -->
+    <div class="loan-info-section">
+      <div class="item-name">{{ getItemName() }}</div>
+      
+      <div class="person-info">
+        <div class="info-row">
+          <span class="info-label">A nombre:</span>
+          <span class="info-value">{{ loan.nombre_persona }}</span>
+        </div>
+        
+        <div class="info-row" *ngIf="loan.correo">
+          <span class="info-label">Correo:</span>
+          <span class="info-value">{{ loan.correo }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional y acciones -->
+    <div class="loan-details-section">
+      <div class="details-column">
+        <div class="info-row" *ngIf="loan.telefono">
+          <span class="info-label">Telefono:</span>
+          <span class="info-value">{{ loan.telefono }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">Fecha limite:</span>
+          <span class="info-value">{{ formatDateLimit() }}</span>
+        </div>
+      </div>
+
+      <div class="actions-column">
+        <div class="status-badge" [class.overdue]="isOverdue()" [class.loaned]="!isOverdue()">
+          {{ getStatusLabel() }}
+        </div>
+        
+        <button class="btn-view-loan" (click)="onViewLoan()">
+          Ver pretamo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

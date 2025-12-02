@@ -1,11 +1,11 @@
 import { ItemDTO } from './ItemDTO';
 
-export interface LoanDTO {
+export interface LoanHistoryDTO {
   id: number;
   nombre_persona: string;
-  item: ItemDTO;              // relación directa
-  fecha_prestamo: string;     // o Date
-  fecha_devolucion: string | null;   // o Date | null
+  item: ItemDTO;
+  fecha_prestamo: string;
+  fecha_devolucion: string | null;
   fecha_limite?: string;
   estado: string;
   correo?: string;
@@ -13,3 +13,5 @@ export interface LoanDTO {
   cedula?: string;
   direccion?: string;
 }
+
+

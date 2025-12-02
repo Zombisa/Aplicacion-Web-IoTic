@@ -4,12 +4,15 @@ import { LoginPage } from './presentation/ui/pages/login-page/login-page';
 import { HomePage } from './presentation/ui/pages/home-page/home-page';
 import { UserPage } from './presentation/ui/pages/user-page/user-page';
 import { AuthGuard } from './guards/auth-guard';
+import { AdminGuard } from './guards/admin-guard-guard';
 import { InventoryPageComponent } from './presentation/ui/pages/inventory-page/inventory-page.component';
 import { WhoWeAre } from './presentation/ui/pages/who-we-are/who-we-are';
 import { AddItem } from './presentation/ui/pages/add-item/add-item';
 import { AddLoan } from './presentation/ui/pages/add-loan/add-loan';
 import { ProductivityPage } from './presentation/ui/pages/productivity-page/productivity-page';
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
+import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-history-loan';
+import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
 import { EvaluationCommitteesPage } from './presentation/ui/pages/publication-templates/evaluation-committees/list/evaluation-committees-page';
 import { EvaluationCommitteeCreatePage } from './presentation/ui/pages/publication-templates/evaluation-committees/form/create-page/evaluation-committee-create-page';
 
@@ -19,10 +22,12 @@ export const routes: Routes = [
      { path: 'login', component: LoginPage },
      { path: 'home', component: HomePage },
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
+     { path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard] },
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path:'inventario/add-item', component: AddItem},
      {path: 'inventario/add-loan', component: AddLoan},
+     {path: 'inventario/history', component: ViewHistoryLoan},
      {path: 'inventario/view-item/:id', component: ViewLoanItem},
      {path: 'productivity', component: ProductivityPage},
      {path: 'publicaciones/comites', component: EvaluationCommitteesPage},
