@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils import timezone
+from datetime import timedelta
 from django.conf import settings
 from backend.serviceCloudflare.R2Client import s3
 
