@@ -58,6 +58,25 @@ class InventarioViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
 
         return Response(serializer.errors, status=400)
+    
+    # ======================================================
+    #   REGISTRO MASIVO
+    # ======================================================
+    @method_decorator(verificar_roles(["admin"]), name=None)
+    @action(detail=False, methods=['post'], url_path='masivo')
+    def crear_masivo(self, request):
+        try:
+            data = request.data
+            creados = crear_items_masivo(data)
+
+            return Response({
+                "message": f"{len(creados)} ítems creados correctamente.",
+                "items": InventarioSerializer(creados, many=True).data
+            }, status=201)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+
 
     # ======================================================
     #   EDITAR ITEM

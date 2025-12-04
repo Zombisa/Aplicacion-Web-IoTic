@@ -1,30 +1,93 @@
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from .models import Inventario, Prestamo
-
+from django.conf import settings
 
 def crear_items_masivo(data):
-    descripcion = data.get("descripcion")
-    cantidad = data.get("cantidad")
-    estado_fisico = data.get("estado_fisico")
-    estado_admin = data.get("estado_admin")
-    observacion = data.get("observacion", "")
 
-    # --- VALIDACIONES ---
-    if not descripcion:
-        raise ValidationError("La descripción es obligatoria.")
+    # ===========================================================
+    #   CASO 1 — OBJETO ÚNICO CON "cantidad"
+    # ===========================================================
+    if isinstance(data, dict):
 
-    if not cantidad or int(cantidad) < 1:
-        raise ValidationError("La cantidad debe ser mayor o igual a 1.")
+        if "cantidad" not in data:
+            raise ValidationError("Si envías un objeto único debes incluir 'cantidad'.")
 
-    creados = []
-    for _ in range(int(cantidad)):
-        item = Inventario.objects.create(
-            descripcion=descripcion,
-            estado_fisico=estado_fisico,
-            estado_admin=estado_admin,
-            observacion=observacion
+        cantidad = int(data.get("cantidad", 0))
+
+        if cantidad < 1:
+            raise ValidationError("La cantidad debe ser mayor o igual a 1.")
+
+        # Validar imágenes múltiples
+        imagenes = data.get("imagenes", None)  # lista opcional
+
+        if imagenes is not None:
+            if not isinstance(imagenes, list):
+                raise ValidationError("'imagenes' debe ser una lista de file_paths.")
+
+            if len(imagenes) != cantidad:
+                raise ValidationError(
+                    f"Debes enviar exactamente {cantidad} imágenes en la lista 'imagenes'."
+                )
+
+        # generar lista de items
+        lista_items = []
+
+        for i in range(cantidad):
+
+            item_copy = data.copy()
+            item_copy.pop("cantidad", None)
+            item_copy.pop("imagenes", None)
+
+            # asignar imagen correspondiente (si existe)
+            if imagenes:
+                item_copy["file_path"] = imagenes[i]
+
+            lista_items.append(item_copy)
+
+        data = lista_items  # Convertir a lista
+
+
+    # ===========================================================
+    #   CASO 2 — RECIBE UNA LISTA COMPLETA
+    # ===========================================================
+    elif not isinstance(data, list):
+        raise ValidationError(
+            "El cuerpo debe ser una lista de ítems o un objeto con 'cantidad'."
         )
+
+
+    # ===========================================================
+    #   PROCESAR LISTA DE ÍTEMS
+    # ===========================================================
+    creados = []
+
+    for item_data in data:
+
+        if not isinstance(item_data, dict):
+            raise ValidationError("Cada ítem debe ser un objeto JSON válido.")
+
+        item_data = item_data.copy()
+
+        # ---------- Validaciones obligatorias ----------
+        if "descripcion" not in item_data:
+            raise ValidationError("Cada ítem debe tener 'descripcion'.")
+
+        if "estado_fisico" not in item_data:
+            raise ValidationError("Cada ítem debe tener 'estado_fisico'.")
+
+        if "estado_admin" not in item_data:
+            raise ValidationError("Cada ítem debe tener 'estado_admin'.")
+
+        # ---------- Procesar imagen ----------
+        file_path = item_data.pop("file_path", None)
+
+        if file_path:
+            full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+            item_data["image_r2"] = full_url
+
+        # ---------- Crear item ----------
+        item = Inventario.objects.create(**item_data)
         creados.append(item)
 
     return creados

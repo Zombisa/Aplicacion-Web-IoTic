@@ -1,233 +1,11 @@
 {
 	"info": {
-		"_postman_id": "6a4a2624-2093-4d20-81ac-4b2bf3468ed4",
+		"_postman_id": "25b25ac2-571e-4be2-b64f-4aee6817eb2c",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38361461"
+		"_exporter_id": "40286637"
 	},
 	"item": [
-		{
-			"name": "Inventario",
-			"item": [
-				{
-					"name": "Consultar inventario",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Añadir item a inventario",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"descripcion\": \"Osciloscopio Tektronix 100MHz\",\r\n    \"estado_fisico\": \"Bueno\",\r\n    \"estado_admin\": \"Disponible\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Dar debe baja un item",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/dar-baja/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items",
-								"1",
-								"dar-baja",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Actualizar item",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Dañado\",\r\n  \"estado_admin\": \"No prestar\",\r\n  \"observacion\": \"Se quemo\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/2/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items",
-								"2",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Eliminar item",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items",
-								"1",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "Préstamos",
 			"item": [
@@ -3420,6 +3198,252 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Productividad",
+			"item": [
+				{
+					"name": "Misión",
+					"item": [
+						{
+							"name": "Agregar misión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Somos un equipo dedicado a promover el aprendizaje tecnológico en toda la comunidad universitaria.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar misión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Visión",
+					"item": [
+						{
+							"name": "Listar visión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Historia",
+					"item": [
+						{
+							"name": "Crear historia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"El semillero nació en 2018 con el objetivo de impulsar el aprendizaje y la investigación en tecnologías emergentes.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar historia",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Objetivos",
+					"item": [
+						{
+							"name": "Agregar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación\",\r\n  \"contenido\": \"Promover la participación de los estudiantes en proyectos de investigación aplicada.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Valores",
+					"item": []
 				}
 			]
 		}
