@@ -1,0 +1,33 @@
+<div class="form-edit-single-content-container">
+  <h3 class="form-title">{{ title }}</h3>
+  
+  <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="content-form" novalidate>
+    <!-- Contenido -->
+    <div class="input-container mt-2">
+      <textarea 
+        class="textarea-content" 
+        formControlName="contenido" 
+        placeholder="Ingrese el contenido..."
+        rows="10"
+        [class.is-invalid]="contentForm.get('contenido')?.invalid && contentForm.get('contenido')?.touched"
+      ></textarea>
+      <div class="invalid-feedback" *ngIf="contentForm.get('contenido')?.invalid && contentForm.get('contenido')?.touched">
+        <small *ngIf="contentForm.get('contenido')?.errors?.['required']">El contenido es obligatorio</small>
+        <small *ngIf="contentForm.get('contenido')?.errors?.['minlength']">Debe tener al menos 10 caracteres</small>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-4">
+      <button type="button" class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1" (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary px-3 px-md-4 order-1 order-sm-2" [disabled]="contentForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Guardar Cambios</span>
+        <span *ngIf="isLoading">Guardando...</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+

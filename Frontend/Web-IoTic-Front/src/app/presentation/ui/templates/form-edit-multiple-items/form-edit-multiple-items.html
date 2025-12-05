@@ -1,0 +1,89 @@
+<div class="form-edit-multiple-items-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="form-title">{{ title }}</h3>
+    <button 
+      *ngIf="!showAddForm && editingItemId === null" 
+      class="btn btn-primary btn-sm" 
+      (click)="showAddItemForm()"
+      [disabled]="isLoading"
+    >
+      <mat-icon class="me-1" style="font-size: 18px; vertical-align: middle;">add</mat-icon>
+      Agregar
+    </button>
+  </div>
+
+  <!-- Formulario para agregar/editar -->
+  <div *ngIf="showAddForm || editingItemId !== null" class="item-form-container mb-4">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="item-form" novalidate>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="input-container mt-2">
+            <input 
+              type="text" 
+              class="input-line" 
+              formControlName="titulo" 
+              placeholder=" "
+              [class.is-invalid]="itemForm.get('titulo')?.invalid && itemForm.get('titulo')?.touched"
+            >
+            <label>Título <span class="text-danger">*</span></label>
+            <div class="invalid-feedback" *ngIf="itemForm.get('titulo')?.invalid && itemForm.get('titulo')?.touched">
+              <small *ngIf="itemForm.get('titulo')?.errors?.['required']">El título es obligatorio</small>
+              <small *ngIf="itemForm.get('titulo')?.errors?.['minlength']">Debe tener al menos 3 caracteres</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="input-container mt-2">
+            <textarea 
+              class="textarea-content" 
+              formControlName="contenido" 
+              placeholder="Ingrese el contenido..."
+              rows="4"
+              [class.is-invalid]="itemForm.get('contenido')?.invalid && itemForm.get('contenido')?.touched"
+            ></textarea>
+            <div class="invalid-feedback" *ngIf="itemForm.get('contenido')?.invalid && itemForm.get('contenido')?.touched">
+              <small *ngIf="itemForm.get('contenido')?.errors?.['required']">El contenido es obligatorio</small>
+              <small *ngIf="itemForm.get('contenido')?.errors?.['minlength']">Debe tener al menos 10 caracteres</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end mt-3">
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="editingItemId !== null ? cancelEdit() : cancelAdd()" [disabled]="isLoading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="itemForm.invalid || isLoading">
+          <span *ngIf="!isLoading">{{ editingItemId !== null ? 'Actualizar' : 'Agregar' }}</span>
+          <span *ngIf="isLoading">Guardando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de items -->
+  <div class="items-list">
+    <div *ngFor="let item of items" class="item-card" [class.editing]="isEditing(item.id)">
+      <div *ngIf="!isEditing(item.id)" class="item-content">
+        <div class="item-header">
+          <h4 class="item-title">{{ item.titulo }}</h4>
+          <div class="item-actions">
+            <button class="btn-icon" (click)="startEdit(item)" title="Editar" [disabled]="isLoading">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="btn-icon btn-delete" (click)="onDelete(item.id!)" title="Eliminar" [disabled]="isLoading">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <p class="item-description">{{ item.contenido }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="items.length === 0" class="empty-state">
+      <p class="text-muted">No hay elementos registrados. Agrega uno nuevo para comenzar.</p>
+    </div>
+  </div>
+</div>
+
+

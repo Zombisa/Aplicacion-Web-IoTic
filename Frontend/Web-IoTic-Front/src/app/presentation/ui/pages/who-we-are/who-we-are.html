@@ -1,4 +1,5 @@
-<div class="who-we-are-container">
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)" class="who-we-are-container">
   <div class="header-wrapper">
     <app-header></app-header>
   </div>
@@ -10,6 +11,41 @@
  
   <!-- Sección Misión, Visión, Valores -->
   <section class="container-fluid d-flex flex-column align-items-center sectionWhoAre">
+    <!-- Formulario de edición de Misión (Admin) -->
+    <div *ngIf="(isAdmin$ | async) && editingMision" class="edit-form-container">
+      <app-form-edit-single-content
+        title="Editar Misión"
+        [content]="mision?.contenido || ''"
+        [isLoading]="isLoadingMision"
+        (submitted)="onUpdateMision($event)"
+        (cancelled)="editingMision = false">
+      </app-form-edit-single-content>
+    </div>
+
+    <!-- Formulario de edición de Visión (Admin) -->
+    <div *ngIf="(isAdmin$ | async) && editingVision" class="edit-form-container">
+      <app-form-edit-single-content
+        title="Editar Visión"
+        [content]="vision?.contenido || ''"
+        [isLoading]="isLoadingVision"
+        (submitted)="onUpdateVision($event)"
+        (cancelled)="editingVision = false">
+      </app-form-edit-single-content>
+    </div>
+
+    <!-- Formulario de edición de Valores (Admin) -->
+    <div *ngIf="(isAdmin$ | async) && editingValores" class="edit-form-container">
+      <app-form-edit-multiple-items
+        title="Editar Valores"
+        [items]="valoresAsItemData"
+        [isLoading]="isLoadingValores"
+        (itemAdded)="onValorAdded($event)"
+        (itemUpdated)="onValorUpdated($event)"
+        (itemDeleted)="onValorDeleted($event)"
+        (cancelled)="editingValores = false">
+      </app-form-edit-multiple-items>
+    </div>
+
     <div class="row container-fluid section-info-company">
       <div
         class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-on-scroll animate-fadeInUp"
@@ -17,7 +53,16 @@
         [id]="item.title === 'Visión' ? 'mision-col' : null"
       >
         <div class="d-flex flex-column justify-content-center align-items-start mb-5">
-          <h2 class="subtitle mb-4">{{ item.title }}</h2>
+          <div class="d-flex justify-content-between align-items-center w-100 mb-3">
+            <h2 class="subtitle mb-0">{{ item.title }}</h2>
+            <button 
+              *ngIf="isAdmin$ | async" 
+              class="btn btn-sm btn-outline-light edit-btn"
+              (click)="item.title === 'Misión' ? editingMision = true : item.title === 'Visión' ? editingVision = true : editingValores = true"
+              title="Editar {{ item.title }}">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
 
           <p *ngIf="typeof(item.description) === 'string'" class="description-items-company">
             {{ item.description }}
@@ -35,14 +80,35 @@
 
   <!-- Sección Objetivos -->
   <section class="section-objetives container-fluid">
-    <div>
-      <h2 class="subtitle-secundary text-center mb-5 animate-on-scroll animate-fadeInUp">Nuestros Objetivos</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="subtitle-secundary text-center mb-0 animate-on-scroll animate-fadeInUp">Nuestros Objetivos</h2>
+      <button 
+        *ngIf="(isAdmin$ | async) && !editingObjetivos" 
+        class="btn btn-sm btn-outline-primary edit-btn"
+        (click)="editingObjetivos = true"
+        title="Editar Objetivos">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
     </div>
-    <div class="container-fluid d-flex justify-content-center align-items-center">
+
+    <!-- Formulario de edición de Objetivos (Admin) -->
+    <div *ngIf="(isAdmin$ | async) && editingObjetivos" class="edit-form-container mb-4">
+      <app-form-edit-multiple-items
+        title="Editar Objetivos"
+        [items]="objetivosAsItemData"
+        [isLoading]="isLoadingObjetivos"
+        (itemAdded)="onObjetivoAdded($event)"
+        (itemUpdated)="onObjetivoUpdated($event)"
+        (itemDeleted)="onObjetivoDeleted($event)"
+        (cancelled)="editingObjetivos = false">
+      </app-form-edit-multiple-items>
+    </div>
+
+    <div class="container-fluid d-flex justify-content-center align-items-center" *ngIf="!(editingObjetivos && (isAdmin$ | async))">
       <div class="row container-fluid d-flex justify-content-center align-items-center section-objetives">
         <div
           class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives animate-on-scroll animate-slideInRight"
-          *ngFor="let objetivo of objetivos; let i = index"
+          *ngFor="let objetivo of objetivosFormatted; let i = index"
         >
           <h3 class="title-objective mb-2">{{ objetivo.title }}</h3>
           <p class="description-objective description-objetives">
@@ -55,11 +121,29 @@
 
   <!-- Sección Historia -->
   <section class="container-fluid section-history d-flex flex-column align-items-start animate-on-scroll animate-slideInLeft">
-    <div>
-      <h2 class="text-center mb-5" id="subtitle_history">Historia</h2>
+    <div class="d-flex justify-content-between align-items-center w-100 mb-3">
+      <h2 class="text-center mb-0" id="subtitle_history">Historia</h2>
+      <button 
+        *ngIf="(isAdmin$ | async) && !editingHistoria" 
+        class="btn btn-sm btn-outline-primary edit-btn"
+        (click)="editingHistoria = true"
+        title="Editar Historia">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
+    </div>
+
+    <!-- Formulario de edición de Historia (Admin) -->
+    <div *ngIf="(isAdmin$ | async) && editingHistoria" class="edit-form-container mb-4">
+      <app-form-edit-single-content
+        title="Editar Historia"
+        [content]="historia?.contenido || ''"
+        [isLoading]="isLoadingHistoria"
+        (submitted)="onUpdateHistoria($event)"
+        (cancelled)="editingHistoria = false">
+      </app-form-edit-single-content>
     </div>
     
-    <div>
+    <div *ngIf="!(editingHistoria && (isAdmin$ | async))">
       <p id="description-history">
         {{ history }}
       </p>

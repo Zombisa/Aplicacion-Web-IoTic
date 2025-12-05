@@ -1,92 +1,81 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { Header } from '../../templates/header/header';
-import { time } from 'console';
-import { deserialize } from 'v8';
-import { title } from 'process';
-import { HttpClient } from '@angular/common/http';
 import { ScrollAnimationServices } from '../../../../services/scroll-animation.service';
-
+import { WhoWeAreService } from '../../../../services/who-we-are.service';
+import { AuthService } from '../../../../services/auth.service';
+import { LoadingService } from '../../../../services/loading.service';
+import { LoadingPage } from '../../components/loading-page/loading-page';
+import { FormEditSingleContent } from '../../templates/form-edit-single-content/form-edit-single-content';
+import { FormEditMultipleItems, ItemData } from '../../templates/form-edit-multiple-items/form-edit-multiple-items';
+import { MisionDTO } from '../../../../models/DTO/MisionDTO';
+import { VisionDTO } from '../../../../models/DTO/VisionDTO';
+import { HistoriaDTO } from '../../../../models/DTO/HistoriaDTO';
+import { ObjetivoDTO } from '../../../../models/DTO/ObjetivoDTO';
+import { ValorDTO } from '../../../../models/DTO/ValorDTO';
+import { Observable, map, startWith } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-who-we-are',
-  imports: [CommonModule, Header],
+  imports: [
+    CommonModule, 
+    Header, 
+    LoadingPage,
+    FormEditSingleContent,
+    FormEditMultipleItems,
+    MatIconModule
+  ],
   templateUrl: './who-we-are.html',
   styleUrl: './who-we-are.css',
 })
-export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
-    private observer!: IntersectionObserver;
-    public options: any = [
-    {
-      title: 'Misión',
-      description: 'El GTI es un grupo de gestión y apoyo a todas las actividades encaminadas a la investigación en Tecnologías de Información en la Universidad del Cauca, brindando la posibilidad a todo el personal docente, administrativo y estudiantil de tener espacios de adquisición, generación y construcción del conocimiento mediante proyectos que representen el interés de estamentos internos y externos a la Universidad.',
-    },
-    {
-      title: 'Visión',
-      description: 'Preservar y estimular el crecimiento de la capacidad de investigación e innovación en el área las Tecnologías de la Información de la Universidad del Cauca, a través de los integrantes del grupo GTI, por medio de la creación de espacios adecuados donde la crítica y el debate intelectual se constituyan en fuente de nuevo conocimiento. El GTI promoverá el desarrollo de su talento humano (profesores, investigadores y estudiantes), aportará la infraestructura requerida y establecerá alianzas estratégicas con centros de investigación de reconocido prestigio internacional para el desarrollo de su labor, con el propósito de agregar valor a su relación con la sociedad. Los principios de calidad, transparencia, independencia de criterio, compromiso y servicio, orientarán las actuaciones del GTI y se constituirán en su diferencial competitivo con respecto de otros grupos en el área. A largo plazo el GTI pretende ser: “Un centro tecnológico en Investigación y Desarrollo con reconocimiento nacional e internacional generador de proyectos y servicios relacionados con las tecnologías de información en el ámbito de la sociedad global de la información, destacándose por la constante formación de investigadores.”',
-    },
-    {
-      title: 'Valores',
-      description: {
-        'Curiosidad:': 'Interés por tratar de comprender las verdades que se encierran detrás de cada tema de los proyectos que se ejecuten.',
-        'Innovación:': 'Capacidad de generar proyectos que aporten nuevos conocimientos y experiencias al área de Tecnologías de Información.',
-        'Responsabilidad':'Para cumplir con las políticas al interior del Grupo.',
-        'Respeto:': 'Por toda persona que interactúe con el Grupo y por todo trabajo que se realice al interior y exterior del mismo.',
-        'Humildad:': 'Reconocer los méritos de los trabajos investigativos que se realizan al interior y exterior del grupo. Ética: Tener siempre presente lo que es moral y profesionalmente correcto. ',
-        'Honestidad:': 'Es la demostración en la práctica diaria que garantiza confianza, seguridad, respaldo y confidencialidad; en otras palabras, integridad.',
-      }
-    },
-  ];
-  public objetivos: any = [{
-    title: 'Fortalecimiento Interno',
-    description: 'Fortalecer la infraestructura humana, técnica, investigativa y de formación especializada en diferentes áreas, de todo el Grupo de Investigación de Unicauca.',
-  },
-  {
-    title: 'Interdisciplinariedad Académica',
-    description: 'Definir, diseñar e implementar proyectos que propendan por la interdisciplinariedad de áreas dentro y fuera de La universidad Del Cauca.',
-  },
-  {
-    title:'Interdisciplinariedad Académica',
-    description: 'Fomentar la investigación y el desarrollo de los estudiantes de Unicauca, especialmente del programa de Ingeniería de Sistemas, en cuanto a áreas de Tecnologías de Información se refiere, utilizando para ello las propuestas de proyectos de grado.'
-  },
-  {
-    title: 'Divulgación Científica',
-    description: 'Desarrollar estrategias de divulgación, mediante la participación de los integrantes del Grupo en eventos y publicaciones de alta calidad en el área de Tecnologías de la Información.'
-  },
-  {
-    title: 'Redes Académicas',
-    description: 'Establecer Redes Temáticas de Aprendizaje y convenios a través de vínculos con Grupos de Investigación de universidades reconocidas.'
-  },
-  {
-    title: 'Integración Docente ',
-    description: 'Aplicar los conocimientos adquiridos en los diferentes proyectos, a los cursos impartidos en el pregrado de Ingeniería de Sistemas.'  
-  },
-  {
-    title: 'Impacto Social',
-    description: 'Desarrollar proyectos que propendan por la búsqueda de soluciones a problemas que causen impacto social, apoyando con las Tecnologías de Información las actividades y requerimientos propios de la comunidad en general.'
-  }
+export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy {
+  private observer!: IntersectionObserver;
   
-  ]
-  history: string = '';
+  // Data from backend
+  public mision: MisionDTO | null = null;
+  public vision: VisionDTO | null = null;
+  public historia: HistoriaDTO | null = null;
+  public objetivos: ObjetivoDTO[] = [];
+  public valores: ValorDTO[] = [];
+
+  // Admin state
+  isAdmin$!: Observable<boolean>;
+
+  // Edit states
+  editingMision: boolean = false;
+  editingVision: boolean = false;
+  editingHistoria: boolean = false;
+  editingObjetivos: boolean = false;
+  editingValores: boolean = false;
+
+  // Loading states
+  isLoadingMision: boolean = false;
+  isLoadingVision: boolean = false;
+  isLoadingHistoria: boolean = false;
+  isLoadingObjetivos: boolean = false;
+  isLoadingValores: boolean = false;
+
   objectKeys = Object.keys;
 
-
-
   constructor(
-    private http: HttpClient,
     private elementRef: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object,
-     private scrollAnimations: ScrollAnimationServices
+    private scrollAnimations: ScrollAnimationServices,
+    private whoWeAreService: WhoWeAreService,
+    private authService: AuthService,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
-    this.http
-      .get('assets/historia.txt', { responseType: 'text' })
-      .subscribe((data) => (this.history = data));
+    this.isAdmin$ = this.authService.isAdmin().pipe(
+      startWith(false),
+      map(isAdmin => isAdmin)
+    );
+    this.loadData();
   }
 
   ngAfterViewInit(): void {
-    // Solo ejecuta animaciones si está en el navegador
     if (isPlatformBrowser(this.platformId)) {
       this.scrollAnimations.observeElements(this.elementRef.nativeElement);
     }
@@ -94,8 +83,282 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy{
 
   ngOnDestroy(): void {
     if (this.observer) {
-       this.scrollAnimations.disconnect();
+      this.scrollAnimations.disconnect();
     }
   }
 
+  /**
+   * Load all data from backend
+   */
+  private loadData(): void {
+    this.loadingService.show();
+    
+    // Load Misión
+    this.whoWeAreService.getMision().subscribe({
+      next: (data) => {
+        if (data && 'id' in data) {
+          this.mision = data;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar misión:', error);
+      }
+    });
+
+    // Load Visión
+    this.whoWeAreService.getVision().subscribe({
+      next: (data) => {
+        if (data && 'id' in data) {
+          this.vision = data;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar visión:', error);
+      }
+    });
+
+    // Load Historia
+    this.whoWeAreService.getHistoria().subscribe({
+      next: (data) => {
+        if (data && 'id' in data) {
+          this.historia = data;
+        }
+        this.loadingService.hide();
+      },
+      error: (error) => {
+        console.error('Error al cargar historia:', error);
+        this.loadingService.hide();
+      }
+    });
+
+    // Load Objetivos
+    this.whoWeAreService.getObjetivos().subscribe({
+      next: (data) => {
+        this.objetivos = data || [];
+      },
+      error: (error) => {
+        console.error('Error al cargar objetivos:', error);
+      }
+    });
+
+    // Load Valores
+    this.whoWeAreService.getValores().subscribe({
+      next: (data) => {
+        this.valores = data || [];
+      },
+      error: (error) => {
+        console.error('Error al cargar valores:', error);
+      }
+    });
+  }
+
+  /**
+   * Get options array for display (Misión, Visión, Valores)
+   */
+  get options(): any[] {
+    const options: any[] = [];
+    
+    if (this.mision) {
+      options.push({
+        title: 'Misión',
+        description: this.mision.contenido
+      });
+    }
+    
+    if (this.vision) {
+      options.push({
+        title: 'Visión',
+        description: this.vision.contenido
+      });
+    }
+    
+    if (this.valores.length > 0) {
+      const valoresObj: any = {};
+      this.valores.forEach(valor => {
+        valoresObj[`${valor.titulo}:`] = valor.contenido;
+      });
+      options.push({
+        title: 'Valores',
+        description: valoresObj
+      });
+    }
+    
+    return options;
+  }
+
+  /**
+   * Get history content
+   */
+  get history(): string {
+    return this.historia?.contenido || '';
+  }
+
+  /**
+   * Get objetivos formatted for display
+   */
+  get objetivosFormatted(): any[] {
+    return this.objetivos.map(obj => ({
+      title: obj.titulo,
+      description: obj.contenido
+    }));
+  }
+
+  // Edit handlers for single content (Misión, Visión, Historia)
+  onUpdateMision(contenido: string): void {
+    if (!this.mision) return;
+    this.isLoadingMision = true;
+    this.whoWeAreService.updateMision(this.mision.id, contenido).subscribe({
+      next: (data) => {
+        this.mision = data;
+        this.editingMision = false;
+        this.isLoadingMision = false;
+      },
+      error: (error) => {
+        console.error('Error al actualizar misión:', error);
+        this.isLoadingMision = false;
+      }
+    });
+  }
+
+  onUpdateVision(contenido: string): void {
+    if (!this.vision) return;
+    this.isLoadingVision = true;
+    this.whoWeAreService.updateVision(this.vision.id, contenido).subscribe({
+      next: (data) => {
+        this.vision = data;
+        this.editingVision = false;
+        this.isLoadingVision = false;
+      },
+      error: (error) => {
+        console.error('Error al actualizar visión:', error);
+        this.isLoadingVision = false;
+      }
+    });
+  }
+
+  onUpdateHistoria(contenido: string): void {
+    if (!this.historia) return;
+    this.isLoadingHistoria = true;
+    this.whoWeAreService.updateHistoria(this.historia.id, contenido).subscribe({
+      next: (data) => {
+        this.historia = data;
+        this.editingHistoria = false;
+        this.isLoadingHistoria = false;
+      },
+      error: (error) => {
+        console.error('Error al actualizar historia:', error);
+        this.isLoadingHistoria = false;
+      }
+    });
+  }
+
+  // Edit handlers for multiple items (Objetivos, Valores)
+  onObjetivoAdded(item: { titulo: string; contenido: string }): void {
+    this.isLoadingObjetivos = true;
+    this.whoWeAreService.createObjetivo(item.titulo, item.contenido).subscribe({
+      next: (data) => {
+        this.objetivos.push(data);
+        this.isLoadingObjetivos = false;
+        this.loadData(); // Reload to get updated list
+      },
+      error: (error) => {
+        console.error('Error al crear objetivo:', error);
+        this.isLoadingObjetivos = false;
+      }
+    });
+  }
+
+  onObjetivoUpdated(item: { id: number; titulo: string; contenido: string }): void {
+    this.isLoadingObjetivos = true;
+    this.whoWeAreService.updateObjetivo(item.id, item.titulo, item.contenido).subscribe({
+      next: (data) => {
+        const index = this.objetivos.findIndex(obj => obj.id === data.id);
+        if (index !== -1) {
+          this.objetivos[index] = data;
+        }
+        this.isLoadingObjetivos = false;
+      },
+      error: (error) => {
+        console.error('Error al actualizar objetivo:', error);
+        this.isLoadingObjetivos = false;
+      }
+    });
+  }
+
+  onObjetivoDeleted(id: number): void {
+    this.isLoadingObjetivos = true;
+    this.whoWeAreService.deleteObjetivo(id).subscribe({
+      next: () => {
+        this.objetivos = this.objetivos.filter(obj => obj.id !== id);
+        this.isLoadingObjetivos = false;
+      },
+      error: (error) => {
+        console.error('Error al eliminar objetivo:', error);
+        this.isLoadingObjetivos = false;
+      }
+    });
+  }
+
+  onValorAdded(item: { titulo: string; contenido: string }): void {
+    this.isLoadingValores = true;
+    this.whoWeAreService.createValor(item.titulo, item.contenido).subscribe({
+      next: (data) => {
+        this.valores.push(data);
+        this.isLoadingValores = false;
+        this.loadData(); // Reload to get updated list
+      },
+      error: (error) => {
+        console.error('Error al crear valor:', error);
+        this.isLoadingValores = false;
+      }
+    });
+  }
+
+  onValorUpdated(item: { id: number; titulo: string; contenido: string }): void {
+    this.isLoadingValores = true;
+    this.whoWeAreService.updateValor(item.id, item.titulo, item.contenido).subscribe({
+      next: (data) => {
+        const index = this.valores.findIndex(val => val.id === data.id);
+        if (index !== -1) {
+          this.valores[index] = data;
+        }
+        this.isLoadingValores = false;
+      },
+      error: (error) => {
+        console.error('Error al actualizar valor:', error);
+        this.isLoadingValores = false;
+      }
+    });
+  }
+
+  onValorDeleted(id: number): void {
+    this.isLoadingValores = true;
+    this.whoWeAreService.deleteValor(id).subscribe({
+      next: () => {
+        this.valores = this.valores.filter(val => val.id !== id);
+        this.isLoadingValores = false;
+      },
+      error: (error) => {
+        console.error('Error al eliminar valor:', error);
+        this.isLoadingValores = false;
+      }
+    });
+  }
+
+  // Convert DTOs to ItemData format for the form component
+  get objetivosAsItemData(): ItemData[] {
+    return this.objetivos.map(obj => ({
+      id: obj.id,
+      titulo: obj.titulo,
+      contenido: obj.contenido
+    }));
+  }
+
+  get valoresAsItemData(): ItemData[] {
+    return this.valores.map(val => ({
+      id: val.id,
+      titulo: val.titulo,
+      contenido: val.contenido
+    }));
+  }
 }
