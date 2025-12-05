@@ -15,6 +15,7 @@ import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-
 import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
 import { EvaluationCommitteesPage } from './presentation/ui/pages/publication-templates/evaluation-committees/list/evaluation-committees-page';
 import { EvaluationCommitteeCreatePage } from './presentation/ui/pages/publication-templates/evaluation-committees/form/create-page/evaluation-committee-create-page';
+import { PublisItemProductiviy } from './presentation/ui/pages/publis-item-productiviy/publis-item-productiviy';
 
 export const routes: Routes = [
 
@@ -31,5 +32,7 @@ export const routes: Routes = [
      {path: 'inventario/view-item/:id', component: ViewLoanItem},
      {path: 'productivity', component: ProductivityPage},
      {path: 'publicaciones/comites', component: EvaluationCommitteesPage},
-     {path: 'publicaciones/comites/nuevo', component: EvaluationCommitteeCreatePage}
+     {path: 'publicaciones/comites/nuevo', component: EvaluationCommitteeCreatePage},
+     
+     {path: 'publicaciones/item-productivity/:tipo', component: PublisItemProductiviy}
 ];   

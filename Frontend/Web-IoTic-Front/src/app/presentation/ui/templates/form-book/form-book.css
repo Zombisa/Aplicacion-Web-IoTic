@@ -1,0 +1,7 @@
+.form-container{
+    padding: 10rem;
+}
+
+.personality-camp input.ng-valid + label::after {
+    background-color: aliceblue;
+}
