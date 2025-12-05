@@ -85,6 +85,7 @@ export class PublisItemProductiviy implements OnInit {
 
     // El hijo enviará: { data: {...}, file: File | null }
     this.currentFormRef.instance.formSubmit.subscribe((payload: {data: BaseProductivityDTO, file: File | null }) => {
+      console.log("Formulario recibido en padre:", payload);
       this.onFormSubmit(payload);
     });
   }
@@ -113,7 +114,7 @@ export class PublisItemProductiviy implements OnInit {
         switchMap((resp) => {
           const uploadUrl = resp.upload_url;
           const filePath = resp.file_path;
-          data.image_url = filePath;
+          data.file_path = filePath;
           return this.imageService.uploadToR2(uploadUrl, file);
         })
       )
@@ -135,6 +136,7 @@ export class PublisItemProductiviy implements OnInit {
   guardarEntidad(payload: any) {
     switch (this.tipo) {
       case 'libro':
+        console.log("Guardando libro:", payload);
         this.booksService.postBook(payload).subscribe({
           next: () => this.isLoading = false,
           error: () => this.isLoading = false

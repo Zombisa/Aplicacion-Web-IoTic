@@ -20,7 +20,7 @@ export class ImagesService {
    *          - file_path  : Ruta final del archivo dentro del bucket.
    */
   getPresignedUrl(extension: string, contentType: string): Observable<any> {
-    return this.http.post(`${this.config.apiUrlBackend}urlfirmada/generar-url/`, {
+    return this.http.post(`${this.config.apiUrlBackend}informacion/urlfirmada/generar-url/`, {
       extension,
       content_type: contentType
     });

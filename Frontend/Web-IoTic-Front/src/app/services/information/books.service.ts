@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfigService } from '../common/app-config.service';
 import { catchError, Observable, throwError } from 'rxjs';
-import { BaseProductivityDTO } from '../../models/Common/BaseProductivityDTO';
+import { BookPeticion } from '../../models/Peticion/BookPeticion';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ export class BooksService {
    * Lista los libros disponibles desde el backend.
    * @returns lista de libros desde el backend
    */
-  getBooks(): Observable<BaseProductivityDTO[]> {
-    return this.http.get<BaseProductivityDTO[]>(
+  getBooks(): Observable<BookPeticion[]> {
+    return this.http.get<BookPeticion[]>(
       `${this.config.apiUrlBackend}informacion/libros/listar_libros/`
     ).pipe(
       catchError(error => {
@@ -27,11 +27,11 @@ export class BooksService {
   }
   /**
    * Crea un nuevo libro en el backend
-   * @param book datos del libro a crear. debe ser de tipo BookPeticion que hereda de BaseProductivityDTO
+   * @param book datos del libro a crear. debe ser de tipo BookPeticion que hereda de BookPeticion
    * @returns Libro creado.
    */
-  postBook(book: BaseProductivityDTO): Observable<BaseProductivityDTO> {
-    return this.http.post<BaseProductivityDTO>(
+  postBook(book: BookPeticion): Observable<BookPeticion> {
+    return this.http.post<BookPeticion>(
       `${this.config.apiUrlBackend}informacion/libros/agregar_libro/`,
       book
     ).pipe(
@@ -44,11 +44,11 @@ export class BooksService {
   /**
    * Actualiza la información de un libro existente en el backend.
    * @param id ID del libro a editar
-   * @param book Información actualizada del libro, debe ser de tipo BookPeticion que hereda de BaseProductivityDTO
+   * @param book Información actualizada del libro, debe ser de tipo BookPeticion que hereda de BookPeticion
    * @returns 
    */
-  editBook(id: number, book: BaseProductivityDTO): Observable<BaseProductivityDTO> {
-    return this.http.put<BaseProductivityDTO>(
+  editBook(id: number, book: BookPeticion): Observable<BookPeticion> {
+    return this.http.put<BookPeticion>(
       `${this.config.apiUrlBackend}informacion/libros/${id}/editar_libro/`,
       book
     ).pipe(

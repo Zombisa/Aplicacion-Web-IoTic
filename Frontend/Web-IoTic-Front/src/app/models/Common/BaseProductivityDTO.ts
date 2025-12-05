@@ -4,5 +4,6 @@ export interface BaseProductivityDTO {
   pais: string;
   anio: string;
   autores: string[];
-  image_url?: string;
+  image_r2?: string;
+  file_path: string;
 }
