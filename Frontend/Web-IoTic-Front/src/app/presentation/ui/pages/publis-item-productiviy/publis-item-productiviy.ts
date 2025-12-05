@@ -9,6 +9,8 @@ import { FormBook } from '../../templates/form-book/form-book';
 import { switchMap } from 'rxjs/operators';
 import { BaseProductivityDTO } from '../../../../models/Common/BaseProductivityDTO';
 import { LoadingService } from '../../../../services/loading.service';
+import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-publis-item-productiviy',
@@ -36,10 +38,10 @@ export class PublisItemProductiviy implements OnInit {
 
   /**
    * Constructor donde se llamaran todos lo servicios necesarios por formulario
-   * @param router 
-   * @param loadingService 
-   * @param booksService 
-   * @param imageService 
+   * @param router  se usa para capturar el parametro de tipo en la URL
+   * @param loadingService maneja el estado de carga global pagina de carga
+   * @param booksService servicio de libros
+   * @param imageService servicio de subida de imagenes
    */
   constructor(
     private router: ActivatedRoute,
@@ -92,41 +94,71 @@ export class PublisItemProductiviy implements OnInit {
 
   /**
    * Recibe desde el hijo:
-   * {
-   *   data: {...fields} que va a ser BaseProductivityDTO como padre, recibe cualquier hijo,
-   *   file: File | null
-   * }
+   * @param dtoSubmit objeto con la informacion traida del fomrulario en formato especifico y la imagen  del hijo
    */
-  onFormSubmit({ data, file }: { data: BaseProductivityDTO, file: File | null }) {
+  async onFormSubmit(dtoSubmit: FormSubmitPayload) {
     this.isLoading = true;
 
-    // Si no hay imagen → guardar de una
-    if (!file) {
-      this.guardarEntidad(data);
+    if (!dtoSubmit.file) {
+      this.guardarEntidad(dtoSubmit.data);
       return;
     }
 
+    try {
+      // 1. Comprimir imagen
+      const compressed = await this.compressFile(dtoSubmit.file);
+
+      // 2. Subir a R2 y actualizar data.image_r2
+      await this.uploadAndSetImage(dtoSubmit.data, compressed);
+
+      // 3. Guardar entidad en backend
+      this.guardarEntidad(dtoSubmit.data);
+
+    } catch (error) {
+      console.error("Error al subir la imagen:", error);
+      this.isLoading = false;
+    }
+  }
+  /**
+   * Comprime el archivo de imagen antes de subirlo
+   * @param file archivo de la imagen a comprimir
+   * @returns la imagen comprimida
+   */
+  private compressFile(file: File): Promise<File> {
+    return this.imageService.compressImage(file, 0.7, 1500);
+  }
+  /**
+   * funcion que sube la imagen comprimida a R2 y actualiza el objeto data con la ruta
+   * @param data objeto de datos donde se colocara la ruta de la imagen subida
+   * @param file imagen comprimida a subir
+   * @returns 
+   */
+  private uploadAndSetImage(data: BaseProductivityDTO, file: File): Promise<void> {
     const extension = file.name.split('.').pop() || 'jpg';
     const contentType = file.type;
 
-    this.imageService.getPresignedUrl(extension, contentType)
-      .pipe(
-        switchMap((resp) => {
-          const uploadUrl = resp.upload_url;
-          const filePath = resp.file_path;
-          data.file_path = filePath;
-          return this.imageService.uploadToR2(uploadUrl, file);
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.guardarEntidad(data);
-        },
-        error: (err) => {
-          console.error("Error subiendo imagen:", err);
-          this.isLoading = false;
-        }
-      });
+    return new Promise((resolve, reject) => {
+      this.imageService.getPresignedUrl(extension, contentType)
+        .pipe(
+          switchMap((resp) => {
+            data.file_path = resp.file_path;
+            return this.imageService.uploadToR2(resp.upload_url, file);
+          })
+        )
+        .subscribe({
+        next: () => resolve(),
+          error: (err) => {
+            // Mostrar notificación de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al subir la imagen',
+              text: 'No se pudo subir la imagen. Por favor intenta nuevamente.',
+              confirmButtonText: 'Aceptar'
+            });
+            reject(err);
+          }
+        });
+    });
   }
 
   /**
@@ -138,8 +170,31 @@ export class PublisItemProductiviy implements OnInit {
       case 'libro':
         console.log("Guardando libro:", payload);
         this.booksService.postBook(payload).subscribe({
-          next: () => this.isLoading = false,
-          error: () => this.isLoading = false
+          next: () => {this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Libro guardado',
+              text: 'El libro se ha guardado correctamente.',
+              confirmButtonText: 'Aceptar',
+              buttonsStyling: true,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: () =>{
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al guardar el libro',
+              text: 'No se pudo guardar el libro. Por favor intenta nuevamente.',
+              confirmButtonText: 'Aceptar',
+              buttonsStyling: true,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          } 
         });
         break;
       

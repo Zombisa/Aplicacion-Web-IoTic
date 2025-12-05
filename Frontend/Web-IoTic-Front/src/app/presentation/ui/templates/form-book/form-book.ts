@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 
 @Component({
   selector: 'app-form-book',
@@ -11,7 +12,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class FormBook {
 
-  @Output() formSubmit = new EventEmitter<any>();
+  @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
   form: FormGroup;
   selectedFile: File | null = null;
@@ -60,10 +61,10 @@ export class FormBook {
       this.form.markAllAsTouched();
       return;
     }
-
-    this.formSubmit.emit({
+    const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
       file: this.selectedFile
-    });
+    };
+    this.formSubmit.emit(dtoSubmit);
   }
 }

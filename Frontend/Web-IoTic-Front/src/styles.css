@@ -200,7 +200,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background: transparent;
   transition: border-color 0.3s;
 }
-
+.input-line:not(:placeholder-shown) {
+  background-color: #f0f6ff; /* azul muy suave, puedes cambiar el color */
+  border-bottom-color: #1976d2;
+  transition: background-color 0.3s;
+}
 .input-line:focus {
   border-bottom-color: #1976d2;
 }

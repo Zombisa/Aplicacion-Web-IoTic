@@ -1,81 +1,83 @@
 <form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+    
+    <!-- Upload Image Box -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input type="file"
+               #fileInput
+               class="file-input-hidden"
+               accept="image/*"
+               (change)="onFileSelected($event)" />
+        
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- Título -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
-    <label>Título</label>
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
+        <label>País</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" placeholder=" " (change)="form.patchValue({ autores: $event.target.value.split(',') })" />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="isbn" placeholder=" " />
+        <label>ISBN</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="volumen" placeholder=" " />
+        <label>Volumen</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="paginas" placeholder=" " />
+        <label>Páginas</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="editorial" placeholder=" " />
+        <label>Editorial</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="codigoEditorial" placeholder=" " />
+        <label>Código Editorial</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
+        <label>Propiedad Intelectual</label>
+      </div>
+
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Guardar Libro</button>
+    </div>
+
   </div>
-
-  <!-- País -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="pais" placeholder=" " />
-    <label>País</label>
-  </div>
-
-  <!-- Año -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="anio" placeholder=" " />
-    <label>Año</label>
-  </div>
-
-  <!-- Autores -->
-  <div class="input-container personality-camp">
-    <input
-      type="text"
-      class="input-line"
-      placeholder=" "
-      (change)="form.patchValue({ autores: $event.target.value.split(',') })"
-    />
-    <label>Autores (separados por coma)</label>
-  </div>
-
-  <!-- ISBN -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="isbn" placeholder=" " />
-    <label>ISBN</label>
-  </div>
-
-  <!-- Volumen -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="volumen" placeholder=" " />
-    <label>Volumen</label>
-  </div>
-
-  <!-- Páginas -->
-  <div class="input-container personality-camp">
-    <input type="number" class="input-line" formControlName="paginas" placeholder=" " />
-    <label>Páginas</label>
-  </div>
-
-  <!-- Editorial -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="editorial" placeholder=" " />
-    <label>Editorial</label>
-  </div>
-
-  <!-- Código Editorial -->
-  <div class="input-container personality-camp">
-    <input type="number" class="input-line" formControlName="codigoEditorial" placeholder=" " />
-    <label>Código Editorial</label>
-  </div>
-
-  <!-- Propiedad Intelectual -->
-  <div class="input-container personality-camp">
-    <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
-    <label>Propiedad Intelectual</label>
-  </div>
-
-  <!-- Imagen -->
-  <div class="input-container personality-camp">
-    <input type="file"
-           class="input-line"
-           accept="image/*"
-           placeholder=" "
-           (change)="onFileSelected($event)" />
-    <label>Imagen</label>
-  </div>
-
-  <img *ngIf="imagePreview" [src]="imagePreview" class="preview" />
-
-  <button type="submit" class="btn btn-primary">Guardar Libro</button>
 </form>
