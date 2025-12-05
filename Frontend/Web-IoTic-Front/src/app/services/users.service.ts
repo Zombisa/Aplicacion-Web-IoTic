@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { UserDTO } from '../models/DTO/UserDTO';
+import { AppConfigService } from './common/app-config.service';
 
 export interface UpdateUserDTO {
   nombre?: string;
@@ -12,12 +13,12 @@ export interface UpdateUserDTO {
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
-  private apiUrl = 'http://localhost:8000/api/';
+  
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private config: AppConfigService) {}
 
   getUsers(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(`${this.apiUrl}usuarios/`).pipe(
+    return this.http.get<UserDTO[]>(`${this.config.apiUrlBackend}usuarios/`).pipe(
       catchError(error => {
         console.error('Error al obtener usuarios:', error);
         return throwError(() => error);
@@ -26,7 +27,7 @@ export class UsersService {
   }
 
   getRoles(): Observable<{ id: number; nombre: string }[]> {
-    return this.http.get<{ id: number; nombre: string }[]>(`${this.apiUrl}usuarios/roles/`).pipe(
+    return this.http.get<{ id: number; nombre: string }[]>(`${this.config.apiUrlBackend}usuarios/roles/`).pipe(
       catchError(error => {
         console.error('Error al obtener roles:', error);
         return throwError(() => error);
@@ -35,7 +36,7 @@ export class UsersService {
   }
 
   updateUser(userId: number, userData: UpdateUserDTO): Observable<UserDTO> {
-    return this.http.put<UserDTO>(`${this.apiUrl}usuarios/${userId}/`, userData).pipe(
+    return this.http.put<UserDTO>(`${this.config.apiUrlBackend}usuarios/${userId}/`, userData).pipe(
       catchError(error => {
         console.error('Error al actualizar usuario:', error);
         return throwError(() => error);
@@ -44,7 +45,7 @@ export class UsersService {
   }
 
   toggleUserStatus(userId: number): Observable<UserDTO> {
-    return this.http.patch<UserDTO>(`${this.apiUrl}usuarios/${userId}/estado/`, {}).pipe(
+    return this.http.patch<UserDTO>(`${this.config.apiUrlBackend}usuarios/${userId}/estado/`, {}).pipe(
       catchError(error => {
         console.error('Error al cambiar estado del usuario:', error);
         return throwError(() => error);
@@ -53,7 +54,7 @@ export class UsersService {
   }
 
   deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}usuarios/${userId}/eliminar/`).pipe(
+    return this.http.delete<void>(`${this.config.apiUrlBackend}usuarios/${userId}/eliminar/`).pipe(
       catchError(error => {
         console.error('Error al eliminar usuario:', error);
         return throwError(() => error);
