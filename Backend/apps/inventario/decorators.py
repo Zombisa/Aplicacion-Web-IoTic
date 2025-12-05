@@ -65,18 +65,32 @@ def verificar_token(view_func):
 # ======================================================
 
 def verificar_roles(roles_permitidos):
+    """
+    Decorador para verificar roles de usuario.
+    Funciona tanto con funciones como con métodos de clase.
+    """
     roles_permitidos = [r.lower().strip() for r in roles_permitidos]
 
-    def decorator(view_func):
-        @wraps(view_func)
-        def wrapped(request, *args, **kwargs):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self_or_request, *args, **kwargs):
+            # Detectar si es un método de clase o una función
+            # En métodos de clase, el primer argumento es 'self'
+            # En funciones, el primer argumento es 'request'
+            
+            if hasattr(self_or_request, 'request'):
+                # Es un método (self)
+                request = self_or_request.request
+            else:
+                # Es una función (request directamente)
+                request = self_or_request
 
             # Leer rol del token
             token_role = getattr(request, "user_role", "").lower().strip()
 
             # Leer rol de BD
             db_role = ""
-            if hasattr(request, "user_local") and request.user_local.rol:
+            if hasattr(request, "user_local") and request.user_local and request.user_local.rol:
                 db_role = request.user_local.rol.nombre.lower().strip()
 
             if token_role not in roles_permitidos and db_role not in roles_permitidos:
@@ -86,7 +100,7 @@ def verificar_roles(roles_permitidos):
                     "db_role": db_role
                 }, status=403)
 
-            return view_func(request, *args, **kwargs)
+            return func(self_or_request, *args, **kwargs)
 
-        return wrapped
+        return wrapper
     return decorator

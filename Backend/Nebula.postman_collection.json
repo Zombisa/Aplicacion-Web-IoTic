@@ -1,11 +1,1428 @@
 {
 	"info": {
-		"_postman_id": "25b25ac2-571e-4be2-b64f-4aee6817eb2c",
+		"_postman_id": "1521e66d-912b-487f-8ae5-72f800cc7d12",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "40286637"
 	},
 	"item": [
+		{
+			"name": "Productividad",
+			"item": [
+				{
+					"name": "Misión",
+					"item": [
+						{
+							"name": "Agregar misión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Somos un equipo dedicado a promover el aprendizaje tecnológico en toda la comunidad universitaria.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar misión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver misión (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar misión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Misión actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Visión",
+					"item": [
+						{
+							"name": "Agregar visión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Ser un semillero líder en innovación tecnológica y formación de talento humano en la región y el país.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar visión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver visión (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar visión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Visión actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Historia",
+					"item": [
+						{
+							"name": "Crear historia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"El semillero nació en 2018 con el objetivo de impulsar el aprendizaje y la investigación en tecnologías emergentes.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar historia",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver historia (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar historia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Historia actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Objetivos",
+					"item": [
+						{
+							"name": "Agregar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación\",\r\n  \"contenido\": \"Promover la participación de los estudiantes en proyectos de investigación aplicada.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar objetivos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver objetivos (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación y la innovación\",\r\n  \"contenido\": \"Texto actualizado del objetivo.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/1/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"1",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/1/eliminar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"1",
+										"eliminar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Valores",
+					"item": [
+						{
+							"name": "Agregar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Trabajo en equipo\",\r\n  \"contenido\": \"Promovemos la colaboración y el apoyo mutuo entre todos los integrantes del semillero.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar valores",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver valores (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Trabajo en equipo (actualizado)\",\r\n  \"contenido\": \"Texto actualizado del valor.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/1/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"1",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/1/eliminar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"1",
+										"eliminar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Inventario",
+			"item": [
+				{
+					"name": "Consultar inventario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar un item inventario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir item a inventario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"file_path\": \"ruta/imagen.jpg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/agregar_item/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"agregar_item",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir varios items iguales",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"descripcion\": \"Cable USB-C\",\r\n  \"estado_fisico\": \"Bueno\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Lote nuevo\",\r\n  \"cantidad\": 3,\r\n  \"imagenes\": [\r\n    \"url cloudfare inv 2\",\r\n    \"url cloudfare inv 3\",\r\n    \"url cloudfare inv 4\"\r\n  ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/masivo/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"masivo",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dar debe baja un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/dar-baja/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"dar-baja",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Dañado\",\r\n  \"estado_admin\": \"No prestar\",\r\n  \"observacion\": \"Se quemo\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/editar_item/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"editar_item",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/eliminar_item/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"eliminar_item",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar imagen de item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/eliminar-imagen/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"eliminar-imagen",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar imágenes del bucket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/listar-imagenes/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"listar-imagenes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items disponibles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/disponibles/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reportes",
+								"disponibles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items prestados",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/prestados/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reportes",
+								"prestados",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items no prestar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/no-prestar/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reportes",
+								"no-prestar",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos de un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/prestamos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"prestamos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos vencidos de un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/prestamos/vencidos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"prestamos",
+								"vencidos",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Préstamos",
 			"item": [
@@ -61,7 +1478,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"item_id\": 1,\r\n  \"nombre_persona\": \"Juan Pérez\",\r\n  \"cedula\": \"1234567890\",\r\n  \"telefono\": \"3001234567\",\r\n  \"correo\": \"juan@mail.com\",\r\n  \"direccion\": \"Calle 123\",\r\n  \"fecha_limite\": \"2025-11-30T12:00:00Z\"\r\n}\r\n",
+							"raw": "{\r\n  \"item_id\": 1,\r\n  \"nombre_persona\": \"Juan Pérez\",\r\n  \"cedula\": \"1234567890\",\r\n  \"telefono\": \"3001234567\",\r\n  \"correo\": \"juan@mail.com\",\r\n  \"direccion\": \"Calle 123\",\r\n  \"fecha_limite\": \"2025-12-30T12:00:00Z\",\r\n  \"file_path_entrega\": \"ruta/foto_entrega.jpg\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -69,7 +1486,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/crear/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -82,6 +1499,7 @@
 								"api",
 								"inventario",
 								"prestamos",
+								"crear",
 								""
 							]
 						}
@@ -148,7 +1566,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n  \"file_path_devolucion\": \"ruta/foto_devolucion.jpg\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -212,6 +1630,224 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Préstamos activos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/activos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"activos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos devueltos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/devueltos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"devueltos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos vencidos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/vencidos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"vencidos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos por vencer (48h)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/por-vencer/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"por-vencer",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar foto de entrega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/eliminar-foto-entrega/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								"eliminar-foto-entrega",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar foto de devolución",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/eliminar-foto-devolucion/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								"eliminar-foto-devolucion",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -235,7 +1871,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"uid\": \"admin2@prueba.com\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
+							"raw": "{\r\n  \"uid\": \"zZjgYQESeOYtc5fr4QsadFLi9So1\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -243,7 +1879,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/asignar_rol/",
+							"raw": "http://127.0.0.1:8000/api/usuarios/asignar-rol/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -255,8 +1891,31 @@
 							"path": [
 								"api",
 								"usuarios",
-								"asignar_rol",
+								"asignar-rol",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios"
 							]
 						}
 					},
@@ -323,7 +1982,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"María\",\r\n  \"apellido\": \"González\",\r\n  \"email\": \"maria@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"role\": \"mentor\"\r\n}",
+							"raw": "{\r\n  \"nombre\": \"Jane\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"jdoe@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -331,7 +1990,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/crear_usuario_admin/",
+							"raw": "http://127.0.0.1:8000/api/usuarios/crear/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -343,7 +2002,42 @@
 							"path": [
 								"api",
 								"usuarios",
-								"crear_usuario_admin",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sincronizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/sincronizar/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"sincronizar",
 								""
 							]
 						}
@@ -3198,252 +4892,6 @@
 							"response": []
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "Productividad",
-			"item": [
-				{
-					"name": "Misión",
-					"item": [
-						{
-							"name": "Agregar misión",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"contenido\": \"Somos un equipo dedicado a promover el aprendizaje tecnológico en toda la comunidad universitaria.\"\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/mision/agregar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"mision",
-										"agregar",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Listar misión",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/mision/listar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"mision",
-										"listar",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Visión",
-					"item": [
-						{
-							"name": "Listar visión",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/vision/listar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"vision",
-										"listar",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Historia",
-					"item": [
-						{
-							"name": "Crear historia",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"contenido\": \"El semillero nació en 2018 con el objetivo de impulsar el aprendizaje y la investigación en tecnologías emergentes.\"\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/historia/agregar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"historia",
-										"agregar",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Listar historia",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/historia/listar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"historia",
-										"listar",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Objetivos",
-					"item": [
-						{
-							"name": "Agregar objetivo",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{access_token}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación\",\r\n  \"contenido\": \"Promover la participación de los estudiantes en proyectos de investigación aplicada.\"\r\n}\r\n"
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/agregar/",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8001",
-									"path": [
-										"api",
-										"informacion",
-										"objetivos",
-										"agregar",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Valores",
-					"item": []
 				}
 			]
 		}

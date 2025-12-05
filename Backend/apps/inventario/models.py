@@ -30,7 +30,7 @@ class Inventario(models.Model):
 
     fecha_registro = models.DateTimeField(auto_now_add=True)
     observacion = models.TextField(blank=True, null=True)
-    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2 
+    image_r2 = models.CharField(max_length=100, blank=True, null=True) #Almacena la ruta en r2 
 
     def save(self, *args, **kwargs):
         # Generar serial solo si no existe
@@ -72,9 +72,10 @@ class Prestamo(models.Model):
     direccion = models.CharField(max_length=200, default="direccion")
 
     fecha_prestamo = models.DateTimeField(auto_now_add=True)
-    fecha_limite = models.DateTimeField(auto_now=True)
+    fecha_limite = models.DateTimeField()
     fecha_devolucion = models.DateTimeField(null=True, blank=True)
-    image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2 
+    foto_entrega = models.CharField(max_length=100, blank=True, null=True) #Almacena la ruta en r2 
+    foto_devolucion = models.CharField(max_length=100, blank=True, null=True) #Almacena la ruta en r2 
 
     estado = models.CharField(
         max_length=20,
