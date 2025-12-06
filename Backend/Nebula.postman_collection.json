@@ -1057,7 +1057,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/deactivate/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1071,7 +1071,6 @@
 								"inventario",
 								"items",
 								"1",
-								"deactivate",
 								""
 							]
 						}
@@ -1558,7 +1557,7 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -1570,7 +1569,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/return/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1584,7 +1583,6 @@
 								"inventario",
 								"prestamos",
 								"1",
-								"return",
 								""
 							]
 						}

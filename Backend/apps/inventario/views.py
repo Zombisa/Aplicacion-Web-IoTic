@@ -408,17 +408,16 @@ class InventarioViewSet(viewsets.ModelViewSet):
         return Response(InventarioSerializer(qs, many=True).data)
 
     # ======================================================
-    #   DAR BAJA
+    #   DAR BAJA (PATCH)
     # ======================================================
-    @method_decorator(verificar_roles(['admin']), name='deactivate')
-    @action(detail=True, methods=['patch'], url_path='deactivate')
-    def deactivate(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin']), name='partial_update')
+    def partial_update(self, request, pk=None):
         """
         Da de baja un ítem marcándolo como dañado y no disponible.
         
         Roles permitidos: admin únicamente
         
-        URL: /inventario/{id}/dar-baja/
+        URL: /inventario/{id}/  [PATCH]
         
         Cambios realizados:
             - estado_fisico = 'Dañado'
@@ -624,17 +623,16 @@ class PrestamoViewSet(viewsets.ModelViewSet):
             return Response({"error": f"Error inesperado: {str(e)}"}, status=500)
 
     # ======================================================
-    #   DEVOLVER ÍTEM (con foto de devolución opcional)
+    #   DEVOLVER ÍTEM (con foto de devolución opcional) - PATCH
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='return_loan')
-    @action(detail=True, methods=['post'], url_path='return')
-    def return_loan(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='partial_update')
+    def partial_update(self, request, pk=None):
         """
         Registra la devolución de un ítem prestado.
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/{id}/devolver/
+        URL: /prestamo/{id}/  [PATCH]
         
         Request body (opcional):
             {
