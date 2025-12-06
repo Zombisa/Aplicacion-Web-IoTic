@@ -78,7 +78,8 @@ export class UsersManagementPageComponent implements OnInit {
    * Manejar edición de usuario
    */
   onEditUser(user: UserDTO): void {
-    this.selectedUserForEdit = user;
+    // Crear una copia del usuario para forzar la detección de cambios
+    this.selectedUserForEdit = { ...user };
     this.showEditForm = true;
   }
 

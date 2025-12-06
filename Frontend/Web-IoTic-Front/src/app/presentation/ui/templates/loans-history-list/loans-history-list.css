@@ -1,0 +1,29 @@
+.loans-history-list-container {
+  width: 100%;
+}
+
+.loans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.no-loans-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.no-loans-message p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .loans-list {
+    gap: 0.75rem;
+  }
+}
+
+

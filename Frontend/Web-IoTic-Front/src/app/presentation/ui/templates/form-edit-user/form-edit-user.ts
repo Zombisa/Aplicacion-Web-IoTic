@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserDTO } from '../../../../models/DTO/UserDTO';
@@ -18,17 +18,35 @@ export class FormEditUser implements OnChanges, OnInit {
 
   userForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
+  ) {
     this.initializeForm();
   }
 
   ngOnInit(): void {
-    this.initializeForm();
+    // Si el usuario ya está disponible al inicializar, poblar el formulario
+    if (this.user) {
+      this.populateForm();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // Si cambia el usuario, actualizar el formulario
     if (changes['user'] && this.user) {
-      this.populateForm();
+      // Usar setTimeout para asegurar que Angular haya procesado el cambio
+      setTimeout(() => {
+        this.populateForm();
+        this.cdr.detectChanges();
+      }, 0);
+    }
+    // Si los roles cambian y hay un usuario, actualizar el formulario (especialmente el rol)
+    if (changes['roles'] && this.roles.length > 0 && this.user) {
+      setTimeout(() => {
+        this.populateForm();
+        this.cdr.detectChanges();
+      }, 0);
     }
   }
 
@@ -42,13 +60,16 @@ export class FormEditUser implements OnChanges, OnInit {
   }
 
   private populateForm(): void {
-    if (this.user) {
+    if (this.user && this.userForm) {
+      // Mapear el rol del usuario al nombre del rol (el formulario usa el nombre)
+      const userRol = this.user.rol || '';
+
       this.userForm.patchValue({
         nombre: this.user.nombre || '',
         apellido: this.user.apellido || '',
         email: this.user.email || '',
-        rol: this.user.rol || ''
-      });
+        rol: userRol
+      }, { emitEvent: false });
     }
   }
 
@@ -75,7 +96,20 @@ export class FormEditUser implements OnChanges, OnInit {
   }
 
   resetForm(): void {
-    this.populateForm();
+    if (this.userForm) {
+      // Resetear valores al estado original del usuario
+      this.populateForm();
+
+      // Limpiar el estado de validación de todos los controles
+      Object.keys(this.userForm.controls).forEach(key => {
+        const control = this.userForm.get(key);
+        if (control) {
+          control.markAsUntouched();
+          control.markAsPristine();
+          control.setErrors(null);
+        }
+      });
+    }
   }
 }
 
