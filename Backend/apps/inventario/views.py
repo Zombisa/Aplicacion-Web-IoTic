@@ -28,11 +28,11 @@ class InventarioViewSet(viewsets.ModelViewSet):
     serializer_class = InventarioSerializer
 
     # ======================================================
-    #   AGREGAR ITEM
+    #   CREAR ITEM (CREATE)
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='agregar_item')
-    @action(detail=False, methods=['post'], url_path='agregar_item')
-    def agregar_item(self, request):
+    # Sobrescribimos el método create de ModelViewSet
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='create')
+    def create(self, request):
         """
         Crea un nuevo ítem de inventario.
         
@@ -85,9 +85,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   REGISTRO MASIVO
     # ======================================================
-    @method_decorator(verificar_roles(['admin']), name='crear_masivo')
-    @action(detail=False, methods=['post'], url_path='masivo')
-    def crear_masivo(self, request):
+    @method_decorator(verificar_roles(['admin']), name='bulk')
+    @action(detail=False, methods=['post'], url_path='bulk')
+    def bulk(self, request):
         """
         Crea múltiples ítems de inventario en una sola operación.
         
@@ -161,11 +161,11 @@ class InventarioViewSet(viewsets.ModelViewSet):
 
 
     # ======================================================
-    #   EDITAR ITEM
+    #   ACTUALIZAR ITEM (UPDATE)
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='editar_item')
-    @action(detail=True, methods=['put'], url_path='editar_item')
-    def editar_item(self, request, pk=None):
+    # Sobrescribimos el método update de ModelViewSet
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='update')
+    def update(self, request, pk=None):
         """
         Edita un ítem de inventario existente.
         
@@ -198,17 +198,17 @@ class InventarioViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=400)
 
     # ======================================================
-    #   ELIMINAR ITEM
+    #   ELIMINAR ITEM (DELETE)
     # ======================================================
-    @method_decorator(verificar_roles(['admin']), name='eliminar_item')
-    @action(detail=True, methods=['delete'], url_path='eliminar_item')
-    def eliminar_item(self, request, pk=None):
+    # Sobrescribimos el método destroy de ModelViewSet
+    @method_decorator(verificar_roles(['admin']), name='destroy')
+    def destroy(self, request, pk=None):
         """
         Elimina un ítem del inventario.
         
         Roles permitidos: admin únicamente
         
-        URL: /inventario/{id}/eliminar_item/
+        URL: /inventario/{id}/
         
         Restricciones:
             - No se puede eliminar si tiene préstamos activos o históricos
@@ -231,17 +231,17 @@ class InventarioViewSet(viewsets.ModelViewSet):
         return Response({"message": "Ítem eliminado correctamente"}, status=204)
 
     # ======================================================
-    #   LISTAR ITEMS
+    #   LISTAR ITEMS (LIST)
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='listar_items')
-    @action(detail=False, methods=['get'], url_path='listar_items')
-    def listar_items(self, request):
+    # Sobrescribimos el método list de ModelViewSet
+    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='list')
+    def list(self, request):
         """
         Lista todos los ítems del inventario.
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/listar_items/
+        URL: /inventario/
         
         Returns:
             200 OK: Lista de objetos Inventario ordenados por ID descendente
@@ -267,15 +267,15 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   ELIMINAR IMAGEN EN R2
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='eliminar_imagen')
-    @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
-    def eliminar_imagen(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='image')
+    @action(detail=True, methods=['delete'], url_path='image')
+    def image(self, request, pk=None):
         """
         Elimina la imagen asociada a un ítem del bucket R2 (Cloudflare).
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/{id}/eliminar-imagen/
+        URL: /inventario/{id}/image/
         
         Comportamiento:
             - Extrae el nombre del archivo de la URL almacenada
@@ -311,9 +311,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   LISTAR IMÁGENES DEL BUCKET
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='listar_imagenes')
-    @action(detail=False, methods=['get'], url_path='listar-imagenes')
-    def listar_imagenes(self, request):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='images')
+    @action(detail=False, methods=['get'], url_path='images')
+    def images(self, request):
         """
         Lista todas las imágenes disponibles en el bucket R2 (Cloudflare).
         
@@ -347,7 +347,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
     #   REPORTES 
     # ======================================================
     @method_decorator(verificar_roles(['admin', 'mentor']), name='disponibles')
-    @action(detail=False, methods=['get'], url_path='reportes/disponibles')
+    @action(detail=False, methods=['get'], url_path='reports/available')
     def disponibles(self, request):
         """
         Reporte: Lista todos los ítems disponibles para prestar.
@@ -366,7 +366,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
 
 
     @method_decorator(verificar_roles(['admin', 'mentor']), name='prestados')
-    @action(detail=False, methods=['get'], url_path='reportes/prestados')
+    @action(detail=False, methods=['get'], url_path='reports/loaned')
     def prestados(self, request):
         """
         Reporte: Lista todos los ítems actualmente prestados.
@@ -385,7 +385,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
 
 
     @method_decorator(verificar_roles(['admin', 'mentor']), name='no_prestar')
-    @action(detail=False, methods=['get'], url_path='reportes/no-prestar')
+    @action(detail=False, methods=['get'], url_path='reports/not-loanable')
     def no_prestar(self, request):
         """
         Reporte: Lista todos los ítems marcados como "No prestar".
@@ -410,9 +410,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   DAR BAJA
     # ======================================================
-    @method_decorator(verificar_roles(['admin']), name='dar_baja')
-    @action(detail=True, methods=['patch'], url_path='dar-baja')
-    def dar_baja(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin']), name='deactivate')
+    @action(detail=True, methods=['patch'], url_path='deactivate')
+    def deactivate(self, request, pk=None):
         """
         Da de baja un ítem marcándolo como dañado y no disponible.
         
@@ -449,9 +449,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   PRÉSTAMOS
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='prestamos_por_item')
-    @action(detail=True, methods=['get'], url_path='prestamos')
-    def prestamos_por_item(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='loans')
+    @action(detail=True, methods=['get'], url_path='loans')
+    def loans(self, request, pk=None):
         """
         Lista todos los préstamos asociados a un ítem específico.
         
@@ -489,9 +489,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   PRÉSTAMOS VENCIDOS
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='prestamos_vencidos')
-    @action(detail=True, methods=['get'], url_path='prestamos/vencidos')
-    def prestamos_vencidos(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='overdue_loans')
+    @action(detail=True, methods=['get'], url_path='loans/overdue')
+    def overdue_loans(self, request, pk=None):
         """
         Lista los préstamos vencidos (no devueltos a tiempo) de un ítem.
         
@@ -553,12 +553,15 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         - Fecha límite debe ser futura
     """
 
+    queryset = Prestamo.objects.all().order_by('-id')
+    serializer_class = PrestamoSerializer
+
     # ======================================================
-    #   CREAR PRÉSTAMO (con foto de entrega opcional)
+    #   CREAR PRÉSTAMO (CREATE) - con foto de entrega opcional
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='crear_prestamo')
-    @action(detail=False, methods=['post'], url_path='crear')
-    def crear_prestamo(self, request):
+    # Sobrescribimos el método create de ModelViewSet
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='create')
+    def create(self, request):
         """
         Crea un nuevo préstamo de un ítem del inventario.
         
@@ -623,9 +626,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   DEVOLVER ÍTEM (con foto de devolución opcional)
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='devolver')
-    @action(detail=True, methods=['post'], url_path='devolver')
-    def devolver(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='return_loan')
+    @action(detail=True, methods=['post'], url_path='return')
+    def return_loan(self, request, pk=None):
         """
         Registra la devolución de un ítem prestado.
         
@@ -681,9 +684,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   ELIMINAR FOTO ENTREGA
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='eliminar_foto_entrega')
-    @action(detail=True, methods=['delete'], url_path='eliminar-foto-entrega')
-    def eliminar_foto_entrega(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='delivery_photo')
+    @action(detail=True, methods=['delete'], url_path='delivery-photo')
+    def delivery_photo(self, request, pk=None):
         """
         Elimina la foto de entrega asociada a un préstamo desde R2.
         
@@ -722,9 +725,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   ELIMINAR FOTO DEVOLUCIÓN
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='eliminar_foto_devolucion')
-    @action(detail=True, methods=['delete'], url_path='eliminar-foto-devolucion')
-    def eliminar_foto_devolucion(self, request, pk=None):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='return_photo')
+    @action(detail=True, methods=['delete'], url_path='return-photo')
+    def return_photo(self, request, pk=None):
         """
         Elimina la foto de devolución asociada a un préstamo desde R2.
         
@@ -763,9 +766,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   REPORTES
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='activos')
-    @action(detail=False, methods=['get'], url_path='activos')
-    def activos(self, request):
+    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='active')
+    @action(detail=False, methods=['get'], url_path='active')
+    def active(self, request):
         """
         Reporte: Lista todos los préstamos activos (no devueltos).
         
@@ -781,9 +784,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         prestamos = Prestamo.objects.filter(estado='Prestado')
         return Response(PrestamoSerializer(prestamos, many=True).data)
 
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='devueltos')
-    @action(detail=False, methods=['get'], url_path='devueltos')
-    def devueltos(self, request):
+    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='returned')
+    @action(detail=False, methods=['get'], url_path='returned')
+    def returned(self, request):
         """
         Reporte: Lista todos los préstamos completados (devueltos).
         
@@ -799,9 +802,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         prestamos = Prestamo.objects.filter(estado='Devuelto')
         return Response(PrestamoSerializer(prestamos, many=True).data)
 
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='historico')
-    @action(detail=False, methods=['get'], url_path='historico')
-    def historico(self, request):
+    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='history')
+    @action(detail=False, methods=['get'], url_path='history')
+    def history(self, request):
         """
         Reporte: Lista el historial completo de todos los préstamos.
         
@@ -822,9 +825,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         prestamos = Prestamo.objects.all().order_by('-fecha_prestamo')
         return Response(PrestamoSerializer(prestamos, many=True).data)
 
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='vencidos')
-    @action(detail=False, methods=['get'], url_path='vencidos')
-    def vencidos(self, request):
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='overdue')
+    @action(detail=False, methods=['get'], url_path='overdue')
+    def overdue(self, request):
         """
         Reporte: Lista todos los préstamos que ya pasaron su fecha límite.
         
