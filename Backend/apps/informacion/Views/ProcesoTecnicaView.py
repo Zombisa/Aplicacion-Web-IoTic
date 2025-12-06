@@ -22,7 +22,7 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
     queryset = ProcesoTecnica.objects.all()
     serializer_class = ProcesoTecnicaSerializer
 
-    @action(detail=False, methods=['post'], url_path='agregar_proceso_tecnica')
+    @action(detail=False, methods=['post'], url_path='proceso_tecnica')
     def agregar_proceso_tecnica(self, request):
         """Crea un proceso/técnica.
 
@@ -31,13 +31,20 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
         """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
-            # si existe file_path, construir la URL completa
-            file_path = data.pop("file_path", None)
+            # construir la URL completa para la imagen
+            image_path = data.pop("image_path", None)
 
-            if file_path:
+            if image_path:
                 # crear la URL usando tu dominio público del bucket
-                full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                full_url = f"{settings.R2_BUCKET_PATH}/{image_path}"
                 data["image_r2"] = full_url
+            
+            # construir la url completa para el archivo
+            archivo_path = data.pop("archivo_path", None)
+            
+            if archivo_path:
+                full_url_archivo = f"{settings.R2_BUCKET_FILES_PATH}/{archivo_path}"
+                data["file_r2"] = full_url_archivo
             serializer = ProcesoTecnicaSerializer(data=data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
@@ -51,7 +58,7 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-    @action(detail=True, methods=['put'], url_path='editar_proceso_tecnica')
+    @action(detail=True, methods=['put'], url_path='proceso_tecnica')
     def editar_proceso_tecnica(self, request, pk):
         """Edita parcialmente un proceso/técnica por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
@@ -69,7 +76,7 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
            
-    @action(detail=True, methods=['delete'], url_path='eliminar_proceso_tecnica')
+    @action(detail=True, methods=['delete'], url_path='proceso_tecnica')
     def eliminar_proceso_tecnica(self, request, pk):
         """Elimina un proceso/técnica por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -84,7 +91,7 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
             
-    @action(detail=False, methods=['get'], url_path='listar_procesos_tecnicas')
+    @action(detail=False, methods=['get'], url_path='procesos_tecnicas')
     def listar_procesos_tecnicas(self, request):
         """Lista todos los procesos/técnicas (requiere rol válido)."""
         if  verificarToken.validarRol(request) is True:
@@ -95,29 +102,60 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
+    @action(detail=True, methods=['delete'], url_path='imagen')
     def eliminar_imagen(self, request, pk):
         """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
-        ProcesoTecnica = self.get_object()
+        if verificarToken.validarRol(request) is True:
+            ProcesoTecnica = self.get_object()
 
-        if not ProcesoTecnica.image_r2:
-            return Response({"message": "El proceso/tecnica no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
+            if not ProcesoTecnica.image_r2:
+                return Response({"message": "El proceso/tecnica no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # extraer solo el nombre del archivo
-        file_path = ProcesoTecnica.image_r2.split("/")[-1]
+            # extraer solo el nombre del archivo
+            file_path = ProcesoTecnica.image_r2.split("/")[-1]
 
-        try:
-            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
-        except Exception as e:
-            return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # actualizar campo image_r2 a None 
-        ProcesoTecnica.image_r2 = None
-        ProcesoTecnica.save()
-        return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+            # actualizar campo image_r2 a None 
+            ProcesoTecnica.image_r2 = None
+            ProcesoTecnica.save()
+            return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        
     
-    @action(detail=False, methods=['get'], url_path='listar-imagenes')
+    @action(detail=True, methods=['delete'], url_path='archivo')
+    def eliminar_archivo(self, request, pk):
+        if verificarToken.validarRol(request) is True:
+            ProcesoTecnica = self.get_object()
+
+            if not ProcesoTecnica.file_r2:
+                return Response({"message": "El proceso/tecnica no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # extraer solo el nombre del archivo
+            file_path = ProcesoTecnica.file_r2.split("/")[-1]
+
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # actualizar producto 
+            ProcesoTecnica.file_r2 = None
+            ProcesoTecnica.save()
+            return Response({"message": "Archivo eliminado correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        
+    
+    @action(detail=False, methods=['get'], url_path='imagenes')
     def listar_imagenes(self, request):
         """Devuelve las URLs públicas actuales del bucket R2."""
         try:

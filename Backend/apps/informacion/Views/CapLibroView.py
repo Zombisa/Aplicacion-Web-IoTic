@@ -20,7 +20,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     queryset = CapLibro.objects.all()
     serializer_class = CapLibroSerializer
 
-    @action(detail=False, methods=['post'], url_path='agregar_capitulo_libro')
+    @action(detail=False, methods=['post'], url_path='capitulo_libro')
     def agregar_capitulo_libro(self, request):
         """Crea un capítulo.
 
@@ -29,13 +29,21 @@ class CapLibroViewSet(viewsets.ModelViewSet):
         """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
-            # si existe file_path, construir la URL completa
-            file_path = data.pop("file_path", None)
+            # construir la URL completa para la imagen
+            image_path = data.pop("image_path", None)
 
-            if file_path:
+            if image_path:
                 # crear la URL usando tu dominio público del bucket
-                full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                full_url = f"{settings.R2_BUCKET_PATH}/{image_path}"
                 data["image_r2"] = full_url
+            
+            # construir la url completa para el archivo
+            archivo_path = data.pop("archivo_path", None)
+            
+            if archivo_path:
+                full_url_archivo = f"{settings.R2_BUCKET_FILES_PATH}/{archivo_path}"
+                data["file_r2"] = full_url_archivo
+
             serializer = CapLibroSerializer(data=data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
@@ -50,7 +58,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['put'], url_path='editar_capitulo_libro')
+    @action(detail=True, methods=['put'], url_path='capitulo_libro')
     def editar_capitulo_libro(self, request, pk):
         """Actualiza parcialmente un capítulo por `pk`; mantiene el usuario original.
 
@@ -71,7 +79,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='eliminar_capitulo_libro')
+    @action(detail=True, methods=['delete'], url_path='capitulo_libro')
     def eliminar_capitulo_libro(self, request, pk):
         """Elimina un capítulo por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -86,7 +94,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=False, methods=['get'], url_path='listar_capitulos_libro')
+    @action(detail=False, methods=['get'], url_path='capitulos_libro')
     def listar_capitulos_libro(self, request):
         """Lista todos los capítulos (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
@@ -97,32 +105,61 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
+    @action(detail=True, methods=['delete'], url_path='imagen')
     def eliminar_imagen(self, request, pk):
         """Borra la imagen en R2 y limpia `image_r2`.
 
         Respuestas: 400 si no hay imagen; 500 si R2 falla; 200 en éxito.
         """
-        CapLibro = self.get_object()
+        if verificarToken.validarRol(request) is True:
+            CapLibro = self.get_object()
 
-        if not CapLibro.image_r2:
-            return Response({"message": "Capitulo de libro no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
+            if not CapLibro.image_r2:
+                return Response({"message": "Capitulo de libro no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # extraer solo el nombre del archivo
-        file_path = CapLibro.image_r2.split("/")[-1]
+            # extraer solo el nombre del archivo
+            file_path = CapLibro.image_r2.split("/")[-1]
 
-        try:
-            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
-        except Exception as e:
-            return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        # actualizar campo image_r2 a None 
-        CapLibro.image_r2 = None
-        CapLibro.save()
-        return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+            # actualizar campo image_r2 a None 
+            CapLibro.image_r2 = None
+            CapLibro.save()
+            return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=False, methods=['get'], url_path='listar-imagenes')
+    @action(detail=True, methods=['delete'], url_path='archivo')
+    def eliminar_archivo(self, request, pk):
+        if verificarToken.validarRol(request) is True:
+            CapLibro = self.get_object()
+
+            if not CapLibro.file_r2:
+                return Response({"message": "Capitulo de libro no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # extraer solo el nombre del archivo
+            file_path = CapLibro.file_r2.split("/")[-1]
+
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # actualizar producto 
+            CapLibro.file_r2 = None
+            CapLibro.save()
+            return Response({"message": "Archivo eliminado correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        
+    
+    @action(detail=False, methods=['get'], url_path='imagenes')
     def listar_imagenes(self, request):
         """Lista URLs públicas actuales del bucket R2 (sin filtros)."""
         try:

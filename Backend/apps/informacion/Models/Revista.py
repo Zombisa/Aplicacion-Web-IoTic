@@ -15,6 +15,7 @@ class Revista(models.Model):
     paginas = models.IntegerField()
     responsable = models.JSONField(default=list, blank=True)
     image_r2 = models.CharField(max_length=100, unique=True, blank=True, null=True) #Almacena la ruta en r2
+    file_r2 = models.CharField(max_length=200, unique=True, blank=True, null=True) #Almacena la ruta de un archivo en r2
 
     class Meta:
         db_table = 'revista'

@@ -22,7 +22,7 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
     queryset = ParticipacionComitesEv.objects.all()
     serializer_class = ParticipacionComitesEvSerializer
 
-    @action(detail=False, methods=['post'], url_path='agregar_comite_ev')
+    @action(detail=False, methods=['post'], url_path='comite_ev')
     def agregar_comite_ev(self, request):
         """Crea una participación.
 
@@ -31,13 +31,20 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
         """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
-            # si existe file_path, construir la URL completa
-            file_path = data.pop("file_path", None)
+            # construir la URL completa para la imagen
+            image_path = data.pop("image_path", None)
 
-            if file_path:
+            if image_path:
                 # crear la URL usando tu dominio público del bucket
-                full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                full_url = f"{settings.R2_BUCKET_PATH}/{image_path}"
                 data["image_r2"] = full_url
+            
+            # construir la url completa para el archivo
+            archivo_path = data.pop("archivo_path", None)
+            
+            if archivo_path:
+                full_url_archivo = f"{settings.R2_BUCKET_FILES_PATH}/{archivo_path}"
+                data["file_r2"] = full_url_archivo
             serializer = ParticipacionComitesEvSerializer(data=data)
             if serializer.is_valid():
                 user_uid = verificarToken.obtenerUID(request)
@@ -52,7 +59,7 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['put'], url_path='editar_comite_ev')
+    @action(detail=True, methods=['put'], url_path='comite_ev')
     def editar_comite_ev(self, request, pk):
         """Edita parcialmente una participación por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
@@ -70,7 +77,7 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='eliminar_comite_ev')
+    @action(detail=True, methods=['delete'], url_path='comite_ev')
     def eliminar_comite_ev(self, request, pk):
         """Elimina una participación por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -96,29 +103,60 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
+    @action(detail=True, methods=['delete'], url_path='imagen')
     def eliminar_imagen(self, request, pk):
         """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
-        ParticipacionComitesEv = self.get_object()
+        if verificarToken.validarRol(request) is True:
+            ParticipacionComitesEv = self.get_object()
 
-        if not ParticipacionComitesEv.image_r2:
-            return Response({"message": "La Participacion en Comites de Evaluacion no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
+            if not ParticipacionComitesEv.image_r2:
+                return Response({"message": "La Participacion en Comites de Evaluacion no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # extraer solo el nombre del archivo
-        file_path = ParticipacionComitesEv.image_r2.split("/")[-1]
+            # extraer solo el nombre del archivo
+            file_path = ParticipacionComitesEv.image_r2.split("/")[-1]
 
-        try:
-            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
-        except Exception as e:
-            return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # actualizar campo image_r2 a None 
-        ParticipacionComitesEv.image_r2 = None
-        ParticipacionComitesEv.save()
-        return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+            # actualizar campo image_r2 a None 
+            ParticipacionComitesEv.image_r2 = None
+            ParticipacionComitesEv.save()
+            return Response({"message": "imagen eliminada correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        
     
-    @action(detail=False, methods=['get'], url_path='listar-imagenes')
+    @action(detail=True, methods=['delete'], url_path='archivo')
+    def eliminar_archivo(self, request, pk):
+        if verificarToken.validarRol(request) is True:
+            ParticipacionComitesEv = self.get_object()
+
+            if not ParticipacionComitesEv.file_r2:
+                return Response({"message": "Participacion en comites de evaluacion no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # extraer solo el nombre del archivo
+            file_path = ParticipacionComitesEv.file_r2.split("/")[-1]
+
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # actualizar producto 
+            ParticipacionComitesEv.file_r2 = None
+            ParticipacionComitesEv.save()
+            return Response({"message": "Archivo eliminado correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        
+    
+    @action(detail=False, methods=['get'], url_path='imagenes')
     def listar_imagenes(self, request):
         """Devuelve las URLs públicas actuales del bucket R2."""
         try:

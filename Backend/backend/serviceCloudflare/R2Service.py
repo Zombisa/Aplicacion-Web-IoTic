@@ -13,3 +13,16 @@ def generar_url_firmada(nombre_archivo, content_type):
         },
         ExpiresIn=60 #cantidad de segundos que la URL será válida
     )
+
+def generar_url_firmada_files(nombre_archivo, content_type):
+    if not settings.R2_BUCKET_FILES_NAME:
+        raise ValueError("R2_BUCKET_FILES_NAME no está configurado")
+    return s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': settings.R2_BUCKET_FILES_NAME,
+            'Key': nombre_archivo,
+            'ContentType': content_type
+        },
+        ExpiresIn=60 #cantidad de segundos que la URL será válida
+    )
