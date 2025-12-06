@@ -1,12 +1,9 @@
-export interface EvaluationCommitteeDTO {
+import { BaseProductivityDTO } from "../Common/BaseProductivityDTO";
+
+export interface EvaluationCommitteeDTO extends BaseProductivityDTO {
   id?: number;
-  usuario: number;      
-  titulo: string;
-  pais: string;
-  anio: number;
+  usuario: number;   
   institucion: string;
-  tipoProductividad: string;
-  autores: string[];    
   etiquetasGTI: string[];
   licencia: string;
   fechaPublicacion?: string; 

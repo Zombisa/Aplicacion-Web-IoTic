@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { EvaluationCommitteesService } from '../../../../../../services/publications/evaluation-committees.service';
+import { EvaluationCommitteesService } from '../../../../../../services/information/evaluation-committees.service';
 import { EvaluationCommitteeDTO } from '../../../../../../models/DTO/evaluation-committeeDTO';
 
 @Component({

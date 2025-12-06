@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EvaluationCommitteeForm } from '../evaluation-committee-form';
-import { EvaluationCommitteesService } from '../../../../../../../services/publications/evaluation-committees.service';
+import { EvaluationCommitteesService } from '../../../../../../../services/information/evaluation-committees.service';
 import { Router } from '@angular/router';
 import { EvaluationCommitteePeticion } from '../../../../../../../models/Peticion/evaluation-committeePeticion';
 

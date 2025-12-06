@@ -10,11 +10,11 @@ import { switchMap } from 'rxjs/operators';
 import { BaseProductivityDTO } from '../../../../models/Common/BaseProductivityDTO';
 import { LoadingService } from '../../../../services/loading.service';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
-import Swal from 'sweetalert2';
 import { FormCapBook } from '../../templates/form-cap-book/form-cap-book';
 import { CapBookService } from '../../../../services/information/cap-book.service';
 import { BookPeticion } from '../../../../models/Peticion/BookPeticion';
 import { CapBookPeticion } from '../../../../models/Peticion/CapBookPeticion';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-publis-item-productiviy',
