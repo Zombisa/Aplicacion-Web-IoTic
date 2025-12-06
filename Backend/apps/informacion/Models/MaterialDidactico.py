@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class MaterialDidactico(models.Model):
+    """Material didáctico producido por un usuario, con licencia y etiquetas GTI."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     tipoProductividad = models.CharField(max_length=50)

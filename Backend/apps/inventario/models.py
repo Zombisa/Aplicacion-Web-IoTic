@@ -1,6 +1,21 @@
 from django.db import models
 
 class Inventario(models.Model):
+    """
+    Modelo que representa un ítem de inventario.
+    
+    Cada ítem tiene un serial único, descripción y estados tanto físicos como administrativos.
+    Los ítems pueden ser prestados y se registra su historial de préstamos.
+    
+    Atributos:
+        serial (str): Identificador único autogenerado con formato ITM-00001
+        descripcion (str): Descripción del ítem
+        estado_fisico (str): Estado físico del ítem (Excelente, Bueno, Dañado)
+        estado_admin (str): Estado administrativo (Disponible, Prestado, No prestar)
+        fecha_registro (datetime): Fecha de creación del registro
+        observacion (str): Notas adicionales sobre el ítem
+        image_r2 (str): URL de imagen almacenada en R2 (Cloudflare)
+    """
     serial = models.CharField(max_length=20, unique=True, default='')
     descripcion = models.TextField(default="Sin descripción")
 
@@ -57,6 +72,33 @@ class Inventario(models.Model):
 
 
 class Prestamo(models.Model):
+    """
+    Modelo que registra un préstamo de un ítem del inventario.
+    
+    Mantiene información completa del prestatario, fechas del préstamo y fotos
+    de entrega/devolución para auditoría.
+    
+    Atributos:
+        item (ForeignKey): Referencia al ítem prestado
+        nombre_persona (str): Nombre completo del prestatario
+        cedula (str): Cédula de identidad del prestatario
+        telefono (str): Teléfono de contacto (mín 7 caracteres, debe contener dígitos)
+        correo (str): Email del prestatario (formato válido requerido)
+        direccion (str): Dirección del prestatario
+        fecha_prestamo (datetime): Fecha/hora de creación del préstamo (auto)
+        fecha_limite (datetime): Fecha máxima de devolución (debe ser futura)
+        fecha_devolucion (datetime): Fecha/hora de devolución real (null hasta devolver)
+        estado (str): Estado del préstamo (Prestado, Devuelto)
+        foto_entrega (str): URL de foto en R2 al momento de entrega (opcional)
+        foto_devolucion (str): URL de foto en R2 al momento de devolución (opcional)
+    
+    Validaciones:
+        - Todos los campos de prestatario son obligatorios
+        - fecha_limite debe ser posterior a fecha_prestamo
+        - fecha_devolucion (si existe) debe ser posterior a fecha_prestamo
+        - El email debe tener formato válido
+        - El teléfono debe tener al menos 7 caracteres y contener dígitos
+    """
     ESTADO_CHOICES = [
         ('Prestado', 'Prestado'),
         ('Devuelto', 'Devuelto'),
@@ -65,11 +107,11 @@ class Prestamo(models.Model):
     item = models.ForeignKey(Inventario, on_delete=models.PROTECT, related_name='prestamos')
 
     # Datos del solicitante
-    nombre_persona = models.CharField(max_length=100, default="nombre")
-    cedula = models.CharField(max_length=30, default="cedula")
-    telefono = models.CharField(max_length=20, default="telefono")
-    correo = models.EmailField(default="correo")
-    direccion = models.CharField(max_length=200, default="direccion")
+    nombre_persona = models.CharField(max_length=100, blank=False, null=False)
+    cedula = models.CharField(max_length=30, blank=False, null=False)
+    telefono = models.CharField(max_length=20, blank=False, null=False)
+    correo = models.EmailField(blank=False, null=False)
+    direccion = models.CharField(max_length=200, blank=False, null=False)
 
     fecha_prestamo = models.DateTimeField(auto_now_add=True)
     fecha_limite = models.DateTimeField()

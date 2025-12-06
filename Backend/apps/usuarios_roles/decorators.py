@@ -4,14 +4,24 @@ from django.http import JsonResponse
 from apps.usuarios_roles.models import Usuario, Rol
 
 
-# ======================================================
-#   VERIFICAR TOKEN Y SINCRONIZAR USUARIO
-# ======================================================
-
 def verificar_token(view_func):
+    """
+    Verifica el JWT de Firebase y sincroniza el usuario con la base de datos local.
+
+    Flujo:
+        1) Lee "Authorization: Bearer <token>" y valida el token con Firebase.
+        2) Crea/actualiza el usuario en PostgreSQL con el UID y email del token.
+        3) Intenta asociar el rol indicado en el claim "role" si existe en BD.
+        4) Adjunta en request: user_local, user_firebase (token decodificado) y user_role.
+
+    Respuestas:
+        - 401 si falta el token o es inválido.
+        - Continúa a la vista protegida si es válido.
+
+    Úsalo con @verificar_token en vistas basadas en función.
+    """
     @wraps(view_func)
     def wrapped(request, *args, **kwargs):
-
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
             return JsonResponse({"error": "Token no proporcionado"}, status=401)
@@ -60,16 +70,22 @@ def verificar_token(view_func):
 
 
 
-# ======================================================
-#   VERIFICAR ROLES
-# ======================================================
-
 def verificar_roles(roles_permitidos):
+    """
+    Autoriza acceso sólo si el usuario tiene alguno de los roles permitidos.
+
+    Compara roles provenientes del token (user_role) y de la BD (user_local.rol).
+    Si ninguno coincide, responde 403 con detalle de roles detectados.
+
+    Args:
+        roles_permitidos (list[str]): Ej. ['admin', 'mentor']
+    """
     roles_permitidos = [r.lower().strip() for r in roles_permitidos]
 
     def decorator(view_func):
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
+            """Wrapper que aplica la validación de rol y retorna 403 si no coincide."""
 
             # Leer rol del token
             token_role = getattr(request, "user_role", "").lower().strip()
@@ -89,4 +105,5 @@ def verificar_roles(roles_permitidos):
             return view_func(request, *args, **kwargs)
 
         return wrapped
+
     return decorator

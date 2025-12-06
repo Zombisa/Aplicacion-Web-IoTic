@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class NoticiaViewSet(viewsets.ModelViewSet):
+    """CRUD de noticias con rol requerido y manejo de imágenes en R2.
+
+    Roles: todas las acciones validan rol (403 si falla).
+    Imágenes: `file_path` → `image_r2`; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si no existe; 400 validación; 500 fallos R2.
+    """
+
     queryset = Noticia.objects.all()
     serializer_class = NoticiaSerializer
     
     @action(detail=False, methods=['post'], url_path='publicar_noticia')
     def publicar_noticia(self, request):
+        """Crea una noticia.
+
+        Entrada: datos de la noticia; opcional `file_path` para `image_r2`.
+        Salida: 201 creada; 404 si no se halla usuario; 400 si falla validación.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar_noticia')
     def editar_noticia(self, request, pk):
+        """Edita parcialmente una noticia por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
             try:
                 noticia = Noticia.objects.get(pk=pk)
@@ -59,6 +72,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar_noticia')
     def eliminar_noticia(self, request, pk):
+        """Elimina una noticia por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 noticia = Noticia.objects.get(pk=pk)
@@ -73,6 +87,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_noticias')
     def listar_noticias(self, request):
+        """Lista todas las noticias (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             noticias = Noticia.objects.all()
             serializer = NoticiaSerializer(noticias, many=True)
@@ -83,6 +98,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
         noticia = self.get_object()
 
         if not noticia.image_r2:
@@ -104,6 +120,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

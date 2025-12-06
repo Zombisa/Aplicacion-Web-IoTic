@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class LibroViewSet(viewsets.ModelViewSet):
+    """CRUD de libros con rol requerido y manejo de imágenes en R2.
+
+    Roles: todas las acciones usan `verificarToken.validarRol` (403 si falla).
+    Imágenes: `file_path` → `image_r2`; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si no existe; 400 validación; 500 fallos R2.
+    """
+
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_libro')
     def agregar_libro(self, request):
+        """Crea un libro.
+
+        Entrada: datos del libro; opcional `file_path` para `image_r2`.
+        Salida: 201 con libro creado; 404 si no se halla usuario; 400 si falla validación.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class LibroViewSet(viewsets.ModelViewSet):
         
     @action(detail=True, methods=['put'], url_path='editar_libro')
     def editar_libro(self, request, pk):
+        """Actualiza parcialmente un libro por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
             try:
                 libro = Libro.objects.get(pk=pk)
@@ -59,6 +72,7 @@ class LibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar_libro')
     def eliminar_libro(self, request, pk):
+        """Elimina un libro por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 libro = Libro.objects.get(pk=pk)
@@ -73,6 +87,7 @@ class LibroViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['get'], url_path='listar_libros')
     def listar_libros(self, request):
+        """Lista todos los libros (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             libros = Libro.objects.all()
             serializer = LibroSerializer(libros, many=True)
@@ -83,6 +98,7 @@ class LibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
         libro = self.get_object()
 
         if not libro.image_r2:
@@ -104,6 +120,7 @@ class LibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

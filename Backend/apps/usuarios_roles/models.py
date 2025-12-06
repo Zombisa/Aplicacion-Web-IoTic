@@ -1,6 +1,8 @@
 from django.db import models
 
 class Rol(models.Model):
+    """Rol de aplicación, usado para claims de Firebase y control de acceso."""
+
     nombre = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -11,6 +13,8 @@ class Rol(models.Model):
 
 
 class Usuario(models.Model):
+    """Usuario sincronizado entre Firebase Auth, Firestore y PostgreSQL."""
+
     uid_firebase = models.CharField(max_length=128, unique=True, null=True, blank=True)  # UID de Firebase
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)

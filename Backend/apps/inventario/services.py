@@ -9,10 +9,69 @@ from datetime import timedelta
 
 
 def calcular_fecha_limite_default():
-    """Calcula la fecha límite por defecto: ahora + 7 días"""
+    """
+    Calcula la fecha límite por defecto para un préstamo.
+    
+    Returns:
+        datetime: Fecha actual + 7 días
+        
+    Ejemplo:
+        >>> fecha_limite = calcular_fecha_limite_default()
+        >>> # fecha_limite será la fecha de hoy a las 7 días
+    """
     return timezone.now() + timedelta(days=7)
 
 def crear_items_masivo(data):
+    """
+    Crea uno o varios ítems de inventario de forma masiva.
+    
+    Soporta dos modos de operación:
+    
+    1. MODO OBJETO ÚNICO CON CANTIDAD:
+       Recibe un objeto con 'cantidad' y crea ese número de ítems.
+       Si 'imagenes' viene como lista, asigna diferentes imágenes a cada ítem.
+       
+    2. MODO LISTA:
+       Recibe una lista completa de ítems a crear.
+    
+    Args:
+        data (dict|list): Datos de los ítems a crear
+        
+    Returns:
+        list: Lista de objetos Inventario creados
+        
+    Raises:
+        ValidationError: Si hay errores en los datos (campos faltantes, 
+                        valores inválidos, estados no permitidos, etc.)
+                        
+    Validaciones realizadas:
+        - cantidad debe ser >= 1
+        - Todos los ítems deben tener 'descripcion'
+        - estado_fisico debe ser uno de: Excelente, Bueno, Dañado
+        - estado_admin debe ser uno de: Disponible, Prestado, No prestar
+        - Las imágenes deben coincidir con la cantidad si se especifican
+        
+    Ejemplos:
+        # Crear 3 ítems iguales
+        items = crear_items_masivo({
+            'cantidad': 3,
+            'descripcion': 'Laptop',
+            'estado_fisico': 'Excelente'
+        })
+        
+        # Crear 3 ítems con imágenes diferentes
+        items = crear_items_masivo({
+            'cantidad': 3,
+            'descripcion': 'Mouse',
+            'imagenes': ['image1.jpg', 'image2.jpg', 'image3.jpg']
+        })
+        
+        # Crear desde una lista completa
+        items = crear_items_masivo([
+            {'descripcion': 'Item1', 'estado_fisico': 'Bueno'},
+            {'descripcion': 'Item2', 'estado_fisico': 'Excelente'}
+        ])
+    """
 
     # ===========================================================
     #   CASO 1 — OBJETO ÚNICO CON "cantidad"
@@ -139,6 +198,48 @@ def crear_items_masivo(data):
     return creados
 
 def registrar_prestamo(data):
+    """
+    Registra un nuevo préstamo de un ítem del inventario.
+    
+    Realiza validaciones exhaustivas:
+    - El ítem existe y es válido
+    - El ítem no tiene préstamos activos
+    - El ítem no está marcado como "No prestar"
+    - El ítem no está dañado
+    - Los datos del prestatario son válidos (nombre, cédula, teléfono, correo, dirección)
+    - La fecha límite es válida (futura y no más de 1 año en el futuro)
+    - El correo tiene formato válido
+    
+    Actualiza automáticamente el estado del ítem a "Prestado" en transacción atómica.
+    
+    Args:
+        data (dict): Diccionario con los siguientes campos:
+            - item (Inventario): Objeto del ítem a prestar
+            - nombre_persona (str): Nombre del prestatario (obligatorio)
+            - cedula (str): Cédula de identidad (obligatorio)
+            - telefono (str): Teléfono de contacto (obligatorio)
+            - correo (str): Email del prestatario (obligatorio)
+            - direccion (str): Dirección del prestatario (obligatorio)
+            - fecha_limite (str|None): Fecha límite en formato ISO (opcional, default +7 días)
+            
+    Returns:
+        Prestamo: Objeto del préstamo creado
+        
+    Raises:
+        ValidationError: Si hay errores en validación (ítem no válido, 
+                        ya tiene préstamo activo, datos inválidos, etc.)
+                        
+    Ejemplo:
+        prestamo = registrar_prestamo({
+            'item': inventario_obj,
+            'nombre_persona': 'Juan Pérez',
+            'cedula': '1234567890',
+            'telefono': '+58412-1234567',
+            'correo': 'juan@example.com',
+            'direccion': 'Calle 1, Apto 2',
+            'fecha_limite': '2025-12-25T18:00:00'
+        })
+    """
 
     # ------------------------------
     # Obtener item
@@ -203,10 +304,15 @@ def registrar_prestamo(data):
         except (ValueError, TypeError) as e:
             raise ValidationError(f"La fecha límite no tiene un formato válido (ISOFormat requerido): {str(e)}")
 
-        if fecha_limite_dt < timezone.now():
+        ahora = timezone.now()
+        
+        if fecha_limite_dt <= ahora:
             raise ValidationError("La fecha límite debe ser futura.")
-
-    # ---- Validar correo electrónico ----
+        
+        # Validar que no sea demasiado lejana (máximo 1 año)
+        fecha_maxima = ahora + timedelta(days=365)
+        if fecha_limite_dt > fecha_maxima:
+            raise ValidationError("La fecha límite no puede ser mayor a 1 año en el futuro.")    # ---- Validar correo electrónico ----
     try:
         validate_email(correo)
     except DjangoValidationError:
@@ -234,6 +340,28 @@ def registrar_prestamo(data):
 
 
 def registrar_devolucion(prestamo: Prestamo):
+    """
+    Registra la devolución de un ítem prestado.
+    
+    Marca el préstamo como "Devuelto" y actualiza la fecha de devolución
+    a la fecha/hora actual. Cambia el estado del ítem a "Disponible" en
+    transacción atómica.
+    
+    Args:
+        prestamo (Prestamo): Objeto del préstamo a devolver
+        
+    Returns:
+        Prestamo: Objeto del préstamo actualizado
+        
+    Raises:
+        ValidationError: Si el préstamo ya está marcado como devuelto
+        
+    Ejemplo:
+        prestamo = registrar_devolucion(prestamo_obj)
+        # Ahora prestamo.estado == 'Devuelto'
+        # prestamo.fecha_devolucion contiene la fecha/hora actual
+        # prestamo.item.estado_admin == 'Disponible'
+    """
     if prestamo.estado == "Devuelto":
         raise ValidationError("Este préstamo ya está devuelto.")
 

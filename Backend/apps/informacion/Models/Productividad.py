@@ -1,6 +1,8 @@
 from django.db import models
 
 class Mision(models.Model):
+    """Texto de la misión institucional, editable y con timestamp de actualización."""
+
     contenido = models.TextField()
     actualizado_en = models.DateTimeField(auto_now=True)
 
@@ -12,6 +14,8 @@ class Mision(models.Model):
 
 
 class Vision(models.Model):
+    """Texto de la visión institucional, editable y con timestamp."""
+
     contenido = models.TextField()
     actualizado_en = models.DateTimeField(auto_now=True)
 
@@ -23,6 +27,8 @@ class Vision(models.Model):
 
 
 class Historia(models.Model):
+    """Reseña histórica de la institución, con control de última edición."""
+
     contenido = models.TextField()
     actualizado_en = models.DateTimeField(auto_now=True)
 
@@ -34,6 +40,8 @@ class Historia(models.Model):
 
 
 class Objetivo(models.Model):
+    """Objetivo estratégico con título, contenido y timestamp de actualización."""
+
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
     actualizado_en = models.DateTimeField(auto_now=True)
@@ -46,6 +54,8 @@ class Objetivo(models.Model):
 
 
 class Valor(models.Model):
+    """Valor institucional descrito con título y contenido editable."""
+
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
     actualizado_en = models.DateTimeField(auto_now=True)

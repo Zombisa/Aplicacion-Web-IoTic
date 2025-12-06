@@ -7,8 +7,20 @@ from rest_framework import status
 from apps.informacion.permissions import verificarToken 
 
 class GenerarURLR2ViewSet(viewsets.ViewSet):
+    """Genera URLs firmadas para subir archivos a R2 (requiere rol válido).
+
+    Entrada esperada: `extension` (ej. jpg, png) y `content_type` opcional.
+    Salida: `upload_url` lista para PUT hacia R2 y `file_path` para guardar en el modelo.
+    Errores: 403 si el token es inválido/expirado; 500 si falla la generación.
+    """
+
     @action(detail=False, methods=['post'], url_path='generar-url')
     def post(self, request):
+        """Devuelve `upload_url` y `file_path` listos para subir a R2.
+
+        Entrada: cuerpo con `extension` (por defecto `jpg`) y `content_type` opcional.
+        Salida: 200 con URL firmada y ruta de archivo; 403 si el rol es inválido; 500 si no se puede generar la URL.
+        """
         if verificarToken.validarRol(request) is True:
             extension = request.data.get("extension", "jpg")
             nombre_archivo = f"{uuid.uuid4()}.{extension}"

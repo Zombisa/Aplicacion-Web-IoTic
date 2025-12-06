@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
+    """CRUD de tutorías concluidas con rol obligatorio y gestión de imágenes en R2.
+
+    Roles: valida token en todas las acciones (403 si falla).
+    Imágenes: `file_path` → `image_r2` con `R2_BUCKET_PATH` antes de validar/guardar; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si la tutoría no existe; 400 validación; 500 fallos R2.
+    """
+
     queryset = TutoriaConcluida.objects.all()
     serializer_class = TutoriaConcluidaSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_tutoria_concluida')
     def agregar_tutoria_concluida(self, request):
+        """Crea una tutoría concluida.
+
+        Entrada: datos de la tutoría; opcional `file_path` para poblar `image_r2`.
+        Salida: 201 con tutoría creada y usuario autenticado; 404 si no se encuentra el usuario; 400 si la validación falla; 403 si el rol es inválido.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='editar_tutoria_concluida')
     def editar_tutoria_concluida(self, request, pk):
+        """Edita parcialmente una tutoría concluida por `pk`, preservando el usuario original; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is True:
             try:
                 tutoria_concluida = TutoriaConcluida.objects.get(pk=pk)
@@ -59,6 +72,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar_tutoria_concluida')
     def eliminar_tutoria_concluida(self, request, pk):
+        """Elimina una tutoría concluida por `pk`; 404 si no existe; 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is True:
             try:
                 tutoria_concluida = TutoriaConcluida.objects.get(pk=pk)
@@ -73,6 +87,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_tutorias_concluidas')
     def listar_tutorias_concluidas(self, request):
+        """Lista todas las tutorías concluidas (requiere rol válido, 403 en caso contrario)."""
         if verificarToken.validarRol(request) is True:
             tutorias_concluidas = TutoriaConcluida.objects.all()
             serializer = TutoriaConcluidaSerializer(tutorias_concluidas, many=True)
@@ -83,6 +98,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
         TutoriaConcluida = self.get_object()
 
         if not TutoriaConcluida.image_r2:
@@ -104,6 +120,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2 configurado."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class Curso(models.Model):
+    """Curso o taller impartido por un usuario, con detalles de edición y certificación."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
     tipoProductividad = models.CharField(max_length=100)

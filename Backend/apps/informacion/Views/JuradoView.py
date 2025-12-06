@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class JuradoViewSet(viewsets.ModelViewSet):
+    """CRUD de jurados con rol requerido y manejo de imágenes en R2.
+
+    Roles: valida rol en todas las acciones (403 si falla).
+    Imágenes: `file_path` → `image_r2`; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si no existe; 400 validación; 500 fallos R2.
+    """
+
     queryset = Jurado.objects.all()
     serializer_class = JuradoSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_jurado')
     def agregar_jurado(self, request):
+        """Crea un jurado.
+
+        Entrada: datos del jurado; opcional `file_path` para `image_r2`.
+        Salida: 201 creado; 404 si no se halla usuario; 400 si falla validación.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='editar_jurado')
     def editar_jurado(self, request, pk):
+        """Edita parcialmente un jurado por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
             try:
                 jurado = Jurado.objects.get(pk=pk)
@@ -58,6 +71,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_403_FORBIDDEN)
     @action(detail=True, methods=['delete'], url_path='eliminar_jurado')
     def eliminar_jurado(self, request, pk):
+        """Elimina un jurado por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 jurado = Jurado.objects.get(pk=pk)
@@ -72,6 +86,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_jurados')
     def listar_jurados(self, request):
+        """Lista todos los jurados (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             jurados = Jurado.objects.all()
             serializer = JuradoSerializer(jurados, many=True)
@@ -82,6 +97,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
         jurado = self.get_object()
 
         if not jurado.image_r2:
@@ -103,6 +119,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

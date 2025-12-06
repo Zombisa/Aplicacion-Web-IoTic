@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class Evento(models.Model):
+    """Evento académico/científico registrado por un usuario, con fechas y tipo."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     tipoProductividad = models.CharField(max_length=50)

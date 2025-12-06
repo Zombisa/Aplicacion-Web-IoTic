@@ -2,6 +2,7 @@ from rest_framework import serializers
 from apps.informacion.Models.Software import Software
 
 class SoftwareSerializer(serializers.ModelSerializer):
+    """Serialize desarrollos de software manteniendo `usuario` como solo lectura."""
     class Meta:
         model = Software
         fields = '__all__'

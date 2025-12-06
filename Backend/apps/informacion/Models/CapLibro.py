@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class CapLibro(models.Model):
+    """Capítulo de libro asociado a un usuario, con metadatos e imagen opcional en R2."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
     tipoProductividad = models.CharField(max_length=100)

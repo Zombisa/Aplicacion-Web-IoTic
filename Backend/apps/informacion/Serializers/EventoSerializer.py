@@ -2,6 +2,7 @@ from rest_framework import serializers
 from  apps.informacion.Models.Evento import Evento
 
 class EventoSerializer(serializers.ModelSerializer):
+    """Serialize eventos manteniendo `usuario` como solo lectura."""
     class Meta:
         model = Evento
         fields = '__all__'

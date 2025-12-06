@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class Jurado(models.Model):
+    """Participación como jurado evaluador en eventos o trabajos académicos."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     tipoProductividad = models.CharField(max_length=50)

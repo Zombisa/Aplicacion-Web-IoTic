@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class TutoriaEnMarcha(models.Model):
+    """Tutoría en curso, con subtipo, orientados y metadatos académicos."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     subtipoTitulo = models.CharField(max_length=100)

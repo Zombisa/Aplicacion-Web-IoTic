@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class Libro(models.Model):
+    """Libro publicado por un usuario con metadatos editoriales e imagen opcional en R2."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
     tipoProductividad = models.CharField(max_length=100)

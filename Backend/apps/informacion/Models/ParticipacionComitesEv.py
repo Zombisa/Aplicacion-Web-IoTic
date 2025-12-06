@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class ParticipacionComitesEv(models.Model):
+    """Participación del usuario en comités o evaluaciones, con institución y licencia."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     pais = models.CharField(max_length=50)

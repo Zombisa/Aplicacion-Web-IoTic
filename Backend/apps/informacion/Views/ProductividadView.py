@@ -15,8 +15,15 @@ from django.shortcuts import get_object_or_404
 #   MISIÓN
 # ======================================================
 class MisionViewSet(viewsets.ViewSet):
+    """Gestiona el único registro de misión institucional.
+
+    Roles: escrituras requieren rol válido (403 si falla); `ver` es público.
+    Regla: solo un registro permitido (400 al intentar duplicar).
+    Errores: 404 en ediciones inexistentes; 400 validación.
+    """
     @action(detail=False, methods=['get'], url_path='listar')
     def listar(self, request):
+        """Obtiene la misión (primera si existe); 200 con mensaje si no hay registro."""
         mision = Mision.objects.first()
         if not mision:
             return Response({"message": "No se ha registrado la misión."}, status=200)
@@ -25,6 +32,7 @@ class MisionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
+        """Crea la misión única (requiere rol válido, 400 si ya existe o falla validación)."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -44,6 +52,7 @@ class MisionViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
+        """Edita parcialmente la misión por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -61,6 +70,7 @@ class MisionViewSet(viewsets.ViewSet):
     # ======================
     @action(detail=False, methods=['get'], url_path='ver')
     def ver(self, request):
+        """Endpoint público para consultar la misión; 200 con mensaje si no existe registro."""
         mision = Mision.objects.first()
         if not mision:
             return Response({"message": "No hay misión registrada."}, status=200)
@@ -72,9 +82,16 @@ class MisionViewSet(viewsets.ViewSet):
 #   VISIÓN
 # ======================================================
 class VisionViewSet(viewsets.ViewSet):
+    """Gestiona la visión institucional única.
+
+    Roles: escrituras con rol válido (403 si falla); `ver` es público.
+    Regla: un solo registro (400 si ya existe al crear).
+    Errores: 404 en ediciones inexistentes; 400 validación.
+    """
 
     @action(detail=False, methods=['get'], url_path='listar')
     def listar(self, request):
+        """Devuelve la visión actual o mensaje si no hay registro."""
         vision = Vision.objects.first()
         if not vision:
             return Response({"message": "No se ha registrado la visión."}, status=200)
@@ -83,6 +100,7 @@ class VisionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
+        """Crea la visión única (rol requerido, 400 si ya existe o falla validación)."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -101,6 +119,7 @@ class VisionViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
+        """Edita parcialmente la visión por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -119,6 +138,7 @@ class VisionViewSet(viewsets.ViewSet):
     # ======================
     @action(detail=False, methods=['get'], url_path='ver')
     def ver(self, request):
+        """Endpoint público para consultar la visión; 200 con mensaje si no hay registro."""
         vision = Vision.objects.first()
         if not vision:
             return Response({"message": "No hay visión registrada."}, status=200)
@@ -131,9 +151,16 @@ class VisionViewSet(viewsets.ViewSet):
 #   HISTORIA
 # ======================================================
 class HistoriaViewSet(viewsets.ViewSet):
+    """Gestiona la reseña histórica única de la institución.
+
+    Roles: escrituras con rol válido (403 si falla); `ver` es público.
+    Regla: solo un registro permitido (400 si se intenta duplicar).
+    Errores: 404 en ediciones inexistentes; 400 validación.
+    """
 
     @action(detail=False, methods=['get'], url_path='listar')
     def listar(self, request):
+        """Devuelve la historia actual o mensaje si no existe."""
         historia = Historia.objects.first()
         if not historia:
             return Response({"message": "No se ha registrado la historia."}, status=200)
@@ -142,6 +169,7 @@ class HistoriaViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
+        """Crea la historia única (rol requerido; 400 si ya existe o falla validación)."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -162,6 +190,7 @@ class HistoriaViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
+        """Edita parcialmente la historia por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
@@ -179,6 +208,7 @@ class HistoriaViewSet(viewsets.ViewSet):
     # ======================
     @action(detail=False, methods=['get'], url_path='ver')
     def ver(self, request):
+        """Endpoint público para ver la historia; 200 con mensaje si no hay registro."""
         historia = Historia.objects.first()
         if not historia:
             return Response({"message": "No hay historia registrada."}, status=200)
@@ -189,9 +219,16 @@ class HistoriaViewSet(viewsets.ViewSet):
 #   OBJETIVOS
 # ======================================================
 class ObjetivoViewSet(viewsets.ViewSet):
+    """Gestiona objetivos (múltiples) con control de rol.
+
+    Roles: crear/editar/eliminar requieren rol válido (403 si falla); listados/ver son públicos.
+    Datos: ordenados por `actualizado_en` descendente en listados.
+    Errores: 404 en ediciones/eliminaciones inexistentes; 400 validación.
+    """
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
+        """Crea un nuevo objetivo (rol requerido; 201 éxito; 400 si falla validación)."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -204,11 +241,13 @@ class ObjetivoViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'], url_path='listar')
     def listar(self, request):
+        """Lista objetivos ordenados por `actualizado_en` desc; acceso público."""
         objetivos = Objetivo.objects.all().order_by('-actualizado_en')
         return Response(ObjetivoSerializer(objetivos, many=True).data)
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
+        """Edita parcialmente un objetivo por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -223,6 +262,7 @@ class ObjetivoViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['delete'], url_path='eliminar')
     def eliminar(self, request, pk=None):
+        """Elimina un objetivo por `pk`; 404 si no existe; 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -235,6 +275,7 @@ class ObjetivoViewSet(viewsets.ViewSet):
     # ======================
     @action(detail=False, methods=['get'], url_path='ver')
     def ver(self, request):
+        """Endpoint público para ver objetivos ordenados por `actualizado_en`; 200 siempre con lista (posiblemente vacía)."""
         objetivos = Objetivo.objects.all().order_by('-actualizado_en')
         return Response(ObjetivoSerializer(objetivos, many=True).data, status=200)
 
@@ -243,9 +284,16 @@ class ObjetivoViewSet(viewsets.ViewSet):
 #   VALORES
 # ======================================================
 class ValorViewSet(viewsets.ViewSet):
+    """Gestiona valores (múltiples) con control de rol.
+
+    Roles: crear/editar/eliminar requieren rol válido (403 si falla); listados/ver son públicos.
+    Datos: ordenados por `actualizado_en` desc en listados.
+    Errores: 404 en ediciones/eliminaciones inexistentes; 400 validación.
+    """
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
+        """Crea un valor institucional (rol requerido; 201 éxito; 400 si falla validación)."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -258,11 +306,13 @@ class ValorViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'], url_path='listar')
     def listar(self, request):
+        """Lista valores ordenados por `actualizado_en` desc; acceso público."""
         valores = Valor.objects.all().order_by('-actualizado_en')
         return Response(ValorSerializer(valores, many=True).data)
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
+        """Edita parcialmente un valor por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -277,6 +327,7 @@ class ValorViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['delete'], url_path='eliminar')
     def eliminar(self, request, pk=None):
+        """Elimina un valor por `pk`; 404 si no existe; 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
@@ -289,6 +340,7 @@ class ValorViewSet(viewsets.ViewSet):
     # ======================
     @action(detail=False, methods=['get'], url_path='ver')
     def ver(self, request):
+        """Endpoint público para ver valores ordenados por `actualizado_en`; 200 siempre con lista (posiblemente vacía)."""
         valores = Valor.objects.all().order_by('-actualizado_en')
         return Response(ValorSerializer(valores, many=True).data, status=200)
 

@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from apps.usuarios_roles.models import Usuario
 
 class Software(models.Model):
+    """Desarrollo de software registrado con código, licenciamiento y metadatos."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     tituloDesarrollo = models.CharField(max_length=200)
     tipoProductividad = models.CharField(max_length=100)

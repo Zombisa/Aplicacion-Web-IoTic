@@ -10,11 +10,23 @@ from django.conf import settings
 from backend.serviceCloudflare.R2Client import s3
 
 class CapLibroViewSet(viewsets.ModelViewSet):
+    """CRUD de capítulos de libro con rol requerido y manejo de imágenes en R2.
+
+    Roles: todos los endpoints validan `verificarToken.validarRol` (403 si falla).
+    Imágenes: `file_path` → `image_r2` usando `R2_BUCKET_PATH`; eliminar imagen borra en R2 y limpia el campo.
+    Errores comunes: 404 cuando el capítulo no existe; 400 en validación; 500 si falla Cloudflare R2.
+    """
+
     queryset = CapLibro.objects.all()
     serializer_class = CapLibroSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_capitulo_libro')
     def agregar_capitulo_libro(self, request):
+        """Crea un capítulo.
+
+        Entrada: campos del modelo; opcional `file_path` para poblar `image_r2`.
+        Salida: 201 con el capítulo creado; 400 si falla validación; 404 si el usuario no existe.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -40,6 +52,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='editar_capitulo_libro')
     def editar_capitulo_libro(self, request, pk):
+        """Actualiza parcialmente un capítulo por `pk`; mantiene el usuario original.
+
+        Errores: 404 si no se encuentra; 400 si la validación falla.
+        """
         if verificarToken.validarRol(request) is True:
             try:
                 cap_libro = CapLibro.objects.get(pk=pk)
@@ -57,6 +73,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar_capitulo_libro')
     def eliminar_capitulo_libro(self, request, pk):
+        """Elimina un capítulo por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 cap_libro = CapLibro.objects.get(pk=pk)
@@ -71,6 +88,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_capitulos_libro')
     def listar_capitulos_libro(self, request):
+        """Lista todos los capítulos (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             capitulos = CapLibro.objects.all()
             serializer = CapLibroSerializer(capitulos, many=True)
@@ -81,6 +99,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2`.
+
+        Respuestas: 400 si no hay imagen; 500 si R2 falla; 200 en éxito.
+        """
         CapLibro = self.get_object()
 
         if not CapLibro.image_r2:
@@ -102,6 +124,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Lista URLs públicas actuales del bucket R2 (sin filtros)."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

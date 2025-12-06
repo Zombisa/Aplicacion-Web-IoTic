@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class Revista(models.Model):
+    """Artículo en revista con ISSN, volumen/fascículo y enlaces opcionales."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
     issn = models.IntegerField()

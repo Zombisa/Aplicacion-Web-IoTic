@@ -15,6 +15,7 @@ from .decorators import verificar_roles, verificar_token
 # ======================================================
 @api_view(["GET"])
 def listar_usuarios(request):
+    """Lista todos los usuarios registrados en PostgreSQL."""
     usuarios = Usuario.objects.all()
     serializer = UsuarioSerializer(usuarios, many=True)
     return Response(serializer.data)
@@ -25,6 +26,12 @@ def listar_usuarios(request):
 # ======================================================
 @api_view(["POST"])
 def crear_usuario(request):
+    """
+    Crea un usuario en Firebase Auth y PostgreSQL, asignando rol y claim.
+
+    Requiere campos: email, contrasena, nombre, apellido, rol (nombre).
+    Devuelve 201 con el usuario creado o 400/404 según validaciones.
+    """
     data = request.data
 
     required_fields = ["email", "contrasena", "nombre", "apellido", "rol"]
@@ -66,6 +73,7 @@ def crear_usuario(request):
 # ======================================================
 @api_view(["GET"])
 def listar_roles(request):
+    """Retorna todos los roles disponibles."""
     roles = Rol.objects.all()
     serializer = RolSerializer(roles, many=True)
     return Response(serializer.data)
@@ -78,6 +86,11 @@ def listar_roles(request):
 @verificar_token
 @verificar_roles(["admin"])
 def asignar_rol(request):
+    """
+    Asigna un rol existente a un usuario ya creado (BD + Firebase claim).
+
+    Requiere uid (Firebase) y rol (nombre). Sólo admin.
+    """
     uid = request.data.get("uid")
     rol_name = request.data.get("rol")
 
@@ -111,6 +124,7 @@ def asignar_rol(request):
 @verificar_token
 @verificar_roles(["admin"])
 def sincronizar_firebase(request):
+    """Ejecuta script de sincronización completa desde Firebase a la BD local."""
     exec(open("apps/usuarios_roles/scripts/sincronizar_firebase.py").read())
     return Response({"message": "Sincronización completa"})
 
@@ -120,6 +134,9 @@ def sincronizar_firebase(request):
 @verificar_token
 @verificar_roles(["admin"])
 def actualizar_usuario(request, usuario_id):
+    """
+    Actualiza datos básicos y rol de un usuario. También actualiza claim en Firebase si aplica.
+    """
     try:
         usuario = Usuario.objects.get(id=usuario_id)
     except Usuario.DoesNotExist:
@@ -153,6 +170,9 @@ def actualizar_usuario(request, usuario_id):
 @verificar_token
 @verificar_roles(["admin"])
 def cambiar_estado_usuario(request, usuario_id):
+    """
+    Activa/desactiva un usuario y refleja el cambio en Firebase Auth (disabled flag).
+    """
     try:
         usuario = Usuario.objects.get(id=usuario_id)
     except Usuario.DoesNotExist:
@@ -183,6 +203,9 @@ def cambiar_estado_usuario(request, usuario_id):
 @verificar_token
 @verificar_roles(["admin"])
 def eliminar_usuario(request, usuario_id):
+    """
+    Elimina un usuario en BD y en Firebase Auth (si tiene uid_firebase).
+    """
     try:
         usuario = Usuario.objects.get(id=usuario_id)
     except Usuario.DoesNotExist:

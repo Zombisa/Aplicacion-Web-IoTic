@@ -4,6 +4,27 @@ from django.contrib.auth.hashers import make_password
 
 
 def crear_usuario(data):
+    """
+    Crea un usuario en Firebase Auth, Firestore y PostgreSQL de forma transaccional.
+
+    Pasos:
+        1) Crea el usuario en Firebase Authentication.
+        2) Asigna el rol (custom claim) en Firebase.
+        3) Persiste el usuario en PostgreSQL.
+        4) Sincroniza el documento en Firestore.
+
+    En caso de fallo, revierte en los tres sistemas (Auth, Firestore, PostgreSQL).
+
+    Args:
+        data (dict): email, contrasena, nombre, apellido, rol (objeto Rol).
+
+    Returns:
+        Usuario: instancia creada.
+
+    Raises:
+        Exception: si ocurre cualquier error en alguno de los sistemas.
+    """
+
     uid_firebase = None
     usuario = None
     try:
@@ -75,9 +96,7 @@ def crear_usuario(data):
     
     
 def asignar_rol_firebase(uid_firebase, rol_nombre):
-    """
-    Asigna un rol al usuario modificando sus custom claims en Firebase.
-    """
+    """Asigna rol a un usuario ajustando sus custom claims en Firebase."""
     try:
         auth.set_custom_user_claims(uid_firebase, {"role": rol_nombre})
         return True

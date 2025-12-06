@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class MaterialDidacticoViewSet(viewsets.ModelViewSet):
+    """CRUD de material didáctico con rol requerido y manejo de imágenes en R2.
+
+    Roles: todas las acciones validan rol (403 si falla).
+    Imágenes: `file_path` → `image_r2`; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si no existe; 400 validación; 500 fallos R2.
+    """
+
     queryset = MaterialDidactico.objects.all()
     serializer_class = MaterialDidacticoSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_material_did')
     def agregar_material_did(self, request):
+        """Crea material didáctico.
+
+        Entrada: datos del material; opcional `file_path` para `image_r2`.
+        Salida: 201 creado; 404 si no se halla usuario; 400 si falla validación.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['put'], url_path='editar_material_did')
     def editar_material_did(self, request, pk):
+        """Edita parcialmente un material didáctico por `pk`; conserva usuario; 404/400 en errores."""
         if verificarToken.validarRol(request) is True:
             try:
                 material_didactico = MaterialDidactico.objects.get(pk=pk)
@@ -59,6 +72,7 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
         
     @action(detail=True, methods=['delete'], url_path='eliminar_material_did')
     def eliminar_material_did(self, request, pk):
+        """Elimina un material didáctico por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 material_didactico = MaterialDidactico.objects.get(pk=pk)
@@ -73,6 +87,7 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_materiales_did')
     def listar_materiales_did(self, request):
+        """Lista todos los materiales didácticos (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             materiales_didacticos = MaterialDidactico.objects.all()
             serializer = MaterialDidacticoSerializer(materiales_didacticos, many=True)
@@ -83,6 +98,7 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen en R2 y limpia `image_r2` (400 sin imagen; 500 si R2 falla)."""
         MaterialDidactico = self.get_object()
 
         if not MaterialDidactico.image_r2:
@@ -104,6 +120,7 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

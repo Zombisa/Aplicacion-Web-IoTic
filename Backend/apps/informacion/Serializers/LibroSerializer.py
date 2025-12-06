@@ -2,6 +2,7 @@ from rest_framework import serializers
 from apps.informacion.Models.Libro import Libro
 
 class LibroSerializer(serializers.ModelSerializer):
+    """Serialize libros publicados manteniendo `usuario` como solo lectura."""
     class Meta:
         model = Libro
         fields = '__all__'

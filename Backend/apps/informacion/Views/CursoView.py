@@ -12,11 +12,23 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class CursoViewSet(viewsets.ModelViewSet):
+    """CRUD de cursos con rol requerido y soporte de imágenes en R2.
+
+    Roles: todas las acciones exigen `verificarToken.validarRol` (403 si falla).
+    Imágenes: `file_path` → `image_r2` usando `R2_BUCKET_PATH`; eliminar imagen borra en R2 y limpia el campo.
+    Errores: 404 si no existe el curso; 400 validación; 500 fallos R2.
+    """
+
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
 
     @action(detail=False, methods=['post'], url_path='agregar_curso')
     def agregar_curso(self, request):
+        """Crea un curso.
+
+        Entrada: datos del curso; opcional `file_path` para `image_r2`.
+        Salida: 201 con el curso creado; 404 si no se halla el usuario; 400 si falla validación.
+        """
         if verificarToken.validarRol(request) is True:
             data = request.data.copy()
             # si existe file_path, construir la URL completa
@@ -42,6 +54,7 @@ class CursoViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar_curso')
     def editar_curso(self, request, pk):
+        """Actualiza parcialmente un curso por `pk`; mantiene el usuario original. Errores: 404/400."""
         if verificarToken.validarRol(request) is True:
             try:
                 curso = Curso.objects.get(pk=pk)
@@ -59,6 +72,7 @@ class CursoViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['delete'], url_path='eliminar_curso')
     def eliminar_curso(self, request, pk):
+        """Elimina un curso por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
             try:
                 curso = Curso.objects.get(pk=pk)
@@ -73,6 +87,7 @@ class CursoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar_cursos')
     def listar_cursos(self, request):
+        """Lista todos los cursos (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:
             cursos = Curso.objects.all()
             serializer = CursoSerializer(cursos, many=True)
@@ -83,6 +98,7 @@ class CursoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['delete'], url_path='eliminar-imagen')
     def eliminar_imagen(self, request, pk):
+        """Borra la imagen del curso en R2 y limpia `image_r2` (400 sin imagen; 500 si falla R2)."""
         curso = self.get_object()
 
         if not curso.image_r2:
@@ -104,6 +120,7 @@ class CursoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='listar-imagenes')
     def listar_imagenes(self, request):
+        """Devuelve las URLs públicas actuales del bucket R2."""
         try:
             response = s3.list_objects_v2(Bucket=settings.R2_BUCKET_NAME)
             archivos = [obj['Key'] for obj in response.get('Contents', [])]

@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class ProcesoTecnica(models.Model):
+    """Proceso o técnica registrada como productividad, con licencia y etiquetas GTI."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     tipoProductividad = models.CharField(max_length=50)

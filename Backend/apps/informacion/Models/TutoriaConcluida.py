@@ -2,6 +2,8 @@ from django.db import models
 from apps.usuarios_roles.models import Usuario
 
 class TutoriaConcluida(models.Model):
+    """Tutoría finalizada con datos de orientados, programa e institución."""
+
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     tipoProductividad = models.CharField(max_length=50)
