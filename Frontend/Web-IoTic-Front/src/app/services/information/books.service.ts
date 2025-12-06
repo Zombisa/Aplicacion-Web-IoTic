@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AppConfigService } from '../common/app-config.service';
 import { catchError, Observable, throwError } from 'rxjs';
 import { BookPeticion } from '../../models/Peticion/BookPeticion';
+import { BookDTO } from '../../models/DTO/BookDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class BooksService {
    * Lista los libros disponibles desde el backend.
    * @returns lista de libros desde el backend
    */
-  getBooks(): Observable<BookPeticion[]> {
-    return this.http.get<BookPeticion[]>(
+  getBooks(): Observable<BookDTO[]> {
+    return this.http.get<BookDTO[]>(
       `${this.config.apiUrlBackend}informacion/libros/listar_libros/`
     ).pipe(
       catchError(error => {
@@ -30,8 +31,8 @@ export class BooksService {
    * @param book datos del libro a crear. debe ser de tipo BookPeticion que hereda de BookPeticion
    * @returns Libro creado.
    */
-  postBook(book: BookPeticion): Observable<BookPeticion> {
-    return this.http.post<BookPeticion>(
+  postBook(book: BookPeticion): Observable<BookDTO> {
+    return this.http.post<BookDTO>(
       `${this.config.apiUrlBackend}informacion/libros/agregar_libro/`,
       book
     ).pipe(
@@ -47,8 +48,8 @@ export class BooksService {
    * @param book Información actualizada del libro, debe ser de tipo BookPeticion que hereda de BookPeticion
    * @returns 
    */
-  editBook(id: number, book: BookPeticion): Observable<BookPeticion> {
-    return this.http.put<BookPeticion>(
+  editBook(id: number, book: BookPeticion): Observable<BookDTO> {
+    return this.http.put<BookDTO>(
       `${this.config.apiUrlBackend}informacion/libros/${id}/editar_libro/`,
       book
     ).pipe(

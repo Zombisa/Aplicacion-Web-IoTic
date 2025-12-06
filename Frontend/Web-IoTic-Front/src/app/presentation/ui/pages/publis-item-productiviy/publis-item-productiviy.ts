@@ -11,6 +11,10 @@ import { BaseProductivityDTO } from '../../../../models/Common/BaseProductivityD
 import { LoadingService } from '../../../../services/loading.service';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import Swal from 'sweetalert2';
+import { FormCapBook } from '../../templates/form-cap-book/form-cap-book';
+import { CapBookService } from '../../../../services/information/cap-book.service';
+import { BookPeticion } from '../../../../models/Peticion/BookPeticion';
+import { CapBookPeticion } from '../../../../models/Peticion/CapBookPeticion';
 
 @Component({
   selector: 'app-publis-item-productiviy',
@@ -31,7 +35,8 @@ export class PublisItemProductiviy implements OnInit {
    *
    */
   formMap: any = {
-    libro: FormBook
+    book: FormBook,
+    cap_book: FormCapBook,
   };
 
   isLoading: boolean = false;
@@ -47,7 +52,8 @@ export class PublisItemProductiviy implements OnInit {
     private router: ActivatedRoute,
     public loadingService: LoadingService,
     private booksService: BooksService,
-    private imageService: ImagesService
+    private imageService: ImagesService,
+    private capBookService: CapBookService
   ) { }
 
   ngOnInit(): void {
@@ -105,13 +111,9 @@ export class PublisItemProductiviy implements OnInit {
     }
 
     try {
-      // 1. Comprimir imagen
+
       const compressed = await this.compressFile(dtoSubmit.file);
-
-      // 2. Subir a R2 y actualizar data.image_r2
       await this.uploadAndSetImage(dtoSubmit.data, compressed);
-
-      // 3. Guardar entidad en backend
       this.guardarEntidad(dtoSubmit.data);
 
     } catch (error) {
@@ -160,46 +162,74 @@ export class PublisItemProductiviy implements OnInit {
         });
     });
   }
+  /**
+   * Muestra un mensaje de exito al usuario
+   * @param titulo titulo de la notificación
+   * @param mensaje mensaje de la notificación personalizado
+   */
+  private mostrarExito(titulo: string, mensaje: string) {
+    Swal.fire({
+      icon: 'success',
+      title: titulo,
+      text: mensaje,
+      confirmButtonText: 'Aceptar',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      }
+    });
+  }
+/**
+ * Muestra un mensaje de error al usuario
+ * @param titulo titulo de la notificación
+ * @param mensaje mensaje de la notificación personalizado
+ */
+private mostrarError(titulo: string, mensaje: string) {
+  Swal.fire({
+    icon: 'error',
+    title: titulo,
+    text: mensaje,
+    confirmButtonText: 'Aceptar',
+    buttonsStyling: true,
+    customClass: {
+      confirmButton: 'btn btn-primary'
+    }
+  });
+}
+
 
   /**
    *  Guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
    * @param payload Datos del formulario ya con image_url si aplica
    */
-  guardarEntidad(payload: any) {
-    switch (this.tipo) {
-      case 'libro':
-        console.log("Guardando libro:", payload);
-        this.booksService.postBook(payload).subscribe({
-          next: () => {this.isLoading = false;
-            Swal.fire({
-              icon: 'success',
-              title: 'Libro guardado',
-              text: 'El libro se ha guardado correctamente.',
-              confirmButtonText: 'Aceptar',
-              buttonsStyling: true,
-              customClass: {
-                confirmButton: 'btn btn-primary'
-              }
-            });
-          },
-          error: () =>{
-            this.isLoading = false;
-            Swal.fire({
-              icon: 'error',
-              title: 'Error al guardar el libro',
-              text: 'No se pudo guardar el libro. Por favor intenta nuevamente.',
-              confirmButtonText: 'Aceptar',
-              buttonsStyling: true,
-              customClass: {
-                confirmButton: 'btn btn-primary'
-              }
-            });
-          } 
-        });
-        break;
-      
-      // Aquí agregas tus 14 servicios extra
-    }
+  private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
+    book: (payload: BaseProductivityDTO) => {
+      this.booksService.postBook(payload as BookPeticion).subscribe({
+        next: () => this.mostrarExito('Libro guardado', 'El libro se ha guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar el libro', 'No se pudo guardar el libro.')
+      });
+    },
+    cap_book: (payload: BaseProductivityDTO) => {
+      this.capBookService.postCapBook(payload as CapBookPeticion).subscribe({
+        next: () => this.mostrarExito('Capítulo de libro guardado', 'El capítulo se ha guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar el capítulo', 'No se pudo guardar el capítulo.')
+      });
+    },
+  };
+
+
+
+guardarEntidad(payload: BaseProductivityDTO) {
+  this.isLoading = true;
+  const guardarFn = this.guardarMap[this.tipo];
+
+  if (!guardarFn) {
+    console.error('No hay servicio definido para tipo:', this.tipo);
+    this.isLoading = false;
+    return;
   }
+
+  guardarFn(payload);
+}
 
 }
