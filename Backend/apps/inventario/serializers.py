@@ -99,6 +99,7 @@ class PrestamoSerializer(serializers.ModelSerializer):
     Campos read-only: id, item (para respuesta), fecha_prestamo, fecha_devolucion, estado
     
     Nota: item_id se usa para escribir (crear préstamo), item se usa para leer (respuesta)
+    item_*_snapshot: Guardan estado del item al momento del préstamo para histórico inmutable
     """
     item_id = serializers.PrimaryKeyRelatedField(
         queryset=Inventario.objects.all(),
@@ -113,9 +114,13 @@ class PrestamoSerializer(serializers.ModelSerializer):
             'item', 'item_id',
             'nombre_persona', 'cedula', 'telefono', 'correo', 'direccion',
             'fecha_prestamo', 'fecha_limite', 'fecha_devolucion',
-            'estado', 'foto_entrega', 'foto_devolucion'
+            'estado', 'foto_entrega', 'foto_devolucion',
+            'item_serial_snapshot', 'item_descripcion_snapshot',
+            'item_estado_fisico_snapshot', 'item_estado_admin_snapshot'
         ]
-        read_only_fields = ['id', 'item', 'fecha_prestamo', 'fecha_devolucion', 'estado']
+        read_only_fields = ['id', 'item', 'fecha_prestamo', 'fecha_devolucion', 'estado',
+                           'item_serial_snapshot', 'item_descripcion_snapshot',
+                           'item_estado_fisico_snapshot', 'item_estado_admin_snapshot']
     
     def validate_nombre_persona(self, value):
         """

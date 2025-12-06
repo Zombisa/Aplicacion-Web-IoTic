@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "46c44e34-25c4-48e0-b2a8-628d30168d72",
-		"name": "Nebula",
+		"_postman_id": "c9c734e8-0c31-48a1-b6fc-a1a4b10b3f3f",
+		"name": "Nebula Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "40286637"
 	},
@@ -1607,7 +1607,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/historico/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/history/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1620,7 +1620,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"historico",
+								"history",
 								""
 							]
 						}
@@ -1875,7 +1875,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/asignar-rol/",
+							"raw": "http://127.0.0.1:8002/api/usuarios/asignar-rol/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1883,7 +1883,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "8002",
 							"path": [
 								"api",
 								"usuarios",
@@ -1900,7 +1900,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios",
+							"raw": "http://127.0.0.1:8002/api/usuarios",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1908,7 +1908,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "8002",
 							"path": [
 								"api",
 								"usuarios"
@@ -1942,7 +1942,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/roles/",
+							"raw": "http://127.0.0.1:8002/api/usuarios/roles/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1950,7 +1950,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "8002",
 							"path": [
 								"api",
 								"usuarios",
@@ -1986,7 +1986,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/crear/",
+							"raw": "http://127.0.0.1:8002/api/usuarios/crear/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1994,7 +1994,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "8002",
 							"path": [
 								"api",
 								"usuarios",
@@ -2021,7 +2021,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/usuarios/sincronizar/",
+							"raw": "http://127.0.0.1:8002/api/usuarios/sincronizar/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2029,7 +2029,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "8002",
 							"path": [
 								"api",
 								"usuarios",

@@ -106,6 +106,12 @@ class Prestamo(models.Model):
 
     item = models.ForeignKey(Inventario, on_delete=models.PROTECT, related_name='prestamos')
 
+    # Snapshot del item al momento del préstamo (para preservar histórico)
+    item_serial_snapshot = models.CharField(max_length=20, blank=True, null=True)
+    item_descripcion_snapshot = models.TextField(blank=True, null=True)
+    item_estado_fisico_snapshot = models.CharField(max_length=20, blank=True, null=True)
+    item_estado_admin_snapshot = models.CharField(max_length=20, blank=True, null=True)
+
     # Datos del solicitante
     nombre_persona = models.CharField(max_length=100, blank=False, null=False)
     cedula = models.CharField(max_length=30, blank=False, null=False)

@@ -329,7 +329,12 @@ def registrar_prestamo(data):
             telefono=telefono,
             correo=correo,
             direccion=direccion,
-            fecha_limite=fecha_limite_dt
+            fecha_limite=fecha_limite_dt,
+            # Snapshot del item al momento del préstamo (para preservar histórico)
+            item_serial_snapshot=item.serial,
+            item_descripcion_snapshot=item.descripcion,
+            item_estado_fisico_snapshot=item.estado_fisico,
+            item_estado_admin_snapshot=item.estado_admin,
         )
 
         # Actualizar estado del item
