@@ -1,0 +1,11 @@
+<app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+    <div class="header-wrapper">
+        <app-header></app-header>
+    </div>
+    <div class="container contaier-content">
+        <!-- Aquí se inyecta dinámicamente el formulario -->
+        <ng-container #formContainer></ng-container>
+    </div>
+</div>  
+  

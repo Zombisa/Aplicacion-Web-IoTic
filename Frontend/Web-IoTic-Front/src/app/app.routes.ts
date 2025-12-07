@@ -14,6 +14,7 @@ import { ItemAvailableGuard } from './guards/item-available-guard';
 import { EditItem } from './presentation/ui/pages/edit-item/edit-item';
 import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-history-loan';
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
+import { PublisItemProductiviy } from './presentation/ui/pages/publis-item-productiviy/publis-item-productiviy';
 
 export const routes: Routes = [
 
@@ -29,6 +30,6 @@ export const routes: Routes = [
      {path: 'inventario/edit-item/:id', component: EditItem},
      {path: 'prestamos/pretamo/:id', component: ViewLoanItem},
      {path: 'inventario/history', component: ViewHistoryLoan},
-     {path: 'productivity', component: ProductivityPage},
-
+     {path: 'productividad', component: ProductivityPage},
+     {path: 'productividad/formulario/:tipo', component: PublisItemProductiviy},
 ];
