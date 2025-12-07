@@ -601,21 +601,9 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         item = get_object_or_404(Inventario, pk=item_id)
         data['item'] = item
 
-        # -------------- FOTO ENTREGA (opcional) --------------
-        file_path_entrega = data.pop("file_path_entrega", None)
-        foto_entrega_url = None
-        if file_path_entrega:
-            foto_entrega_url = f"{settings.R2_BUCKET_PATH}/{file_path_entrega}"
-
         # registrar préstamo
         try:
             prestamo = registrar_prestamo(data)
-            
-            # Asignar foto de entrega después de crear el préstamo
-            if foto_entrega_url:
-                prestamo.foto_entrega = foto_entrega_url
-                prestamo.save()
-            
             return Response(PrestamoSerializer(prestamo).data, status=201)
         except ValidationError as e:
             return Response({"error": str(e)}, status=400)
@@ -623,7 +611,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
             return Response({"error": f"Error inesperado: {str(e)}"}, status=500)
 
     # ======================================================
-    #   DEVOLVER ÍTEM (con foto de devolución opcional) - PATCH
+    #   DEVOLVER ÍTEM - PATCH
     # ======================================================
     @method_decorator(verificar_roles(['admin', 'mentor']), name='partial_update')
     def partial_update(self, request, pk=None):
@@ -633,11 +621,6 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         Roles permitidos: admin, mentor
         
         URL: /prestamo/{id}/  [PATCH]
-        
-        Request body (opcional):
-            {
-                "file_path_devolucion": "str (opcional, ruta en R2)"
-            }
         
         Cambios realizados:
             - Marca el préstamo como "Devuelto"
@@ -652,13 +635,6 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         """
         prestamo = get_object_or_404(Prestamo, pk=pk)
         data = request.data.copy()
-
-        # -------------- FOTO DEVOLUCIÓN (opcional) --------------
-        file_path_devolucion = data.pop("file_path_devolucion", None)
-        if file_path_devolucion:
-            full_url = f"{settings.R2_BUCKET_PATH}/{file_path_devolucion}"
-            prestamo.foto_devolucion = full_url
-            prestamo.save()
 
         # registrar devolución lógica
         try:
@@ -678,88 +654,6 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     @method_decorator(verificar_roles(['admin']), name='destroy')
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-
-    # ======================================================
-    #   ELIMINAR FOTO ENTREGA
-    # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='delivery_photo')
-    @action(detail=True, methods=['delete'], url_path='delivery-photo')
-    def delivery_photo(self, request, pk=None):
-        """
-        Elimina la foto de entrega asociada a un préstamo desde R2.
-        
-        Roles permitidos: admin, mentor
-        
-        URL: /prestamo/{id}/delivery-photo/
-        
-        Comportamiento:
-            - Extrae el nombre del archivo de la URL almacenada
-            - Elimina el archivo del bucket R2
-            - Limpia el campo foto_entrega del préstamo
-        
-        Returns:
-            200 OK: {"message": "Foto de entrega eliminada correctamente"}
-            400 Bad Request: {"error": "No existe foto de entrega"}
-            404 Not Found: Préstamo no existe
-            500 Internal Server Error: Error al eliminar en R2
-        """
-        prestamo = get_object_or_404(Prestamo, pk=pk)
-
-        if not prestamo.foto_entrega:
-            return Response({"error": "No existe foto de entrega"}, status=400)
-
-        filename = prestamo.foto_entrega.split("/")[-1]
-
-        try:
-            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=filename)
-        except Exception as e:
-            return Response({"error": f"No se pudo eliminar la foto: {str(e)}"}, status=500)
-
-        prestamo.foto_entrega = None
-        prestamo.save()
-
-        return Response({"message": "Foto de entrega eliminada correctamente"}, status=200)
-
-    # ======================================================
-    #   ELIMINAR FOTO DEVOLUCIÓN
-    # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor']), name='return_photo')
-    @action(detail=True, methods=['delete'], url_path='return-photo')
-    def return_photo(self, request, pk=None):
-        """
-        Elimina la foto de devolución asociada a un préstamo desde R2.
-        
-        Roles permitidos: admin, mentor
-        
-        URL: /prestamo/{id}/return-photo/
-        
-        Comportamiento:
-            - Extrae el nombre del archivo de la URL almacenada
-            - Elimina el archivo del bucket R2
-            - Limpia el campo foto_devolucion del préstamo
-        
-        Returns:
-            200 OK: {"message": "Foto de devolución eliminada correctamente"}
-            400 Bad Request: {"error": "No existe foto de devolución"}
-            404 Not Found: Préstamo no existe
-            500 Internal Server Error: Error al eliminar en R2
-        """
-        prestamo = get_object_or_404(Prestamo, pk=pk)
-
-        if not prestamo.foto_devolucion:
-            return Response({"error": "No existe foto de devolución"}, status=400)
-
-        filename = prestamo.foto_devolucion.split("/")[-1]
-
-        try:
-            s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=filename)
-        except Exception as e:
-            return Response({"error": f"No se pudo eliminar la foto: {str(e)}"}, status=500)
-
-        prestamo.foto_devolucion = None
-        prestamo.save()
-
-        return Response({"message": "Foto de devolución eliminada correctamente"}, status=200)
 
     # ======================================================
     #   REPORTES

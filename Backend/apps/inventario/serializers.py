@@ -96,10 +96,10 @@ class PrestamoSerializer(serializers.ModelSerializer):
     - direccion: No vacía, máx 200 caracteres
     - fecha_limite: Debe ser posterior a la fecha actual
     
-    Campos read-only: id, item (para respuesta), fecha_prestamo, fecha_devolucion, estado
+    Campos read-only: id, fecha_prestamo, fecha_devolucion, estado, item (anidado)
     
-    Nota: item_id se usa para escribir (crear préstamo), item se usa para leer (respuesta)
-    item_*_snapshot: Guardan estado del item al momento del préstamo para histórico inmutable
+    Nota: item_id se usa para escribir (crear préstamo)
+    El campo 'item' en la respuesta contiene la información snapshot del momento del préstamo
     """
     item_id = serializers.PrimaryKeyRelatedField(
         queryset=Inventario.objects.all(),
@@ -111,16 +111,40 @@ class PrestamoSerializer(serializers.ModelSerializer):
         model = Prestamo
         fields = [
             'id',
-            'item', 'item_id',
-            'nombre_persona', 'cedula', 'telefono', 'correo', 'direccion',
-            'fecha_prestamo', 'fecha_limite', 'fecha_devolucion',
-            'estado', 'foto_entrega', 'foto_devolucion',
-            'item_serial_snapshot', 'item_descripcion_snapshot',
-            'item_estado_fisico_snapshot', 'item_estado_admin_snapshot'
+            'nombre_persona', 
+            'cedula', 
+            'telefono', 
+            'correo', 
+            'direccion',
+            'fecha_prestamo', 
+            'fecha_devolucion',
+            'fecha_limite',
+            'estado',
+            'item_id',
+            'item'
         ]
-        read_only_fields = ['id', 'item', 'fecha_prestamo', 'fecha_devolucion', 'estado',
-                           'item_serial_snapshot', 'item_descripcion_snapshot',
-                           'item_estado_fisico_snapshot', 'item_estado_admin_snapshot']
+        read_only_fields = ['id', 'fecha_prestamo', 'fecha_devolucion', 'estado', 'item']
+    
+    def to_representation(self, instance):
+        """
+        Customiza la salida para mostrar la información snapshot del item
+        tal como estaba en el momento del préstamo.
+        """
+        representation = super().to_representation(instance)
+        
+        # Crear objeto item con la información snapshot del momento del préstamo
+        representation['item'] = {
+            'id': instance.item.id,
+            'serial': instance.item_serial_snapshot or instance.item.serial,
+            'descripcion': instance.item_descripcion_snapshot or instance.item.descripcion,
+            'estado_fisico': instance.item_estado_fisico_snapshot or instance.item.estado_fisico,
+            'estado_admin': instance.item_estado_admin_snapshot or instance.item.estado_admin,
+            'fecha_registro': instance.item.fecha_registro,
+            'observacion': instance.item.observacion,
+            'image_r2': instance.item_image_r2_snapshot if instance.item_image_r2_snapshot is not None else instance.item.image_r2
+        }
+        
+        return representation
     
     def validate_nombre_persona(self, value):
         """

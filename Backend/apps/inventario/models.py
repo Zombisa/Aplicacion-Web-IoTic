@@ -75,8 +75,7 @@ class Prestamo(models.Model):
     """
     Modelo que registra un préstamo de un ítem del inventario.
     
-    Mantiene información completa del prestatario, fechas del préstamo y fotos
-    de entrega/devolución para auditoría.
+    Mantiene información completa del prestatario y fechas del préstamo.
     
     Atributos:
         item (ForeignKey): Referencia al ítem prestado
@@ -89,8 +88,6 @@ class Prestamo(models.Model):
         fecha_limite (datetime): Fecha máxima de devolución (debe ser futura)
         fecha_devolucion (datetime): Fecha/hora de devolución real (null hasta devolver)
         estado (str): Estado del préstamo (Prestado, Devuelto)
-        foto_entrega (str): URL de foto en R2 al momento de entrega (opcional)
-        foto_devolucion (str): URL de foto en R2 al momento de devolución (opcional)
     
     Validaciones:
         - Todos los campos de prestatario son obligatorios
@@ -111,6 +108,7 @@ class Prestamo(models.Model):
     item_descripcion_snapshot = models.TextField(blank=True, null=True)
     item_estado_fisico_snapshot = models.CharField(max_length=20, blank=True, null=True)
     item_estado_admin_snapshot = models.CharField(max_length=20, blank=True, null=True)
+    item_image_r2_snapshot = models.CharField(max_length=100, blank=True, null=True)
 
     # Datos del solicitante
     nombre_persona = models.CharField(max_length=100, blank=False, null=False)
@@ -122,8 +120,6 @@ class Prestamo(models.Model):
     fecha_prestamo = models.DateTimeField(auto_now_add=True)
     fecha_limite = models.DateTimeField()
     fecha_devolucion = models.DateTimeField(null=True, blank=True)
-    foto_entrega = models.CharField(max_length=100, blank=True, null=True) #Almacena la ruta en r2 
-    foto_devolucion = models.CharField(max_length=100, blank=True, null=True) #Almacena la ruta en r2 
 
     estado = models.CharField(
         max_length=20,
