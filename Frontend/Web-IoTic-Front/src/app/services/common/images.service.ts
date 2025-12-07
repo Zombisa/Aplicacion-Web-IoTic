@@ -69,7 +69,7 @@ export class ImagesService {
    *  y la ruta del archivo en R2
    */
   getPresignedUrl(extension: string, contentType: string): Observable<any> {
-    return this.http.post(`${this.config.apiUrlBackend}informacion/urlfirmada/generar-url/`, {
+    return this.http.post(`${this.config.apiUrlBackend}informacion/urlfirmada/images/`, {
       extension,
       content_type: contentType
     });
