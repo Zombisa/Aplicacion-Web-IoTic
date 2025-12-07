@@ -17,7 +17,7 @@ import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
 })
 export class ViewHistoryLoan implements OnInit {
   
-  public displayedLoans: LoanHistoryDTO[] = [];
+  public displayedLoans: LoanDTO[] = [];
   public searchText: string = '';
   public activeFilter: FilterType = 'vigentes';
 
@@ -76,7 +76,7 @@ export class ViewHistoryLoan implements OnInit {
 
     request$.subscribe({
       next: (loans: LoanDTO[]) => {
-        this.displayedLoans = loans.map(l => this.convertToLoanHistoryDTO(l));
+        this.displayedLoans = loans;
         this.loadingService.hide();
       },
       error: (err) => {
@@ -86,31 +86,6 @@ export class ViewHistoryLoan implements OnInit {
     });
   }
 
-  /** ==========================
-   *  CONVERTIR DTO
-   * ========================== */
-  private convertToLoanHistoryDTO(loan: LoanDTO): LoanHistoryDTO {
-    return {
-      id: loan.id,
-      nombre_persona: loan.nombre_persona,
-      item: {
-        id: loan.item,
-        serial: loan.item_serial_snapshot,
-        descripcion: loan.item_descripcion_snapshot,
-        estado_fisico: loan.item_estado_fisico_snapshot,
-        estado_admin: loan.item_estado_admin_snapshot,
-        observacion: '',
-        fecha_registro: ''
-      },
-      fecha_prestamo: loan.fecha_prestamo,
-      fecha_devolucion: loan.fecha_devolucion,
-      fecha_limite: loan.fecha_limite,
-      estado: loan.estado,
-      correo: loan.correo,
-      telefono: loan.telefono,
-      cedula: loan.cedula,
-      direccion: loan.direccion
-    };
-  }
+
 
 }

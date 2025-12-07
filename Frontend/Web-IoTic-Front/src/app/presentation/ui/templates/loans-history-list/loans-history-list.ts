@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoanCard } from '../../components/loan-card/loan-card';
 import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
+import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 
 @Component({
   selector: 'app-loans-history-list',
@@ -10,10 +11,10 @@ import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
   styleUrl: './loans-history-list.css'
 })
 export class LoansHistoryList implements OnChanges {
-  @Input() loans: LoanHistoryDTO[] = [];
+  @Input() loans: LoanDTO[] = [];
   @Input() searchText: string = '';
 
-  filteredLoans: LoanHistoryDTO[] = [];
+  filteredLoans: LoanDTO[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['loans'] || changes['searchText']) {

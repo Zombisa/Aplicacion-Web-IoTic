@@ -6,4 +6,5 @@ export interface ItemDTO {
   estado_admin: string;
   fecha_registro: string; 
   observacion: string;
+  image_r2?: string;
 }

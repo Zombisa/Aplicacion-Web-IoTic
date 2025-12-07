@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
+import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 
 @Component({
   selector: 'app-loan-card',
@@ -10,7 +11,7 @@ import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
   styleUrl: './loan-card.css'
 })
 export class LoanCard {
-  @Input() loan!: LoanHistoryDTO;
+  @Input() loan!: LoanDTO;
   @Output() viewLoan = new EventEmitter<number>();
 
   constructor(private router: Router) {}
