@@ -11,7 +11,7 @@ import { AppConfigService } from './common/app-config.service';
   providedIn: 'root'
 })
 export class LoanService {
-
+  
 
   constructor(
     private http: HttpClient,
@@ -21,10 +21,10 @@ export class LoanService {
 
   /**
    * Consultar todos los préstamos
+   * @returns Observable<LoanDTO[]> Lista de préstamos
    */
   getLoans(): Observable<LoanDTO[]> {
-
-      return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/`).pipe(
+      return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/history/`).pipe(
         catchError(error => {
           console.error('Error al obtener préstamos:', error);
           return throwError(() => error);
@@ -33,9 +33,10 @@ export class LoanService {
   }
     /**
    * Obtener préstamo por ID
+   * @param id ID del préstamo
+   * @returns Observable<LoanDTOConsultById> Detalles del préstamo
    */
   getLoanById(id: number): Observable<LoanDTOConsultById> {
-
     return this.http.get<LoanDTOConsultById>(`${this.config.apiUrlBackend}inventario/prestamos/` + id, )
     .pipe(
       catchError(error => {
@@ -44,23 +45,52 @@ export class LoanService {
       })
     );
   }
-
+  /**
+   * Obtener préstamos todos los préstamos activos 
+   * @returns Observable<LoanDTO[]> Préstamos activos
+   */
   getLoansCurrent(): Observable<LoanDTO[]> {
-      return  this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/activos/`).pipe(
+      return  this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/active/`).pipe(
       catchError(error => {
         console.error('Error al obtener préstamos activos:', error);
         return throwError(() => error);
       })
     );
   }
+  /**
+   * Retorna los préstamos que han sido devueltos
+   * @returns Observable<LoanDTO[]> Obtener préstamos devueltos
+   */
+  getLoansReturned(): Observable<LoanDTO[]> {
+      return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/returned/`).pipe(
+      catchError(error => {
+        console.error('Error al obtener préstamos devueltos:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
 
   /**
    * Obtener préstamos vencidos
+   * @returns Observable<LoanDTO[]> Préstamos vencidos
    */
   getOverdueLoans(): Observable<LoanDTO[]> {
-    return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/vencidos/`).pipe(
+    return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/overdue/`).pipe(
       catchError(error => {
         console.error('Error al obtener préstamos vencidos:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  /**
+   * Obtener préstamos por vencer dentro de 48 horas antes de su fecha de devolución
+   * @returns Observable<LoanDTO[]> Préstamos por vencer
+   */
+  getLoansAboutToExpire(): Observable<LoanDTO[]> {
+    return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/prestamos/por-vencer/`).pipe(
+      catchError(error => {
+        console.error('Error al obtener préstamos por vencer:', error);
         return throwError(() => error);
       })
     );
@@ -68,6 +98,8 @@ export class LoanService {
 
     /**
    * Crear un nuevo préstamo
+   * @param loanData Datos del préstamo a crear
+   * @returns Observable<LoanDTO> Préstamo creado
    */
   createLoan(loanData: LoanPeticion): Observable<LoanDTO> {
       console.log("Préstamo a crear:", JSON.stringify(loanData, null, 2));
@@ -81,13 +113,19 @@ export class LoanService {
     );
 
   }
+  /**
+   * =================================================PATCH
+   * @param id ID del préstamo a devolver
+   * @returns 
+   */
    returnLoan(id: number): Observable<LoanDTO> {
-    return this.http.post<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamos/devolucion/${id}/`, {}).pipe(
+    return this.http.post<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamo/{id}/`, {}).pipe(
       catchError(error => {
         console.error('Error al devolver préstamo:', error);
         return throwError(() => error);
       })
     );
   }
-
+  
+  
 }

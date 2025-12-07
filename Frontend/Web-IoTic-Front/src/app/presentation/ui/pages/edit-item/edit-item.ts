@@ -45,7 +45,7 @@ export class EditItem {
     this.isLoading = true;
     this.showSuccess = false;
     this.showError = false;
-    const { cantidad, ...updateData } = itemData;
+    const {  ...updateData } = itemData;
     this.inventoryService.updateElectronicComponent(this.itemId, itemData).subscribe({
       next: (response) => {
         console.log("Respuesta del servidor:", response);

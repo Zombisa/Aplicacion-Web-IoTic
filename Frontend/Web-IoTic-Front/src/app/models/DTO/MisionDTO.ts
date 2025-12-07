@@ -3,3 +3,5 @@ export interface MisionDTO {
   contenido: string;
   actualizado_en: string;
 }
+
+

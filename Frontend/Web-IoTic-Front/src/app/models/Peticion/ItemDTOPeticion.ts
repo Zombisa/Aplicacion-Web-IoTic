@@ -3,5 +3,5 @@ export interface ItemDTOPeticion {
   estado_fisico: string;
   estado_admin: string;
   observacion: string;
-  cantidad: number;
+
 }

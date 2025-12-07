@@ -49,6 +49,12 @@ export class FormPersonLoan implements OnInit {
 
   this.isLoading = true;
   const formData = this.loanForm.getRawValue();
+
+  // 🔥 Convertir fecha a ISO con zona horaria
+  if (formData.fecha_limite) {
+    formData.fecha_limite = new Date(formData.fecha_limite + "T00:00:00Z").toISOString();
+  }
+
   const loanData: LoanPeticion = {
     ...formData,
     item_id: this.idItem!
@@ -63,9 +69,8 @@ export class FormPersonLoan implements OnInit {
       this.showSuccess = true;
       this.successMessage = 'Préstamo creado exitosamente.';
       setTimeout(() => {
-        this.router.navigate(['/inventario']); // Cambia la ruta según tu app
+        this.router.navigate(['/inventario']);
       }, 1500);
-      
     },
     error: (error: unknown) => {
       console.error('❌ Error completo:', error);
@@ -82,6 +87,7 @@ export class FormPersonLoan implements OnInit {
     }
   });
 }
+
 
 /**
  * Inicializa el formulario reactivo con validaciones

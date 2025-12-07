@@ -4,3 +4,4 @@ export interface HistoriaDTO {
   actualizado_en: string;
 }
 
+

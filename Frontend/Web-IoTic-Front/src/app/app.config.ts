@@ -1,4 +1,4 @@
-import { ApplicationConfig, PLATFORM_ID, inject } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, PLATFORM_ID, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -11,8 +11,11 @@ import { environment } from './environment/environment';
 import { withInMemoryScrolling } from '@angular/router';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { AppConfigService } from './services/common/app-config.service';
 
-
+export function initializeAppConfig(configService: AppConfigService) {
+  return () => configService.load();
+}
 export const appConfig: ApplicationConfig = {
  providers: [
     provideRouter(
@@ -22,7 +25,7 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled'
       })
     ),
-    // Solo inicializar Firebase en el navegador, no en SSR
+    // 
     ...(typeof window !== 'undefined' ? [
       provideFirebaseApp(() => initializeApp(environment.firebase)),
       provideFirestore(() => getFirestore()),
@@ -31,5 +34,11 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([authInterceptor, errorInterceptor])
     ),
+     {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppConfig,
+      deps: [AppConfigService],
+      multi: true
+    }
   ]
 };
