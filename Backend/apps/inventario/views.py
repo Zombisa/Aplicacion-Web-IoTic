@@ -58,10 +58,10 @@ class InventarioViewSet(viewsets.ModelViewSet):
         """
         data = request.data.copy()
 
+        # Si el frontend envía file_path lo usamos tal cual (ya debe ser URL completa)
         file_path = data.pop("file_path", None)
         if file_path:
-            full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
-            data["image_r2"] = full_url
+            data["image_r2"] = file_path
 
         serializer = InventarioSerializer(data=data)
 

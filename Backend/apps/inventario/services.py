@@ -185,11 +185,11 @@ def crear_items_masivo(data):
             raise ValidationError(f"estado_admin debe ser uno de: {estados_admin_validos}")
 
         # ---------- Procesar imagen ----------
+        # Permitimos compatibilidad: si viene file_path lo usamos tal cual (frontend debe mandar la URL completa)
         file_path = item_data.pop("file_path", None)
 
         if file_path:
-            full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
-            item_data["image_r2"] = full_url
+            item_data["image_r2"] = file_path
 
         # ---------- Crear item ----------
         item = Inventario.objects.create(**item_data)
