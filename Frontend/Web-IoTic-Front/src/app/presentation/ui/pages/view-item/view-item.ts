@@ -8,19 +8,19 @@ import { InventoryService } from '../../../../services/inventory.service';
 import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
-import { BlockViewPersonLoan } from '../../templates/block-view-person-loan/block-view-person-loan';
 import { LoanDTOConsultById } from '../../../../models/DTO/LoanDTOConsultById';
+import { SectionInfoItem } from '../../templates/section-info-item/section-info-item';
 
 @Component({
   selector: 'app-view-item',
-  imports: [CommonModule, Header, LoadingPage, ConfirmationModal, BlockViewPersonLoan],
+  imports: [CommonModule, Header, LoadingPage,SectionInfoItem, ConfirmationModal],
   templateUrl: './view-item.html',
   styleUrl: './view-item.css'
 })
 export class ViewItem implements OnInit {
 
   private itemId!: number;  
-  public item?: ItemDTO;
+  public item!: ItemDTO;
   public showDeleteModal = false;
   public loanData?: LoanDTOConsultById;
 
@@ -78,17 +78,38 @@ export class ViewItem implements OnInit {
       }
     })  
   };
+
+  handlerFunctionEmitter(action: string): void {
+    switch (action) {
+      case 'edit':
+        console.log('Acción de edición recibida para el item:', action);
+        this.goToEdit();
+        break;
+      case 'delete':
+        this.confirmDelete();
+        break;
+      case 'loan':
+        this.goToLoan();
+        break;
+      case 'viewLoan':
+        this.goToViewLoan();
+        break;
+      default:
+        console.warn('Acción no reconocida:', action);
+    }
+  }
   /**
    * Navegar a la página de edición del item
    */
   goToEdit(): void{
-    console.log('Navegando a la página de edición del item con ID:', this.itemId);
     this.router.navigate(['inventario/edit-item', this.itemId]);
   }
   
   goToLoan(): void{
-    console.log('Navegando a la página de préstamo del item con ID:', this.itemId);
     this.router.navigate(['inventario/add-loan', this.itemId]);
+  }
+  goToViewLoan(): void{
+    this.router.navigate(['prestamos/pretamo', this.itemId]);
   }
   
   /**

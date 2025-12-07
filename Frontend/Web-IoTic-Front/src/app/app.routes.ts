@@ -13,6 +13,7 @@ import { ViewItem } from './presentation/ui/pages/view-item/view-item';
 import { ItemAvailableGuard } from './guards/item-available-guard';
 import { EditItem } from './presentation/ui/pages/edit-item/edit-item';
 import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-history-loan';
+import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 
 export const routes: Routes = [
 
@@ -26,6 +27,7 @@ export const routes: Routes = [
      {path: 'inventario/add-loan/:id', component: AddLoan, canActivate: [ItemAvailableGuard]},
      {path: 'inventario/view-item/:id', component: ViewItem},
      {path: 'inventario/edit-item/:id', component: EditItem},
+     {path: 'prestamos/pretamo/:id', component: ViewLoanItem},
      {path: 'inventario/history', component: ViewHistoryLoan},
      {path: 'productivity', component: ProductivityPage},
 

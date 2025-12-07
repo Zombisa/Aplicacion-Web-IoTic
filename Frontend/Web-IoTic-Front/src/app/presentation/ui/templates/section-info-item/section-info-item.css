@@ -1,0 +1,85 @@
+
+.text-help{
+    color: white;
+    margin-top: 1px;
+    font-weight: 300;
+}
+.item-card{
+  position: relative;
+  z-index: 1;
+  margin-top: -10rem;
+  width: 100%;
+  max-width: 60rem;
+}
+.title-card{
+    color: var(--color-primary);
+    padding: 2.5rem 2.5rem 0 2.5rem;
+}
+.text-card-item{
+    font-weight: 200;
+    padding: 0 2.5rem 0 2.5rem;
+}
+.section-estados{
+    padding: 0 2.5rem 0 2.5rem;
+}
+.text-state-subtitle{
+    font-size: 1rem;
+    font-weight: 300;
+}
+.box-state{
+    background: linear-gradient(90deg, #829CE3, transparent);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: 15rem;
+    height: 5rem;
+}
+.box-state p{
+    background-color: white;
+    height: 2rem;
+    border-radius: 10px;
+    margin: 0;
+    width: 80%;
+    padding-left: 1rem;
+    padding-top: 4px;
+}
+.warning-state{
+     background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+.warning-state-no-loan{
+     background: linear-gradient(90deg, var(--color-secondary-dark), transparent);
+}
+.bad-warning{
+     background: linear-gradient(90deg, var(--color-danger), transparent);
+}
+
+.section-buttons{
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem;
+}
+.btn-danger {
+  position: absolute; /* Posición absoluta respecto a .card */
+  top: -15px;         /* Ajusta según quieras que sobresalga */
+  right: -15px;       /* Ajusta según quieras que sobresalga */
+  z-index: 10;        /* Siempre encima de otros elementos */
+  background-color: var(--color-danger);
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 50%; /* Para que quede tipo clip circular */
+  width: 80px;        /* Tamaño del “clip” */
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background-color 0.2s ;
+}
+.btn-danger:hover{
+    background-color: rgb(145, 17, 17);
+}
+.bi-trash{
+    font-size: 30px;
+}
+.section-loan-data{
+
+}

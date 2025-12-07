@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewLoanItem } from './view-loan-item';
+import { SectionInfoLoan } from './section-info-loan';
 
-describe('ViewLoanItem', () => {
-  let component: ViewLoanItem;
-  let fixture: ComponentFixture<ViewLoanItem>;
+describe('SectionInfoLoan', () => {
+  let component: SectionInfoLoan;
+  let fixture: ComponentFixture<SectionInfoLoan>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewLoanItem]
+      imports: [SectionInfoLoan]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ViewLoanItem);
+    fixture = TestBed.createComponent(SectionInfoLoan);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
