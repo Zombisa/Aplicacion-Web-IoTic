@@ -1,12 +1,73 @@
-<div class="header-wrapper">
-    <app-header></app-header>
-</div>
-<div class="who-we-are-container">
-    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
-        <h1 class="title">Detalles del Préstamo</h1>
-    </div>
-    <!-- Contenido principal -->
-    <section *ngIf="!isLoading && loanData" class="container-fluid ">
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
 
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="banner-primary d-flex justify-content-center align-items-center flex-column">
+          <h1 class="title">Revisemos el préstamo</h1>
+          <p class="text-help">Detalles del préstamo y estado actual</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="showError" class="alert alert-danger mt-4 mx-4" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Contenido principal -->
+    <section *ngIf="!showError && loanData" class="content-section">
+      <div class="row g-4 justify-content-center align-items-stretch">
+        <!-- Información de la persona (section-info-loan) -->
+        <div class="col-12 col-lg-6 d-flex">
+          <app-section-info-loan [loanData]="loanData"></app-section-info-loan>
+        </div>
+
+        <!-- Información del item (section-info-item) -->
+        <div class="col-12 col-lg-6 d-flex">
+          <div *ngIf="item" class="w-100">
+            <app-section-info-item
+              [item]="item"
+              mode="loan"
+              (functionEmitter)="handlerFunctionEmitter($event)">
+            </app-section-info-item>
+          </div>
+          <div *ngIf="!item && !itemLoadError && loanData?.item && typeof loanData.item === 'number'" class="alert alert-info d-flex align-items-center" role="alert">
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <span>Cargando información del item...</span>
+          </div>
+          <div *ngIf="itemLoadError" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Error al cargar el item:</strong> No se pudo obtener la información del item asociado al préstamo. 
+            <br>
+            <small *ngIf="loanData?.item && typeof loanData.item === 'number'">ID del item: {{ loanData.item }}</small>
+          </div>
+          <div *ngIf="!item && !itemLoadError && !loanData?.item" class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            El préstamo no tiene un item asociado.
+          </div>
+        </div>
+      </div>
     </section>
+  </div>
+
+  <!-- Modal de confirmación para devolver préstamo -->
+  <app-confirmation-modal
+    [isVisible]="showReturnModal"
+    title="Confirmar devolución"
+    message="¿Estás seguro de que deseas devolver este préstamo? Esta acción marcará el item como disponible."
+    confirmText="Devolver"
+    cancelText="Cancelar"
+    confirmButtonClass="btn-primary"
+    icon="fas fa-check-circle"
+    (confirmed)="onReturnConfirmed()"
+    (cancelled)="onReturnCancelled()">
+  </app-confirmation-modal>
 </div>

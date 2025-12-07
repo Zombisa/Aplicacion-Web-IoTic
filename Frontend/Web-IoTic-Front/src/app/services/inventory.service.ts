@@ -75,7 +75,7 @@ export class InventoryService {
    * @returns item obtenido del inventario del id consultado
    */
   getElectronicComponentById(id: number): Observable<ItemDTO> {
-    return this.http.get<ItemDTO>(`${this.config.apiUrlBackend}inventario/items/`+ id).pipe(
+    return this.http.get<ItemDTO>(`${this.config.apiUrlBackend}inventario/items/${id}/`).pipe(
       catchError(error => {
         console.error('Error al obtener componente por ID:', error);
         return throwError(() => error);

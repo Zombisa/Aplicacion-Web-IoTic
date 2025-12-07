@@ -1,1 +1,60 @@
-<p>section-info-loan works!</p>
+<div class="container-info-loan">
+  <div class="row g-0">
+    <!-- Sección izquierda: Icono de persona -->
+    <div class="col-12 col-md-4 d-flex justify-content-center align-items-center icon-section">
+      <i class="bi bi-person person-icon"></i>
+    </div>
+
+    <!-- Sección derecha: Información de la persona -->
+    <div class="col-12 col-md-8 info-section">
+      <div class="info-content">
+        <p class="section-title">Objeto prestado a:</p>
+        
+        <div class="info-block">
+          <h4 class="info-label">Nombre</h4>
+          <p class="info-text">{{ loanData.nombre_persona || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Cédula</h4>
+          <p class="info-text">{{ loanData.cedula || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Teléfono</h4>
+          <p class="info-text">{{ loanData.telefono || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Correo</h4>
+          <p class="info-text">{{ loanData.correo || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Dirección</h4>
+          <p class="info-text">{{ loanData.direccion || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Fecha de préstamo</h4>
+          <p class="info-text">{{ formatDate(loanData.fecha_prestamo) || '—' }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Fecha límite</h4>
+          <p class="info-text">{{ formatDate(loanData.fecha_limite) || '—' }}</p>
+        </div>
+
+        <div class="info-block" *ngIf="loanData.fecha_devolucion">
+          <h4 class="info-label">Fecha de devolución</h4>
+          <p class="info-text">{{ formatDate(loanData.fecha_devolucion) }}</p>
+        </div>
+
+        <div class="info-block">
+          <h4 class="info-label">Estado</h4>
+          <p class="info-text">{{ loanData.estado || '—' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

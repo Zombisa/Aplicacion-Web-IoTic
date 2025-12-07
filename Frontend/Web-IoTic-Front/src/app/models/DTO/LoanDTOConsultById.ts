@@ -1,6 +1,8 @@
+import { ItemDTO } from './ItemDTO';
+
 export interface LoanDTOConsultById {
   id: number;
-  item: number;
+  item: number | ItemDTO; // Puede ser el ID o el objeto completo del item
   nombre_persona: string;
   cedula: string;
   telefono: string;

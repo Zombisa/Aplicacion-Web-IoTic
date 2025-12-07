@@ -9,6 +9,7 @@ import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
 import { LoanDTOConsultById } from '../../../../models/DTO/LoanDTOConsultById';
+import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 import { SectionInfoItem } from '../../templates/section-info-item/section-info-item';
 
 @Component({
@@ -22,7 +23,7 @@ export class ViewItem implements OnInit {
   private itemId!: number;  
   public item!: ItemDTO;
   public showDeleteModal = false;
-  public loanData?: LoanDTOConsultById;
+  public loanData?: LoanDTO;
 
   constructor(
     private inventoryService: InventoryService,
@@ -65,16 +66,20 @@ export class ViewItem implements OnInit {
     
   };
   getLoanDataById(): void { 
-    this.loadingService.show();
-    console.log('Obteniendo el préstamo del item con ID:', this.itemId);
-    this.loanService.getLoanById(this.itemId).subscribe({
+    console.log('Obteniendo el préstamo activo del item con ID:', this.itemId);
+    this.loanService.getActiveLoanByItemId(this.itemId).subscribe({
       next: (loanData) => {
-        this.loanData = loanData;
-        console.log('Préstamo obtenido:', this.loanData);
-        this.loadingService.hide();
+        if (loanData) {
+          this.loanData = loanData;
+          console.log('Préstamo activo obtenido:', this.loanData);
+        } else {
+          console.log('No hay préstamo activo para este item');
+          this.loanData = undefined;
+        }
       },
       error: (error) => {
         console.error('Error al obtener el préstamo:', error);
+        this.loanData = undefined;
       }
     })  
   };
@@ -109,7 +114,30 @@ export class ViewItem implements OnInit {
     this.router.navigate(['inventario/add-loan', this.itemId]);
   }
   goToViewLoan(): void{
-    this.router.navigate(['prestamos/pretamo', this.itemId]);
+    // Verificar si hay un préstamo activo antes de navegar
+    if (this.loanData?.id) {
+      this.router.navigate(['prestamos/pretamo', this.loanData.id]);
+    } else {
+      // Si no hay préstamo activo, intentar obtenerlo primero
+      this.loadingService.show();
+      this.loanService.getActiveLoanByItemId(this.itemId).subscribe({
+        next: (loan) => {
+          this.loadingService.hide();
+          if (loan?.id) {
+            this.loanData = loan;
+            this.router.navigate(['prestamos/pretamo', loan.id]);
+          } else {
+            console.warn('No hay préstamo activo para este item');
+            // Opcional: mostrar un mensaje al usuario
+          }
+        },
+        error: (error) => {
+          this.loadingService.hide();
+          console.error('Error al obtener el préstamo activo:', error);
+          // Opcional: mostrar un mensaje al usuario
+        }
+      });
+    }
   }
   
   /**

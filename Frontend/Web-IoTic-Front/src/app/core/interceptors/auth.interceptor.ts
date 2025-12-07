@@ -14,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const backendUrl = configService.apiUrlBackend || '';
 
-  // 🔥 Lista ÚNICA de rutas que NO llevan token
+  // Lista ÚNICA de rutas que NO llevan token
   const excludedPatterns = [
     'firebase',
     'cloudflare',
@@ -33,17 +33,17 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const shouldSkipAuth = excludedPatterns.some(p => req.url.includes(p));
 
-  // ❌ Si la URL coincide con la lista → no poner token
+  // Si la URL coincide con la lista → no poner token
   if (shouldSkipAuth) {
     return next(req);
   }
 
-  // ❌ Si la URL NO es del backend → no poner token
+  // Si la URL NO es del backend → no poner token
   if (!req.url.startsWith(backendUrl)) {
     return next(req);
   }
 
-  // ✔ Obtener token y agregarlo
+  // Obtener token y agregarlo
   return from(authService.getToken()).pipe(
     switchMap(token => {
       if (!token) return next(req);

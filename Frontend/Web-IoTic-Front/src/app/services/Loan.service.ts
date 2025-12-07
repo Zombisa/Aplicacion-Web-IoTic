@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
+import { catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { LoanDTO } from '../models/DTO/LoanDTO';
 import { LoanPeticion } from '../models/Peticion/LoanPeticion';
 import { LoanDTOConsultById } from '../models/DTO/LoanDTOConsultById';
@@ -37,7 +37,7 @@ export class LoanService {
    * @returns Observable<LoanDTOConsultById> Detalles del préstamo
    */
   getLoanById(id: number): Observable<LoanDTOConsultById> {
-    return this.http.get<LoanDTOConsultById>(`${this.config.apiUrlBackend}inventario/prestamos/` + id, )
+    return this.http.get<LoanDTOConsultById>(`${this.config.apiUrlBackend}inventario/prestamos/${id}/`)
     .pipe(
       catchError(error => {
         console.error('Error al obtener préstamo por ID:', error);
@@ -114,14 +114,39 @@ export class LoanService {
 
   }
   /**
-   * =================================================PATCH
+   * Devolver un préstamo
    * @param id ID del préstamo a devolver
-   * @returns 
+   * @returns Observable<LoanDTO> Préstamo devuelto
    */
-   returnLoan(id: number): Observable<LoanDTO> {
-    return this.http.post<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamo/{id}/`, {}).pipe(
+  returnLoan(id: number): Observable<LoanDTO> {
+    return this.http.post<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamo/${id}/`, {}).pipe(
       catchError(error => {
         console.error('Error al devolver préstamo:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Obtener préstamo activo de un item por ID del item
+   * @param itemId ID del item
+   * @returns Observable<LoanDTO | null> Préstamo activo del item o null si no existe
+   */
+  getActiveLoanByItemId(itemId: number): Observable<LoanDTO | null> {
+    return this.http.get<LoanDTO[]>(`${this.config.apiUrlBackend}inventario/items/${itemId}/loans/?activo=true`).pipe(
+      map(loans => {
+        // Retornar el primer préstamo activo si existe, null si no hay
+        if (loans && loans.length > 0) {
+          return loans[0];
+        }
+        return null;
+      }),
+      catchError(error => {
+        // Si es 404 o no hay préstamos, retornar null en lugar de error
+        if (error.status === 404) {
+          return of(null);
+        }
+        console.error('Error al obtener préstamo activo del item:', error);
         return throwError(() => error);
       })
     );

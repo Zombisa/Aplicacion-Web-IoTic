@@ -1,15 +1,16 @@
 
-<div class="container-fluid mt-4 d-flex justify-content-center align-items-center">
-    <div class="card item-card shadow-lg rounded-4 p-3 p-md-4 border-0">
+<div class="container-fluid d-flex justify-content-center align-items-stretch h-100">
+    <div class="card item-card shadow-lg rounded-4 p-3 p-md-4 border-0 w-100">
             <button class="btn-danger"
+            *ngIf="mode === 'edit'"
             (click)="goToDelete()">
                 <i class="bi bi-trash "></i>
             </button>
-        <div class="mb-4">
+        <div class="mb-4 flex-grow-0">
             <h3 class="title-card">Descripción</h3>
             <p class="text-card-item">{{ item.descripcion }}</p>
         </div>
-        <div class="mb-4">
+        <div class="mb-4 flex-grow-0">
             <h3 class="title-card">Estados</h3>
             <div class="row g-3 section-estados">
                 
@@ -32,11 +33,11 @@
                 </div>
             </div>
         </div>
-        <div class="mb-4">
+        <div class="mb-4 flex-grow-0">
             <h3 class="title-card">Observación</h3>
             <p class="text-card-item"> {{ item.observacion }}</p>
         </div>
-        <div>
+        <div class="flex-grow-0">
             <h3 class="title-card">Fecha registro del item</h3>
             <p class="text-card-item">{{ item.fecha_registro }}</p>
         </div>
