@@ -1,9 +1,10 @@
-
 .text-help{
-    color: white;
-    margin-top: 1px;
-    font-weight: 300;
+  color: white;
+  margin-top: 1px;
+  font-weight: 300;
 }
+
+/* Tarjeta principal */
 .item-card{
   position: relative;
   z-index: 1;
@@ -15,92 +16,129 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+
+/* Columna derecha (contenidos) */
+.content-wrapper{
+  padding: 3rem 3rem 3rem 3.5rem; 
+  font-size: 0.95rem; 
+}
+
+/* Imagen */
+.item-image-wrapper{
+  height: 100%;
+  min-height: 18rem;
+  background-color: #d3d3d3; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-image{
+  width: 100%;
+  height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;         
+  display: block;
+}
+
+/* Bloques de contenido */
+.block{
+  /* si quieres separar aún más, agrega margin-top aquí */
+}
+
+/* Títulos y textos SIN padding lateral extra */
 .title-card{
-    color: var(--color-primary);
-    padding: 2rem 2rem 0 2rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  padding: 0;                    
 }
+
 .text-card-item{
-    font-weight: 200;
-    padding: 0 2rem 0 2rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;                   
 }
+
 .section-estados{
-    padding: 0 2rem 0 2rem;
+  padding: 0;
+  padding-left: 0.2rem;
+  margin-top: 0.5rem;
 }
+
 .text-state-subtitle{
-    font-size: 1rem;
-    font-weight: 300;
+  font-size: 0.95rem;
+  font-weight: 300;
+  margin-bottom: 0.4rem;
 }
+
 .box-state{
-    background: linear-gradient(90deg, #829CE3, transparent);
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    width: 15rem;
-    height: 5rem;
+  background: linear-gradient(90deg, #829CE3, transparent);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  width: 15rem;
+  height: 5rem;
 }
+
 .box-state p{
-    background-color: white;
-    height: 2rem;
-    border-radius: 10px;
-    margin: 0;
-    width: 80%;
-    padding-left: 1rem;
-    padding-top: 4px;
+  background-color: white;
+  height: 2rem;
+  border-radius: 10px;
+  margin: 0;
+  width: 80%;
+  padding-left: 1rem;
+  padding-top: 4px;
 }
+
 .warning-state{
-     background: linear-gradient(90deg, var(--color-secondary), transparent);
+  background: linear-gradient(90deg, var(--color-secondary), transparent);
 }
+
 .warning-state-no-loan{
-     background: linear-gradient(90deg, var(--color-secondary-dark), transparent);
+  background: linear-gradient(90deg, var(--color-secondary-dark), transparent);
 }
+
 .bad-warning{
-     background: linear-gradient(90deg, var(--color-danger), transparent);
+  background: linear-gradient(90deg, var(--color-danger), transparent);
 }
 
+/* Botones */
 .section-buttons{
-    margin: 0 auto;
-    width: 100%;
-    padding: 2rem;
-    margin-top: auto;
+  margin-top: 1rem;
+  padding: 0;                    /* sin padding interno extra */
 }
 
-.section-buttons button {
-    width: 100%;
-    max-width: 100%;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    padding: 0.75rem 1rem;
-    box-sizing: border-box;
-}
-
-/* Asegurar que el botón en modo loan ocupe todo el ancho */
-.section-buttons > div:last-child button {
-    width: 100% !important;
-    max-width: 100% !important;
-}
 .btn-danger {
-  position: absolute; /* Posición absoluta respecto a .card */
-  top: -15px;         /* Ajusta según quieras que sobresalga */
-  right: -15px;       /* Ajusta según quieras que sobresalga */
-  z-index: 10;        /* Siempre encima de otros elementos */
+  position: absolute;
+  top: 20px;
+  right: 0px;
+  z-index: 10;
   background-color: var(--color-danger);
   color: white;
-  border: 1px solid transparent;
-  border-radius: 50%; /* Para que quede tipo clip circular */
-  width: 80px;        /* Tamaño del “clip” */
-  height: 80px;
+  border: none;
+  width: 120px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: background-color 0.2s ;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 -3px 10px rgba(220, 53, 69, 0.3);
+  animation: slideInRight 0.6s ease-out 0.3s forwards;
+  opacity: 0;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-.btn-danger:hover{
-    background-color: rgb(145, 17, 17);
-}
-.bi-trash{
-    font-size: 30px;
-}
-.section-loan-data{
 
+.btn-danger:hover{
+  background-color: rgb(145, 17, 17);
+}
+
+.bi-trash{
+  font-size: 30px;
 }

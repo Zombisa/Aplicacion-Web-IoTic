@@ -1,32 +1,28 @@
-<app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
 <div *ngIf="!(loadingService.loading$ | async)">
   <div class="header-wrapper">
     <app-header></app-header>
   </div>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 p-0">
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Revisemos el item</h1>
+    <p class="text-help">Detalles y estado actual del registro</p>
+  </section>
 
-        <div class="banner-primary d-flex justify-content-center align-items-center flex-column">
-          <h1 class="title">Revisemos el item</h1>
-          <p class="text-help">Detalles y estado actual del registro</p>
-        </div>
-
+  <!-- CONTENEDOR DE LA TARJETA -->
+  <div class="container-fluid px-3 px-md-4 form-container">
+    <div class="row justify-content-center">
+      <div class="col-12 section-view-item">
+        <app-section-info-item
+          [item]="item"
+          [itemImageUrl]="itemImageUrl"
+          (functionEmitter)="handlerFunctionEmitter($event)">
+        </app-section-info-item>
       </div>
-    <section>
-      <app-section-info-item
-        [item]="item"
-        (functionEmitter)="handlerFunctionEmitter($event)"
-      >
-      </app-section-info-item>
-    </section>
-
     </div>
-    
   </div>
 
-  <!-- Modal de confirmación para eliminar -->
   <app-confirmation-modal
     [isVisible]="showDeleteModal"
     title="Confirmar eliminación"
@@ -38,5 +34,4 @@
     (confirmed)="onDeleteConfirmed()"
     (cancelled)="onDeleteCancelled()">
   </app-confirmation-modal>
-
 </div>

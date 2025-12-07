@@ -11,6 +11,7 @@ import { ConfirmationModal } from '../../templates/confirmation-modal/confirmati
 import { LoanDTOConsultById } from '../../../../models/DTO/LoanDTOConsultById';
 import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 import { SectionInfoItem } from '../../templates/section-info-item/section-info-item';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-item',
@@ -24,6 +25,7 @@ export class ViewItem implements OnInit {
   public item!: ItemDTO;
   public showDeleteModal = false;
   public loanData?: LoanDTO;
+  public itemImageUrl: string = 'assets/img/item-placeholder.svg';
 
   constructor(
     private inventoryService: InventoryService,
@@ -57,10 +59,23 @@ export class ViewItem implements OnInit {
       next: (item) => {
         this.item = item;
         console.log('Item obtenido:', this.item);
+        const posibleImagen = this.item.image_r2;
+
+        this.itemImageUrl =
+          posibleImagen && posibleImagen.trim() !== ''
+            ? posibleImagen
+            : 'assets/img/item-placeholder.svg';
+
         this.loadingService.hide();
       },
       error: (error) => {
         console.error('Error al obtener el item:', error);
+        this.loadingService.hide();
+        Swal.fire(
+          'Error',
+          'No se pudo cargar la información del ítem.',
+          'error'
+        );
       }
     })  
     
@@ -158,12 +173,24 @@ export class ViewItem implements OnInit {
       next: () => {
         console.log('Item eliminado exitosamente');
         this.loadingService.hide();
-        this.router.navigate(['/inventario']);
+        Swal.fire(
+          'Eliminado',
+          'El ítem se eliminó correctamente.',
+          'success'
+        ).then(() => {
+          this.router.navigate(['/inventario']);
+        });
       },
       error: (error) => {
         console.error('Error al eliminar el item:', error);
         this.loadingService.hide();
-        // TODO: Mostrar mensaje de error al usuario
+        
+        const msgBackend =
+          error?.error?.detail ||
+          error?.error?.message ||
+          'El ítem no puede ser eliminado en su estado actual.';
+
+        Swal.fire('No se pudo eliminar', msgBackend, 'error');
       }
     });  
   }

@@ -16,11 +16,13 @@ export class SectionInfoItem {
   @Input() item!: ItemDTO;
   @Input() mode: string = 'edit'; // edit, view, loan
 
+  // Url de imagen calculada en el padre
+  @Input() itemImageUrl: string = 'assets/img/item-placeholder.svg';
+
   //Emite un evento cuando se presiona un botón de acción, envia la accion a realizar y el item asociado
   // Edit, delete, loan,
   // y envia el item asociado
   @Output() functionEmitter = new EventEmitter<string>();
-
 
   public goToEdit(): void {
     console.log('Emitiendo evento de edición para el item:' );
