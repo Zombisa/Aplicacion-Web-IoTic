@@ -78,7 +78,7 @@ export class LoanCard {
    */
   onViewLoan(): void {
     if (this.loan.item?.id) {
-      this.router.navigate(['/inventario/view-item', this.loan.item.id]);
+      this.router.navigate(['/prestamos/pretamo', this.loan.id]);
     }
   }
 }
