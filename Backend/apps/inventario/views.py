@@ -171,7 +171,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/{id}/editar_item/
+        URL: /inventario/{id}/  [PUT]
         
         Request body (todos los campos son opcionales):
             {
@@ -234,7 +234,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
     #   LISTAR ITEMS (LIST)
     # ======================================================
     # Sobrescribimos el método list de ModelViewSet
-    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='list')
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='list')
     def list(self, request):
         """
         Lista todos los ítems del inventario.
@@ -319,7 +319,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/listar-imagenes/
+        URL: /inventario/images/
         
         Útil para:
             - Ver qué imágenes están disponibles en el bucket
@@ -354,7 +354,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/reportes/disponibles/
+        URL: /inventario/reports/available/
         
         Filtro: estado_admin == 'Disponible'
         
@@ -373,7 +373,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/reportes/prestados/
+        URL: /inventario/reports/loaned/
         
         Filtro: estado_admin == 'Prestado'
         
@@ -392,7 +392,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/reportes/no-prestar/
+        URL: /inventario/reports/not-loanable/
         
         Filtro: estado_admin == 'No prestar'
         
@@ -448,7 +448,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   PRÉSTAMOS
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='loans')
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='loans')
     @action(detail=True, methods=['get'], url_path='loans')
     def loans(self, request, pk=None):
         """
@@ -456,15 +456,15 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/{id}/prestamos/
+        URL: /inventario/{id}/loans/
         
         Query parameters (opcionales):
             - estado: Filtrar por estado ('Prestado' o 'Devuelto')
             - activo: Si es 'true', muestra solo préstamos en estado 'Prestado'
         
         Ejemplos:
-            /inventario/1/prestamos/?estado=Prestado
-            /inventario/1/prestamos/?activo=true
+            /inventario/1/loans/?estado=Prestado
+            /inventario/1/loans/?activo=true
         
         Returns:
             200 OK: Lista de objetos Prestamo del ítem
@@ -496,7 +496,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /inventario/{id}/prestamos/vencidos/
+        URL: /inventario/{id}/loans/overdue/
         
         Filtros automáticos:
             - estado == 'Prestado' (aún no devuelto)
@@ -690,7 +690,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/{id}/eliminar-foto-entrega/
+        URL: /prestamo/{id}/delivery-photo/
         
         Comportamiento:
             - Extrae el nombre del archivo de la URL almacenada
@@ -731,7 +731,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/{id}/eliminar-foto-devolucion/
+        URL: /prestamo/{id}/return-photo/
         
         Comportamiento:
             - Extrae el nombre del archivo de la URL almacenada
@@ -764,7 +764,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     # ======================================================
     #   REPORTES
     # ======================================================
-    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='active')
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='active')
     @action(detail=False, methods=['get'], url_path='active')
     def active(self, request):
         """
@@ -772,7 +772,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/activos/
+        URL: /prestamo/active/
         
         Filtro: estado == 'Prestado'
         
@@ -782,7 +782,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         prestamos = Prestamo.objects.filter(estado='Prestado')
         return Response(PrestamoSerializer(prestamos, many=True).data)
 
-    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='returned')
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='returned')
     @action(detail=False, methods=['get'], url_path='returned')
     def returned(self, request):
         """
@@ -790,7 +790,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/devueltos/
+        URL: /prestamo/returned/
         
         Filtro: estado == 'Devuelto'
         
@@ -800,7 +800,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         prestamos = Prestamo.objects.filter(estado='Devuelto')
         return Response(PrestamoSerializer(prestamos, many=True).data)
 
-    @method_decorator(verificar_roles(['admin', 'mentor', 'estudiante']), name='history')
+    @method_decorator(verificar_roles(['admin', 'mentor']), name='history')
     @action(detail=False, methods=['get'], url_path='history')
     def history(self, request):
         """
@@ -808,7 +808,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/historico/
+        URL: /prestamo/history/
         
         Ordenamiento: Por fecha_prestamo descendente (más recientes primero)
         
@@ -831,7 +831,7 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         Roles permitidos: admin, mentor
         
-        URL: /prestamo/vencidos/
+        URL: /prestamo/overdue/
         
         Filtros automáticos:
             - estado == 'Prestado' (aún no devueltos)
