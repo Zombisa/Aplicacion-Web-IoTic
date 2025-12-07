@@ -33,7 +33,7 @@ export class BooksService {
    */
   postBook(book: BookPeticion): Observable<BookDTO> {
     return this.http.post<BookDTO>(
-      `${this.config.apiUrlBackend}informacion/libros/agregar_libro/`,
+      `${this.config.apiUrlBackend}informacion/libros/libro/`,
       book
     ).pipe(
       catchError(error => {

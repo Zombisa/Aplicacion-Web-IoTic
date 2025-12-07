@@ -1,0 +1,47 @@
+.banner-primary{
+  background-color: var(--color-secondary-light);
+  height: 36vh;
+}
+.title{
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
+    
+}
+
+.resume{
+    background-color: var(--color-primary);
+}
+.text-capitalize{
+    color: white;
+}
+
+.box-type{
+    
+}
+.divider{
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-text-secondary);
+}
+.resume{
+  color: white;
+  border-color: white;
+}
+.dark-card{
+  padding: 5rem;
+  background-color: var(--color-primary);
+  color: white;
+}
+.text-card{
+  min-width: 70%;
+}
+.titleOption{
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
+}
+.textOption{
+  color: var(--color-secondary-dark)
+}
