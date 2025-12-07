@@ -119,7 +119,7 @@ export class LoanService {
    * @returns Observable<LoanDTO> Préstamo devuelto
    */
   returnLoan(id: number): Observable<LoanDTO> {
-    return this.http.post<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamo/${id}/`, {}).pipe(
+    return this.http.patch<LoanDTO>(`${this.config.apiUrlBackend}inventario/prestamos/${id}/`, {}).pipe(
       catchError(error => {
         console.error('Error al devolver préstamo:', error);
         return throwError(() => error);
