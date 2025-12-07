@@ -18,11 +18,27 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const backendUrl = configService.apiUrlBackend;  // ej: http://localhost:8000/
 
-  // ⛔ Excluir URLs que NO sean del backend (Cloudflare, Firebase, etc.)
+  // Excluir URLs que NO sean del backend (Cloudflare, Firebase, etc.)
   const isExternalRequest = !req.url.startsWith(backendUrl);
 
   if (isExternalRequest) {
     console.log("🔵 Saltando interceptor para URL externa:", req.url);
+    return next(req);
+  }
+
+  // Excluir endpoints públicos de "Who We Are" 
+  const publicEndpoints = [
+    '/mision/ver/',
+    '/vision/ver/',
+    '/historia/ver/',
+    '/objetivos/ver/',
+    '/valores/ver/'
+  ];
+  
+  const isPublicEndpoint = publicEndpoints.some(endpoint => req.url.includes(endpoint));
+  
+  if (isPublicEndpoint) {
+    console.log("Saltando interceptor para endpoint público:", req.url);
     return next(req);
   }
 
@@ -39,13 +55,17 @@ export const authInterceptor: HttpInterceptorFn = (
         });
         return next(authReq);
       } else {
-        console.warn('No se obtuvo token para:', req.url);
-        return throwError(() => new Error('Usuario no autenticado.'));
+        // Si no hay token, permitir la petición sin autenticación
+        // El backend decidirá si requiere autenticación o no
+        console.log("Petición sin token:", req.url);
+        return next(req);
       }
     }),
     catchError(error => {
-      console.error('Error en interceptor de autenticación:', error);
-      return throwError(() => error);
+      // Si hay error al obtener el token, permitir la petición de todas formas
+      // Esto permite que endpoints públicos funcionen sin autenticación
+      console.log("Error al obtener token:", req.url);
+      return next(req);
     })
   );
 };
