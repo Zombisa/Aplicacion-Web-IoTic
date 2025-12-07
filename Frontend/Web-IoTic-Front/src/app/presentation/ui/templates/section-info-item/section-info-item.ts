@@ -14,7 +14,7 @@ export class SectionInfoItem {
 
   /// Item del cual se mostrará la información
   @Input() item!: ItemDTO;
-  @Input() showActions: boolean = false;
+  @Input() mode: string = 'edit'; // edit, view, loan
 
   //Emite un evento cuando se presiona un botón de acción, envia la accion a realizar y el item asociado
   // Edit, delete, loan,
@@ -37,6 +37,9 @@ export class SectionInfoItem {
 
   public goToViewLoan(): void {
     this.functionEmitter.emit("viewLoan");
+  }
+  public returnItem(): void {
+    this.functionEmitter.emit("return");
   }
 
 
