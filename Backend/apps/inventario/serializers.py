@@ -140,7 +140,7 @@ class PrestamoSerializer(serializers.ModelSerializer):
             'estado_fisico': instance.item_estado_fisico_snapshot or instance.item.estado_fisico,
             'estado_admin': instance.item_estado_admin_snapshot or instance.item.estado_admin,
             'fecha_registro': instance.item.fecha_registro,
-            'observacion': instance.item.observacion,
+            'observacion': instance.item_observacion_snapshot if instance.item_observacion_snapshot is not None else instance.item.observacion,
             'image_r2': instance.item_image_r2_snapshot if instance.item_image_r2_snapshot is not None else instance.item.image_r2
         }
         

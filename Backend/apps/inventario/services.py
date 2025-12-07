@@ -336,6 +336,7 @@ def registrar_prestamo(data):
             item_estado_fisico_snapshot=item.estado_fisico,
             item_estado_admin_snapshot=item.estado_admin,
             item_image_r2_snapshot=item.image_r2,
+            item_observacion_snapshot=item.observacion,
         )
 
         # Actualizar estado del item

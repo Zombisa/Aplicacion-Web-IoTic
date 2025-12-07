@@ -109,6 +109,7 @@ class Prestamo(models.Model):
     item_estado_fisico_snapshot = models.CharField(max_length=20, blank=True, null=True)
     item_estado_admin_snapshot = models.CharField(max_length=20, blank=True, null=True)
     item_image_r2_snapshot = models.CharField(max_length=100, blank=True, null=True)
+    item_observacion_snapshot = models.TextField(blank=True, null=True)
 
     # Datos del solicitante
     nombre_persona = models.CharField(max_length=100, blank=False, null=False)
