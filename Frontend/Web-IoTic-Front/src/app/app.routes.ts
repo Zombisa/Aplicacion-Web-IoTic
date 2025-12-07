@@ -16,6 +16,8 @@ import { ViewHistoryLoan } from './presentation/ui/pages/view-history-loan/view-
 import { ViewLoanItem } from './presentation/ui/pages/view-loan-item/view-loan-item';
 import { PublisItemProductiviy } from './presentation/ui/pages/publis-item-productiviy/publis-item-productiviy';
 import { PanelPublishProductivity } from './presentation/ui/pages/panel-publish-productivity/panel-publish-productivity';
+import { EditWhoWeAre } from './presentation/ui/pages/edit-who-we-are/edit-who-we-are';
+import { AdminGuard } from './guards/admin-guard-guard';
 
 export const routes: Routes = [
 
@@ -25,6 +27,7 @@ export const routes: Routes = [
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
+     {path: 'who-we-are/edit', component: EditWhoWeAre, canActivate: [AdminGuard]},
      {path:'inventario/add-item', component: AddItem},
      {path: 'inventario/add-loan/:id', component: AddLoan, canActivate: [ItemAvailableGuard]},
      {path: 'inventario/view-item/:id', component: ViewItem},

@@ -35,8 +35,7 @@ export class FormEditMultipleItems implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['items']) {
-      // Reset form when items change
+    if (changes['items'] && !this.showAddForm && this.editingItemId === null) {
       this.cancelEdit();
     }
   }
@@ -83,20 +82,23 @@ export class FormEditMultipleItems implements OnChanges {
         // Update existing item
         this.itemUpdated.emit({
           id: this.editingItemId,
-          titulo: formData.titulo,
-          contenido: formData.contenido
+          titulo: formData.titulo?.trim() || '',
+          contenido: formData.contenido?.trim() || ''
         });
+
         this.cancelEdit();
       } else {
         // Add new item
         this.itemAdded.emit({
-          titulo: formData.titulo,
-          contenido: formData.contenido
+          titulo: formData.titulo?.trim() || '',
+          contenido: formData.contenido?.trim() || ''
         });
         this.cancelAdd();
       }
     } else {
       this.itemForm.markAllAsTouched();
+      console.log('Form invalid:', this.itemForm.errors);
+      console.log('Form values:', this.itemForm.value);
     }
   }
 

@@ -33,6 +33,18 @@ export class WhoWeAreService {
     );
   }
 
+  createMision(contenido: string): Observable<MisionDTO> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers =>
+        this.http.post<MisionDTO>(`${this.apiUrl}mision/agregar/`, { contenido }, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al crear misión:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   /**
    * Obtener Misión (público)
    */
@@ -52,8 +64,23 @@ export class WhoWeAreService {
     );
   }
 
+    /**
+   * Crear Visión 
+   */
+    createVision(contenido: string): Observable<VisionDTO> {
+      return this.getAuthHeaders().pipe(
+        switchMap(headers =>
+          this.http.post<VisionDTO>(`${this.apiUrl}vision/agregar/`, { contenido }, { headers })
+        ),
+        catchError(error => {
+          console.error('Error al crear visión:', error);
+          return throwError(() => error);
+        })
+      );
+    }
+
   /**
-   * Actualizar Misión (admin)
+   * Actualizar Misión 
    */
   updateMision(id: number, contenido: string): Observable<MisionDTO> {
     return this.getAuthHeaders().pipe(
@@ -68,7 +95,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Obtener Visión (público)
+   * Obtener Visión 
    */
   getVision(): Observable<VisionDTO | null> {
     return this.http.get<any>(`${this.apiUrl}vision/ver/`).pipe(
@@ -87,7 +114,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Actualizar Visión (admin)
+   * Actualizar Visión 
    */
   updateVision(id: number, contenido: string): Observable<VisionDTO> {
     return this.getAuthHeaders().pipe(
@@ -100,9 +127,22 @@ export class WhoWeAreService {
       })
     );
   }
-
   /**
-   * Obtener Historia (público)
+   * Crear Historia 
+   */
+  createHistoria(contenido: string): Observable<HistoriaDTO> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers =>
+        this.http.post<HistoriaDTO>(`${this.apiUrl}historia/agregar/`, { contenido }, { headers })
+      ),
+      catchError(error => {
+        console.error('Error al crear historia:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  /**
+   * Obtener Historia 
    */
   getHistoria(): Observable<HistoriaDTO | null> {
     return this.http.get<any>(`${this.apiUrl}historia/ver/`).pipe(
@@ -121,7 +161,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Actualizar Historia (admin)
+   * Actualizar Historia 
    */
   updateHistoria(id: number, contenido: string): Observable<HistoriaDTO> {
     return this.getAuthHeaders().pipe(
@@ -136,7 +176,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Obtener Objetivos (público)
+   * Obtener Objetivos 
    */
   getObjetivos(): Observable<ObjetivoDTO[]> {
     return this.http.get<ObjetivoDTO[]>(`${this.apiUrl}objetivos/ver/`).pipe(
@@ -148,7 +188,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Crear Objetivo (admin)
+   * Crear Objetivo 
    */
   createObjetivo(titulo: string, contenido: string): Observable<ObjetivoDTO> {
     return this.getAuthHeaders().pipe(
@@ -163,7 +203,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Actualizar Objetivo (admin)
+   * Actualizar Objetivo 
    */
   updateObjetivo(id: number, titulo: string, contenido: string): Observable<ObjetivoDTO> {
     return this.getAuthHeaders().pipe(
@@ -178,7 +218,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Eliminar Objetivo (admin)
+   * Eliminar Objetivo 
    */
   deleteObjetivo(id: number): Observable<void> {
     return this.getAuthHeaders().pipe(
@@ -193,7 +233,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Obtener Valores (público)
+   * Obtener Valores
    */
   getValores(): Observable<ValorDTO[]> {
     return this.http.get<ValorDTO[]>(`${this.apiUrl}valores/ver/`).pipe(
@@ -205,7 +245,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Crear Valor (admin)
+   * Crear Valor 
    */
   createValor(titulo: string, contenido: string): Observable<ValorDTO> {
     return this.getAuthHeaders().pipe(
@@ -220,7 +260,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Actualizar Valor (admin)
+   * Actualizar Valor 
    */
   updateValor(id: number, titulo: string, contenido: string): Observable<ValorDTO> {
     return this.getAuthHeaders().pipe(
@@ -235,7 +275,7 @@ export class WhoWeAreService {
   }
 
   /**
-   * Eliminar Valor (admin)
+   * Eliminar Valor 
    */
   deleteValor(id: number): Observable<void> {
     return this.getAuthHeaders().pipe(

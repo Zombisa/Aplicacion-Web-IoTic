@@ -1,0 +1,95 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)" class="edit-who-we-are-container">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- Banner principal -->
+  <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
+    <h1 class="title">Editar ¿Quiénes somos?</h1>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="main-container container-fluid">
+    <!-- Botones de navegación -->
+    <div class="navigation-buttons mb-4">
+      <button class="btn btn-outline-secondary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Volver al Panel
+      </button>
+      <button class="btn btn-outline-primary" (click)="viewWhoWeAre()">
+        <mat-icon>visibility</mat-icon> Ver Página Pública
+      </button>
+    </div>
+    <!-- Sección Misión -->
+    <section class="edit-section mb-5">
+        <h2 class="section-title">Misión</h2>
+        <div class="section-content">
+          <app-form-edit-single-content
+            title="Editar Misión"
+            [content]="mision?.contenido || ''"
+            [isLoading]="isLoadingMision"
+            (submitted)="onUpdateMision($event)"
+            (cancelled)="onCancel()">
+          </app-form-edit-single-content>
+        </div>
+      </section>
+  
+      <!-- Sección Visión -->
+      <section class="edit-section mb-5">
+        <h2 class="section-title">Visión</h2>
+        <div class="section-content">
+          <app-form-edit-single-content
+            title="Editar Visión"
+            [content]="vision?.contenido || ''"
+            [isLoading]="isLoadingVision"
+            (submitted)="onUpdateVision($event)"
+            (cancelled)="onCancel()">
+        </app-form-edit-single-content>
+    </div>
+  </section>
+
+  <!-- Sección Historia -->
+  <section class="edit-section mb-5">
+    <h2 class="section-title">Historia</h2>
+    <div class="section-content">
+      <app-form-edit-single-content
+        title="Editar Historia"
+        [content]="historia?.contenido || ''"
+        [isLoading]="isLoadingHistoria"
+        (submitted)="onUpdateHistoria($event)"
+        (cancelled)="onCancel()">
+      </app-form-edit-single-content>
+    </div>
+  </section>
+    <!-- Sección Objetivos -->
+    <section class="edit-section mb-5">
+        <h2 class="section-title">Objetivos</h2>
+        <div class="section-content">
+          <app-form-edit-multiple-items
+            title="Gestionar Objetivos"
+            [items]="objetivosAsItemData"
+            [isLoading]="isLoadingObjetivos"
+            (itemAdded)="onObjetivoAdded($event)"
+            (itemUpdated)="onObjetivoUpdated($event)"
+            (itemDeleted)="onObjetivoDeleted($event)"
+            (cancelled)="onCancel()">
+          </app-form-edit-multiple-items>
+        </div>
+      </section>
+    <!-- Sección Valores -->
+    <section class="edit-section mb-5">
+        <h2 class="section-title">Valores</h2>
+        <div class="section-content">
+          <app-form-edit-multiple-items
+            title="Gestionar Valores"
+            [items]="valoresAsItemData"
+            [isLoading]="isLoadingValores"
+            (itemAdded)="onValorAdded($event)"
+            (itemUpdated)="onValorUpdated($event)"
+            (itemDeleted)="onValorDeleted($event)"
+            (cancelled)="onCancel()">
+          </app-form-edit-multiple-items>
+        </div>
+      </section>
+    </div>
+  </div>

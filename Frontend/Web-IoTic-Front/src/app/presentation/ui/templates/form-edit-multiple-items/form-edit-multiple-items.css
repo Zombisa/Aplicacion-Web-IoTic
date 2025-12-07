@@ -38,6 +38,9 @@
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background-color: white;
+  z-index: 1;
+  position: relative;
 }
 
 .input-line:focus {
@@ -48,6 +51,10 @@
 
 .input-line.is-invalid {
   border-color: #dc3545;
+}
+.input-container label {
+  z-index: 2;
+  pointer-events: none;
 }
 
 .textarea-content {
@@ -60,6 +67,9 @@
   resize: vertical;
   min-height: 100px;
   transition: border-color 0.3s ease;
+  background-color: white;
+  z-index: 1;
+  position: relative; 
 }
 
 .textarea-content:focus {
