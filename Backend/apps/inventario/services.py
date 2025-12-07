@@ -87,18 +87,31 @@ def crear_items_masivo(data):
             raise ValidationError("La cantidad debe ser mayor o igual a 1.")
 
         # imágenes múltiples (opcional)
-        imagenes = data.get("imagenes", None)
+        imagenes_r2 = data.get("imagenes_r2", None)
+        imagenes = data.get("imagenes", None)  # para nombres que se composición con bucket
 
         # imagen única (opcional)
-        file_path_unico = data.get("file_path", None)
+        image_r2_unico = data.get("image_r2", None)
 
         # ─────────────────────────────────────────────────────────────
-        # VALIDAR: no permitir file_path único cuando cantidad > 1
+        # VALIDAR: no permitir ambas listas de imágenes
         # ─────────────────────────────────────────────────────────────
-        if cantidad > 1 and file_path_unico:
+        if imagenes_r2 and imagenes:
             raise ValidationError(
-                "No puedes usar un 'file_path' único cuando la cantidad es mayor a 1. "
-                "Debes usar 'imagenes' para enviar imágenes diferentes por ítem."
+                "No puedes usar 'imagenes_r2' e 'imagenes' simultáneamente. "
+                "Elige uno: 'imagenes_r2' para URLs completas o 'imagenes' para nombres de archivo."
+            )
+
+        # Unificar en imagenes para facilitar el procesamiento
+        imagenes = imagenes_r2 or imagenes
+
+        # ─────────────────────────────────────────────────────────────
+        # VALIDAR: no permitir image_r2 único cuando cantidad > 1
+        # ─────────────────────────────────────────────────────────────
+        if cantidad > 1 and image_r2_unico:
+            raise ValidationError(
+                "No puedes usar un 'image_r2' único cuando la cantidad es mayor a 1. "
+                "Debes usar 'imagenes_r2' o 'imagenes' para enviar imágenes diferentes por ítem."
             )
 
         # ─────────────────────────────────────────────────────────────
@@ -107,11 +120,11 @@ def crear_items_masivo(data):
         if imagenes is not None:
 
             if not isinstance(imagenes, list):
-                raise ValidationError("'imagenes' debe ser una lista de file_paths.")
+                raise ValidationError("'imagenes_r2' o 'imagenes' debe ser una lista.")
 
             if len(imagenes) != cantidad:
                 raise ValidationError(
-                    f"Debes enviar exactamente {cantidad} imágenes diferentes en 'imagenes'."
+                    f"Debes enviar exactamente {cantidad} imágenes en 'imagenes_r2' o 'imagenes'."
                 )
 
         # ─────────────────────────────────────────────────────────────
@@ -123,20 +136,28 @@ def crear_items_masivo(data):
 
             item_copy = data.copy()
             item_copy.pop("cantidad", None)
+            item_copy.pop("imagenes_r2", None)
             item_copy.pop("imagenes", None)
 
             # asignar imagen correcta
             if imagenes is not None:
                 # imágenes diferentes → OK
-                item_copy["file_path"] = imagenes[i]
+                img = imagenes[i]
+                # Si viene de 'imagenes' (nombres), componer URL; si es 'imagenes_r2', usar tal cual
+                if imagenes_r2:
+                    # Era 'imagenes_r2' → URL completa
+                    item_copy["image_r2"] = img
+                else:
+                    # Era 'imagenes' → componer URL
+                    item_copy["image_r2"] = f"{settings.R2_BUCKET_PATH}/{img}"
 
             else:
-                # file_path único permitido solo si cantidad == 1
-                if cantidad == 1 and file_path_unico:
-                    item_copy["file_path"] = file_path_unico
+                # image_r2 único permitido solo si cantidad == 1
+                if cantidad == 1 and image_r2_unico:
+                    item_copy["image_r2"] = image_r2_unico
                 else:
-                    # eliminar file_path si no aplica
-                    item_copy.pop("file_path", None)
+                    # eliminar image_r2 si no aplica
+                    item_copy.pop("image_r2", None)
 
             lista_items.append(item_copy)
 
@@ -185,10 +206,12 @@ def crear_items_masivo(data):
             raise ValidationError(f"estado_admin debe ser uno de: {estados_admin_validos}")
 
         # ---------- Procesar imagen ----------
-        # Permitimos compatibilidad: si viene file_path lo usamos tal cual (frontend debe mandar la URL completa)
+        # Acepta image_r2 (URL completa) o file_path (para compatibilidad backward, sin composición)
+        image_r2 = item_data.get("image_r2")
         file_path = item_data.pop("file_path", None)
-
-        if file_path:
+        
+        if file_path and not image_r2:
+            # Compatibilidad: si solo viene file_path, usarlo como image_r2 tal cual
             item_data["image_r2"] = file_path
 
         # ---------- Crear item ----------

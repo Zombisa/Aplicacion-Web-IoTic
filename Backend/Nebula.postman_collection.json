@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "c9c734e8-0c31-48a1-b6fc-a1a4b10b3f3f",
-		"name": "Nebula Copy",
+		"_postman_id": "56b6d52c-4b89-4275-ae5d-ac4bf1089ea7",
+		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "40286637"
 	},
@@ -960,7 +960,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"file_path\": \"ruta/imagen.jpg\"\r\n}\r\n",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"image_r2\": \"ruta/imagen.jpg\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -988,7 +988,7 @@
 					"response": []
 				},
 				{
-					"name": "Añadir varios items iguales",
+					"name": "Añadir varios items diferentes",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1004,7 +1004,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"descripcion\": \"Cable USB-C\",\r\n  \"estado_fisico\": \"Bueno\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Lote nuevo\",\r\n  \"cantidad\": 3,\r\n  \"imagenes\": [\r\n    \"url cloudfare inv 2\",\r\n    \"url cloudfare inv 3\",\r\n    \"url cloudfare inv 4\"\r\n  ]\r\n}\r\n\r\n",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"descripcion\": \"Teclado mecánico\",\r\n      \"estado_fisico\": \"Excelente\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"teclado\"\r\n    },\r\n    {\r\n      \"descripcion\": \"Monitor 24 pulgadas\",\r\n      \"estado_fisico\": \"Bueno\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"monitor\"\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -58,10 +58,10 @@ class InventarioViewSet(viewsets.ModelViewSet):
         """
         data = request.data.copy()
 
-        # Si el frontend envía file_path lo usamos tal cual (ya debe ser URL completa)
         file_path = data.pop("file_path", None)
         if file_path:
-            data["image_r2"] = file_path
+            full_url = f"{settings.R2_BUCKET_PATH}/{file_path}"
+            data["image_r2"] = full_url
 
         serializer = InventarioSerializer(data=data)
 
@@ -101,8 +101,9 @@ class InventarioViewSet(viewsets.ModelViewSet):
                 "descripcion": "str",
                 "estado_fisico": "str",
                 "estado_admin": "str",
-                "file_path": "str (opcional, imagen única)",
-                "imagenes": ["img1.jpg", "img2.jpg", "img3.jpg"] (opcional, una por ítem)
+                "image_r2": "str (opcional, URL completa única)",
+                "imagenes_r2": ["url1", "url2", "url3"] (opcional, URLs completas, una por ítem),
+                "imagenes": ["img1.jpg", "img2.jpg", "img3.jpg"] (opcional, solo nombres/paths, se componen URLs)
             }
         
         MODO 2 - Lista completa:
