@@ -1,6 +1,6 @@
 .banner-primary{
   background-color: var(--color-secondary-light);
-  height: 116vh;
+  height: 50vh;
 }
 .title{
     margin-top: 10rem;
@@ -12,7 +12,7 @@
 
 
 .form-container{
-  width: 50rem;
+  
 }
 .card{
   height: 40rem;

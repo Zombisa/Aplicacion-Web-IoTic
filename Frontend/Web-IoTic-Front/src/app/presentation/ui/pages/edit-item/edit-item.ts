@@ -41,12 +41,12 @@ export class EditItem {
    * Se encarga de manejar el evento submitted emitido por el componente hijo FormItem guardando el item
    * @param itemData Datos del item a agregar traidos desde el hijo FormItem por medio del evento submitted
    */
-  handleSubmit(itemData: ItemDTOPeticion) {
+  handleSubmit(event: {itemDTOPeticion: ItemDTOPeticion, file: File}): void {
     this.isLoading = true;
     this.showSuccess = false;
     this.showError = false;
-    const {  ...updateData } = itemData;
-    this.inventoryService.updateElectronicComponent(this.itemId, itemData).subscribe({
+    const {  ...updateData } = event.itemDTOPeticion;
+    this.inventoryService.updateElectronicComponent(this.itemId, event.itemDTOPeticion).subscribe({
       next: (response) => {
         console.log("Respuesta del servidor:", response);
         this.isLoading = false;

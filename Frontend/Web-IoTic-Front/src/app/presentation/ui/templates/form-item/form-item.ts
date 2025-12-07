@@ -15,10 +15,12 @@ export class FormItem implements OnChanges {
   @Input() item?: ItemDTO;
 
 
-  @Output() submitted = new EventEmitter<ItemDTOPeticion>();
+  @Output() submitted = new EventEmitter<{itemDTOPeticion: ItemDTOPeticion, file: File}>();
   @Output() formReset = new EventEmitter<void>();
 
   itemForm!: FormGroup;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
   public  isLoan: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -69,7 +71,7 @@ export class FormItem implements OnChanges {
       observacion: formValue.observacion || ''
     };
     
-    this.submitted.emit(data);
+    this.submitted.emit({itemDTOPeticion: data, file: this.selectedFile!});
   }
 
   resetForm(): void {
@@ -82,4 +84,18 @@ export class FormItem implements OnChanges {
     });
     this.formReset.emit();
   }
+
+  /**
+   * Captura el archivo seleccionado y genera un preview
+   */
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreview = reader.result as string;
+    reader.readAsDataURL(file);
+  }
+
 }

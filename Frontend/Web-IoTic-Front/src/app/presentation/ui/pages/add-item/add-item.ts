@@ -5,6 +5,7 @@ import { InventoryService } from '../../../../services/inventory.service';
 import { AuthService } from '../../../../services/auth.service';
 import { Header } from '../../templates/header/header';
 import { FormItem } from '../../templates/form-item/form-item';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-item',
@@ -35,47 +36,32 @@ export class AddItem implements OnInit {
    * Se encarga de manejar el evento submitted emitido por el componente hijo FormItem
    * @param itemData Datos del item a agregar traídos desde el hijo FormItem
    */
-  handleSubmit(itemData: ItemDTOPeticion) {
+  handleSubmit(event: {itemDTOPeticion: ItemDTOPeticion, file: File}){
     this.isLoading = true;
     this.hideMessages();
 
-    console.log("📤 Enviando item:", JSON.stringify(itemData, null, 2));
+    console.log(" Enviando item:", JSON.stringify(event.itemDTOPeticion, null, 2));
 
-    this.inventoryService.addElectronicComponent(itemData).subscribe({
+    this.inventoryService.addElectronicComponent(event.itemDTOPeticion).subscribe({
       next: (response) => {
-        console.log("✅ Respuesta del servidor:", response);
         this.isLoading = false;
-        this.showSuccess = true;
-        this.successMessage = 'Item agregado exitosamente';
-
-        // Resetear formulario después del éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'Item agregado exitosamente',
+          text: `El item con ID ${response.id} ha sido agregado.`,
+          confirmButtonText: 'Aceptar'
+        });
         this.itemFormComponent.resetForm();
-
-        // Auto-ocultar mensaje después de 5 segundos
-        setTimeout(() => {
-          this.hideMessages();
-        }, 5000);
       },
       error: (error) => {
-        console.error("❌ Error completo:", error);
+        console.error(" Error completo:", error);
         this.isLoading = false;
-        this.showError = true;
-        
-        // Mejorar el mensaje de error
-        if (error.status === 401) {
-          this.errorMessage = 'Sesión expirada. Por favor, inicia sesión nuevamente.';
-        } else if (error.status === 400) {
-          this.errorMessage = `Datos inválidos: ${error.error?.message || 'Verifica los campos'}`;
-        } else if (error.status === 500) {
-          this.errorMessage = 'Error interno del servidor. Intenta nuevamente más tarde.';
-        } else {
-          this.errorMessage = `Error al agregar el item: ${error.error?.message || error.message}`;
-        }
-
-        // Auto-ocultar mensaje de error después de 8 segundos
-        setTimeout(() => {
-          this.hideMessages();
-        }, 8000);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al agregar item',
+          text: `Ocurrió un error al agregar el item: ${error.message || error}`,
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
