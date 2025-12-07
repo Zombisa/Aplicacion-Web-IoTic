@@ -20,6 +20,7 @@
       class="filter-tab"
       [class.active]="activeFilter === 'vigentes'"
       (click)="onFilterClick('vigentes')"
+      type="button"
     >
       En vigencia
     </button>
@@ -27,6 +28,7 @@
       class="filter-tab"
       [class.active]="activeFilter === 'todos'"
       (click)="onFilterClick('todos')"
+      type="button"
     >
       Todos
     </button>
@@ -34,6 +36,7 @@
       class="filter-tab"
       [class.active]="activeFilter === 'atrasados'"
       (click)="onFilterClick('atrasados')"
+      type="button"
     >
       Atrasados
     </button>

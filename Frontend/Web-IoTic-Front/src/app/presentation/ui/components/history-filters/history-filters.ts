@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
-export type FilterType = 'vigentes' | 'todos' | 'atrasados';
+export type FilterType = 'vigentes' | 'todos' | 'atrasados' | 'devueltos';
 
 @Component({
   selector: 'app-history-filters',

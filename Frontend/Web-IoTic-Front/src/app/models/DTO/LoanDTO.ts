@@ -2,14 +2,20 @@ import { ItemDTO } from './ItemDTO';
 
 export interface LoanDTO {
   id: number;
+  item: number;
   nombre_persona: string;
-  item: ItemDTO;              // relación directa
-  fecha_prestamo: string;     // o Date
-  fecha_devolucion: string | null;   // o Date | null
-  fecha_limite?: string;
+  cedula: string;
+  telefono: string;
+  correo: string;
+  direccion: string;
+  fecha_prestamo: string;          // ISO date string
+  fecha_limite: string;            // ISO date string
+  fecha_devolucion: string ; // puede ser null
   estado: string;
-  correo?: string;
-  telefono?: string;
-  cedula?: string;
-  direccion?: string;
+  foto_entrega: string;
+  foto_devolucion: string ;  // puede ser null
+  item_serial_snapshot: string;
+  item_descripcion_snapshot: string;
+  item_estado_fisico_snapshot: string;
+  item_estado_admin_snapshot: string;
 }

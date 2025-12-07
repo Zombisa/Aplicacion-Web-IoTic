@@ -16,10 +16,8 @@ import { LoanHistoryDTO } from '../../../../models/DTO/LoanHistoryDTO';
   styleUrl: './view-history-loan.css'
 })
 export class ViewHistoryLoan implements OnInit {
-  public allLoans: LoanDTO[] = [];
-  public currentLoans: LoanDTO[] = [];
+  
   public displayedLoans: LoanHistoryDTO[] = [];
-
   public searchText: string = '';
   public activeFilter: FilterType = 'vigentes';
 
@@ -29,108 +27,81 @@ export class ViewHistoryLoan implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadLoans();
+    this.loadLoansByFilter(this.activeFilter);
   }
 
-  /**
-   * Cargar todos los préstamos
-   */
-  private loadLoans(): void {
-    this.loadingService.show();
-    this.loanService.getLoans().subscribe({
-      next: (loans) => {
-        this.allLoans = loans;
-        this.applyFilters();
-        this.loadingService.hide();
-      },
-      error: (error) => {
-        console.error('Error al obtener los préstamos:', error);
-        this.loadingService.hide();
-      }
-    });
+  /** ==========================
+   *  MANEJO DE BUSQUEDA
+   * ========================== */
+  onSearchChange(text: string): void {
+    this.searchText = text;
   }
 
-  /**
-   * Manejar cambio en el texto de búsqueda
-   */
-  onSearchChange(searchText: string): void {
-    this.searchText = searchText;
-    // La búsqueda se aplica en el template loans-history-list
-    // Solo necesitamos actualizar el texto para que el componente hijo lo reciba
-  }
-
-  /**
-   * Manejar cambio en el filtro activo
-   */
+  /** ==========================
+   *  CAMBIO DE FILTRO
+   * ========================== */
   onFilterChange(filter: FilterType): void {
     this.activeFilter = filter;
-    // Si cambia a "atrasados", cargar desde el backend
-    // Si cambia a otros, aplicar filtros sobre los datos ya cargados
-    this.applyFilters();
+    this.loadLoansByFilter(filter);
   }
 
-  /**
-   * Aplicar filtros según el tipo seleccionado
-   */
-  private applyFilters(): void {
-    // Si el filtro es "atrasados", usar el endpoint específico del backend
-    if (this.activeFilter === 'atrasados') {
-      this.loadOverdueLoans();
-      return;
-    }
-
-    // Para otros filtros, usar los datos ya cargados
-    let filtered: LoanDTO[] = [];
-
-    switch (this.activeFilter) {
-      case 'vigentes':
-        // Préstamos activos (prestados y no devueltos)
-        filtered = this.allLoans.filter(loan =>
-          (loan.estado === 'Prestado' || loan.estado === 'prestado') && !loan.fecha_devolucion
-        );
-        break;
-      case 'todos':
-        filtered = [...this.allLoans];
-        break;
-    }
-
-    // Convertir LoanDTO a LoanHistoryDTO y aplicar búsqueda
-    this.displayedLoans = filtered.map(loan => this.convertToLoanHistoryDTO(loan));
-  }
-
-  /**
-   * Cargar préstamos vencidos desde el backend
-   */
-  private loadOverdueLoans(): void {
+  /** ==========================
+   *  CARGA SEGÚN FILTRO
+   * ========================== */
+  private loadLoansByFilter(filter: FilterType): void {
     this.loadingService.show();
-    this.loanService.getOverdueLoans().subscribe({
-      next: (loans) => {
-        this.displayedLoans = loans.map(loan => this.convertToLoanHistoryDTO(loan));
+
+    let request$;
+
+    switch (filter) {
+      case 'vigentes':
+        request$ = this.loanService.getLoansCurrent();
+        break;
+
+      case 'atrasados':
+        request$ = this.loanService.getOverdueLoans();
+        break;
+
+      case 'devueltos':
+        request$ = this.loanService.getLoansReturned();
+        break;
+
+      case 'todos':
+        request$ = this.loanService.getLoans();
+        break;
+
+      default:
+        return;
+    }
+
+    request$.subscribe({
+      next: (loans: LoanDTO[]) => {
+        this.displayedLoans = loans.map(l => this.convertToLoanHistoryDTO(l));
         this.loadingService.hide();
       },
-      error: (error) => {
-        console.error('Error al obtener préstamos vencidos:', error);
+      error: (err) => {
+        console.error('Error loading loans:', err);
         this.loadingService.hide();
-        // En caso de error, filtrar localmente
-        const today = new Date();
-        const filtered = this.allLoans.filter(loan => {
-          if (!loan.fecha_limite || loan.fecha_devolucion) return false;
-          const limitDate = new Date(loan.fecha_limite);
-          return limitDate < today && (loan.estado === 'Prestado' || loan.estado === 'prestado');
-        });
-        this.displayedLoans = filtered.map(loan => this.convertToLoanHistoryDTO(loan));
       }
     });
   }
 
-  /**
-   * Convertir LoanDTO a LoanHistoryDTO
-   */
+  /** ==========================
+   *  CONVERTIR DTO
+   * ========================== */
   private convertToLoanHistoryDTO(loan: LoanDTO): LoanHistoryDTO {
     return {
       id: loan.id,
       nombre_persona: loan.nombre_persona,
-      item: loan.item,
+      item: {
+        id: loan.item,
+        serial: loan.item_serial_snapshot,
+        descripcion: loan.item_descripcion_snapshot,
+        estado_fisico: loan.item_estado_fisico_snapshot,
+        estado_admin: loan.item_estado_admin_snapshot,
+        observacion: '',
+        fecha_registro: ''
+      },
       fecha_prestamo: loan.fecha_prestamo,
       fecha_devolucion: loan.fecha_devolucion,
       fecha_limite: loan.fecha_limite,
@@ -141,4 +112,5 @@ export class ViewHistoryLoan implements OnInit {
       direccion: loan.direccion
     };
   }
+
 }
