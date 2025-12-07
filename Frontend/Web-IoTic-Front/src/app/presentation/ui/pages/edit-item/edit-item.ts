@@ -2,11 +2,13 @@ import { Component, OnChanges, ViewChild } from '@angular/core';
 import { ItemDTOPeticion } from '../../../../models/Peticion/ItemDTOPeticion';
 import { InventoryService } from '../../../../services/inventory.service';
 import { FormItem } from '../../templates/form-item/form-item';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { LoadingService } from '../../../../services/loading.service';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../templates/header/header';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-edit-item',
@@ -17,9 +19,6 @@ import { Header } from '../../templates/header/header';
 export class EditItem {
  @ViewChild('itemFormComponent') itemFormComponent!: FormItem;
 
-  isLoading = false;
-  showSuccess = false;
-  showError = false;
   successMessage = '';
   errorMessage = '';
   private itemId!: number;
@@ -27,7 +26,8 @@ export class EditItem {
 
   constructor(private inventoryService: InventoryService,
     private activatedRoute: ActivatedRoute,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private route: Router
   ) {}
   
   ngOnInit(): void {
@@ -42,25 +42,29 @@ export class EditItem {
    * @param itemData Datos del item a agregar traidos desde el hijo FormItem por medio del evento submitted
    */
   handleSubmit(event: {itemDTOPeticion: ItemDTOPeticion, file: File}): void {
-    this.isLoading = true;
-    this.showSuccess = false;
-    this.showError = false;
     const {  ...updateData } = event.itemDTOPeticion;
     this.inventoryService.updateElectronicComponent(this.itemId, event.itemDTOPeticion).subscribe({
       next: (response) => {
         console.log("Respuesta del servidor:", response);
-        this.isLoading = false;
-        this.showSuccess = true;
         this.successMessage = 'Item agregado exitosamente';
-
-        setTimeout(() => this.hideMessages(), 5000);
         this.itemFormComponent.resetForm();
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'El item ha sido actualizado exitosamente.',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          this.route.navigate(['/inventario']);
+        });
       },
       error: (error) => {
         console.error("Error completo:", error);
-        this.isLoading = false;
-        this.showError = true;
-        this.errorMessage = `Error al agregar el item: ${error.error?.message || error.message}`;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al actualizar el item. Por favor, intenta nuevamente.',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
@@ -84,8 +88,5 @@ export class EditItem {
     })  
     
   };
-  hideMessages() {
-    this.showSuccess = false;
-    this.showError = false;
-  }
+
 }

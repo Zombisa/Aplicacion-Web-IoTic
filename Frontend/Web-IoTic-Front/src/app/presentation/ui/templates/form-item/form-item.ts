@@ -32,7 +32,9 @@ export class FormItem implements OnChanges {
       this.populateForm();
     }
   }
-
+  /**
+   * Inicializa el formulario reactivo con validaciones
+   */
   private initializeForm(): void {
     this.itemForm = this.fb.group({
       descripcion: ['', [Validators.required, Validators.minLength(10)]],
@@ -42,7 +44,9 @@ export class FormItem implements OnChanges {
       cantidad: [1, [Validators.required, Validators.min(1)]]
     });
   }
-
+  /**
+   * Popula el formulario con los datos del item para edición
+   */
   private populateForm(): void {
     if (this.item) {
       this.itemForm.patchValue({
@@ -50,15 +54,19 @@ export class FormItem implements OnChanges {
         estado_fisico: this.item.estado_fisico || '',
         estado_admin: this.item.estado_admin || '',
         observacion: this.item.observacion || '',
-        cantidad: 1
+        cantidad: 1,
       });
       if(this.item.estado_admin === 'Prestado'){
         this.isLoan = true;
       }
+      this.imagePreview = this.item.image_r2|| '';
     }
 
   }
-
+  /**
+   * 
+   * @returns Maneja el envío del formulario, emitiendo los datos al componente padre
+   */
   onSubmit(): void {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched();
@@ -97,5 +105,10 @@ export class FormItem implements OnChanges {
     reader.onload = () => this.imagePreview = reader.result as string;
     reader.readAsDataURL(file);
   }
+
+  get isEditMode(): boolean {
+  return this.mode === 'edit';
+}
+
 
 }

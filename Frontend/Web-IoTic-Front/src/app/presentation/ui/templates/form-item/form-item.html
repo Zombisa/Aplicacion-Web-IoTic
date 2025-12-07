@@ -9,13 +9,14 @@
                  #fileInput
                  class="file-input-hidden"
                  accept="image/*"
+                 [disabled]="isEditMode"
                  (change)="onFileSelected($event)" />
           
           <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
             <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
             <div *ngIf="!imagePreview" class="upload-placeholder text-center">
               <i class="fas fa-camera camera-icon"></i>
-              <p class="upload-text">Haz clic para subir imagen</p>
+              <p class="upload-text">Imagen</p>
             </div>
           </div>
         </div>
@@ -80,7 +81,7 @@
         </div>
 
         <!-- Observación -->
-        <div class="input-container personality-camp mt-3">
+        <div class="input-container personality-camp ">
           <input type="text" class="input-line" formControlName="observacion" placeholder=" ">
           <label>Observación (Opcional)</label>
         </div>

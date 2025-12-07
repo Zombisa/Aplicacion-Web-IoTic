@@ -7,4 +7,5 @@ export interface ItemDTO {
   fecha_registro: string; 
   observacion: string;
   image_r2?: string;
+  file_path: string;
 }
