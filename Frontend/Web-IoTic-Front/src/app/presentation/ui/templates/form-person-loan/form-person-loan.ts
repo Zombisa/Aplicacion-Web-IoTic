@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { fechaFuturaValidator } from '../../../../validators/fecha-futura-vaidators';
 import { timeEnd } from 'node:console';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-person-loan',
@@ -24,6 +25,7 @@ export class FormPersonLoan implements OnInit {
   loanForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
+  hoy!: string; 
 
   constructor(
     private loanService: LoanService,
@@ -35,6 +37,9 @@ export class FormPersonLoan implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    const today = new Date();
+    // Formateamos como YYYY-MM-DD
+    this.hoy = today.toISOString().split('T')[0];
   }
 
   /**
@@ -63,27 +68,31 @@ export class FormPersonLoan implements OnInit {
   console.log('🚀 Enviando datos del préstamo:', loanData);
   this.loanService.createLoan(loanData).subscribe({
     next: (response: LoanDTO) => {
-      console.log('✅ Respuesta del servidor:', response);
-      this.isLoading = false;
-      this.buttonDissabled = true;
-      this.showSuccess = true;
-      this.successMessage = 'Préstamo creado exitosamente.';
-      setTimeout(() => {
+     Swal.fire({
+        icon: 'success',
+        title: 'Préstamo creado',
+        text: 'El préstamo ha sido creado exitosamente.',
+        buttonsStyling: true,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }, 
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
         this.router.navigate(['/inventario']);
-      }, 1500);
+      });
     },
     error: (error: unknown) => {
       console.error('❌ Error completo:', error);
-      this.isLoading = false;
-      this.showError = true;
-
-      if (typeof error === 'object' && error && 'error' in error) {
-        const err = error as { error?: { message?: string } };
-        this.errorMessage =
-          `Error al crear el préstamo: ${err.error?.message || 'Error desconocido'}`;
-      } else {
-        this.errorMessage = 'Error inesperado al crear el préstamo.';
-      }
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al crear el préstamo',
+        text: 'Ha ocurrido un error al intentar crear el préstamo. Por favor, inténtalo de nuevo más tarde.',
+        buttonsStyling: true,
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        } 
+        
+      });
     }
   });
 }
@@ -97,11 +106,11 @@ initializeForm() {
     this.loanForm = this.fb.group({
       nombre_persona: ['', [Validators.required, Validators.minLength(3)]],
       item_id: [this.idItem],
-      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      cedula: ['', [Validators.required, Validators.pattern(/^\d{6,10}$/)]],
       telefono: ['', [ Validators.pattern(/^\d{10}$/), Validators.required]],
       correo: ['', [Validators.email, Validators.required]],
       direccion: ['', Validators.required],
-      fecha_limite: ['', [Validators.required, fechaFuturaValidator]],
+      fecha_limite: ['', [Validators.required]],
     });
   }
 

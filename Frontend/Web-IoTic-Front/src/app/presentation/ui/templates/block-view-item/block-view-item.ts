@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { InventoryService } from '../../../../services/inventory.service';
 import { ItemDTO } from '../../../../models/DTO/ItemDTO';
-
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs);
 @Component({
   selector: 'app-block-view-item',
   imports: [CommonModule],
@@ -12,6 +13,7 @@ import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 export class BlockViewItem implements  OnChanges{
   @Input() itemId!: number;
   public itemDetails?: ItemDTO;
+  
   constructor(
     private inventoryService: InventoryService
   ) {}

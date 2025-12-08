@@ -1,6 +1,6 @@
 .banner-primary{
-  background-color: var(--color-secondary);
-  height: 60vh;
+  background: var(--color-primary);
+  height: 35vh;
 
 }
 .title{
@@ -16,6 +16,15 @@
     height: 50rem;
     width: 50rem;
     
+}
+.person-section{
+  background-color: var(--color-secondary-light);
+  padding: 10rem;
+
+}
+.item-sectio{
+  background-color: white;
+  padding: 2rem;
 }
 .form-container{
   position: relative;
@@ -49,6 +58,9 @@
   .banner-primary .title {
     font-size: 1.8rem !important;
   }
+  .person-section{
+    padding: 3rem;
+  } 
   
   .form-container {
     padding-top: 1rem !important;
@@ -65,6 +77,9 @@
   .banner-primary .title {
     font-size: 2.2rem !important;
   }
+    .person-section{
+    padding: 3rem;
+  } 
 }
 
 @media (min-width: 768px) {
@@ -72,6 +87,9 @@
     padding: 0.5rem 0.75rem;
     font-size: 1rem;
   }
+    .person-section{
+    padding: 3rem;
+  } 
   
   .form-select-md-lg {
     padding: 0.5rem 0.75rem;
@@ -88,10 +106,16 @@
   .form-label.small {
     font-size: 1rem;
   }
+    .person-section{
+    padding: 2rem;
+  } 
 }
 
 /* Botones responsive */
 @media (max-width: 576px) {
+  .person-section{
+    padding: 1rem;
+  } 
   .btn {
     font-size: 0.9rem;
     padding: 0.5rem 1rem !important;
