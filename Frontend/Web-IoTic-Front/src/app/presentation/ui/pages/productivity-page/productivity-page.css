@@ -1,7 +1,11 @@
 .banner-primary{
-    height: 55vh;
+    height: 40vh;
     background-color: var(--color-secondary-light);
     
+}
+.title{
+    font-size: 1.3rem;
+    padding: 0 0rem 1rem 1rem ;
 }
 .block-text-primary {
   padding-left: 2rem; /* valor por defecto en pantallas pequeñas */
@@ -30,7 +34,7 @@
 }
 
 .card-route {
-    height: 15rem;
+    height: 20rem;
     background-color: var(--color-primary);
     color: aliceblue;
 }
@@ -43,4 +47,12 @@
     padding-left: 8rem;
     
   }
+}
+
+.block-options .col-12 {
+  margin-bottom: 1rem; /* aumenta la separación vertical */
+}
+
+.block-options .card-route {
+  margin: 1.4rem; /* aumenta separación entre columnas horizontal y vertical */
 }
