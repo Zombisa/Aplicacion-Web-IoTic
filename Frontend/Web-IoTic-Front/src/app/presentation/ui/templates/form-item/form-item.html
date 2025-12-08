@@ -9,7 +9,6 @@
                  #fileInput
                  class="file-input-hidden"
                  accept="image/*"
-                 [disabled]="isEditMode"
                  (change)="onFileSelected($event)" />
           
           <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">

@@ -8,6 +8,8 @@ import { ItemDTO } from '../../../../models/DTO/ItemDTO';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../templates/header/header';
 import Swal from 'sweetalert2';
+import { ImagesService } from '../../../../services/common/images.service';
+import { switchMap } from 'rxjs';
 
 
 @Component({
@@ -27,7 +29,8 @@ export class EditItem {
   constructor(private inventoryService: InventoryService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
-    private route: Router
+    private route: Router,
+    private imageService: ImagesService
   ) {}
   
   ngOnInit(): void {
@@ -41,9 +44,68 @@ export class EditItem {
    * Se encarga de manejar el evento submitted emitido por el componente hijo FormItem guardando el item
    * @param itemData Datos del item a agregar traidos desde el hijo FormItem por medio del evento submitted
    */
-  handleSubmit(event: {itemDTOPeticion: ItemDTOPeticion, file: File}): void {
+  async handleSubmit(event: {itemDTOPeticion: ItemDTOPeticion, file: File}) {
     const {  ...updateData } = event.itemDTOPeticion;
-    this.inventoryService.updateElectronicComponent(this.itemId, event.itemDTOPeticion).subscribe({
+    if(!event.file){
+      this.saveItem(updateData);
+      return;
+    }
+    const compressedFile = await this.compressFile(event.file);
+    await this.uploadAndSetImage(updateData, compressedFile);
+    this.saveItem(updateData);
+  }
+
+  /**
+   * 
+   * @param file archivo a comprimir
+   * @returns Archivo comprimido
+   */
+  private compressFile(file: File): Promise<File> {
+    return this.imageService.compressImage(file, 0.7, 1500);
+  }
+  /**
+     * funcion que sube la imagen comprimida a R2 y actualiza el objeto data con la ruta
+     * @param data objeto de datos donde se colocara la ruta de la imagen subida
+     * @param file imagen comprimida a subir
+     * @returns 
+     */
+  private uploadAndSetImage(data: ItemDTOPeticion, file: File): Promise<void> {
+    const extension = file.name.split('.').pop() || 'jpg';
+    const contentType = file.type;
+
+    return new Promise((resolve, reject) => {
+      // Pasa file_path existente para sobrescribir
+      this.imageService.getPresignedUrl(extension, data.file_path)
+        .pipe(
+          switchMap((resp) => {
+            // Si es nuevo, asigna file_path devuelto por backend
+            if (!data.file_path) {
+              data.file_path = resp.file_path;
+            }
+            return this.imageService.uploadToR2(resp.upload_url, file);
+          })
+        )
+        .subscribe({
+          next: () => resolve(),
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al subir la imagen',
+              text: 'No se pudo subir la imagen. Por favor intenta nuevamente.',
+              confirmButtonText: 'Aceptar'
+            });
+            reject(err);
+          }
+        });
+    });
+  }
+
+  /**
+   * Guarda el item en el backend
+   * @param itemData Datos del item a guardar
+   */
+  private saveItem(itemData: ItemDTOPeticion): void {
+    this.inventoryService.updateElectronicComponent(this.itemId, itemData).subscribe({
       next: (response) => {
         console.log("Respuesta del servidor:", response);
         this.successMessage = 'Item agregado exitosamente';
