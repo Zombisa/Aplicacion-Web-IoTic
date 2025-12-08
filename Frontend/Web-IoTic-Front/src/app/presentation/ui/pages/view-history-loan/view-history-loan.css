@@ -1,6 +1,6 @@
 .banner-primary {
-  background-color: var(--color-secondary);
-  height: 70vh;
+  background-color: var(--color-primary);
+  height: 32vh;
 }
 
 .title {
@@ -8,7 +8,7 @@
   font-family: "Roboto", sans-serif;
   font-weight: 600;
   font-size: clamp(2rem, 4rem, 6rem);
-  color: #333;
+  color: #fff7f7;
 }
 
 .content-section {

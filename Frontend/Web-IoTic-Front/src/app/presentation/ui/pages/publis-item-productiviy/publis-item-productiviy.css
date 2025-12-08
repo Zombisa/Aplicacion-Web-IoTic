@@ -1,3 +1,6 @@
 .contaier-content{
     margin-top: 10rem;
 }
+.background-page{
+    background: var(--color-secondary-light);
+}

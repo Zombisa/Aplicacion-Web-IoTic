@@ -84,7 +84,7 @@ export class InventoryPageComponent implements OnInit {
   ).length;
 
   this.resume.dañados = this.inventoryData.filter(
-    item => item.estado_admin === 'Dañado'
+    item => item.estado_fisico === 'Dañado'
   ).length;
 }
 
