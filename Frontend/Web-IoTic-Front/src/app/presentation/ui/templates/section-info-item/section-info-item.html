@@ -2,113 +2,109 @@
   <div class="card item-card shadow-lg rounded-4 border-0 overflow-hidden">
     <div class="row g-0 align-items-stretch">
       <!-- Columna imagen (izquierda) -->
-      <div class="col-12 col-lg-5 p-0 item-image-wrapper">
-        <img
-          class="item-image"
-          [src]="itemImageUrl"
-          alt="Imagen del ítem"
-        />
+      <div class="col-12 col-md-5 p-0 item-image-wrapper">
+        <img class="item-image" [src]="itemImageUrl" alt="Imagen del ítem" />
       </div>
 
       <!-- Columna información (derecha) -->
-      <div class="col-12 col-lg-7 position-relative content-wrapper">
+      <div class="col-12 col-md-7 position-relative content-wrapper">
         <!-- Botón eliminar (clip) -->
-        <button
-          class="btn-danger"
-          *ngIf="item.estado_admin !== 'Prestado'"
-          (click)="goToDelete()">
+        <button class="btn-danger" *ngIf="item.estado_admin !== 'Prestado'" (click)="goToDelete()">
           <i class="bi bi-trash"></i>
         </button>
+        <div class="content-inner">
+          <!-- Descripción -->
+          <div class="block mb-4">
+            <h3 class="title-card">Descripción</h3>
+            <p class="text-card-item">
+              {{ item.descripcion || 'Sin descripción' }}
+            </p>
+          </div>
 
-        <!-- Descripción -->
-        <div class="block mb-4">
-          <h3 class="title-card">Descripción</h3>
-          <p class="text-card-item">
-            {{ item.descripcion || 'Sin descripción' }}
-          </p>
-        </div>
-
-        <!-- Estados -->
-        <div class="block mb-4">
-          <h3 class="title-card">Estados</h3>
-          <div class="row g-3 section-estados">
-            <div class="col-12 col-md-6">
-              <h4 class="text-state-subtitle">Estado físico</h4>
-              <div
-                class="box-state d-flex align-items-center"
-                [ngClass]="{
-                  'warning-state': item.estado_fisico === 'Bueno',
-                  'bad-warning': item.estado_fisico === 'Dañado'
-                }">
-                <p>{{ item.estado_fisico || 'N/A' }}</p>
+          <!-- Estados -->
+          <div class="block mb-4">
+            <h3 class="title-card">Estados</h3>
+            <div class="row g-3 section-estados">
+              <div class="col-12 col-md-6">
+                <h4 class="text-state-subtitle">Estado físico</h4>
+                <div
+                  class="box-state d-flex align-items-center"
+                  [ngClass]="{
+                    'warning-state': item.estado_fisico === 'Bueno',
+                    'bad-warning': item.estado_fisico === 'Dañado'
+                  }"
+                >
+                  <p>{{ item.estado_fisico || 'N/A' }}</p>
+                </div>
               </div>
-            </div>
 
-            <div class="col-12 col-md-6">
-              <h4 class="text-state-subtitle">Estado administrativo</h4>
-              <div
-                class="box-state d-flex align-items-center"
-                [ngClass]="{
-                  'bad-warning': item.estado_admin === 'Prestado',
-                  'warning-state-no-loan': item.estado_admin === 'No prestar'
-                }">
-                <p>{{ item.estado_admin || 'Disponible' }}</p>
+              <div class="col-12 col-md-6">
+                <h4 class="text-state-subtitle">Estado administrativo</h4>
+                <div
+                  class="box-state d-flex align-items-center"
+                  [ngClass]="{
+                    'bad-warning': item.estado_admin === 'Prestado',
+                    'warning-state-no-loan': item.estado_admin === 'No prestar'
+                  }"
+                >
+                  <p>{{ item.estado_admin || 'Disponible' }}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Observación -->
-        <div class="block mb-4">
-          <h3 class="title-card">Observación</h3>
-          <p class="text-card-item">
-            {{ item.observacion || 'Sin observaciones' }}
-          </p>
-        </div>
+          <!-- Observación -->
+          <div class="block mb-4">
+            <h3 class="title-card">Observación</h3>
+            <p class="text-card-item">
+              {{ item.observacion || 'Sin observaciones' }}
+            </p>
+          </div>
 
-        <!-- Fecha de registro -->
-        <div class="block mb-4">
-          <h3 class="title-card">Fecha registro del item</h3>
-          <p class="text-card-item">
-            {{ item.fecha_registro | date:'dd \'de\' MMMM \'de\' yyyy, h:mm a' }}
-          </p>
-        </div>
+          <!-- Fecha de registro -->
+          <div class="block mb-4">
+            <h3 class="title-card">Fecha registro del item</h3>
+            <p class="text-card-item">
+              {{ item.fecha_registro | date : "dd 'de' MMMM 'de' yyyy, h:mm a" }}
+            </p>
+          </div>
 
-        <!-- Botones -->
-        <div class="section-buttons d-flex flex-column flex-sm-row gap-2">
-          <ng-container *ngIf="mode === 'edit'">
-            <button
-              class="btn-outline-secondary"
-              *ngIf="item.estado_admin !== 'Prestado'"
-              (click)="goToEdit()">
-              Editar
+          <!-- Botones -->
+          <div class="section-buttons d-flex flex-column flex-sm-row gap-2">
+            <ng-container *ngIf="mode === 'edit'">
+              <button
+                class="btn-outline-secondary"
+                *ngIf="item.estado_admin !== 'Prestado'"
+                (click)="goToEdit()"
+              >
+                Editar
+              </button>
+
+              <button
+                class="btn-primary"
+                (click)="goToLoan()"
+                *ngIf="
+                  item.estado_fisico !== 'Dañado' &&
+                  item.estado_admin !== 'Prestado' &&
+                  item.estado_admin !== 'No prestar'
+                "
+              >
+                Dar en préstamo
+              </button>
+
+              <button
+                class="btn-primary"
+                (click)="goToViewLoan()"
+                *ngIf="item.estado_admin === 'Prestado'"
+              >
+                Ver préstamo
+              </button>
+            </ng-container>
+
+            <button class="btn-outline-secondary" *ngIf="mode === 'loan'" (click)="returnItem()">
+              Devolver préstamo
             </button>
-
-            <button
-              class="btn-primary"
-              (click)="goToLoan()"
-              *ngIf="
-                item.estado_fisico !== 'Dañado' &&
-                item.estado_admin !== 'Prestado' &&
-                item.estado_admin !== 'No prestar'
-              ">
-              Dar en préstamo
-            </button>
-
-            <button
-              class="btn-primary"
-              (click)="goToViewLoan()"
-              *ngIf="item.estado_admin === 'Prestado'">
-              Ver préstamo
-            </button>
-          </ng-container>
-
-          <button
-            class="btn-outline-secondary"
-            *ngIf="mode === 'loan'"
-            (click)="returnItem()">
-            Devolver préstamo
-          </button>
+          </div>
         </div>
       </div>
     </div>
