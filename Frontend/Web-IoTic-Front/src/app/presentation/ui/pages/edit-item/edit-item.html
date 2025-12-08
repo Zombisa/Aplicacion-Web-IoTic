@@ -18,7 +18,9 @@
                             #itemFormComponent
                             [mode]="'edit'"
                             [item]="item"
-                            (submitted)="handleSubmit($event)">
+                            (submitted)="handleSubmit($event)"
+                            (deactivateItem)="handleDeactivateItem()"
+                            (deleteItem)="handleDeleteItem()">
                         </app-form-item>
                     </div>
                 </div>

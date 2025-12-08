@@ -146,9 +146,98 @@ export class EditItem {
       },
       error: (error) => {
         console.error('Error al obtener el item:', error);
+        this.loadingService.hide();
       }
     })  
     
-  };
+  }
+
+  /**
+   * Maneja la acción de dar de baja el item
+   * Muestra confirmación y luego marca el item como dañado/no prestar
+   */
+  handleDeactivateItem(): void {
+    Swal.fire({
+      title: '¿Dar de baja este item?',
+      text: 'El item será marcado como dañado y no disponible para préstamo. Podrás reactivarlo editando su estado más adelante.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ffc107',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, dar de baja',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loadingService.show();
+        this.inventoryService.desactivateItem(this.itemId).subscribe({
+          next: () => {
+            this.loadingService.hide();
+            Swal.fire({
+              icon: 'success',
+              title: 'Item dado de baja',
+              text: 'El item ha sido marcado como dañado y no disponible para préstamo.',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              this.route.navigate(['/inventario']);
+            });
+          },
+          error: (error) => {
+            console.error('Error al dar de baja el item:', error);
+            this.loadingService.hide();
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un error al dar de baja el item. Por favor, intenta nuevamente.',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Maneja la acción de eliminar el item
+   * Muestra confirmación y luego elimina permanentemente el item
+   */
+  handleDeleteItem(): void {
+    Swal.fire({
+      title: '¿Eliminar este item?',
+      text: 'Esta acción no se puede deshacer. El item será eliminado permanentemente del inventario.',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loadingService.show();
+        this.inventoryService.deleteElectronicComponent(this.itemId).subscribe({
+          next: () => {
+            this.loadingService.hide();
+            Swal.fire({
+              icon: 'success',
+              title: 'Item eliminado',
+              text: 'El item ha sido eliminado permanentemente del inventario.',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              this.route.navigate(['/inventario']);
+            });
+          },
+          error: (error) => {
+            console.error('Error al eliminar el item:', error);
+            this.loadingService.hide();
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un error al eliminar el item. Por favor, intenta nuevamente.',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+      }
+    });
+  }
 
 }

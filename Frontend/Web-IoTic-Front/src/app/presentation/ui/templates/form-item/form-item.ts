@@ -17,6 +17,8 @@ export class FormItem implements OnChanges {
 
   @Output() submitted = new EventEmitter<{itemDTOPeticion: ItemDTOPeticion, file: File}>();
   @Output() formReset = new EventEmitter<void>();
+  @Output() deactivateItem = new EventEmitter<void>();
+  @Output() deleteItem = new EventEmitter<void>();
 
   itemForm!: FormGroup;
   selectedFile: File | null = null;
@@ -107,8 +109,22 @@ export class FormItem implements OnChanges {
   }
 
   get isEditMode(): boolean {
-  return this.mode === 'edit';
-}
+    return this.mode === 'edit';
+  }
+
+  /**
+   * Emite evento para dar de baja el item
+   */
+  onDeactivateItem(): void {
+    this.deactivateItem.emit();
+  }
+
+  /**
+   * Emite evento para eliminar el item
+   */
+  onDeleteItem(): void {
+    this.deleteItem.emit();
+  }
 
 
 }

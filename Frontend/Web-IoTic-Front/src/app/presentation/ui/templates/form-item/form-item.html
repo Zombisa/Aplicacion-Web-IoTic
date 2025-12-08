@@ -97,10 +97,31 @@
 
         <!-- Botones -->
         <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3">
-          <button type="button" class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1"
-                  (click)="resetForm()">Limpiar</button>
+          <!-- Botón Limpiar solo en modo create -->
+          <button *ngIf="mode === 'create'" 
+                  type="button" 
+                  class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1"
+                  (click)="resetForm()">
+            Limpiar
+          </button>
 
-          <button type="submit" class="btn btn-primary px-3 px-md-4 order-1 order-sm-2"
+          <!-- Botones de acción solo en modo edit -->
+          <button *ngIf="mode === 'edit'" 
+                  type="button" 
+                  class="btn btn-outline-warning px-3 px-md-4 order-2 order-sm-1"
+                  (click)="onDeactivateItem()">
+            Dar de baja
+          </button>
+
+          <button *ngIf="mode === 'edit'" 
+                  type="button" 
+                  class="btn btn-outline-danger px-3 px-md-4 order-3 order-sm-2"
+                  (click)="onDeleteItem()">
+            Eliminar
+          </button>
+
+          <button type="submit" 
+                  class="btn btn-primary px-3 px-md-4 order-1 order-sm-3"
                   [disabled]="itemForm.invalid">
             {{ mode === 'create' ? 'Agregar Item' : 'Guardar Cambios' }}
           </button>
