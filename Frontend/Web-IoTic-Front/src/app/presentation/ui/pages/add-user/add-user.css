@@ -6,7 +6,6 @@
 
 .page-container {
   padding: 2rem 1rem;
-  padding-top: 20rem; 
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -34,7 +33,7 @@
   margin-top: 2rem;
 }
 
-.edit-form-section {
+.form-section {
   margin-bottom: 2rem;
   padding: 1rem;
   background-color: #f8f9fa;
@@ -45,15 +44,13 @@
 @media (max-width: 768px) {
   .page-container {
     padding: 1rem 0.5rem;
-    padding-top: 5rem; /* Menos espacio en móvil */
   }
 
   .page-title {
     font-size: 1.75rem;
   }
 
-  .edit-form-section {
+  .form-section {
     padding: 0.5rem;
   }
 }
-

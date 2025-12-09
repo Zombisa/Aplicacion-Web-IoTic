@@ -19,6 +19,8 @@ import { PanelPublishProductivity } from './presentation/ui/pages/panel-publish-
 import { EditWhoWeAre } from './presentation/ui/pages/edit-who-we-are/edit-who-we-are';
 import { AdminGuard } from './guards/admin-guard-guard';
 import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
+import { AddUser } from './presentation/ui/pages/add-user/add-user';
+import { ViewUser } from './presentation/ui/pages/view-user/view-user';
 
 export const routes: Routes = [
 
@@ -27,6 +29,8 @@ export const routes: Routes = [
      { path: 'home', component: HomePage },
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
      { path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard] },
+     { path: 'usuarios/add', component: AddUser, canActivate: [AuthGuard, AdminGuard] },
+     { path: 'usuarios/view/:id', component: ViewUser, canActivate: [AuthGuard, AdminGuard] },
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path: 'who-we-are/edit', component: EditWhoWeAre, canActivate: [AdminGuard]},

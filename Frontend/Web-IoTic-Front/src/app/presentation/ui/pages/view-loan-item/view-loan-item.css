@@ -5,9 +5,9 @@
 
 .title {
   color: var(--color-secondary);
-  font-size: 3rem;
-  font-weight: 300;
-  font-family: "Roboto", sans-serif;
+    font-size: 3rem;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
   margin: 0;
 }
 

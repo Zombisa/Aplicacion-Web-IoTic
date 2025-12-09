@@ -285,3 +285,17 @@
   }
 }
 
+/* Asegurar que el user-content sea clickeable */
+.user-content {
+  cursor: pointer;
+  /* Asegurar que no haya elementos que bloqueen el click */
+  position: relative;
+  z-index: 1;
+}
+
+/* Asegurar que los botones de acción no bloqueen el click del contenido */
+.user-actions {
+  position: relative;
+  z-index: 2;
+}
+

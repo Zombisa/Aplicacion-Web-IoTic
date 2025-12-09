@@ -1,0 +1,88 @@
+.user-card {
+  position: relative;
+  z-index: 1;
+  margin-top: -10rem;
+  margin-bottom: 5rem; /* Espacio adicional debajo de la tarjeta */
+  width: 100%;
+  max-width: 60rem;
+}
+
+.title-card {
+  color: var(--color-primary);
+  padding: 2.5rem 2.5rem 0 2.5rem;
+}
+
+.text-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.text-card-item {
+  font-weight: 300;
+  padding: 0 2.5rem 0 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.section-estados {
+  padding: 0 2.5rem 0 2.5rem;
+}
+
+.box-state {
+  background: linear-gradient(90deg, #829CE3, transparent);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  width: 15rem;
+  height: 5rem;
+}
+
+.box-state p {
+  background-color: white;
+  height: 2rem;
+  border-radius: 10px;
+  margin: 0;
+  width: 80%;
+  padding-left: 1rem;
+  padding-top: 4px;
+}
+
+.warning-state {
+  background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+
+.bad-warning {
+  background: linear-gradient(90deg, var(--color-danger), transparent);
+}
+
+.section-buttons {
+  margin: 0 auto;
+  width: 100%;
+  padding: 3rem;
+}
+
+.btn-danger {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  z-index: 10;
+  background-color: var(--color-danger);
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+  background-color: rgb(145, 17, 17);
+}
+
+.bi-trash {
+  font-size: 30px;
+}

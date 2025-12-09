@@ -11,6 +11,14 @@ export interface UpdateUserDTO {
   rol?: string;
 }
 
+export interface CreateUserDTO {
+  email: string;
+  contrasena: string;
+  nombre: string;
+  apellido: string;
+  rol: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   
@@ -57,6 +65,35 @@ export class UsersService {
     return this.http.delete<void>(`${this.config.apiUrlBackend}usuarios/${userId}/eliminar/`).pipe(
       catchError(error => {
         console.error('Error al eliminar usuario:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  createUser(userData: CreateUserDTO): Observable<UserDTO> {
+    return this.http.post<UserDTO>(`${this.config.apiUrlBackend}usuarios/crear/`, userData).pipe(
+      catchError(error => {
+        console.error('Error al crear usuario:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  sincronizarFirebase(): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.config.apiUrlBackend}usuarios/sincronizar/`, {}).pipe(
+      catchError(error => {
+        console.error('Error al sincronizar Firebase:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getUserById(userId: number): Observable<UserDTO> {
+    // Nota: Si el backend no tiene este endpoint, podemos filtrar de la lista
+    // Por ahora asumimos que podemos obtenerlo de la lista o el backend lo soporta
+    return this.http.get<UserDTO>(`${this.config.apiUrlBackend}usuarios/${userId}/`).pipe(
+      catchError(error => {
+        console.error('Error al obtener usuario por ID:', error);
         return throwError(() => error);
       })
     );

@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../templates/header/header';
 import { UserDTO } from '../../../../models/DTO/UserDTO';
-import { UsersService, UpdateUserDTO } from '../../../../services/users.service';
+import { UsersService, UpdateUserDTO, CreateUserDTO } from '../../../../services/users.service';
 import { UsersTable } from '../../templates/users-table/users-table';
 import { FormEditUser } from '../../templates/form-edit-user/form-edit-user';
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
+import { AuthService } from '../../../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-users-management-page',
@@ -24,12 +26,16 @@ export class UsersManagementPageComponent implements OnInit {
   public selectedUserForEdit: UserDTO | null = null;
   public showDeleteModal = false;
   public userToDelete: UserDTO | null = null;
+  public isAdmin$: Observable<boolean>;
 
   constructor(
     private usersService: UsersService,
     public loadingService: LoadingService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.isAdmin$ = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.loadUsersData();
@@ -72,6 +78,14 @@ export class UsersManagementPageComponent implements OnInit {
    */
   onUserSelected(user: UserDTO): void {
     console.log('Usuario seleccionado:', user);
+    if (user && user.id) {
+      // Navegar a la página de detalle del usuario
+      this.router.navigate(['/usuarios/view', user.id]).catch(error => {
+        console.error('Error al navegar:', error);
+      });
+    } else {
+      console.error('Usuario inválido o sin ID:', user);
+    }
   }
 
   /**
@@ -167,6 +181,13 @@ export class UsersManagementPageComponent implements OnInit {
   cancelDelete(): void {
     this.showDeleteModal = false;
     this.userToDelete = null;
+  }
+
+  /**
+   * Navegar a la página de crear usuario
+   */
+  goToAddUser(): void {
+    this.router.navigate(['/usuarios/add']);
   }
 }
 
