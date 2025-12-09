@@ -96,11 +96,17 @@ def verificar_roles(roles_permitidos):
         "administrador": "administrador"
     }
     
-    # Normalizar roles permitidos
+    # Normalizar roles permitidos y construir lista de nombres canonicos para error
     roles_normalizados = []
+    roles_canonicos = []
     for r in roles_permitidos:
         r_lower = r.lower().strip()
-        roles_normalizados.append(ROLES_MAP.get(r_lower, r_lower))
+        norm = ROLES_MAP.get(r_lower, r_lower)
+        roles_normalizados.append(norm)
+        # Mapear de vuelta al nombre canónico (Administrador, Mentor)
+        canonical = "Administrador" if norm == "administrador" else "Mentor" if norm == "mentor" else norm
+        if canonical not in roles_canonicos:
+            roles_canonicos.append(canonical)
 
     def decorator(view_func):
         @wraps(view_func)
@@ -120,7 +126,7 @@ def verificar_roles(roles_permitidos):
 
             if token_role_normalizado not in roles_normalizados and db_role_normalizado not in roles_normalizados:
                 return JsonResponse({
-                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos}",
+                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_canonicos}",
                     "token_role": token_role,
                     "db_role": db_role
                 }, status=403)
