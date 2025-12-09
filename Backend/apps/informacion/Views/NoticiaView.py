@@ -68,6 +68,10 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             except Noticia.DoesNotExist:
                 return Response({'error': 'Noticia no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if noticia.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = NoticiaSerializer(noticia, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             except Noticia.DoesNotExist:
                 return Response({'error': 'Noticia no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if noticia.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             noticia.delete()
             return Response({'Noticia eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -111,6 +119,10 @@ class NoticiaViewSet(viewsets.ModelViewSet):
 
             if not noticia.image_r2:
                 return Response({"message": "El noticia no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if noticia.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = noticia.image_r2.split("/")[-1]
@@ -138,6 +150,11 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             if not Noticia.file_r2:
                 return Response({"message": "Noticia no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if Noticia.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
+            
             # extraer solo el nombre del archivo
             file_path = Noticia.file_r2.split("/")[-1]
 
@@ -167,3 +184,21 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(detail=False, methods=['get'], url_path='misNoticias')
+    def misNoticias(self, request):
+        """Lista las noticias que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            noticias = Noticia.objects.all()
+            notPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for noticia in noticias:
+                if noticia.usuario.uid_firebase == uid:
+                    notPublicados.append(noticia)
+            if len(notPublicados) == 0:
+                return Response({'message': 'No tienes noticias publicados'})
+            serializer = NoticiaSerializer(notPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

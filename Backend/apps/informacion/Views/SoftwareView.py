@@ -68,6 +68,10 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             except Software.DoesNotExist:
                 return Response({'error': 'Software no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if software.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = SoftwareSerializer(software, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             except Software.DoesNotExist:
                 return Response({'error': 'Software no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if software.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             software.delete()
             return Response({'Software eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             if not Software.image_r2:
                 return Response({"message": "El Software no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if Software.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
             # extraer solo el nombre del archivo
             file_path = Software.image_r2.split("/")[-1]
 
@@ -137,6 +149,10 @@ class SoftwareViewSet(viewsets.ModelViewSet):
 
             if not Software.file_r2:
                 return Response({"message": "Software no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if Software.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = Software.file_r2.split("/")[-1]
@@ -167,3 +183,21 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(detail=False, methods=['get'], url_path='miSoftware')
+    def miSoftware(self, request):
+        """Lista los software que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            sfts = Software.objects.all()
+            sftsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for software in sfts:
+                if software.usuario.uid_firebase == uid:
+                    sftsPublicados.append(software)
+            if len(sftsPublicados) == 0:
+                return Response({'message': 'No tienes software publicados'})
+            serializer = SoftwareSerializer(sftsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

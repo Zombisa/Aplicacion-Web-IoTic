@@ -68,6 +68,10 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             except TrabajoEventos.DoesNotExist:
                 return Response({'error': 'Trabajo en evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if trabajo_evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = TrabajoEventosSerializer(trabajo_evento, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             except TrabajoEventos.DoesNotExist:
                 return Response({'error': 'Trabajo en evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if trabajo_evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             trabajo_evento.delete()
             return Response({'Trabajo en evento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             if not TrabajoEventos.image_r2:
                 return Response({"message": "El trabajo en eventos no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if TrabajoEventos.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = TrabajoEventos.image_r2.split("/")[-1]
 
@@ -138,6 +150,10 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             if not TrabajoEventos.file_r2:
                 return Response({"message": "Trabajo en eventos no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if TrabajoEventos.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = TrabajoEventos.file_r2.split("/")[-1]
 
@@ -167,3 +183,21 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='miTrabajoEv')
+    def miTrabajoEv(self, request):
+        """Lista los trabjos en eventos que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            tevs = TrabajoEventos.objects.all()
+            tevsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for tv in tevs:
+                if tv.usuario.uid_firebase == uid:
+                    tevsPublicados.append(tv)
+            if len(tevsPublicados) == 0:
+                return Response({'message': 'No tienes trabajos en eventos publicados'})
+            serializer = TrabajoEventosSerializer(tevsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

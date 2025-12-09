@@ -68,6 +68,10 @@ class RevistaViewSet(viewsets.ModelViewSet):
             except Revista.DoesNotExist:
                 return Response({'error': 'Revista no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if revista.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = RevistaSerializer(revista, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class RevistaViewSet(viewsets.ModelViewSet):
             except Revista.DoesNotExist:
                 return Response({'error': 'Revista no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if revista.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             revista.delete()
             return Response({'Revista eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class RevistaViewSet(viewsets.ModelViewSet):
             if not revista.image_r2:
                 return Response({"message": "La revista no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if revista.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
             # extraer solo el nombre del archivo
             file_path = revista.image_r2.split("/")[-1]
 
@@ -137,6 +149,11 @@ class RevistaViewSet(viewsets.ModelViewSet):
 
             if not revista.file_r2:
                 return Response({"message": "Revista no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if revista.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
 
             # extraer solo el nombre del archivo
             file_path = revista.file_r2.split("/")[-1]
@@ -167,3 +184,21 @@ class RevistaViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='misRevistas')
+    def misRevistas(self, request):
+        """Lista las revistas que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            revistas = Revista.objects.all()
+            revistasPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for revista in revistas:
+                if revista.usuario.uid_firebase == uid:
+                    revistasPublicados.append(revista)
+            if len(revistasPublicados) == 0:
+                return Response({'message': 'No tienes revistas publicadas'})
+            serializer = RevistaSerializer(revistasPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

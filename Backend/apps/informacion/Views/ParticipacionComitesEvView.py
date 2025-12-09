@@ -68,6 +68,10 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             except ParticipacionComitesEv.DoesNotExist:
                 return Response({'error': 'Participacion en comite o evento no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if comite_ev.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = ParticipacionComitesEvSerializer(comite_ev, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             except ParticipacionComitesEv.DoesNotExist:
                 return Response({'error': 'Participacion en comite o evento no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if comite_ev.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             comite_ev.delete()
             return Response({'Participacion en comite o evento eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             if not ParticipacionComitesEv.image_r2:
                 return Response({"message": "La Participacion en Comites de Evaluacion no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if ParticipacionComitesEv.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = ParticipacionComitesEv.image_r2.split("/")[-1]
 
@@ -137,6 +149,10 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
 
             if not ParticipacionComitesEv.file_r2:
                 return Response({"message": "Participacion en comites de evaluacion no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if ParticipacionComitesEv.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = ParticipacionComitesEv.file_r2.split("/")[-1]
@@ -167,3 +183,21 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='misParticipaciones')
+    def misParticipaciones(self, request):
+        """Lista las participaciones en comites que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            pcs = ParticipacionComitesEv.objects.all()
+            pcsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for pc in pcs:
+                if pc.usuario.uid_firebase == uid:
+                    pcsPublicados.append(pc)
+            if len(pcsPublicados) == 0:
+                return Response({'message': 'No tienes participaciones en comites de evaluacion publicados'})
+            serializer = ParticipacionComitesEvSerializer(pcsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

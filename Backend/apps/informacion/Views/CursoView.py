@@ -68,6 +68,11 @@ class CursoViewSet(viewsets.ModelViewSet):
                 curso = Curso.objects.get(pk=pk)
             except Curso.DoesNotExist:
                 return Response({'error': 'Curso no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            
+            uid = verificarToken.obtenerUID(request)
+            if curso.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
 
             serializer = CursoSerializer(curso, data=request.data, partial=True)
             if serializer.is_valid():
@@ -86,7 +91,11 @@ class CursoViewSet(viewsets.ModelViewSet):
                 curso = Curso.objects.get(pk=pk)
             except Curso.DoesNotExist:
                 return Response({'error': 'Curso no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
+            
+            uid = verificarToken.obtenerUID(request)
+            if curso.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             curso.delete()
             return Response({'Curso eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -113,6 +122,11 @@ class CursoViewSet(viewsets.ModelViewSet):
             if not curso.image_r2:
                 return Response({"message": "El curso no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if Curso.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
+            
             # extraer solo el nombre del archivo
             file_path = curso.image_r2.split("/")[-1]
 
@@ -139,6 +153,10 @@ class CursoViewSet(viewsets.ModelViewSet):
             if not Curso.file_r2:
                 return Response({"message": "Curso no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if Curso.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = Curso.file_r2.split("/")[-1]
 
@@ -168,3 +186,21 @@ class CursoViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=['get'], url_path='misCursos')
+    def misCursos(self, request):
+        """Lista los cursos que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            cursos = Curso.objects.all()
+            cursosPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for curso in cursos:
+                if curso.usuario.uid_firebase == uid:
+                    cursosPublicados.append(curso)
+            if len(cursosPublicados) == 0:
+                return Response({'message': 'No tienes cursos publicados'})
+            serializer = CursoSerializer(cursosPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

@@ -69,6 +69,11 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
             except MaterialDidactico.DoesNotExist:
                 return Response({'error': 'Material didactico no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if material_didactico.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
+            
             serializer = MaterialDidacticoSerializer(material_didactico, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -87,6 +92,11 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
             except MaterialDidactico.DoesNotExist:
                 return Response({'error': 'Material didactico no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if material_didactico.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
+            
             material_didactico.delete()
             return Response({'Material didactico eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -113,6 +123,10 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
             if not MaterialDidactico.image_r2:
                 return Response({"message": "El MaterialDidactico no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if MaterialDidactico.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
             # extraer solo el nombre del archivo
             file_path = MaterialDidactico.image_r2.split("/")[-1]
 
@@ -138,6 +152,10 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
 
             if not MaterialDidactico.file_r2:
                 return Response({"message": "Material didactico no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if MaterialDidactico.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = MaterialDidactico.file_r2.split("/")[-1]
@@ -168,3 +186,21 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(detail=False, methods=['get'], url_path='misMaterialesDidacticos')
+    def misMaterialesDidacticos(self, request):
+        """Lista los materiales didacticos que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            mds = MaterialDidactico.objects.all()
+            mdsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for md in mds:
+                if md.usuario.uid_firebase == uid:
+                    mdsPublicados.append(md)
+            if len(mdsPublicados) == 0:
+                return Response({'message': 'No tienes materiales didacticos publicados'})
+            serializer = MaterialDidacticoSerializer(mdsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

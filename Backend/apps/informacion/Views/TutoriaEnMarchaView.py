@@ -68,6 +68,10 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
             except TutoriaEnMarcha.DoesNotExist:
                 return Response({'error': 'Tutoría en marcha no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if tutoria_en_marcha.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = TutoriaEnMarchaSerializer(tutoria_en_marcha, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
             except TutoriaEnMarcha.DoesNotExist:
                 return Response({'error': 'Tutoría en marcha no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if tutoria_en_marcha.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             tutoria_en_marcha.delete()
             return Response({'Tutoría en marcha eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
             if not TutoriaEnMarcha.image_r2:
                 return Response({"message": "La tutoria en marcha no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if TutoriaEnMarcha.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+
             # extraer solo el nombre del archivo
             file_path = TutoriaEnMarcha.image_r2.split("/")[-1]
 
@@ -137,6 +149,10 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
 
             if not TutoriaEnMarcha.file_r2:
                 return Response({"message": "Tutoria en marcha no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if TutoriaEnMarcha.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = TutoriaEnMarcha.file_r2.split("/")[-1]
@@ -167,3 +183,21 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='miTutoriasMar')
+    def miTutoriasMar(self, request):
+        """Lista las tutorias en marcha que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            tms = TutoriaEnMarcha.objects.all()
+            tmsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for tm in tms:
+                if tm.usuario.uid_firebase == uid:
+                    tmsPublicados.append(tm)
+            if len(tmsPublicados) == 0:
+                return Response({'message': 'No tienes tutorias en marcha publicados'})
+            serializer = TutoriaEnMarchaSerializer(tmsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

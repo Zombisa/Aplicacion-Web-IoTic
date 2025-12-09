@@ -69,6 +69,10 @@ class EventoViewSet(viewsets.ModelViewSet):
             except Evento.DoesNotExist:
                 return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = EventoSerializer(evento, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,7 +90,10 @@ class EventoViewSet(viewsets.ModelViewSet):
                 evento = Evento.objects.get(pk=pk)
             except Evento.DoesNotExist:
                 return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
+            uid = verificarToken.obtenerUID(request)
+            if evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             evento.delete()
             return Response({'Evento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -113,6 +120,11 @@ class EventoViewSet(viewsets.ModelViewSet):
             if not evento.image_r2:
                 return Response({"message": "El evento no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+            uid = verificarToken.obtenerUID(request)
+            if evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = evento.image_r2.split("/")[-1]
 
@@ -138,7 +150,11 @@ class EventoViewSet(viewsets.ModelViewSet):
 
             if not Evento.file_r2:
                 return Response({"message": "Evento no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            uid = verificarToken.obtenerUID(request)
+            if Evento.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = Evento.file_r2.split("/")[-1]
 
@@ -168,3 +184,21 @@ class EventoViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=['get'], url_path='misEventos')
+    def misEventos(self, request):
+        """Lista los eventos que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            eventos = Evento.objects.all()
+            eventosPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for evento in eventos:
+                if evento.usuario.uid_firebase == uid:
+                    eventosPublicados.append(evento)
+            if len(eventosPublicados) == 0:
+                return Response({'message': 'No tienes eventos publicados'})
+            serializer = EventoSerializer(eventosPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

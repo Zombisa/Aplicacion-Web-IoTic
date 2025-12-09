@@ -68,6 +68,10 @@ class JuradoViewSet(viewsets.ModelViewSet):
             except Jurado.DoesNotExist:
                 return Response({'error': 'Jurado no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if jurado.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = JuradoSerializer(jurado, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -85,6 +89,10 @@ class JuradoViewSet(viewsets.ModelViewSet):
             except Jurado.DoesNotExist:
                 return Response({'error': 'Jurado no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if jurado.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             jurado.delete()
             return Response({'Jurado eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -111,6 +119,10 @@ class JuradoViewSet(viewsets.ModelViewSet):
             if not jurado.image_r2:
                 return Response({"message": "El jurado no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if jurado.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = jurado.image_r2.split("/")[-1]
 
@@ -136,6 +148,10 @@ class JuradoViewSet(viewsets.ModelViewSet):
 
             if not Jurado.file_r2:
                 return Response({"message": "Jurado no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if Jurado.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = Jurado.file_r2.split("/")[-1]
@@ -166,3 +182,21 @@ class JuradoViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(detail=False, methods=['get'], url_path='misJurados')
+    def misJurados(self, request):
+        """Lista los jurados que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            jurados = Jurado.objects.all()
+            juradosPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for jurado in jurados:
+                if jurado.usuario.uid_firebase == uid:
+                    juradosPublicados.append(jurado)
+            if len(juradosPublicados) == 0:
+                return Response({'message': 'No tienes jurados publicados'})
+            serializer = JuradoSerializer(juradosPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

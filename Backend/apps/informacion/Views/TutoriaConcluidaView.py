@@ -68,6 +68,10 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
             except TutoriaConcluida.DoesNotExist:
                 return Response({'error': 'Tutoría concluida no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if tutoria_concluida.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = TutoriaConcluidaSerializer(tutoria_concluida, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -86,6 +90,10 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
             except TutoriaConcluida.DoesNotExist:
                 return Response({'error': 'Tutoría concluida no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if tutoria_concluida.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             tutoria_concluida.delete()
             return Response({'Tutoría concluida eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -112,6 +120,10 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
             if not TutoriaConcluida.image_r2:
                 return Response({"message": "La tutoria concluida no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if TutoriaConcluida.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = TutoriaConcluida.image_r2.split("/")[-1]
 
@@ -137,6 +149,10 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
 
             if not TutoriaConcluida.file_r2:
                 return Response({"message": "Tutoria concluida no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if TutoriaConcluida.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = TutoriaConcluida.file_r2.split("/")[-1]
@@ -167,3 +183,21 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='miTutoriasCon')
+    def miTutoriasCon(self, request):
+        """Lista las tutorias concluidas que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            tcs = TutoriaConcluida.objects.all()
+            tcsPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for tc in tcs:
+                if tc.usuario.uid_firebase == uid:
+                    tcsPublicados.append(tc)
+            if len(tcsPublicados) == 0:
+                return Response({'message': 'No tienes tutorias concluidas publicados'})
+            serializer = TutoriaConcluidaSerializer(tcsPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

@@ -70,6 +70,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             except CapLibro.DoesNotExist:
                 return Response({'error': 'Capítulo de libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+            uid = verificarToken.obtenerUID(request)
+            if cap_libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = CapLibroSerializer(cap_libro, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -87,6 +91,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
                 cap_libro = CapLibro.objects.get(pk=pk)
             except CapLibro.DoesNotExist:
                 return Response({'error': 'Capítulo de libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            
+            uid = verificarToken.obtenerUID(request)
+            if cap_libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             cap_libro.delete()
             return Response({'Capítulo de libro eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
@@ -117,6 +125,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             if not CapLibro.image_r2:
                 return Response({"message": "Capitulo de libro no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if CapLibro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             # extraer solo el nombre del archivo
             file_path = CapLibro.image_r2.split("/")[-1]
 
@@ -140,6 +152,10 @@ class CapLibroViewSet(viewsets.ModelViewSet):
 
             if not CapLibro.file_r2:
                 return Response({"message": "Capitulo de libro no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
+
+            uid = verificarToken.obtenerUID(request)
+            if CapLibro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
 
             # extraer solo el nombre del archivo
             file_path = CapLibro.file_r2.split("/")[-1]
@@ -170,3 +186,21 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='misCapLibros')
+    def misCapLibros(self, request):
+        """Lista los capitulo de libros que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            cap_libros = CapLibro.objects.all()
+            caplibrosPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for caplibro in cap_libros:
+                if caplibro.usuario.uid_firebase == uid:
+                    caplibrosPublicados.append(caplibro)
+            if len(caplibrosPublicados) == 0:
+                return Response({'message': 'No tienes capitulos de libros publicados'})
+            serializer = CapLibroSerializer(caplibrosPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
