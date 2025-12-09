@@ -15,6 +15,7 @@ from apps.informacion.Views.ProcesoTecnicaView import ProcesoTecnicaViewSet
 from apps.informacion.Views.TutoriaConcluidaView import TutoriaConcluidaViewSet
 from apps.informacion.Views.TutoriaEnMarchaView import TutoriaEnMarchaViewSet
 from apps.informacion.Views.GenerarUrlR2 import GenerarURLR2ViewSet
+from apps.informacion.Views.RegistroFotograficoView import RegistroFotograficoViewSet
 from apps.informacion.Views.ProductividadView import (
     MisionViewSet, VisionViewSet, HistoriaViewSet,
     ObjetivoViewSet, ValorViewSet
@@ -36,6 +37,7 @@ router.register(r'procesosTecnicas', ProcesoTecnicaViewSet, basename='procesoTec
 router.register(r'tutoriasConcluidas', TutoriaConcluidaViewSet, basename='tutoriaConcluida')
 router.register(r'tutoriasEnMarcha', TutoriaEnMarchaViewSet, basename='tutoriaEnMarcha')
 router.register(r'urlfirmada', GenerarURLR2ViewSet, basename='urlfirmada')
+router.register(r'registrosFotograficos', RegistroFotograficoViewSet, basename='registroFotografico')
 router.register(r'mision', MisionViewSet, basename='mision')
 router.register(r'vision', VisionViewSet, basename='vision')
 router.register(r'historia', HistoriaViewSet, basename='historia')
