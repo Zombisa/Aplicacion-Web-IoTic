@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "56b6d52c-4b89-4275-ae5d-ac4bf1089ea7",
+		"_postman_id": "6b0bb323-acf7-4b62-867a-30802b3a780e",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40286637"
+		"_exporter_id": "38361461"
 	},
 	"item": [
 		{
@@ -960,7 +960,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"image_r2\": \"ruta/imagen.jpg\"\r\n}\r\n",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"file_path\": \"ruta/imagen.jpg\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -968,7 +968,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/agregar_item/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -981,6 +981,7 @@
 								"api",
 								"inventario",
 								"items",
+								"agregar_item",
 								""
 							]
 						}
@@ -988,7 +989,7 @@
 					"response": []
 				},
 				{
-					"name": "Añadir varios items diferentes",
+					"name": "Añadir varios items iguales",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1004,7 +1005,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"descripcion\": \"Teclado mecánico\",\r\n      \"estado_fisico\": \"Excelente\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"teclado\"\r\n    },\r\n    {\r\n      \"descripcion\": \"Monitor 24 pulgadas\",\r\n      \"estado_fisico\": \"Bueno\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"monitor\"\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"descripcion\": \"Cable USB-C\",\r\n  \"estado_fisico\": \"Bueno\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Lote nuevo\",\r\n  \"cantidad\": 3,\r\n  \"imagenes\": [\r\n    \"url cloudfare inv 2\",\r\n    \"url cloudfare inv 3\",\r\n    \"url cloudfare inv 4\"\r\n  ]\r\n}\r\n\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1012,7 +1013,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/bulk/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/masivo/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1025,52 +1026,7 @@
 								"api",
 								"inventario",
 								"items",
-								"bulk",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Añadir varios items iguales con imagen diferente",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"cantidad\": 3,\r\n  \"descripcion\": \"Cable USB-C\",\r\n  \"estado_fisico\": \"Bueno\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"imagenes_r2\": [\r\n    \"cable-1.jpg\",\r\n    \"cable-2.jpg\",\r\n    \"cable-3.jpg\"\r\n  ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/bulk/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inventario",
-								"items",
-								"bulk",
+								"masivo",
 								""
 							]
 						}
@@ -1102,7 +1058,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/dar-baja/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1116,6 +1072,7 @@
 								"inventario",
 								"items",
 								"1",
+								"dar-baja",
 								""
 							]
 						}
@@ -1147,7 +1104,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/editar_item/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1161,6 +1118,7 @@
 								"inventario",
 								"items",
 								"1",
+								"editar_item",
 								""
 							]
 						}
@@ -1183,7 +1141,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/eliminar_item/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1197,6 +1155,7 @@
 								"inventario",
 								"items",
 								"1",
+								"eliminar_item",
 								""
 							]
 						}
@@ -1219,7 +1178,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/image/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/eliminar-imagen/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1233,7 +1192,7 @@
 								"inventario",
 								"items",
 								"1",
-								"image",
+								"eliminar-imagen",
 								""
 							]
 						}
@@ -1256,7 +1215,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/images/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/listar-imagenes/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1269,7 +1228,7 @@
 								"api",
 								"inventario",
 								"items",
-								"images",
+								"listar-imagenes",
 								""
 							]
 						}
@@ -1292,7 +1251,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/available/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/disponibles/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1305,8 +1264,8 @@
 								"api",
 								"inventario",
 								"items",
-								"reports",
-								"available",
+								"reportes",
+								"disponibles",
 								""
 							]
 						}
@@ -1329,7 +1288,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/loaned/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/prestados/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1342,8 +1301,8 @@
 								"api",
 								"inventario",
 								"items",
-								"reports",
-								"loaned",
+								"reportes",
+								"prestados",
 								""
 							]
 						}
@@ -1366,7 +1325,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/not-loanable/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reportes/no-prestar/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1379,8 +1338,8 @@
 								"api",
 								"inventario",
 								"items",
-								"reports",
-								"not-loanable",
+								"reportes",
+								"no-prestar",
 								""
 							]
 						}
@@ -1403,7 +1362,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/loans/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/prestamos/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1417,7 +1376,7 @@
 								"inventario",
 								"items",
 								"1",
-								"loans",
+								"prestamos",
 								""
 							]
 						}
@@ -1440,7 +1399,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/items/1/loans/overdue/",
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/prestamos/vencidos/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1454,8 +1413,8 @@
 								"inventario",
 								"items",
 								"1",
-								"loans",
-								"overdue",
+								"prestamos",
+								"vencidos",
 								""
 							]
 						}
@@ -1527,7 +1486,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/crear/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1540,6 +1499,7 @@
 								"api",
 								"inventario",
 								"prestamos",
+								"crear",
 								""
 							]
 						}
@@ -1602,7 +1562,7 @@
 								}
 							]
 						},
-						"method": "PATCH",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -1614,7 +1574,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/devolver/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1628,6 +1588,7 @@
 								"inventario",
 								"prestamos",
 								"1",
+								"devolver",
 								""
 							]
 						}
@@ -1650,7 +1611,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/history/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/historico/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1663,7 +1624,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"history",
+								"historico",
 								""
 							]
 						}
@@ -1686,7 +1647,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/active/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/activos/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1699,7 +1660,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"active",
+								"activos",
 								""
 							]
 						}
@@ -1722,7 +1683,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/returned/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/devueltos/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1735,7 +1696,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"returned",
+								"devueltos",
 								""
 							]
 						}
@@ -1758,7 +1719,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/overdue/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/vencidos/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1771,7 +1732,7 @@
 								"api",
 								"inventario",
 								"prestamos",
-								"overdue",
+								"vencidos",
 								""
 							]
 						}
@@ -1830,7 +1791,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/delivery-photo/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/eliminar-foto-entrega/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1844,7 +1805,7 @@
 								"inventario",
 								"prestamos",
 								"1",
-								"delivery-photo",
+								"eliminar-foto-entrega",
 								""
 							]
 						}
@@ -1867,7 +1828,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/return-photo/",
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/eliminar-foto-devolucion/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1881,7 +1842,202 @@
 								"inventario",
 								"prestamos",
 								"1",
-								"return-photo",
+								"eliminar-foto-devolucion",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "asignar rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uid\": \"zZjgYQESeOYtc5fr4QsadFLi9So1\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/asignar-rol/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"asignar-rol",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crear rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\" : \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/roles/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"roles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear usuario con rol por admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"james\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"ja@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"Mentor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/crear/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sincronizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/sincronizar/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"sincronizar",
 								""
 							]
 						}
@@ -2635,7 +2791,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_tokenAdmin}}",
 											"type": "string"
 										}
 									]
@@ -3119,7 +3275,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_tokenAdmin}}",
 											"type": "string"
 										}
 									]
@@ -3131,7 +3287,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/libros/libros/",
+									"raw": "http://127.0.0.1:8000/api/informacion/libros",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3143,9 +3299,7 @@
 									"path": [
 										"api",
 										"informacion",
-										"libros",
-										"libros",
-										""
+										"libros"
 									]
 								}
 							},
@@ -3159,7 +3313,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_tokenAdmin}}",
 											"type": "string"
 										}
 									]
@@ -3168,7 +3322,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"titulo\": \"Fundamentos de Inteligencia Artificial Aplicada\",\r\n  \"tipoProductividad\": \"Libro de texto universitario\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 97895,\r\n  \"volumen\": 1,\r\n  \"paginas\": 350,\r\n  \"editorial\": \"Editorial Universidad del Cauca\",\r\n  \"codigoEditorial\": \"EUC-2024-045\",\r\n  \"etiquetas\": [\"inteligencia artificial\", \"machine learning\", \"educación superior\", \"tecnología\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-004\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. Laura Martínez\", \"MSc. Roberto Silva\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"raw": "{\r\n  \"titulo\": \"Fundamentos de Inteligencia\",\r\n  \"tipoProductividad\": \"Libro de texto universitario\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 97895,\r\n  \"volumen\": 1,\r\n  \"paginas\": 350,\r\n  \"editorial\": \"Editorial Universidad del Cauca\",\r\n  \"codigoEditorial\": \"EUC-2024-045\",\r\n  \"etiquetas\": [\"inteligencia artificial\", \"machine learning\", \"educación superior\", \"tecnología\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-004\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. Laura Martínez\", \"MSc. Roberto Silva\"],\r\n  \"image_path\": \"urlcloudflare\",\r\n  \"archivo_path\": \"urlarchivo\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3250,7 +3404,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_tokenAdmin}}",
 											"type": "string"
 										}
 									]
@@ -3262,7 +3416,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/libro/",
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/libros/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3276,7 +3430,7 @@
 										"informacion",
 										"libros",
 										"1",
-										"libro",
+										"libros",
 										""
 									]
 								}
@@ -3286,10 +3440,20 @@
 						{
 							"name": "Eliminar imagen de libro",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/imagen/",
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/2/imagen/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3302,7 +3466,7 @@
 										"api",
 										"informacion",
 										"libros",
-										"1",
+										"2",
 										"imagen",
 										""
 									]
@@ -3341,6 +3505,49 @@
 										"libros",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/misLibros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"misLibros",
 										""
 									]
 								}
@@ -5277,201 +5484,6 @@
 							"response": []
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "Roles",
-			"item": [
-				{
-					"name": "asignar rol",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"uid\": \"zZjgYQESeOYtc5fr4QsadFLi9So1\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8002/api/usuarios/asignar-rol/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"usuarios",
-								"asignar-rol",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Listar usuarios",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:8002/api/usuarios",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"usuarios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "crear rol",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"nombre\" : \"Admin\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8002/api/usuarios/roles/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"usuarios",
-								"roles",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Crear usuario con rol por admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"Jane\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"jdoe@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"admin\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8002/api/usuarios/crear/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"usuarios",
-								"crear",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Sincronizar",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:8002/api/usuarios/sincronizar/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"usuarios",
-								"sincronizar",
-								""
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}

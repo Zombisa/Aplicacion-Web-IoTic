@@ -67,7 +67,11 @@ class LibroViewSet(viewsets.ModelViewSet):
                 libro = Libro.objects.get(pk=pk)
             except Libro.DoesNotExist:
                 return Response({'error': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
+            
+            uid = verificarToken.obtenerUID(request)
+            if libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             serializer = LibroSerializer(libro, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -77,7 +81,7 @@ class LibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='libro')
+    @action(detail=True, methods=['delete'], url_path='libros')
     def eliminar_libro(self, request, pk):
         """Elimina un libro por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -85,7 +89,11 @@ class LibroViewSet(viewsets.ModelViewSet):
                 libro = Libro.objects.get(pk=pk)
             except Libro.DoesNotExist:
                 return Response({'error': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
+            
+            uid = verificarToken.obtenerUID(request)
+            if libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
+            
             libro.delete()
             return Response({'Libro eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -111,7 +119,10 @@ class LibroViewSet(viewsets.ModelViewSet):
 
             if not libro.image_r2:
                 return Response({"message": "El libro no tiene imagen"}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            uid = verificarToken.obtenerUID(request)
+            if libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
             # extraer solo el nombre del archivo
             file_path = libro.image_r2.split("/")[-1]
 
@@ -138,6 +149,9 @@ class LibroViewSet(viewsets.ModelViewSet):
             if not Libro.file_r2:
                 return Response({"message": "Libro no tiene archivo"}, status=status.HTTP_400_BAD_REQUEST)
 
+            uid = verificarToken.obtenerUID(request)
+            if Libro.usuario.uid_firebase != uid:
+                return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
             # extraer solo el nombre del archivo
             file_path = Libro.file_r2.split("/")[-1]
 
@@ -167,3 +181,21 @@ class LibroViewSet(viewsets.ModelViewSet):
             return Response(urls)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['get'], url_path='misLibros')
+    def misLibros(self, request):
+        """Lista los libros que ha publicado el usuario (requiere rol válido)."""
+        if verificarToken.validarRol(request) is True:
+            libros = Libro.objects.all()
+            librosPublicados = []
+            uid = verificarToken.obtenerUID(request)
+            for libro in libros:
+                if libro.usuario.uid_firebase == uid:
+                    librosPublicados.append(libro)
+            if len(librosPublicados) == 0:
+                return Response({'message': 'No tienes libros publicados'})
+            serializer = LibroSerializer(librosPublicados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
