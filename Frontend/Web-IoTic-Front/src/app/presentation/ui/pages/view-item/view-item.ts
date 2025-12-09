@@ -26,6 +26,7 @@ export class ViewItem implements OnInit {
   public showDeleteModal = false;
   public loanData?: LoanDTO;
   public itemImageUrl: string = 'assets/img/item-placeholder.svg';
+  private isDeleting = false;
 
   constructor(
     private inventoryService: InventoryService,
@@ -159,13 +160,22 @@ export class ViewItem implements OnInit {
    * Mostrar modal de confirmación para eliminar item
    */
   confirmDelete(): void {
+    console.log('Mostrando modal de confirmación de eliminación');
     this.showDeleteModal = true;
   }
   
   /**
    * Ejecutar eliminación del item tras confirmación
    */
-  onDeleteConfirmed(): void {
+    onDeleteConfirmed(): void {
+    if (this.isDeleting) {
+      console.warn('Eliminación ya en proceso, ignorando llamada duplicada');
+      return;
+    }
+
+    this.isDeleting = true;
+    this.showDeleteModal = false; 
+
     this.loadingService.show();
     console.log('Eliminando item con ID:', this.itemId);
     
@@ -173,6 +183,8 @@ export class ViewItem implements OnInit {
       next: () => {
         console.log('Item eliminado exitosamente');
         this.loadingService.hide();
+        this.isDeleting = false;
+
         Swal.fire(
           'Eliminado',
           'El ítem se eliminó correctamente.',
@@ -184,6 +196,7 @@ export class ViewItem implements OnInit {
       error: (error) => {
         console.error('Error al eliminar el item:', error);
         this.loadingService.hide();
+        this.isDeleting = false;
         
         const msgBackend =
           error?.error?.detail ||

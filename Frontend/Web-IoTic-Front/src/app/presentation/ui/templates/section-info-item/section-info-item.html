@@ -9,7 +9,7 @@
       <!-- Columna información (derecha) -->
       <div class="col-12 col-md-7 position-relative content-wrapper">
         <!-- Botón eliminar (clip) -->
-        <button class="btn-danger" *ngIf="item.estado_admin !== 'Prestado'" (click)="goToDelete()">
+        <button class="btn-danger" *ngIf="mode === 'edit' && item.estado_admin !== 'Prestado'" (click)="goToDelete()">
           <i class="bi bi-trash"></i>
         </button>
         <div class="content-inner">
