@@ -70,18 +70,14 @@ export class EditItem {
      * @returns 
      */
   private uploadAndSetImage(data: ItemDTOPeticion, file: File): Promise<void> {
+    console.log("Subiendo imagen...", file);
     const extension = file.name.split('.').pop() || 'jpg';
     const contentType = file.type;
-
     return new Promise((resolve, reject) => {
-      // Pasa file_path existente para sobrescribir
-      this.imageService.getPresignedUrl(extension, data.file_path)
+      this.imageService.getPresignedUrl(extension, contentType)
         .pipe(
           switchMap((resp) => {
-            // Si es nuevo, asigna file_path devuelto por backend
-            if (!data.file_path) {
               data.file_path = resp.file_path;
-            }
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
         )

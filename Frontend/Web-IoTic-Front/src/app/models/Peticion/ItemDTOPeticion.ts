@@ -5,4 +5,5 @@ export interface ItemDTOPeticion {
   observacion: string;
   image_r2?: string;
   file_path: string;
+  cantidad?: number;
 }

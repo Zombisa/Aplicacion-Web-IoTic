@@ -4,7 +4,7 @@ import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { BooksService } from '../../../../services/information/books.service';
 import { ImagesService } from '../../../../services/common/images.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBook } from '../../templates/form-book/form-book';
 import { switchMap } from 'rxjs/operators';
 import { BaseProductivityDTO } from '../../../../models/Common/BaseProductivityDTO';
@@ -32,6 +32,11 @@ export class PublisItemProductiviy implements OnInit {
 
   /**
    * Mapeo de tipos a componentes de formulario
+   * se debe agregar el componente correspondiente para cada nuevo tipo de productividad
+   * el tipo de productividad debe coincidir con el parametro 'tipo' en la URL
+   * ejemplo: 'book' -> FormBook, 'cap_book' -> FormCapBook
+   * la clave es el tipo y el valor es el componente del formulario
+   *
    *
    */
   formMap: any = {
@@ -53,7 +58,13 @@ export class PublisItemProductiviy implements OnInit {
     public loadingService: LoadingService,
     private booksService: BooksService,
     private imageService: ImagesService,
-    private capBookService: CapBookService
+    private capBookService: CapBookService,
+    private route: Router
+    /**
+     * Agregar servicios necesarios para cada tipo de formulario
+     * private servicioEjemplo: ServicioEjemplo
+     * private otroServicio: OtroServicio
+     */
   ) { }
 
   ngOnInit(): void {
@@ -100,6 +111,9 @@ export class PublisItemProductiviy implements OnInit {
 
   /**
    * Recibe desde el hijo:
+   * Comprime la imagen si existe, la sube a R2 y guarda la entidad
+   * guardando la ruta en el objeto data
+   * es necesario que el hijo envie un objeto con la estructura BaseProductivityDTO
    * @param dtoSubmit objeto con la informacion traida del fomrulario en formato especifico y la imagen  del hijo
    */
   async onFormSubmit(dtoSubmit: FormSubmitPayload) {
@@ -144,7 +158,7 @@ export class PublisItemProductiviy implements OnInit {
         .pipe(
           switchMap((resp) => {
             console.log(resp)
-            data.file_path = resp.file_path;
+            data.image_path = resp.file_path;
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
         )
@@ -178,6 +192,8 @@ export class PublisItemProductiviy implements OnInit {
       customClass: {
         confirmButton: 'btn btn-primary'
       }
+    }).then(() => {
+      this.route.navigate(['/productividad']);
     });
   }
 /**
@@ -201,7 +217,16 @@ private mostrarError(titulo: string, mensaje: string) {
 
   /**
    *  Guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
+   * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
+   * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
    * @param payload Datos del formulario ya con image_url si aplica
+   * @example
+   * EXAMPLE: (payload: BaseProductivityDTO) => {
+      this.EXAMPLEService.postEXAMPLE(payload as EXAMPLEPeticion).subscribe({
+        next: () => this.mostrarExito('Libro guardado', 'EXAMPLE se ha guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar EXAMPLE', 'No se pudo guardar el EXAMPLE.')
+      });
+    }
    */
   private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
     book: (payload: BaseProductivityDTO) => {
@@ -219,7 +244,13 @@ private mostrarError(titulo: string, mensaje: string) {
   };
 
 
-
+/**
+ * guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
+ * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
+ * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
+ * @param payload Datos del formulario ya con image_url si aplica
+ * @returns 
+ */
 guardarEntidad(payload: BaseProductivityDTO) {
   this.isLoading = true;
   const guardarFn = this.guardarMap[this.tipo];
