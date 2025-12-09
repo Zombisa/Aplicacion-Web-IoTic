@@ -47,13 +47,13 @@ export class FormBook implements OnChanges {
     return this.fb.group({
       titulo: ['', Validators.required],
       tipoProductividad: ['Libro', Validators.required],
-      pais: ['', Validators.required],
-      anio: ['', Validators.required],
+      pais: ['', Validators.required, Validators.minLength(2)],
+      anio: ['', Validators.required, Validators.min(0)],
       autores: [[], Validators.required],
 
-      isbn: ['', Validators.required],
-      volumen: [''],
-      paginas: ['', Validators.required],
+      isbn: ['', Validators.required, Validators.minLength(1)],
+      volumen: ['' ,Validators.required, Validators.min(1)],
+      paginas: ['', Validators.required, Validators.min(1)],
       editorial: ['', Validators.required],
       codigoEditorial: ['', Validators.required],
       propiedadIntelectual: ['', Validators.required],
@@ -125,8 +125,14 @@ export class FormBook implements OnChanges {
   removeFile() {
     this.selectedDocument = null;
   }
-  
-
+  /**
+   * Resetea el formulario
+   */
+  private resetForm() {
+    this.form.reset();
+    this.selectedFile = null;
+    this.imagePreview = null;
+  }
   /**
    * Envía el formulario al componente padre
    */

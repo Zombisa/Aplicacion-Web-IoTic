@@ -22,11 +22,15 @@ body, html {
     
 }
 .title{
-    font-size: 1.3rem;
-    padding: 0 0rem 1rem 1rem ;
+    margin-top: 10rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
+    
 }
 .block-text-primary {
-  padding-left: 2rem; /* valor por defecto en pantallas pequeñas */
+  padding: 2rem; /* valor por defecto en pantallas pequeñas */
 }
 .divider{
     height: 3px;
