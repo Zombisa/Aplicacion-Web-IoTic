@@ -267,11 +267,13 @@ export class PublisItemProductiviy implements OnInit {
             'Participación guardada',
             'La participación en comité de evaluación se ha guardado correctamente.'
           ),
-        error: () =>
+        error: (err) =>{
+          console.error("❌ Error backend:", err.error);
           this.mostrarError(
             'Error al guardar la participación',
             'No se pudo guardar la participación en comité de evaluación.'
           )
+        }
       });
     }
   };
