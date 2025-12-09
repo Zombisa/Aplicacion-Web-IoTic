@@ -5,5 +5,5 @@ export interface BaseProductivityDTO {
   anio: string;
   autores: string[];
   image_r2?: string;
-  file_path: string;
+  file_r2: string;
 }
