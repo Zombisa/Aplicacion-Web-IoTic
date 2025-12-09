@@ -9,7 +9,7 @@ import { ApiService } from "../common/api.service";
 })
 export class TutoriaConcluidaService {
 
-  private readonly basePath = 'tutoriaConcluida';
+  private readonly basePath = 'informacion/tutoriasConcluidas';
 
   constructor(private api: ApiService) {}
 

@@ -1,0 +1,105 @@
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+    <!-- Upload Image Box -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+      <!-- Título del desarrollo -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="tituloDesarrollo" placeholder=" " />
+        <label>Título del desarrollo</label>
+      </div>
+
+      <!-- País -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
+        <label>País</label>
+      </div>
+
+      <!-- Nivel de acceso -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="nivelAcceso" placeholder=" " />
+        <label>Nivel de acceso</label>
+      </div>
+
+      <!-- Tipo de producto -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="tipoProducto" placeholder=" " />
+        <label>Tipo de producto</label>
+      </div>
+
+      <!-- Responsables (array) -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onResponsablesChange($event.target.value)"
+        />
+        <label>Responsables (separados por coma)</label>
+      </div>
+
+      <!-- Etiquetas (array) -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event.target.value)"
+        />
+        <label>Etiquetas (separadas por coma)</label>
+      </div>
+
+      <!-- Código de registro (opcional) -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="codigoRegistro" placeholder=" " />
+        <label>Código de registro</label>
+      </div>
+
+      <!-- Descripción funcional -->
+      <div class="input-container personality-camp">
+        <textarea
+          class="input-line"
+          formControlName="descripcionFuncional"
+          rows="3"
+          placeholder=" "
+        ></textarea>
+        <label>Descripción funcional</label>
+      </div>
+
+      <!-- Propiedad intelectual -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          formControlName="propiedadIntelectual"
+          placeholder=" "
+        />
+        <label>Propiedad intelectual</label>
+      </div>
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Guardar software</button>
+    </div>
+  </div>
+</form>

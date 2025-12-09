@@ -1,0 +1,98 @@
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+    
+    <!-- Upload Image Box -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)" />
+        
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+
+      <!-- Título -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título del artículo</label>
+      </div>
+
+      <!-- ISSN -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="issn" placeholder=" " />
+        <label>ISSN</label>
+      </div>
+
+      <!-- Volumen -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="volumen" placeholder=" " />
+        <label>Volumen</label>
+      </div>
+
+      <!-- Fascículo -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="fasc" placeholder=" " />
+        <label>Fascículo</label>
+      </div>
+
+      <!-- Páginas -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="paginas" placeholder=" " />
+        <label>Páginas</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event)" />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <!-- Responsables -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onResponsablesChange($event)" />
+        <label>Responsables (separados por coma)</label>
+      </div>
+
+      <!-- Link descarga artículo -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="linkDescargaArticulo" placeholder=" " />
+        <label>Link de descarga del artículo</label>
+      </div>
+
+      <!-- Link sitio web -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="linksitioWeb" placeholder=" " />
+        <label>Link del sitio web de la revista</label>
+      </div>
+
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">
+        Guardar revista
+      </button>
+    </div>
+
+  </div>
+</form>

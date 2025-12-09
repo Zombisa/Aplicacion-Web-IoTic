@@ -9,7 +9,7 @@ import { NoticiaPeticion } from '../../models/Peticion/informacion/NoticiaPetici
 })
 export class NoticiaService {
 
-  private readonly basePath = 'noticia';
+  private readonly basePath = 'informacion/noticias';
 
   constructor(private api: ApiService) {}
 

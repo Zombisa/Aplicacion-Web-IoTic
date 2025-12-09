@@ -9,7 +9,7 @@ import { RevistaPeticion } from "../../models/Peticion/informacion/RevistaPetici
 })
 export class RevistaService {
 
-  private readonly basePath = 'revista';
+  private readonly basePath = 'informacion/revistas';
 
   constructor(private api: ApiService) {}
 

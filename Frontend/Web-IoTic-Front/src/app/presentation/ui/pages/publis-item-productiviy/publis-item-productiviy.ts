@@ -18,6 +18,21 @@ import Swal from 'sweetalert2';
 import { FormEvaluacion } from '../../templates/form-evaluacion/form-evaluacion';
 import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
 import { ParticipacionComitesEvPeticion } from '../../../../models/Peticion/informacion/ParticipacionComitesEvPeticion';
+import { TutoriaEnMarchaService } from '../../../../services/information/tutoria-en-marcha.service';
+import { TrabajoEventosService } from '../../../../services/information/trabajo-eventos.service';
+import { TutoriaConcluidaService } from '../../../../services/information/tutoria-concluida.service';
+import { SoftwareService } from '../../../../services/information/software.service';
+import { RevistaService } from '../../../../services/information/revista.service';
+import { ProcesoTecnicaService } from '../../../../services/information/proceso-tecnica.service';
+import { ProcesoTecnicaPeticion } from '../../../../models/Peticion/informacion/ProcesoTecnicaPeticion';
+import { RevistaPeticion } from '../../../../models/Peticion/informacion/RevistaPeticion';
+import { SoftwarePeticion } from '../../../../models/Peticion/informacion/SoftwarePeticion ';
+import { TrabajoEventosPeticion } from '../../../../models/Peticion/informacion/TrabajoEventosPeticion';
+import { TutoriaConcluidaPeticion } from '../../../../models/Peticion/informacion/TutoriaConcluidaPeticion';
+import { TutoriaEnMarchaPeticion } from '../../../../models/Peticion/informacion/TutoriaEnMarchaPeticion';
+import { FormProcesoTecnica } from '../../templates/form-proceso-tecnica/form-proceso-tecnica';
+import { FormRevista } from '../../templates/form-revista/form-revista';
+import { FormSoftware } from '../../templates/form-software/form-software';
 
 
 @Component({
@@ -60,6 +75,12 @@ export class PublisItemProductiviy implements OnInit {
     libro: FormBook,
     capitulo_libro: FormCapBook,
     participacion_comites_ev: FormEvaluacion,
+    proceso_tecnica: FormProcesoTecnica,
+    revista: FormRevista,
+    software: FormSoftware,
+    trabajo_eventos: null,
+    tutoria_en_marcha: null,
+    tutoria_concluida: null
   };
 
   isLoading: boolean = false;
@@ -78,6 +99,12 @@ export class PublisItemProductiviy implements OnInit {
     private imageService: ImagesService,
     private capBookService: CapBookService,
     private participacionComitesEvService: ParticipacionComitesEvService,
+    private tutoriaEnMarchaService: TutoriaEnMarchaService,
+    private tutoriaConcluidaService: TutoriaConcluidaService,
+    private trabajoEventosService: TrabajoEventosService,
+    private softwareService: SoftwareService,
+    private revistaService: RevistaService,
+    private procesoTecnicaService: ProcesoTecnicaService,
     private route: Router
     /**
      * Agregar servicios necesarios para cada tipo de formulario
@@ -260,6 +287,7 @@ export class PublisItemProductiviy implements OnInit {
         error: () => this.mostrarError('Error al guardar el capítulo', 'No se pudo guardar el capítulo.')
       });
     },
+
     participacion_comites_ev: (payload: BaseProductivityDTO) => {
       this.participacionComitesEvService.create(payload as ParticipacionComitesEvPeticion).subscribe({
         next: () =>
@@ -267,13 +295,66 @@ export class PublisItemProductiviy implements OnInit {
             'Participación guardada',
             'La participación en comité de evaluación se ha guardado correctamente.'
           ),
-        error: (err) =>{
-          console.error("❌ Error backend:", err.error);
+        error: (err) => {
           this.mostrarError(
             'Error al guardar la participación',
             'No se pudo guardar la participación en comité de evaluación.'
           )
         }
+      });
+    },
+
+    tutoria_en_marcha: (payload: BaseProductivityDTO) => {
+      this.tutoriaEnMarchaService.create(payload as TutoriaEnMarchaPeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Tutoría en marcha guardada', 'La tutoría en marcha se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar tutoría', 'No se pudo guardar la tutoría en marcha.')
+      });
+    },
+
+    tutoria_concluida: (payload: BaseProductivityDTO) => {
+      this.tutoriaConcluidaService.create(payload as TutoriaConcluidaPeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Tutoría concluida guardada', 'La tutoría concluida se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar tutoría', 'No se pudo guardar la tutoría concluida.')
+      });
+    },
+
+    trabajo_eventos: (payload: BaseProductivityDTO) => {
+      this.trabajoEventosService.create(payload as TrabajoEventosPeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Trabajo guardado', 'El trabajo de eventos se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar trabajo', 'No se pudo guardar el trabajo de eventos.')
+      });
+    },
+
+    software: (payload: BaseProductivityDTO) => {
+      this.softwareService.create(payload as SoftwarePeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Software guardado', 'El software se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar software', 'No se pudo guardar el software.')
+      });
+    },
+
+    revista: (payload: BaseProductivityDTO) => {
+      this.revistaService.create(payload as RevistaPeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Revista guardada', 'La revista se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar revista', 'No se pudo guardar la revista.')
+      });
+    },
+
+    proceso_tecnica: (payload: BaseProductivityDTO) => {
+      this.procesoTecnicaService.create(payload as ProcesoTecnicaPeticion).subscribe({
+        next: () =>
+          this.mostrarExito('Proceso técnico guardado', 'El proceso técnico se ha guardado correctamente.'),
+        error: () =>
+          this.mostrarError('Error al guardar proceso técnico', 'No se pudo guardar el proceso técnico.')
       });
     }
   };

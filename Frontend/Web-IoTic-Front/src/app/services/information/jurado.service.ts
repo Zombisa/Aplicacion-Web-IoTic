@@ -9,7 +9,7 @@ import { JuradoPeticion } from "../../models/Peticion/informacion/JuradoPeticion
 })
 export class JuradoService {
 
-  private readonly basePath = 'jurado';
+  private readonly basePath = 'informacion/jurados';
 
   constructor(private api: ApiService) {}
 

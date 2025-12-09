@@ -9,7 +9,7 @@ import { MaterialDidacticoPeticion } from '../../models/Peticion/informacion/Mat
 })
 export class MaterialDidacticoService {
 
-  private readonly basePath = 'materialDidactico';
+  private readonly basePath = 'informacion/materialDidactico';
 
   constructor(private api: ApiService) {}
 

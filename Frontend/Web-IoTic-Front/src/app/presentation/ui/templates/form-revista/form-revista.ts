@@ -1,0 +1,146 @@
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
+import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
+
+@Component({
+  selector: 'app-form-revista',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './form-revista.html',
+  styleUrls: ['./form-revista.css']
+})
+export class FormRevista implements OnChanges {
+
+  @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
+
+  /** Modo editar */
+  @Input() editMode: boolean = false;
+
+  /** Datos de la revista a editar */
+  @Input() revistaData!: RevistaDTO;
+
+  form: FormGroup;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.buildForm();
+  }
+
+  /**
+   * Detecta cambios en los @Input
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.editMode && this.revistaData) {
+      this.populateForm(this.revistaData);
+    }
+  }
+
+  /**
+   * Construye el formulario reactivo para revistas
+   */
+  private buildForm(): FormGroup {
+    return this.fb.group({
+      // Si manejas tipoProductividad para revista, lo dejamos fijo
+      tipoProductividad: ['Revistas', Validators.required],
+
+      titulo: ['', Validators.required],
+      issn: ['', Validators.required],
+      volumen: ['', Validators.required],
+      fasc: ['', Validators.required],
+      paginas: ['', Validators.required],
+
+      autores: [[], Validators.required],
+      responsable: [[], Validators.required],
+
+      linkDescargaArticulo: [''],
+      linksitioWeb: [''],
+
+      // El padre la completa luego cuando sube la imagen
+      image_url: ['']
+    });
+  }
+
+  /**
+   * Llena el formulario con los datos existentes
+   */
+  private populateForm(data: RevistaDTO): void {
+    this.form.patchValue({
+      tipoProductividad: (data as any).tipoProductividad || 'Revistas',
+      titulo: data.titulo,
+      issn: data.issn,
+      volumen: data.volumen,
+      fasc: data.fasc,
+      paginas: data.paginas,
+      autores: data.autores || [],
+      responsable: data.responsable || [],
+      linkDescargaArticulo: (data as any).linkDescargaArticulo || '',
+      linksitioWeb: (data as any).linksitioWeb || '',
+      image_url: (data as any).image_url || data.image_r2 || ''
+    });
+
+    if ((data as any).image_url || data.image_r2) {
+      this.imagePreview = (data as any).image_url || data.image_r2!;
+    }
+  }
+
+  /**
+   * Maneja cambio de texto en campo Autores (separados por coma)
+   */
+  onAutoresChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value || '';
+    const autores = value
+      .split(',')
+      .map(a => a.trim())
+      .filter(a => a);
+
+    this.form.patchValue({ autores });
+  }
+
+  /**
+   * Maneja cambio de texto en campo Responsables (separados por coma)
+   */
+  onResponsablesChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value || '';
+    const responsable = value
+      .split(',')
+      .map(r => r.trim())
+      .filter(r => r);
+
+    this.form.patchValue({ responsable });
+  }
+
+  /**
+   * Captura el archivo seleccionado y genera un preview
+   */
+  onFileSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => (this.imagePreview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  /**
+   * Envía el formulario al componente padre
+   */
+  submitForm(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload: FormSubmitPayload = {
+      data: this.form.value,
+      file_image: this.selectedFile
+    };
+
+    this.formSubmit.emit(payload);
+  }
+}
