@@ -19,38 +19,19 @@ export class ApiService {
     return `${base}/${rel}`;
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('authToken');
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    return new HttpHeaders(headers);
-  }
-
   get<T>(path: string): Observable<T> {
-    return this.http.get<T>(this.buildUrl(path), {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<T>(this.buildUrl(path));
   }
 
   post<T>(path: string, body: any): Observable<T> {
-    return this.http.post<T>(this.buildUrl(path), body, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.post<T>(this.buildUrl(path), body);
   }
 
   put<T>(path: string, body: any): Observable<T> {
-    return this.http.put<T>(this.buildUrl(path), body, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.put<T>(this.buildUrl(path), body);
   }
 
   delete<T>(path: string): Observable<T> {
-    return this.http.delete<T>(this.buildUrl(path), {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.delete<T>(this.buildUrl(path));
   }
 }
