@@ -198,8 +198,14 @@ class InventarioViewSet(viewsets.ModelViewSet):
         """
         item = get_object_or_404(Inventario, pk=pk)
 
+        # Procesar file_path si viene (componer URL con bucket)
+        data = request.data.copy()
+        file_path = data.pop('file_path', None)
+        if file_path and not data.get('image_r2'):
+            data['image_r2'] = f"{settings.R2_BUCKET_PATH}/{file_path}"
+
         # Si viene una nueva imagen y ya tenía una diferente, verificar antes de eliminar
-        nueva_imagen = request.data.get('image_r2')
+        nueva_imagen = data.get('image_r2')
         if nueva_imagen and item.image_r2 and nueva_imagen != item.image_r2:
             imagen_anterior = item.image_r2
             
@@ -223,7 +229,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
                     print(f"Error eliminando imagen anterior de R2: {str(e)}")
             # Si items_con_misma_imagen > 1 o prestamos_con_imagen == True, no eliminar
 
-        serializer = InventarioSerializer(item, data=request.data, partial=True)
+        serializer = InventarioSerializer(item, data=data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
