@@ -37,6 +37,14 @@ def verificar_token(view_func):
         email = decoded.get("email")
         role_claim = (decoded.get("role") or "").lower().strip()
 
+        # Normalizar claim a los nombres oficiales de rol
+        ROLES_PERMITIDOS = {
+            "admin": "Administrador",
+            "administrador": "Administrador",
+            "mentor": "Mentor",
+        }
+        role_normalizado = ROLES_PERMITIDOS.get(role_claim, "")
+
         # ------------------------------
         #  Sincronizar usuario en BD
         # ------------------------------
@@ -51,14 +59,14 @@ def verificar_token(view_func):
             }
         )
 
-        # Asignar rol si existe y es válido (Administrador/Mentor). Si no, dejar sin rol.
-        try:
-            if role_claim in ["admin", "administrador", "mentor"]:
-                rol_obj = Rol.objects.get(nombre__iexact=role_claim)
+        # Asignar rol si el claim es válido (Administrador/Mentor). Si no, dejar sin rol.
+        if role_normalizado:
+            try:
+                rol_obj = Rol.objects.get(nombre__iexact=role_normalizado)
                 usuario.rol = rol_obj
                 usuario.save()
-        except Rol.DoesNotExist:
-            pass
+            except Rol.DoesNotExist:
+                pass
 
         # Guardar objetos en request
         request.user_local = usuario
@@ -104,6 +112,7 @@ def verificar_roles(roles_permitidos):
             token_role_normalizado = ROLES_MAP.get(token_role, token_role)
 
             # Leer rol de BD y normalizarlo
+            db_role = ""
             db_role_normalizado = ""
             if hasattr(request, "user_local") and request.user_local.rol:
                 db_role = request.user_local.rol.nombre.lower().strip()
