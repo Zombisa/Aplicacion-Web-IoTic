@@ -3,12 +3,8 @@ from apps.usuarios_roles.models import Usuario, Rol
 
 print("Iniciando sincronización de usuarios Firebase → PostgreSQL...\n")
 
-# Roles permitidos (case-insensitive: se normaliza a minúsculas)
-ROLES_PERMITIDOS = {
-    "admin": "Administrador",
-    "mentor": "Mentor",
-    "administrador": "Administrador"
-}
+# Roles permitidos: admin o mentor (en minúsculas)
+ROLES_VALIDOS = ["admin", "mentor"]
 
 for user in auth.list_users().iterate_all():
 
@@ -20,13 +16,12 @@ for user in auth.list_users().iterate_all():
     # LEER ROL DESDE CUSTOM CLAIM
     # ============================
     claims = user.custom_claims or {}
-    rol_name_claim = claims.get("role", "").lower()
+    rol_name_claim = (claims.get("role") or "").lower().strip()
 
-    # Normalizar y validar rol
+    # Validar rol
     rol_obj = None
-    if rol_name_claim in ROLES_PERMITIDOS:
-        rol_normalizado = ROLES_PERMITIDOS[rol_name_claim]
-        rol_obj, _ = Rol.objects.get_or_create(nombre=rol_normalizado)
+    if rol_name_claim in ROLES_VALIDOS:
+        rol_obj, _ = Rol.objects.get_or_create(nombre=rol_name_claim)
     # Si el rol no es válido, rol_obj queda como None
 
     # ============================

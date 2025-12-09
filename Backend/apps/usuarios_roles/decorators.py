@@ -37,14 +37,6 @@ def verificar_token(view_func):
         email = decoded.get("email")
         role_claim = (decoded.get("role") or "").lower().strip()
 
-        # Normalizar claim a los nombres oficiales de rol
-        ROLES_PERMITIDOS = {
-            "admin": "Administrador",
-            "administrador": "Administrador",
-            "mentor": "Mentor",
-        }
-        role_normalizado = ROLES_PERMITIDOS.get(role_claim, "")
-
         # ------------------------------
         #  Sincronizar usuario en BD
         # ------------------------------
@@ -59,28 +51,19 @@ def verificar_token(view_func):
             }
         )
 
-        # Asignar rol si el claim es válido (Administrador/Mentor). Si no, dejar sin rol.
-        if role_normalizado:
+        # Asignar rol si el claim es válido (admin o mentor). Si no, dejar sin rol.
+        if role_claim in ["admin", "mentor"]:
             try:
-                rol_obj = Rol.objects.get(nombre__iexact=role_normalizado)
+                rol_obj = Rol.objects.get(nombre=role_claim)
                 usuario.rol = rol_obj
                 usuario.save()
             except Rol.DoesNotExist:
                 pass
 
-        # Normalizar role_claim para uniformidad en decorators
-        # admin/administrador -> administrador, mentor -> mentor
-        ROLES_NORM = {
-            "admin": "administrador",
-            "administrador": "administrador",
-            "mentor": "mentor"
-        }
-        role_normalizado_para_request = ROLES_NORM.get(role_claim, role_claim)
-
         # Guardar objetos en request
         request.user_local = usuario
         request.user_firebase = decoded
-        request.user_role = role_normalizado_para_request
+        request.user_role = role_claim
 
         return view_func(request, *args, **kwargs)
 
@@ -92,55 +75,36 @@ def verificar_roles(roles_permitidos):
     """
     Autoriza acceso sólo si el usuario tiene alguno de los roles permitidos.
 
-    Compara roles provenientes del token (user_role) y de la BD (user_local.rol).
-    Si ninguno coincide, responde 403 con detalle de roles detectados.
+    Compara roles directamente sin normalización (admin, mentor).
 
     Args:
-        roles_permitidos (list[str]): Ej. ['admin', 'mentor'] o ['Administrador', 'Mentor']
+        roles_permitidos (list[str]): Ej. ['admin', 'mentor']
     """
-    # Mapeo de normalización para compatibilidad
-    ROLES_MAP = {
-        "admin": "administrador",
-        "mentor": "mentor",
-        "administrador": "administrador"
-    }
-    
-    # Normalizar roles permitidos y construir lista de nombres canonicos para error
-    roles_normalizados = []
-    roles_canonicos = []
-    for r in roles_permitidos:
-        r_lower = r.lower().strip()
-        norm = ROLES_MAP.get(r_lower, r_lower)
-        roles_normalizados.append(norm)
-        # Mapear de vuelta al nombre canónico (Administrador, Mentor)
-        canonical = "Administrador" if norm == "administrador" else "Mentor" if norm == "mentor" else norm
-        if canonical not in roles_canonicos:
-            roles_canonicos.append(canonical)
+    # Normalizar roles a minúsculas para comparación
+    roles_permitidos_lower = [r.lower().strip() for r in roles_permitidos]
 
     def decorator(view_func):
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
             """Wrapper que aplica la validación de rol y retorna 403 si no coincide."""
 
-            # Leer rol del token y normalizarlo
+            # Leer rol del token
             token_role = getattr(request, "user_role", "").lower().strip()
-            token_role_normalizado = ROLES_MAP.get(token_role, token_role)
 
-            # Leer rol de BD y normalizarlo
+            # Leer rol de BD
             db_role = ""
-            db_role_normalizado = ""
             if hasattr(request, "user_local") and request.user_local.rol:
                 db_role = request.user_local.rol.nombre.lower().strip()
-                db_role_normalizado = ROLES_MAP.get(db_role, db_role)
 
-            if token_role_normalizado not in roles_normalizados and db_role_normalizado not in roles_normalizados:
-                return JsonResponse({
-                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos}",
-                    "token_role": token_role,
-                    "db_role": db_role
-                }, status=403)
-
-            return view_func(request, *args, **kwargs)
+            # Autorizar si al menos uno de los roles coincide
+            if token_role in roles_permitidos_lower or db_role in roles_permitidos_lower:
+                return view_func(request, *args, **kwargs)
+            
+            return JsonResponse({
+                "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos_lower}",
+                "token_role": token_role,
+                "db_role": db_role
+            }, status=403)
 
         return wrapped
 

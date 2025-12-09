@@ -1979,7 +1979,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nombre\": \"james\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"ja@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"Mentor\"\r\n}",
+							"raw": "{\r\n  \"nombre\": \"james\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"ja@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"mentor\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

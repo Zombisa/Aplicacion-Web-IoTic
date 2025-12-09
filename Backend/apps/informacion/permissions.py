@@ -14,7 +14,7 @@ class verificarToken():
             decoded_token = auth.verify_id_token(token)
             role = decoded_token.get('role')
             
-            if role not in ['Admin', 'Mentor']:
+            if role not in ['admin', 'mentor']:
                 return Response(
                     {'error': 'No tienes permisos para realizar esta acción'}, 
                     status=status.HTTP_403_FORBIDDEN

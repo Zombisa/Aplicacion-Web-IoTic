@@ -39,19 +39,13 @@ def crear_usuario(request):
         if field not in data:
             return Response({"error": f"'{field}' es requerido"}, status=400)
 
-    # Validar y normalizar rol (acepta variaciones)
-    ROLES_PERMITIDOS = {
-        "admin": "Administrador",
-        "mentor": "Mentor",
-        "administrador": "Administrador"
-    }
+    # Validar rol (solo admin o mentor)
     rol_input = data["rol"].lower().strip()
     
-    if rol_input not in ROLES_PERMITIDOS:
-        return Response({"error": "Rol inválido. Solo se permiten: Admin, Mentor, o Administrador"}, status=400)
+    if rol_input not in ["admin", "mentor"]:
+        return Response({"error": "Rol inválido. Solo se permiten: admin o mentor"}, status=400)
     
-    rol_normalizado = ROLES_PERMITIDOS[rol_input]
-    rol, _ = Rol.objects.get_or_create(nombre=rol_normalizado)
+    rol, _ = Rol.objects.get_or_create(nombre=rol_input)
 
     # Crear usuario en Firebase
     try:
@@ -73,7 +67,7 @@ def crear_usuario(request):
         estado=True
     )
 
-    # Asignar custom claim (usar nombre normalizado)
+    # Asignar custom claim (usar nombre normalizado: admin o mentor)
     asignar_rol_firebase(user_record.uid, rol.nombre)
 
     return Response(UsuarioSerializer(usuario).data, status=201)
@@ -95,12 +89,11 @@ def listar_roles(request):
 # ======================================================
 @api_view(["POST"])
 @verificar_token
-@verificar_roles(["admin"])
 def asignar_rol(request):
     """
     Asigna un rol existente a un usuario ya creado (BD + Firebase claim).
 
-    Requiere uid (Firebase) y rol (nombre). Sólo admin.
+    Requiere uid (Firebase) y rol (nombre: admin o mentor). Sólo admin.
     """
     uid = request.data.get("uid")
     rol_name = request.data.get("rol")
@@ -114,19 +107,13 @@ def asignar_rol(request):
     except Usuario.DoesNotExist:
         return Response({"error": "Usuario no existe en la base de datos"}, status=404)
 
-    # Validar y normalizar rol (acepta variaciones)
-    ROLES_PERMITIDOS = {
-        "admin": "Administrador",
-        "mentor": "Mentor",
-        "administrador": "Administrador"
-    }
+    # Validar rol (solo admin o mentor)
     rol_input = rol_name.lower().strip()
     
-    if rol_input not in ROLES_PERMITIDOS:
-        return Response({"error": "Rol inválido. Solo se permiten: Admin, Mentor, o Administrador"}, status=400)
+    if rol_input not in ["admin", "mentor"]:
+        return Response({"error": "Rol inválido. Solo se permiten: admin o mentor"}, status=400)
     
-    rol_normalizado = ROLES_PERMITIDOS[rol_input]
-    rol, _ = Rol.objects.get_or_create(nombre=rol_normalizado)
+    rol, _ = Rol.objects.get_or_create(nombre=rol_input)
 
     # Actualizar en base de datos (reemplaza el rol anterior)
     usuario.rol = rol
@@ -171,19 +158,13 @@ def actualizar_usuario(request, usuario_id):
     if "email" in data:
         usuario.email = data["email"]
     if "rol" in data:
-        # Validar y normalizar rol (acepta variaciones)
-        ROLES_PERMITIDOS = {
-            "admin": "Administrador",
-            "mentor": "Mentor",
-            "administrador": "Administrador"
-        }
+        # Validar rol (solo admin o mentor)
         rol_input = data["rol"].lower().strip()
         
-        if rol_input not in ROLES_PERMITIDOS:
-            return Response({"error": "Rol inválido. Solo se permiten: Admin, Mentor, o Administrador"}, status=400)
+        if rol_input not in ["admin", "mentor"]:
+            return Response({"error": "Rol inválido. Solo se permiten: admin o mentor"}, status=400)
         
-        rol_normalizado = ROLES_PERMITIDOS[rol_input]
-        rol, _ = Rol.objects.get_or_create(nombre=rol_normalizado)
+        rol, _ = Rol.objects.get_or_create(nombre=rol_input)
         
         # Reemplazar el rol anterior
         usuario.rol = rol
