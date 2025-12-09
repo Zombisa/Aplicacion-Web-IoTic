@@ -688,23 +688,45 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         
         URL: /prestamo/{id}/  [PATCH]
         
+        Request body (opcional):
+            {
+                "estado_fisico": "str (Excelente|Bueno|Dañado)"
+            }
+        
         Cambios realizados:
             - Marca el préstamo como "Devuelto"
             - Asigna fecha_devolucion = ahora
             - Cambia estado del ítem a "Disponible"
+            - Si se proporciona estado_fisico, actualiza el estado físico del ítem
         
         Returns:
             200 OK: {"message": "Ítem devuelto correctamente.", "prestamo": {...}}
-            400 Bad Request: El préstamo ya está devuelto
+            400 Bad Request: El préstamo ya está devuelto o estado_fisico inválido
             404 Not Found: Préstamo no existe
             500 Internal Server Error: Error inesperado
+            
+        Ejemplos:
+            # Devolución normal (sin cambio de estado)
+            PATCH /prestamo/5/
+            {}
+            
+            # Devolución con ítem dañado
+            PATCH /prestamo/5/
+            {"estado_fisico": "Dañado"}
+            
+            # Devolución con menor calidad
+            PATCH /prestamo/5/
+            {"estado_fisico": "Bueno"}
         """
         prestamo = get_object_or_404(Prestamo, pk=pk)
         data = request.data.copy()
 
+        # Extraer estado_fisico si viene
+        nuevo_estado_fisico = data.pop('estado_fisico', None)
+
         # registrar devolución lógica
         try:
-            prestamo = registrar_devolucion(prestamo)
+            prestamo = registrar_devolucion(prestamo, nuevo_estado_fisico=nuevo_estado_fisico)
             return Response({
                 "message": "Ítem devuelto correctamente.",
                 "prestamo": PrestamoSerializer(prestamo).data

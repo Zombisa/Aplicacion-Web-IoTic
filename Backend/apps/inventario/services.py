@@ -376,7 +376,7 @@ def registrar_prestamo(data):
     return prestamo
 
 
-def registrar_devolucion(prestamo: Prestamo):
+def registrar_devolucion(prestamo: Prestamo, nuevo_estado_fisico=None):
     """
     Registra la devolución de un ítem prestado.
     
@@ -384,23 +384,42 @@ def registrar_devolucion(prestamo: Prestamo):
     a la fecha/hora actual. Cambia el estado del ítem a "Disponible" en
     transacción atómica.
     
+    Opcionalmente, permite actualizar el estado físico del ítem si fue devuelto
+    en peor condición (ej: "Dañado", "Bueno" en lugar de "Excelente").
+    
+    Si el nuevo estado físico es "Dañado", automáticamente cambia el estado
+    admin a "No prestar" para evitar futuros préstamos del ítem dañado.
+    
     Args:
         prestamo (Prestamo): Objeto del préstamo a devolver
+        nuevo_estado_fisico (str, optional): Nuevo estado físico del ítem
+                                              (Excelente|Bueno|Dañado)
+                                              Si no se proporciona, mantiene el actual.
         
     Returns:
         Prestamo: Objeto del préstamo actualizado
         
     Raises:
         ValidationError: Si el préstamo ya está marcado como devuelto
+                        o si el estado físico es inválido
         
     Ejemplo:
+        # Devolución normal (sin cambios de estado físico)
         prestamo = registrar_devolucion(prestamo_obj)
-        # Ahora prestamo.estado == 'Devuelto'
-        # prestamo.fecha_devolucion contiene la fecha/hora actual
-        # prestamo.item.estado_admin == 'Disponible'
+        
+        # Devolución con ítem dañado (cambia estado_admin a "No prestar" automáticamente)
+        prestamo = registrar_devolucion(prestamo_obj, nuevo_estado_fisico="Dañado")
     """
     if prestamo.estado == "Devuelto":
         raise ValidationError("Este préstamo ya está devuelto.")
+
+    # Validar estado físico si se proporciona
+    if nuevo_estado_fisico:
+        estados_validos = ['Excelente', 'Bueno', 'Dañado']
+        if nuevo_estado_fisico not in estados_validos:
+            raise ValidationError(
+                f"estado_fisico debe ser uno de: {estados_validos}"
+            )
 
     # Marcar devuelto (Transacción atómica)
     with transaction.atomic():
@@ -411,6 +430,15 @@ def registrar_devolucion(prestamo: Prestamo):
         # Actualizar item
         item = prestamo.item
         item.estado_admin = "Disponible"
+        
+        # Actualizar estado físico si se proporciona
+        if nuevo_estado_fisico:
+            item.estado_fisico = nuevo_estado_fisico
+            
+            # Si es dañado, cambiar estado_admin a "No prestar"
+            if nuevo_estado_fisico == "Dañado":
+                item.estado_admin = "No prestar"
+        
         item.save()
 
     return prestamo
