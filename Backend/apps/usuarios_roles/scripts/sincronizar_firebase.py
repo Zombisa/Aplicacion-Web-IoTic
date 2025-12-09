@@ -3,8 +3,12 @@ from apps.usuarios_roles.models import Usuario, Rol
 
 print("Iniciando sincronización de usuarios Firebase → PostgreSQL...\n")
 
-# --- Validar que exista el rol por defecto ---
-rol_por_defecto, _ = Rol.objects.get_or_create(nombre="usuario")
+# Roles permitidos (case-insensitive: se normaliza a minúsculas)
+ROLES_PERMITIDOS = {
+    "admin": "Administrador",
+    "mentor": "Mentor",
+    "administrador": "Administrador"
+}
 
 for user in auth.list_users().iterate_all():
 
@@ -16,10 +20,14 @@ for user in auth.list_users().iterate_all():
     # LEER ROL DESDE CUSTOM CLAIM
     # ============================
     claims = user.custom_claims or {}
-    rol_name = claims.get("role", "usuario")
+    rol_name_claim = claims.get("role", "").lower()
 
-    # Buscar el rol en la BD, si no existe crearlo
-    rol_obj, _ = Rol.objects.get_or_create(nombre=rol_name)
+    # Normalizar y validar rol
+    rol_obj = None
+    if rol_name_claim in ROLES_PERMITIDOS:
+        rol_normalizado = ROLES_PERMITIDOS[rol_name_claim]
+        rol_obj, _ = Rol.objects.get_or_create(nombre=rol_normalizado)
+    # Si el rol no es válido, rol_obj queda como None
 
     # ============================
     # CREAR O ACTUALIZAR USUARIO
@@ -30,9 +38,9 @@ for user in auth.list_users().iterate_all():
             "email": email,
             "nombre": nombre_default,
             "apellido": "",
-            "contrasena": "",        # No guardamos contraseña local
+            "contrasena": "",
             "estado": True,
-            "rol": rol_obj           
+            "rol": rol_obj  # Puede ser None si no tiene rol válido
         }
     )
 
@@ -41,9 +49,10 @@ for user in auth.list_users().iterate_all():
         usuario.email = email
         usuario.nombre = nombre_default
         usuario.estado = True
-        usuario.rol = rol_obj      # ← SIEMPRE asignar rol válido
+        usuario.rol = rol_obj  # Reemplaza el rol anterior (puede ser None)
         usuario.save()
 
-    print(f"Usuario sincronizado: {uid} ({email}) - Rol asignado: {rol_obj.nombre}")
+    rol_texto = rol_obj.nombre if rol_obj else "Sin rol"
+    print(f"Usuario sincronizado: {uid} ({email}) - Rol: {rol_texto}")
 
 print("\nSincronización completa.")

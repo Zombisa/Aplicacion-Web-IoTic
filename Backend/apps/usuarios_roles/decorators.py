@@ -78,24 +78,37 @@ def verificar_roles(roles_permitidos):
     Si ninguno coincide, responde 403 con detalle de roles detectados.
 
     Args:
-        roles_permitidos (list[str]): Ej. ['admin', 'mentor']
+        roles_permitidos (list[str]): Ej. ['admin', 'mentor'] o ['Administrador', 'Mentor']
     """
-    roles_permitidos = [r.lower().strip() for r in roles_permitidos]
+    # Mapeo de normalización para compatibilidad
+    ROLES_MAP = {
+        "admin": "administrador",
+        "mentor": "mentor",
+        "administrador": "administrador"
+    }
+    
+    # Normalizar roles permitidos
+    roles_normalizados = []
+    for r in roles_permitidos:
+        r_lower = r.lower().strip()
+        roles_normalizados.append(ROLES_MAP.get(r_lower, r_lower))
 
     def decorator(view_func):
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
             """Wrapper que aplica la validación de rol y retorna 403 si no coincide."""
 
-            # Leer rol del token
+            # Leer rol del token y normalizarlo
             token_role = getattr(request, "user_role", "").lower().strip()
+            token_role_normalizado = ROLES_MAP.get(token_role, token_role)
 
-            # Leer rol de BD
-            db_role = ""
+            # Leer rol de BD y normalizarlo
+            db_role_normalizado = ""
             if hasattr(request, "user_local") and request.user_local.rol:
                 db_role = request.user_local.rol.nombre.lower().strip()
+                db_role_normalizado = ROLES_MAP.get(db_role, db_role)
 
-            if token_role not in roles_permitidos and db_role not in roles_permitidos:
+            if token_role_normalizado not in roles_normalizados and db_role_normalizado not in roles_normalizados:
                 return JsonResponse({
                     "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos}",
                     "token_role": token_role,

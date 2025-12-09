@@ -93,6 +93,8 @@ def crear_items_masivo(data):
         # imagen única (opcional)
         image_r2_unico = data.get("image_r2", None)
 
+        usar_urls_completas = False
+
         # ─────────────────────────────────────────────────────────────
         # VALIDAR: no permitir ambas listas de imágenes
         # ─────────────────────────────────────────────────────────────
@@ -104,15 +106,13 @@ def crear_items_masivo(data):
 
         # Unificar en imagenes para facilitar el procesamiento
         imagenes = imagenes_r2 or imagenes
+        if imagenes_r2:
+            usar_urls_completas = True
 
-        # ─────────────────────────────────────────────────────────────
-        # VALIDAR: no permitir image_r2 único cuando cantidad > 1
-        # ─────────────────────────────────────────────────────────────
-        if cantidad > 1 and image_r2_unico:
-            raise ValidationError(
-                "No puedes usar un 'image_r2' único cuando la cantidad es mayor a 1. "
-                "Debes usar 'imagenes_r2' o 'imagenes' para enviar imágenes diferentes por ítem."
-            )
+        # Permitir image_r2 único para cantidad > 1 replicándolo en la lista
+        if cantidad > 1 and image_r2_unico and imagenes is None:
+            imagenes = [image_r2_unico] * cantidad
+            usar_urls_completas = True
 
         # ─────────────────────────────────────────────────────────────
         # VALIDAR: lista de imágenes EXIGE coincidencia exacta
@@ -141,11 +141,9 @@ def crear_items_masivo(data):
 
             # asignar imagen correcta
             if imagenes is not None:
-                # imágenes diferentes → OK
+                # imágenes diferentes o replicadas
                 img = imagenes[i]
-                # Si viene de 'imagenes' (nombres), componer URL; si es 'imagenes_r2', usar tal cual
-                if imagenes_r2:
-                    # Era 'imagenes_r2' → URL completa
+                if usar_urls_completas:
                     item_copy["image_r2"] = img
                 else:
                     # Era 'imagenes' → componer URL
