@@ -32,7 +32,11 @@ export class PanelPublishProductivity {
     { name: 'Software', tipo: 'software', description: 'Comparte software desarrollado, incluyendo herramientas, aplicaciones o sistemas.' },
     { name: 'Trabajos en Eventos', tipo: 'trabajo_eventos', description: 'Publica trabajos presentados en eventos académicos, conferencias o simposios.' },
     { name: 'Trabajos Dirigidos - Tutorías en Marcha', tipo: 'tutoria_en_marcha', description: 'Registra tutorías que actualmente están en desarrollo o ejecución.'},
-    { name: 'Trabajos Dirigidos - Tutorías Concluidas', tipo: 'tutoria_concluida', description: 'Publica tutorías finalizadas indicando los resultados o logros alcanzados.'}
+    { name: 'Trabajos Dirigidos - Tutorías Concluidas', tipo: 'tutoria_concluida', description: 'Publica tutorías finalizadas indicando los resultados o logros alcanzados.'},
+    { name: 'Cursos de Duración Corta', tipo: 'curso', description: 'Publica cursos de duración corta que has impartido o desarrollado.'},
+    { name: 'Desarrollo de Material Didáctico', tipo: 'material_didactico', description: 'Comparte materiales didácticos que has desarrollado para la enseñanza.'},
+    { name: 'Jurado - Comisiones Evaluadoras', tipo: 'jurado', description: 'Registra tu participación como jurado en comisiones evaluadoras de trabajo de grado.'},
+    { name: 'Organización de Eventos', tipo: 'evento', description: 'Publica eventos académicos o profesionales que has organizado.'}
   ];
 
 

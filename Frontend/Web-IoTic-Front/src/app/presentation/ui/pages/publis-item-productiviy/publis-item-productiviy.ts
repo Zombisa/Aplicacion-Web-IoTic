@@ -4,6 +4,7 @@ import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { BooksService } from '../../../../services/information/books.service';
 import { ImagesService } from '../../../../services/common/images.service';
+import { FilesService } from '../../../../services/common/files.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBook } from '../../templates/form-book/form-book';
 import { switchMap } from 'rxjs/operators';
@@ -26,7 +27,7 @@ import { RevistaService } from '../../../../services/information/revista.service
 import { ProcesoTecnicaService } from '../../../../services/information/proceso-tecnica.service';
 import { ProcesoTecnicaPeticion } from '../../../../models/Peticion/informacion/ProcesoTecnicaPeticion';
 import { RevistaPeticion } from '../../../../models/Peticion/informacion/RevistaPeticion';
-import { SoftwarePeticion } from '../../../../models/Peticion/informacion/SoftwarePeticion ';
+import { SoftwarePeticion } from '../../../../models/Peticion/informacion/SoftwarePeticion';
 import { TrabajoEventosPeticion } from '../../../../models/Peticion/informacion/TrabajoEventosPeticion';
 import { TutoriaConcluidaPeticion } from '../../../../models/Peticion/informacion/TutoriaConcluidaPeticion';
 import { TutoriaEnMarchaPeticion } from '../../../../models/Peticion/informacion/TutoriaEnMarchaPeticion';
@@ -36,8 +37,21 @@ import { FormSoftware } from '../../templates/form-software/form-software';
 import { FormTrabajoEventos } from '../../templates/form-trabajo-eventos/form-trabajo-eventos';
 import { FormTutoriaConcluida } from '../../templates/form-tutoria-concluida/form-tutoria-concluida';
 import { FormTutoriaEnMarcha } from '../../templates/form-tutoria-en-marcha/form-tutoria-en-marcha';
-import { FileService } from '../../../../services/common/files.service';
 
+import { FormCurso } from '../../templates/form-curso/form-curso';
+import { FormMaterialDidactico } from '../../templates/form-material-didactico/form-material-didactico';
+import { FormJurado } from '../../templates/form-jurado/form-jurado';
+import { FormEvento } from '../../templates/form-evento/form-evento';
+
+import { CursoService } from '../../../../services/information/curso.service';
+import { MaterialDidacticoService } from '../../../../services/information/material-didactico.service';
+import { JuradoService } from '../../../../services/information/jurado.service';
+import { EventoService } from '../../../../services/information/evento.service';
+
+import { CursoPeticion } from '../../../../models/Peticion/informacion/CursoPeticion';
+import { MaterialDidacticoPeticion } from '../../../../models/Peticion/informacion/MaterialDidacticoPeticion';
+import { JuradoPeticion } from '../../../../models/Peticion/informacion/JuradoPeticion';
+import { EventoPeticion } from '../../../../models/Peticion/informacion/EventoPeticion';
 
 @Component({
   selector: 'app-publis-item-productiviy',
@@ -52,29 +66,7 @@ export class PublisItemProductiviy implements OnInit {
 
   @ViewChild('formContainer', { read: ViewContainerRef })
   formContainer!: ViewContainerRef;
-  /**
-   * ===========FLUJO DE TRABAJO =================
-   * 1. registrar el formulario dentrode formMap, clave: componente
-   * 2. incluir el servicio necesario en el constructor dentro de guardarMap (estructura docuentada abajo)
-   * 3. agregar el tipo en el panel de seleccion de tipos (panel-publish-productivity.ts)
-   * =============================================
-   * 
-   *======== TODOS ============ los formularios deben emitir un FormSubmitPayload
-   * en el cual estan los campos para imagenes y documentos opcionales
-   * DOCUMENTO AUN FALTA IMPLEMENTAR
-   * IMAGEN LISTA 
-   * 
-   */
 
-  /**
-   * Mapeo de tipos a componentes de formulario
-   * se debe agregar el componente correspondiente para cada nuevo tipo de productividad
-   * el tipo de productividad debe coincidir con el parametro 'tipo' en la URL
-   * ejemplo: 'book' -> FormBook, 'cap_book' -> FormCapBook
-   * la clave es el tipo y el valor es el componente del formulario
-   *
-   *
-   */
   formMap: any = {
     libro: FormBook,
     capitulo_libro: FormCapBook,
@@ -84,23 +76,21 @@ export class PublisItemProductiviy implements OnInit {
     software: FormSoftware,
     trabajo_eventos: FormTrabajoEventos,
     tutoria_en_marcha: FormTutoriaEnMarcha,
-    tutoria_concluida: FormTutoriaConcluida
+    tutoria_concluida: FormTutoriaConcluida,
+    curso: FormCurso,
+    material_didactico: FormMaterialDidactico,
+    jurado: FormJurado,
+    evento: FormEvento
   };
 
   isLoading: boolean = false;
 
-  /**
-   * Constructor donde se llamaran todos lo servicios necesarios por formulario
-   * @param router  se usa para capturar el parametro de tipo en la URL
-   * @param loadingService maneja el estado de carga global pagina de carga
-   * @param booksService servicio de libros
-   * @param imageService servicio de subida de imagenes
-   */
   constructor(
     private router: ActivatedRoute,
     public loadingService: LoadingService,
     private booksService: BooksService,
     private imageService: ImagesService,
+    private filesService: FilesService,
     private capBookService: CapBookService,
     private participacionComitesEvService: ParticipacionComitesEvService,
     private tutoriaEnMarchaService: TutoriaEnMarchaService,
@@ -109,13 +99,11 @@ export class PublisItemProductiviy implements OnInit {
     private softwareService: SoftwareService,
     private revistaService: RevistaService,
     private procesoTecnicaService: ProcesoTecnicaService,
-    private route: Router,
-    private fileService: FileService
-    /**
-     * Agregar servicios necesarios para cada tipo de formulario
-     * private servicioEjemplo: ServicioEjemplo
-     * private otroServicio: OtroServicio
-     */
+    private cursoService: CursoService,
+    private materialDidacticoService: MaterialDidacticoService,
+    private juradoService: JuradoService,
+    private eventoService: EventoService,
+    private route: Router
   ) { }
 
   ngOnInit(): void {
@@ -128,8 +116,8 @@ export class PublisItemProductiviy implements OnInit {
       }
     });
   }
+
   ngAfterViewInit(): void {
-    // Espera un ciclo para asegurar que formContainer ya existe
     setTimeout(() => {
       if (this.tipo) {
         this.cargarFormulario();
@@ -137,10 +125,6 @@ export class PublisItemProductiviy implements OnInit {
     });
   }
 
-  /**
-   * Crea el componente y escucha que envie el formulario
-   * @returns 
-   */
   cargarFormulario() {
     const formComponent = this.formMap[this.tipo];
 
@@ -153,55 +137,39 @@ export class PublisItemProductiviy implements OnInit {
 
     this.currentFormRef = this.formContainer.createComponent(formComponent);
 
-    // El hijo enviará: { data: {...}, file: File | null }
     this.currentFormRef.instance.formSubmit.subscribe((payload: FormSubmitPayload) => {
       console.log("Formulario recibido en padre:", payload);
       this.onFormSubmit(payload);
     });
   }
 
-  /**
-   * Recibe desde el hijo:
-   * Comprime la imagen si existe, la sube a R2 y guarda la entidad
-   * guardando la ruta en el objeto data
-   * es necesario que el hijo envie un objeto con la estructura BaseProductivityDTO
-   * @param dtoSubmit objeto con la informacion traida del fomrulario en formato especifico y la imagen  del hijo
-   */
   async onFormSubmit(dtoSubmit: FormSubmitPayload) {
     this.isLoading = true;
 
-    if (!dtoSubmit.file_image && !dtoSubmit.file_document) {
-      this.guardarEntidad(dtoSubmit.data);
-      return;
-    }
-
     try {
-      if(dtoSubmit.file_document){
+      // Imagen
+      if (dtoSubmit.file_image) {
+        const compressed = await this.compressFile(dtoSubmit.file_image!);
+        await this.uploadAndSetImage(dtoSubmit.data, compressed);
+      }
+
+      // Archivo
+      if (dtoSubmit.file_document) {
         await this.uploadAndSetFile(dtoSubmit.data, dtoSubmit.file_document);
       }
-      const compressed = await this.compressFile(dtoSubmit.file_image!);
-      await this.uploadAndSetImage(dtoSubmit.data, compressed);
+
       this.guardarEntidad(dtoSubmit.data);
 
     } catch (error) {
-      console.error("Error al subir la imagen:", error);
+      console.error("Error al subir archivos:", error);
       this.isLoading = false;
     }
   }
-  /**
-   * Comprime el archivo de imagen antes de subirlo
-   * @param file archivo de la imagen a comprimir
-   * @returns la imagen comprimida
-   */
+
   private compressFile(file: File): Promise<File> {
     return this.imageService.compressImage(file, 0.7, 1500);
   }
-  /**
-   * funcion que sube la imagen comprimida a R2 y actualiza el objeto data con la ruta
-   * @param data objeto de datos donde se colocara la ruta de la imagen subida
-   * @param file imagen comprimida a subir
-   * @returns 
-   */
+
   private uploadAndSetImage(data: BaseProductivityDTO, file: File): Promise<void> {
     const extension = file.name.split('.').pop() || 'jpg';
     const contentType = file.type;
@@ -210,7 +178,6 @@ export class PublisItemProductiviy implements OnInit {
       this.imageService.getPresignedUrl(extension, contentType)
         .pipe(
           switchMap((resp) => {
-            console.log(resp)
             data.image_path = resp.file_path;
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
@@ -218,11 +185,10 @@ export class PublisItemProductiviy implements OnInit {
         .subscribe({
           next: () => resolve(),
           error: (err) => {
-            // Mostrar notificación de error
             Swal.fire({
               icon: 'error',
               title: 'Error al subir la imagen',
-              text: 'No se pudo subir la imagen. Por favor intenta nuevamente.',
+              text: 'No se pudo subir la imagen.',
               confirmButtonText: 'Aceptar'
             });
             reject(err);
@@ -230,33 +196,26 @@ export class PublisItemProductiviy implements OnInit {
         });
     });
   }
-  /**
-   * Funcion que sube el archivo pdf o archivo a R2 y actualiza el objeto data con la ruta
-   * @param data objeto de datos donde se colocara la ruta del archivo subida
-   * @param file archivo pdf o archivo a subir
-   * @returns 
-   */
+
   private uploadAndSetFile(data: BaseProductivityDTO, file: File): Promise<void> {
-    const extension = file.name.split('.').pop() || 'jpg';
+    const extension = file.name.split('.').pop() || 'pdf';
     const contentType = file.type;
 
     return new Promise((resolve, reject) => {
-      this.imageService.getPresignedUrl(extension, contentType)
+      this.filesService.getPresignedUrl(extension, contentType)
         .pipe(
           switchMap((resp) => {
-            console.log(resp)
             data.archivo_path = resp.file_path;
-            return this.imageService.uploadToR2(resp.upload_url, file);
+            return this.filesService.uploadToR2(resp.upload_url, file);
           })
         )
         .subscribe({
           next: () => resolve(),
           error: (err) => {
-            // Mostrar notificación de error
             Swal.fire({
               icon: 'error',
-              title: 'Error al subir la imagen',
-              text: 'No se pudo subir la imagen. Por favor intenta nuevamente.',
+              title: 'Error al subir archivo',
+              text: 'No se pudo subir el archivo.',
               confirmButtonText: 'Aceptar'
             });
             reject(err);
@@ -264,150 +223,122 @@ export class PublisItemProductiviy implements OnInit {
         });
     });
   }
-  /**
-   * Muestra un mensaje de exito al usuario
-   * @param titulo titulo de la notificación
-   * @param mensaje mensaje de la notificación personalizado
-   */
+
   private mostrarExito(titulo: string, mensaje: string) {
     Swal.fire({
       icon: 'success',
       title: titulo,
       text: mensaje,
       confirmButtonText: 'Aceptar',
-      buttonsStyling: true,
-      customClass: {
-        confirmButton: 'btn btn-primary'
-      }
+      buttonsStyling: true
     }).then(() => {
       this.route.navigate(['/productividad']);
     });
   }
-  /**
-   * Muestra un mensaje de error al usuario
-   * @param titulo titulo de la notificación
-   * @param mensaje mensaje de la notificación personalizado
-   */
+
   private mostrarError(titulo: string, mensaje: string) {
     Swal.fire({
       icon: 'error',
       title: titulo,
       text: mensaje,
       confirmButtonText: 'Aceptar',
-      buttonsStyling: true,
-      customClass: {
-        confirmButton: 'btn btn-primary'
-      }
+      buttonsStyling: true
     });
   }
 
-
-  /**
-   *  Guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
-   * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
-   * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
-   * @param payload Datos del formulario ya con image_url si aplica
-   * @example
-   * EXAMPLE: (payload: BaseProductivityDTO) => {
-      this.EXAMPLEService.postEXAMPLE(payload as EXAMPLEPeticion).subscribe({
-        next: () => this.mostrarExito('Libro guardado', 'EXAMPLE se ha guardado correctamente.'),
-        error: () => this.mostrarError('Error al guardar EXAMPLE', 'No se pudo guardar el EXAMPLE.')
-      });
-    }
-   */
   private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
-    libro: (payload: BaseProductivityDTO) => {
+    libro: (payload) => {
       this.booksService.postBook(payload as BookPeticion).subscribe({
         next: () => this.mostrarExito('Libro guardado', 'El libro se ha guardado correctamente.'),
-        error: () => this.mostrarError('Error al guardar el libro', 'No se pudo guardar el libro.')
+        error: () => this.mostrarError('Error al guardar libro', 'No se pudo guardar el libro.')
       });
     },
-    capitulo_libro: (payload: BaseProductivityDTO) => {
+
+    capitulo_libro: (payload) => {
       this.capBookService.postCapBook(payload as CapBookPeticion).subscribe({
-        next: () => this.mostrarExito('Capítulo de libro guardado', 'El capítulo se ha guardado correctamente.'),
-        error: () => this.mostrarError('Error al guardar el capítulo', 'No se pudo guardar el capítulo.')
+        next: () => this.mostrarExito('Capítulo guardado', 'El capítulo se ha guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar capítulo', 'No se pudo guardar el capítulo.')
       });
     },
 
-    participacion_comites_ev: (payload: BaseProductivityDTO) => {
+    participacion_comites_ev: (payload) => {
       this.participacionComitesEvService.create(payload as ParticipacionComitesEvPeticion).subscribe({
-        next: () =>
-          this.mostrarExito(
-            'Participación guardada',
-            'La participación en comité de evaluación se ha guardado correctamente.'
-          ),
-        error: (err) => {
-          this.mostrarError(
-            'Error al guardar la participación',
-            'No se pudo guardar la participación en comité de evaluación.'
-          )
-        }
+        next: () => this.mostrarExito('Participación guardada', 'Datos guardados correctamente.'),
+        error: () => this.mostrarError('Error al guardar participación', 'No se pudo guardar.')
       });
     },
 
-    tutoria_en_marcha: (payload: BaseProductivityDTO) => {
+    tutoria_en_marcha: (payload) => {
       this.tutoriaEnMarchaService.create(payload as TutoriaEnMarchaPeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Tutoría en marcha guardada', 'La tutoría en marcha se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar tutoría', 'No se pudo guardar la tutoría en marcha.')
+        next: () => this.mostrarExito('Tutoría en marcha guardada', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    tutoria_concluida: (payload: BaseProductivityDTO) => {
+    tutoria_concluida: (payload) => {
       this.tutoriaConcluidaService.create(payload as TutoriaConcluidaPeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Tutoría concluida guardada', 'La tutoría concluida se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar tutoría', 'No se pudo guardar la tutoría concluida.')
+        next: () => this.mostrarExito('Tutoría concluida guardada', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    trabajo_eventos: (payload: BaseProductivityDTO) => {
+    trabajo_eventos: (payload) => {
       this.trabajoEventosService.create(payload as TrabajoEventosPeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Trabajo guardado', 'El trabajo de eventos se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar trabajo', 'No se pudo guardar el trabajo de eventos.')
+        next: () => this.mostrarExito('Trabajo guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    software: (payload: BaseProductivityDTO) => {
+    software: (payload) => {
       this.softwareService.create(payload as SoftwarePeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Software guardado', 'El software se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar software', 'No se pudo guardar el software.')
+        next: () => this.mostrarExito('Software guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    revista: (payload: BaseProductivityDTO) => {
+    revista: (payload) => {
       this.revistaService.create(payload as RevistaPeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Revista guardada', 'La revista se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar revista', 'No se pudo guardar la revista.')
+        next: () => this.mostrarExito('Revista guardada', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    proceso_tecnica: (payload: BaseProductivityDTO) => {
+    proceso_tecnica: (payload) => {
       this.procesoTecnicaService.create(payload as ProcesoTecnicaPeticion).subscribe({
-        next: () =>
-          this.mostrarExito('Proceso técnico guardado', 'El proceso técnico se ha guardado correctamente.'),
-        error: () =>
-          this.mostrarError('Error al guardar proceso técnico', 'No se pudo guardar el proceso técnico.')
+        next: () => this.mostrarExito('Proceso técnico guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
+      });
+    },
+
+    curso: (payload) => {
+      this.cursoService.create(payload as CursoPeticion).subscribe({
+        next: () => this.mostrarExito('Curso guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar curso', 'No se pudo guardar.')
+      });
+    },
+
+    material_didactico: (payload) => {
+      this.materialDidacticoService.create(payload as MaterialDidacticoPeticion).subscribe({
+        next: () => this.mostrarExito('Material didáctico guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
+      });
+    },
+
+    jurado: (payload) => {
+      this.juradoService.create(payload as JuradoPeticion).subscribe({
+        next: () => this.mostrarExito('Jurado guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
+      });
+    },
+
+    evento: (payload) => {
+      this.eventoService.create(payload as EventoPeticion).subscribe({
+        next: () => this.mostrarExito('Evento guardado', 'Guardado correctamente.'),
+        error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     }
   };
 
-
-  /**
-   * guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
-   * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
-   * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
-   * @param payload Datos del formulario ya con image_url si aplica
-   * @returns 
-   */
   guardarEntidad(payload: BaseProductivityDTO) {
     this.isLoading = true;
     const guardarFn = this.guardarMap[this.tipo];

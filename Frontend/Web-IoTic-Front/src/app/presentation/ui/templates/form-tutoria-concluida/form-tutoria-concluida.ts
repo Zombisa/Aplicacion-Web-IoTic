@@ -23,6 +23,7 @@ export class FormTutoriaConcluida implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -108,7 +109,7 @@ export class FormTutoriaConcluida implements OnChanges {
   }
 
   /**
-   * Captura el archivo seleccionado y genera un preview
+   * Captura el archivo de imagen seleccionado y genera un preview
    */
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -118,6 +119,15 @@ export class FormTutoriaConcluida implements OnChanges {
     const reader = new FileReader();
     reader.onload = () => (this.imagePreview = reader.result as string);
     reader.readAsDataURL(file);
+  }
+
+  /**
+   * Captura el archivo documento seleccionado
+   */
+  onDocumentSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedDocument = file;
   }
 
   /**
@@ -131,7 +141,8 @@ export class FormTutoriaConcluida implements OnChanges {
 
     const payload: FormSubmitPayload = {
       data: this.form.value,
-      file_image: this.selectedFile
+      file_image: this.selectedFile,
+      file_document: this.selectedDocument
     };
 
     this.formSubmit.emit(payload);

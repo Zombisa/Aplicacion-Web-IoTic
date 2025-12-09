@@ -20,6 +20,7 @@ export class FormTutoriaEnMarcha implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -104,6 +105,13 @@ export class FormTutoriaEnMarcha implements OnChanges {
     reader.readAsDataURL(file);
   }
 
+  /** --- Documento --- */
+  onDocumentSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedDocument = file;
+  }
+
   /** --- Submit --- */
   submitForm(): void {
     if (this.form.invalid) {
@@ -113,7 +121,8 @@ export class FormTutoriaEnMarcha implements OnChanges {
 
     const payload: FormSubmitPayload = {
       data: this.form.value,
-      file_image: this.selectedFile
+      file_image: this.selectedFile,
+      file_document: this.selectedDocument
     };
 
     this.formSubmit.emit(payload);

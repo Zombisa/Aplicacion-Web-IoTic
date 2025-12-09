@@ -2,24 +2,24 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
-import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO'; // ajusta la ruta si es distinta
+import { EventoDTO } from '../../../../models/DTO/informacion/EventoDTO';
 
 @Component({
-  selector: 'app-form-software',
+  selector: 'app-form-evento',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './form-software.html',
-  styleUrls: ['./form-software.css']
+  templateUrl: './form-evento.html',
+  styleUrls: ['./form-evento.css']
 })
-export class FormSoftware implements OnChanges {
+export class FormEvento implements OnChanges {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
   /** Modo editar */
   @Input() editMode: boolean = false;
 
-  /** Datos del software a editar */
-  @Input() softwareData!: SoftwareDTO;
+  /** Datos del evento a editar */
+  @Input() eventoData!: EventoDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
@@ -34,61 +34,49 @@ export class FormSoftware implements OnChanges {
    * Detecta cambios en los inputs
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.softwareData) {
-      this.populateForm(this.softwareData);
+    if (this.editMode && this.eventoData) {
+      this.populateForm(this.eventoData);
     }
   }
 
   /**
-   * Construye el formulario reactivo para software
+   * Construye el formulario reactivo para eventos
    */
   private buildForm(): FormGroup {
     return this.fb.group({
       // BaseProductivity
       titulo: ['', Validators.required],
-      tipoProductividad: ['Software', Validators.required],
+      tipoProductividad: ['Organización de eventos', Validators.required],
       pais: ['', Validators.required],
       anio: ['', Validators.required],
       autores: [[], Validators.required],
 
-      // Campos propios de Software
-      tituloDesarrollo: ['', Validators.required],
-      responsable: [[], Validators.required],
+      // Campos propios de Evento
       etiquetas: [[], Validators.required],
-      nivelAcceso: ['', Validators.required],
-      tipoProducto: ['', Validators.required],
-      codigoRegistro: [''],
-      descripcionFuncional: ['', Validators.required],
       propiedadIntelectual: ['', Validators.required],
+      alcance: ['', Validators.required],
+      institucion: ['', Validators.required],
 
-      // La completa el padre cuando sube la imagen
+      // El padre la completa luego cuando sube la imagen
       image_url: ['']
     });
   }
 
   /**
-   * Llena el formulario con los datos del software
-   * @param data datos del software a editar
+   * Llena el formulario con los datos del evento
+   * @param data datos del evento a editar
    */
-  private populateForm(data: SoftwareDTO): void {
+  private populateForm(data: EventoDTO): void {
     this.form.patchValue({
-      // BaseProductivity
       titulo: data.titulo,
-      tipoProductividad: data.tipoProductividad || 'Software',
+      tipoProductividad: data.tipoProductividad || 'Organización de eventos',
       pais: data.pais,
       anio: data.anio,
       autores: data.autores || [],
-
-      // Campos propios de Software
-      tituloDesarrollo: data.tituloDesarrollo,
-      responsable: data.responsable || [],
       etiquetas: data.etiquetas || [],
-      nivelAcceso: data.nivelAcceso,
-      tipoProducto: data.tipoProducto,
-      codigoRegistro: data.codigoRegistro || '',
-      descripcionFuncional: data.descripcionFuncional,
       propiedadIntelectual: data.propiedadIntelectual,
-
+      alcance: data.alcance,
+      institucion: data.institucion,
       image_url: (data as any).image_url || data.image_r2 || ''
     });
 
@@ -99,10 +87,38 @@ export class FormSoftware implements OnChanges {
   }
 
   /**
+   * Maneja cambio de texto en campo Autores (separados por coma)
+   */
+  onAutoresChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value || '';
+    const autores = value
+      .split(',')
+      .map(a => a.trim())
+      .filter(a => a);
+
+    this.form.patchValue({ autores });
+  }
+
+  /**
+   * Maneja cambio de texto en campo Etiquetas (separadas por coma)
+   */
+  onEtiquetasChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value || '';
+    const etiquetas = value
+      .split(',')
+      .map(e => e.trim())
+      .filter(e => e);
+
+    this.form.patchValue({ etiquetas });
+  }
+
+  /**
    * Captura el archivo de imagen seleccionado y genera un preview
    */
   onFileSelected(event: any): void {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     this.selectedFile = file;
@@ -115,7 +131,7 @@ export class FormSoftware implements OnChanges {
    * Captura el archivo documento seleccionado
    */
   onDocumentSelected(event: any): void {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (!file) return;
     this.selectedDocument = file;
   }
@@ -137,32 +153,5 @@ export class FormSoftware implements OnChanges {
 
     this.formSubmit.emit(payload);
   }
-
-  onAutoresChange(value: string): void {
-    const autores = value
-      .split(',')
-      .map(a => a.trim())
-      .filter(a => a);
-
-    this.form.patchValue({ autores });
-  }
-
-  onResponsablesChange(value: string): void {
-    const responsable = value
-      .split(',')
-      .map(r => r.trim())
-      .filter(r => r);
-
-    this.form.patchValue({ responsable });
-  }
-
-  onEtiquetasChange(value: string): void {
-    const etiquetas = value
-      .split(',')
-      .map(e => e.trim())
-      .filter(e => e);
-
-    this.form.patchValue({ etiquetas });
-  }
-
 }
+

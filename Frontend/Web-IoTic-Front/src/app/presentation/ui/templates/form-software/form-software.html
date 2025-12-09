@@ -19,10 +19,37 @@
           </div>
         </div>
       </div>
+
+      <!-- Upload Document Box -->
+      <div class="document-upload-box">
+        <input
+          type="file"
+          #documentInput
+          class="file-input-hidden"
+          accept=".pdf,.doc,.docx,.txt"
+          (change)="onDocumentSelected($event)"
+        />
+        
+        <div class="document-upload-area" (click)="documentInput.click()">
+          <div class="document-upload-placeholder">
+            <i class="fas fa-file-alt document-icon"></i>
+            <p class="document-upload-text">
+              <span *ngIf="!selectedDocument">Haz clic para subir archivo (opcional)</span>
+              <span *ngIf="selectedDocument">{{ selectedDocument.name }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Inputs -->
     <section class="col-12 col-lg-6 column">
+      <!-- Título -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título</label>
+      </div>
+
       <!-- Título del desarrollo -->
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="tituloDesarrollo" placeholder=" " />
@@ -33,6 +60,23 @@
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="pais" placeholder=" " />
         <label>País</label>
+      </div>
+
+      <!-- Año -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event.target.value)"
+        />
+        <label>Autores (separados por coma)</label>
       </div>
 
       <!-- Nivel de acceso -->

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { SoftwareDTO } from "../../models/DTO/informacion/SoftwareDTO";
-import { SoftwarePeticion } from "../../models/Peticion/informacion/SoftwarePeticion ";
+import { SoftwarePeticion } from "../../models/Peticion/informacion/SoftwarePeticion";
 import { ApiService } from "../common/api.service";
 
 @Injectable({

@@ -23,6 +23,7 @@ export class FormRevista implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -43,18 +44,19 @@ export class FormRevista implements OnChanges {
    */
   private buildForm(): FormGroup {
     return this.fb.group({
-      // Si manejas tipoProductividad para revista, lo dejamos fijo
+      // BaseProductivity
       tipoProductividad: ['Revistas', Validators.required],
-
       titulo: ['', Validators.required],
+      pais: ['', Validators.required],
+      anio: ['', Validators.required],
+      autores: [[], Validators.required],
+
+      // Campos propios de Revista
       issn: ['', Validators.required],
       volumen: ['', Validators.required],
       fasc: ['', Validators.required],
       paginas: ['', Validators.required],
-
-      autores: [[], Validators.required],
       responsable: [[], Validators.required],
-
       linkDescargaArticulo: [''],
       linksitioWeb: [''],
 
@@ -68,13 +70,18 @@ export class FormRevista implements OnChanges {
    */
   private populateForm(data: RevistaDTO): void {
     this.form.patchValue({
+      // BaseProductivity
       tipoProductividad: (data as any).tipoProductividad || 'Revistas',
       titulo: data.titulo,
+      pais: data.pais,
+      anio: data.anio,
+      autores: data.autores || [],
+
+      // Campos propios de Revista
       issn: data.issn,
       volumen: data.volumen,
       fasc: data.fasc,
       paginas: data.paginas,
-      autores: data.autores || [],
       responsable: data.responsable || [],
       linkDescargaArticulo: (data as any).linkDescargaArticulo || '',
       linksitioWeb: (data as any).linksitioWeb || '',
@@ -115,7 +122,7 @@ export class FormRevista implements OnChanges {
   }
 
   /**
-   * Captura el archivo seleccionado y genera un preview
+   * Captura el archivo de imagen seleccionado y genera un preview
    */
   onFileSelected(event: any): void {
     const file = event.target.files?.[0];
@@ -125,6 +132,15 @@ export class FormRevista implements OnChanges {
     const reader = new FileReader();
     reader.onload = () => (this.imagePreview = reader.result as string);
     reader.readAsDataURL(file);
+  }
+
+  /**
+   * Captura el archivo documento seleccionado
+   */
+  onDocumentSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    this.selectedDocument = file;
   }
 
   /**
@@ -138,7 +154,8 @@ export class FormRevista implements OnChanges {
 
     const payload: FormSubmitPayload = {
       data: this.form.value,
-      file_image: this.selectedFile
+      file_image: this.selectedFile,
+      file_document: this.selectedDocument
     };
 
     this.formSubmit.emit(payload);

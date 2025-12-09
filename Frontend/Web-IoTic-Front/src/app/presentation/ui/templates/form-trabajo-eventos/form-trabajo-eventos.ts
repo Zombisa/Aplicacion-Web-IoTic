@@ -19,6 +19,7 @@ export class FormTrabajoEventos implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -33,17 +34,21 @@ export class FormTrabajoEventos implements OnChanges {
 
   private buildForm(): FormGroup {
     return this.fb.group({
+      // BaseProductivity
       titulo: ['', Validators.required],
       tipoProductividad: ['Trabajo en Evento', Validators.required],
+      pais: ['', Validators.required],
+      anio: ['', Validators.required],
+      autores: [[], Validators.required],
+
+      // Campos propios de TrabajoEventos
       volumen: ['', Validators.required],
       nombreSeminario: ['', Validators.required],
       tipoPresentacion: ['', Validators.required],
       tituloActas: ['', Validators.required],
       isbn: ['', Validators.required],
       paginas: ['', Validators.required],
-      anio: ['', Validators.required],
       etiquetas: [[]],
-      autores: [[]],
       propiedadIntelectual: ['', Validators.required],
       image_url: ['']
     });
@@ -51,22 +56,27 @@ export class FormTrabajoEventos implements OnChanges {
 
   private populateForm(data: TrabajoEventosDTO) {
     this.form.patchValue({
+      // BaseProductivity
       titulo: data.titulo,
+      tipoProductividad: data.tipoProductividad || 'Trabajo en Evento',
+      pais: data.pais,
+      anio: data.anio,
+      autores: data.autores || [],
+
+      // Campos propios de TrabajoEventos
       volumen: data.volumen,
       nombreSeminario: data.nombreSeminario,
       tipoPresentacion: data.tipoPresentacion,
       tituloActas: data.tituloActas,
       isbn: data.isbn,
       paginas: data.paginas,
-      anio: data.anio,
       etiquetas: data.etiquetas || [],
-      autores: data.autores || [],
       propiedadIntelectual: data.propiedadIntelectual,
-      image_url: data.image_r2 || ''
+      image_url: (data as any).image_url || data.image_r2 || ''
     });
 
-    if (data.image_r2) {
-      this.imagePreview = data.image_r2;
+    if ((data as any).image_url || data.image_r2) {
+      this.imagePreview = (data as any).image_url || data.image_r2!;
     }
   }
 
@@ -91,6 +101,12 @@ export class FormTrabajoEventos implements OnChanges {
     reader.readAsDataURL(file);
   }
 
+  onDocumentSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedDocument = file;
+  }
+
   submitForm() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -99,7 +115,8 @@ export class FormTrabajoEventos implements OnChanges {
 
     const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
-      file_image: this.selectedFile
+      file_image: this.selectedFile,
+      file_document: this.selectedDocument
     };
 
     this.formSubmit.emit(dtoSubmit);

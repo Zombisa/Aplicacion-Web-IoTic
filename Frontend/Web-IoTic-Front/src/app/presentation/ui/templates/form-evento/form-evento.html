@@ -4,11 +4,12 @@
     <!-- Upload Image Box -->
     <section class="col-12 col-lg-6 column">
       <div class="image-upload-box">
-        <input type="file"
-               #fileInput
-               class="file-input-hidden"
-               accept="image/*"
-               (change)="onFileSelected($event)" />
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)" />
         
         <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
           <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
@@ -21,11 +22,12 @@
 
       <!-- Upload Document Box -->
       <div class="document-upload-box">
-        <input type="file"
-               #documentInput
-               class="file-input-hidden"
-               accept=".pdf,.doc,.docx,.txt"
-               (change)="onDocumentSelected($event)" />
+        <input
+          type="file"
+          #documentInput
+          class="file-input-hidden"
+          accept=".pdf,.doc,.docx,.txt"
+          (change)="onDocumentSelected($event)" />
         
         <div class="document-upload-area" (click)="documentInput.click()">
           <div class="document-upload-placeholder">
@@ -42,51 +44,57 @@
     <!-- Inputs -->
     <section class="col-12 col-lg-6 column">
 
+      <!-- Título -->
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
-        <label>Título</label>
+        <label>Título del evento</label>
       </div>
 
+      <!-- País -->
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="pais" placeholder=" " />
         <label>País</label>
       </div>
 
+      <!-- Año -->
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="anio" placeholder=" " />
         <label>Año</label>
       </div>
 
+      <!-- Autores -->
       <div class="input-container personality-camp">
-        <input type="text" class="input-line" placeholder=" " (change)="form.patchValue({ autores: $event.target.value.split(',') })" />
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event)" />
         <label>Autores (separados por coma)</label>
       </div>
 
+      <!-- Institución -->
       <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="isbn" placeholder=" " />
-        <label>ISBN</label>
+        <input type="text" class="input-line" formControlName="institucion" placeholder=" " />
+        <label>Institución</label>
       </div>
 
+      <!-- Alcance -->
       <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="volumen" placeholder=" " />
-        <label>Volumen</label>
+        <input type="text" class="input-line" formControlName="alcance" placeholder=" " />
+        <label>Alcance</label>
       </div>
 
+      <!-- Etiquetas -->
       <div class="input-container personality-camp">
-        <input type="number" class="input-line" formControlName="paginas" placeholder=" " />
-        <label>Páginas</label>
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event)" />
+        <label>Etiquetas (separadas por coma)</label>
       </div>
 
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="editorial" placeholder=" " />
-        <label>Editorial</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="number" class="input-line" formControlName="codigoEditorial" placeholder=" " />
-        <label>Código Editorial</label>
-      </div>
-
+      <!-- Propiedad Intelectual -->
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
         <label>Propiedad Intelectual</label>
@@ -95,8 +103,11 @@
     </section>
 
     <div class="col-12">
-      <button type="submit" class="btn btn-primary">Guardar capitulo de libro</button>
+      <button type="submit" class="btn btn-primary">
+        Guardar evento
+      </button>
     </div>
 
   </div>
 </form>
+

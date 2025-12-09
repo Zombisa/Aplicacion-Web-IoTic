@@ -25,7 +25,7 @@ export class FormCapBook implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
-  slectedDocument: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
   
   constructor(private fb: FormBuilder) {
@@ -53,6 +53,7 @@ export class FormCapBook implements OnChanges {
       editorial: ['', Validators.required],
       codigoEditorial: ['', Validators.required],
       propiedadIntelectual: ['', Validators.required],
+      image_url: [''], // El padre la completa luego cuando sube la imagen
     });
   }
   /**
@@ -65,18 +66,23 @@ export class FormCapBook implements OnChanges {
       tipoProductividad: data.tipoProductividad,
       pais: data.pais,
       anio: data.anio,
-      autores: data.autores,
+      autores: data.autores || [],
       isbn: data.isbn,
       volumen: data.volumen,
       paginas: data.paginas,
       editorial: data.editorial,
       codigoEditorial: data.codigoEditorial,
       propiedadIntelectual: data.propiedadIntelectual,
-      image_r2: data.image_r2 || '',
+      image_url: (data as any).image_url || data.image_r2 || '',
     });
+
+    // Si trae imagen, mostrar preview
+    if ((data as any).image_url || data.image_r2) {
+      this.imagePreview = (data as any).image_url || data.image_r2!;
+    }
   }
   /**
-   * Captura el archivo seleccionado y genera un preview
+   * Captura el archivo de imagen seleccionado y genera un preview
    * @param event Evento del input file
    */
   onFileSelected(event: any) {
@@ -92,6 +98,15 @@ export class FormCapBook implements OnChanges {
     reader.readAsDataURL(file);
   }
 
+  /**
+   * Captura el archivo documento seleccionado
+   */
+  onDocumentSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedDocument = file;
+  }
+
    /**
    * Envía el formulario al componente padre
    */
@@ -103,7 +118,7 @@ export class FormCapBook implements OnChanges {
     const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
       file_image: this.selectedFile,
-      file_document: this.slectedDocument
+      file_document: this.selectedDocument
     };
     this.formSubmit.emit(dtoSubmit);
   }
