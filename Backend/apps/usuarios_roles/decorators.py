@@ -68,10 +68,19 @@ def verificar_token(view_func):
             except Rol.DoesNotExist:
                 pass
 
+        # Normalizar role_claim para uniformidad en decorators
+        # admin/administrador -> administrador, mentor -> mentor
+        ROLES_NORM = {
+            "admin": "administrador",
+            "administrador": "administrador",
+            "mentor": "mentor"
+        }
+        role_normalizado_para_request = ROLES_NORM.get(role_claim, role_claim)
+
         # Guardar objetos en request
         request.user_local = usuario
         request.user_firebase = decoded
-        request.user_role = role_claim
+        request.user_role = role_normalizado_para_request
 
         return view_func(request, *args, **kwargs)
 
@@ -126,7 +135,7 @@ def verificar_roles(roles_permitidos):
 
             if token_role_normalizado not in roles_normalizados and db_role_normalizado not in roles_normalizados:
                 return JsonResponse({
-                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_canonicos}",
+                    "error": f"Permisos insuficientes. Este recurso requiere: {roles_permitidos}",
                     "token_role": token_role,
                     "db_role": db_role
                 }, status=403)
