@@ -33,6 +33,9 @@ import { TutoriaEnMarchaPeticion } from '../../../../models/Peticion/informacion
 import { FormProcesoTecnica } from '../../templates/form-proceso-tecnica/form-proceso-tecnica';
 import { FormRevista } from '../../templates/form-revista/form-revista';
 import { FormSoftware } from '../../templates/form-software/form-software';
+import { FormTrabajoEventos } from '../../templates/form-trabajo-eventos/form-trabajo-eventos';
+import { FormTutoriaConcluida } from '../../templates/form-tutoria-concluida/form-tutoria-concluida';
+import { FormTutoriaEnMarcha } from '../../templates/form-tutoria-en-marcha/form-tutoria-en-marcha';
 
 
 @Component({
@@ -78,9 +81,9 @@ export class PublisItemProductiviy implements OnInit {
     proceso_tecnica: FormProcesoTecnica,
     revista: FormRevista,
     software: FormSoftware,
-    trabajo_eventos: null,
-    tutoria_en_marcha: null,
-    tutoria_concluida: null
+    trabajo_eventos: FormTrabajoEventos,
+    tutoria_en_marcha: FormTutoriaEnMarcha,
+    tutoria_concluida: FormTutoriaConcluida
   };
 
   isLoading: boolean = false;

@@ -1,0 +1,97 @@
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+
+    <!-- Imagen -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)" />
+
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título del trabajo</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="nombreSeminario" placeholder=" " />
+        <label>Nombre del seminario</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="tipoPresentacion" placeholder=" " />
+        <label>Tipo de presentación</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="tituloActas" placeholder=" " />
+        <label>Título de actas</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="isbn" placeholder=" " />
+        <label>ISBN</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="volumen" placeholder=" " />
+        <label>Volumen</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="paginas" placeholder=" " />
+        <label>Páginas</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event.target.value)" />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event.target.value)" />
+        <label>Etiquetas (separadas por coma)</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
+        <label>Propiedad intelectual</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Guardar Trabajo en Evento</button>
+    </div>
+
+  </div>
+</form>
