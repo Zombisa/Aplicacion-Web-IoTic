@@ -34,7 +34,7 @@ export class InventoryService {
 
   addElectronicComponent(device: ItemDTOPeticion): Observable<ItemDTO> {
     console.log("Item a guardar: ", device);
-    return this.http.post<ItemDTO>(`${this.config.apiUrlBackend}inventario/items/bulk/`, device).pipe(
+    return this.http.post<ItemDTO>(`${this.config.apiUrlBackend}inventario/items/`, device).pipe(
       catchError(error => {
         console.error('Error al agregar componente:', error);
         return throwError(() => error);

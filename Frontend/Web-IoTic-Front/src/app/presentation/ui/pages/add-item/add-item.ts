@@ -86,6 +86,7 @@ export class AddItem {
    * @param item Datos del item a guardar
    */
   private saveItemData(item: ItemDTOPeticion): void {
+    console.log(" Datos del item a guardar:", item);
     this.inventoryService.addElectronicComponent(item).subscribe({
           next: (response) => {
             Swal.fire({

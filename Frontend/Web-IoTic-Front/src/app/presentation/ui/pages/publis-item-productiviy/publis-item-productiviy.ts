@@ -143,6 +143,7 @@ export class PublisItemProductiviy implements OnInit {
       this.imageService.getPresignedUrl(extension, contentType)
         .pipe(
           switchMap((resp) => {
+            console.log(resp)
             data.file_path = resp.file_path;
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
