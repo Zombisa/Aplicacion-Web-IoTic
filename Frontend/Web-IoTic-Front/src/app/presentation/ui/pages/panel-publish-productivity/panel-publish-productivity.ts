@@ -31,8 +31,8 @@ export class PanelPublishProductivity {
     { name: 'Revistas', tipo: 'revista', description: 'Publica información sobre revistas académicas o profesionales en las que has participado.' },
     { name: 'Software', tipo: 'software', description: 'Comparte software desarrollado, incluyendo herramientas, aplicaciones o sistemas.' },
     { name: 'Trabajos en Eventos', tipo: 'trabajo_eventos', description: 'Publica trabajos presentados en eventos académicos, conferencias o simposios.' },
-    { name: 'Tutoría en Marcha', tipo: 'tutoria_en_marcha', description: 'Registra tutorías que actualmente están en desarrollo o ejecución.'},
-    { name: 'Tutoría Concluida', tipo: 'tutoria_concluida', description: 'Publica tutorías finalizadas indicando los resultados o logros alcanzados.'}
+    { name: 'Trabajos Dirigidos - Tutorías en Marcha', tipo: 'tutoria_en_marcha', description: 'Registra tutorías que actualmente están en desarrollo o ejecución.'},
+    { name: 'Trabajos Dirigidos - Tutorías Concluidas', tipo: 'tutoria_concluida', description: 'Publica tutorías finalizadas indicando los resultados o logros alcanzados.'}
   ];
 
 
