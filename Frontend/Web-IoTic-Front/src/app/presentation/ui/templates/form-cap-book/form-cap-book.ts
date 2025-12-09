@@ -25,6 +25,7 @@ export class FormCapBook implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  slectedDocument: File | null = null;
   imagePreview: string | null = null;
   
   constructor(private fb: FormBuilder) {
@@ -101,7 +102,8 @@ export class FormCapBook implements OnChanges {
     }
     const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
-      file: this.selectedFile
+      file_image: this.selectedFile,
+      file_document: this.slectedDocument
     };
     this.formSubmit.emit(dtoSubmit);
   }

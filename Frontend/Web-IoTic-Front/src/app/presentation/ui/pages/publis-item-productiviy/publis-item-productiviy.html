@@ -1,8 +1,22 @@
 <app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
 <div *ngIf="!(loadingService.loading$ | async)" class="">
+
     <div class="header-wrapper">
         <app-header></app-header>
     </div>
+    <section class="banner-primary container-fluid d-flex align-items-center justify-content-center text-center p-4  ">
+        <div class="block-text-primary mt-4">
+            <h1 class="title">
+                Publiquemos con el mundo
+            </h1>
+            <p class="subtitle">
+                El conocmiento es poder y que mejor que compartirlo
+            </p>
+        </div>
+
+        
+    </section>
+
     <div class="container contaier-content">
         <!-- Aquí se inyecta dinámicamente el formulario -->
         <ng-container #formContainer></ng-container>

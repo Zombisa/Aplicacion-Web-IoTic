@@ -14,9 +14,18 @@ import { Route, Router } from '@angular/router';
 })
 export class PanelPublishProductivity {
 
+  /**
+   * Tipos de productividad disponibles para publicar
+   * cada tipo tiene un nombre, un identificador (tipo) y una descripcion
+   * el identificador (tipo) se usa para navegar al formulario correspondiente
+   * la descripcion se muestra en la tarjeta de cada tipo
+   * @example
+   * { name: TITULO_EN_LA_PAGINA, tipo: CLAVE_PARA_URL, description: DESCRIPCION_DEL_TOP }
+   * 
+   */
   types = [
-    { name: 'Libro', tipo: 'book',description: 'En esta seccion podras publicar libros.', },
-    { name: 'Capítulo de Libro', tipo: 'cap_book',description: 'En esta seccion podras publicar capitulos de libros.', },
+    { name: 'Libro', tipo: 'libro',description: 'En esta seccion podras publicar libros.', },
+    { name: 'Capítulo de Libro', tipo: 'capitulo_libro',description: 'En esta seccion podras publicar capitulos de libros.', },
   ];
 
 
@@ -26,6 +35,11 @@ export class PanelPublishProductivity {
     public loadingService: LoadingService
   ) {}
 
+  /**
+   * 
+   * @param tipo tipo de productividad a publicar
+   * Navega al formulario correspondiente segun el tipo de productividad
+   */
   gotoForm(tipo: string): void {
     this.router.navigate(['/productividad/panel/formulario', tipo]);
   }

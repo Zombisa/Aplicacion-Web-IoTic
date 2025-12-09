@@ -109,7 +109,7 @@ export class FormBook implements OnChanges {
     }
     const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
-      file: this.selectedFile
+      file_image: this.selectedFile
     };
     this.formSubmit.emit(dtoSubmit);
   }

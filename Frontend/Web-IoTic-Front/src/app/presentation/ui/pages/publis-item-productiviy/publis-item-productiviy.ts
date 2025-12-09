@@ -16,6 +16,7 @@ import { BookPeticion } from '../../../../models/Peticion/BookPeticion';
 import { CapBookPeticion } from '../../../../models/Peticion/CapBookPeticion';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-publis-item-productiviy',
   imports: [CommonModule, Header, LoadingPage],
@@ -29,6 +30,19 @@ export class PublisItemProductiviy implements OnInit {
 
   @ViewChild('formContainer', { read: ViewContainerRef })
   formContainer!: ViewContainerRef;
+  /**
+   * ===========FLUJO DE TRABAJO =================
+   * 1. registrar el formulario dentrode formMap, clave: componente
+   * 2. incluir el servicio necesario en el constructor dentro de guardarMap (estructura docuentada abajo)
+   * 3. agregar el tipo en el panel de seleccion de tipos (panel-publish-productivity.ts)
+   * =============================================
+   * 
+   *======== TODOS ============ los formularios deben emitir un FormSubmitPayload
+   * en el cual estan los campos para imagenes y documentos opcionales
+   * DOCUMENTO AUN FALTA IMPLEMENTAR
+   * IMAGEN LISTA 
+   * 
+   */
 
   /**
    * Mapeo de tipos a componentes de formulario
@@ -40,8 +54,8 @@ export class PublisItemProductiviy implements OnInit {
    *
    */
   formMap: any = {
-    book: FormBook,
-    cap_book: FormCapBook,
+    libro: FormBook,
+    capitulo_libro: FormCapBook,
   };
 
   isLoading: boolean = false;
@@ -103,7 +117,7 @@ export class PublisItemProductiviy implements OnInit {
     this.currentFormRef = this.formContainer.createComponent(formComponent);
 
     // El hijo enviará: { data: {...}, file: File | null }
-    this.currentFormRef.instance.formSubmit.subscribe((payload: {data: BaseProductivityDTO, file: File | null }) => {
+    this.currentFormRef.instance.formSubmit.subscribe((payload: FormSubmitPayload) => {
       console.log("Formulario recibido en padre:", payload);
       this.onFormSubmit(payload);
     });
@@ -119,14 +133,14 @@ export class PublisItemProductiviy implements OnInit {
   async onFormSubmit(dtoSubmit: FormSubmitPayload) {
     this.isLoading = true;
 
-    if (!dtoSubmit.file) {
+    if (!dtoSubmit.file_image) {
       this.guardarEntidad(dtoSubmit.data);
       return;
     }
 
     try {
-
-      const compressed = await this.compressFile(dtoSubmit.file);
+      /**PROCESO PATA SUBIR Y COMPRIMIR IMAGNES */
+      const compressed = await this.compressFile(dtoSubmit.file_image!);
       await this.uploadAndSetImage(dtoSubmit.data, compressed);
       this.guardarEntidad(dtoSubmit.data);
 
@@ -229,13 +243,13 @@ private mostrarError(titulo: string, mensaje: string) {
     }
    */
   private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
-    book: (payload: BaseProductivityDTO) => {
+    libro: (payload: BaseProductivityDTO) => {
       this.booksService.postBook(payload as BookPeticion).subscribe({
         next: () => this.mostrarExito('Libro guardado', 'El libro se ha guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar el libro', 'No se pudo guardar el libro.')
       });
     },
-    cap_book: (payload: BaseProductivityDTO) => {
+    capitulo_libro: (payload: BaseProductivityDTO) => {
       this.capBookService.postCapBook(payload as CapBookPeticion).subscribe({
         next: () => this.mostrarExito('Capítulo de libro guardado', 'El capítulo se ha guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar el capítulo', 'No se pudo guardar el capítulo.')
