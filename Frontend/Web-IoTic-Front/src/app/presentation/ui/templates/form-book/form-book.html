@@ -1,8 +1,8 @@
-<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+<form (ngSubmit)="submitForm()" [formGroup]="form" class=" form-container">
   <div class="row g-4">
     
     <!-- Upload Image Box -->
-    <section class="col-12 col-lg-6 column">
+    <section class="col-12 col-lg-6 ">
       <div class="image-upload-box">
         <input type="file"
                #fileInput
@@ -17,11 +17,32 @@
             <p class="upload-text">Haz clic para subir imagen</p>
           </div>
         </div>
+         <!-- Input oculto -->
+      <input
+        type="file"
+        #documentInput
+        hidden
+         (change)="onDocumentSelected($event)"
+      />
+
+      <!-- Botón para abrir selector -->
+      <button
+        class="btn-outline-secondary btn mt-3"
+        (click)="documentInput.click()"
+        [class.file-loaded]="selectedDocument"
+      >
+        {{ selectedDocument ? 'Archivo seleccionado ✔' : 'Subir archivo' }}
+      </button>
+
+      <button *ngIf="selectedDocument" class="btn-danger" (click)="removeFile()">
+        Quitar archivo ✖
+      </button>
       </div>
+     
     </section>
 
     <!-- Inputs -->
-    <section class="col-12 col-lg-6 column">
+    <section class="col-12 col-lg-6 column form card">
 
       <div class="input-container personality-camp">
         <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
@@ -72,12 +93,12 @@
         <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
         <label>Propiedad Intelectual</label>
       </div>
+      <div class="">
+        <button type="submit" class="btn btn-primary mt-3">Guardar Libro</button>
+      </div>
 
     </section>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Guardar Libro</button>
-    </div>
 
   </div>
 </form>

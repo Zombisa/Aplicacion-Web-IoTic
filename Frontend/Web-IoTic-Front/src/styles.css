@@ -164,8 +164,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     height: 3rem;
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
+.btn-danger{
+    color: var(--color-danger);
+    border: 2px solid var(--color-danger);
+    background-color: #f6f9ff;
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-danger:hover{
+  background-color: var(--color-danger);
+  color: white;
+}
 .btn-outline-secondary:hover{
   background-color: #e6e7e9;
+  color: #202136;
 }
 
 /* Media query para pantallas pequeñas (<576px) */

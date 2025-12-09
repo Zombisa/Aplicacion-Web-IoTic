@@ -36,6 +36,7 @@ import { FormSoftware } from '../../templates/form-software/form-software';
 import { FormTrabajoEventos } from '../../templates/form-trabajo-eventos/form-trabajo-eventos';
 import { FormTutoriaConcluida } from '../../templates/form-tutoria-concluida/form-tutoria-concluida';
 import { FormTutoriaEnMarcha } from '../../templates/form-tutoria-en-marcha/form-tutoria-en-marcha';
+import { FileService } from '../../../../services/common/files.service';
 
 
 @Component({
@@ -108,7 +109,8 @@ export class PublisItemProductiviy implements OnInit {
     private softwareService: SoftwareService,
     private revistaService: RevistaService,
     private procesoTecnicaService: ProcesoTecnicaService,
-    private route: Router
+    private route: Router,
+    private fileService: FileService
     /**
      * Agregar servicios necesarios para cada tipo de formulario
      * private servicioEjemplo: ServicioEjemplo
@@ -168,13 +170,15 @@ export class PublisItemProductiviy implements OnInit {
   async onFormSubmit(dtoSubmit: FormSubmitPayload) {
     this.isLoading = true;
 
-    if (!dtoSubmit.file_image) {
+    if (!dtoSubmit.file_image && !dtoSubmit.file_document) {
       this.guardarEntidad(dtoSubmit.data);
       return;
     }
 
     try {
-      /**PROCESO PATA SUBIR Y COMPRIMIR IMAGNES */
+      if(dtoSubmit.file_document){
+        await this.uploadAndSetFile(dtoSubmit.data, dtoSubmit.file_document);
+      }
       const compressed = await this.compressFile(dtoSubmit.file_image!);
       await this.uploadAndSetImage(dtoSubmit.data, compressed);
       this.guardarEntidad(dtoSubmit.data);
@@ -208,6 +212,40 @@ export class PublisItemProductiviy implements OnInit {
           switchMap((resp) => {
             console.log(resp)
             data.image_path = resp.file_path;
+            return this.imageService.uploadToR2(resp.upload_url, file);
+          })
+        )
+        .subscribe({
+          next: () => resolve(),
+          error: (err) => {
+            // Mostrar notificación de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al subir la imagen',
+              text: 'No se pudo subir la imagen. Por favor intenta nuevamente.',
+              confirmButtonText: 'Aceptar'
+            });
+            reject(err);
+          }
+        });
+    });
+  }
+  /**
+   * Funcion que sube el archivo pdf o archivo a R2 y actualiza el objeto data con la ruta
+   * @param data objeto de datos donde se colocara la ruta del archivo subida
+   * @param file archivo pdf o archivo a subir
+   * @returns 
+   */
+  private uploadAndSetFile(data: BaseProductivityDTO, file: File): Promise<void> {
+    const extension = file.name.split('.').pop() || 'jpg';
+    const contentType = file.type;
+
+    return new Promise((resolve, reject) => {
+      this.imageService.getPresignedUrl(extension, contentType)
+        .pipe(
+          switchMap((resp) => {
+            console.log(resp)
+            data.archivo_path = resp.file_path;
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
         )

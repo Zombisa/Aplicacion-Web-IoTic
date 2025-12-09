@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { BookDTO } from '../../../../models/DTO/BookDTO';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-book',
@@ -23,6 +24,7 @@ export class FormBook implements OnChanges {
 
   form: FormGroup;
   selectedFile: File | null = null;
+  selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -97,6 +99,32 @@ export class FormBook implements OnChanges {
     reader.onload = () => this.imagePreview = reader.result as string;
     reader.readAsDataURL(file);
   }
+  /**
+   * Captura el archivo de documento seleccionado 
+   * valida el tamaño máximo de 20 MB 
+   * @param event evento del input file
+   * @returns 
+   */
+  onDocumentSelected(event: any) {
+    const file = event.target.files[0];
+    const maxSize = 20 * 1024 * 1024; // 20 MB
+
+    if (file.size > maxSize) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Archivo demasiado grande',
+        text: 'El archivo supera el tamaño máximo permitido de 20 MB.',
+        confirmButtonText: 'Aceptar'
+      }); 
+      event.target.value = ""; // limpiar input
+      return;
+    }
+
+  this.selectedDocument = file;
+  }
+  removeFile() {
+    this.selectedDocument = null;
+  }
   
 
   /**
@@ -114,3 +142,4 @@ export class FormBook implements OnChanges {
     this.formSubmit.emit(dtoSubmit);
   }
 }
+
