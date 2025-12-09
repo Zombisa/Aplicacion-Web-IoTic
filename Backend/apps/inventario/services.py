@@ -92,6 +92,7 @@ def crear_items_masivo(data):
 
         # imagen única (opcional)
         image_r2_unico = data.get("image_r2", None)
+        file_path_unico = data.get("file_path", None)
 
         usar_urls_completas = False
 
@@ -109,7 +110,16 @@ def crear_items_masivo(data):
         if imagenes_r2:
             usar_urls_completas = True
 
-        # Permitir image_r2 único para cantidad > 1 replicándolo en la lista
+        # Si viene file_path único y no se enviaron listas ni image_r2, componer URL única
+        if file_path_unico and not image_r2_unico and imagenes is None:
+            image_r2_unico = f"{settings.R2_BUCKET_PATH}/{file_path_unico}"
+            usar_urls_completas = True
+
+        # Si viene una sola imagen (str) y cantidad > 1, replicar la lista
+        if imagenes is not None and not isinstance(imagenes, list):
+            imagenes = [imagenes] * cantidad
+
+        # Permitir image_r2 único (o file_path compuesto) para cantidad > 1 replicándolo en la lista
         if cantidad > 1 and image_r2_unico and imagenes is None:
             imagenes = [image_r2_unico] * cantidad
             usar_urls_completas = True
@@ -204,13 +214,12 @@ def crear_items_masivo(data):
             raise ValidationError(f"estado_admin debe ser uno de: {estados_admin_validos}")
 
         # ---------- Procesar imagen ----------
-        # Acepta image_r2 (URL completa) o file_path (para compatibilidad backward, sin composición)
+        # Acepta image_r2 (URL completa) o file_path; si viene file_path, componer con bucket
         image_r2 = item_data.get("image_r2")
         file_path = item_data.pop("file_path", None)
         
         if file_path and not image_r2:
-            # Compatibilidad: si solo viene file_path, usarlo como image_r2 tal cual
-            item_data["image_r2"] = file_path
+            item_data["image_r2"] = f"{settings.R2_BUCKET_PATH}/{file_path}"
 
         # ---------- Crear item ----------
         item = Inventario.objects.create(**item_data)
