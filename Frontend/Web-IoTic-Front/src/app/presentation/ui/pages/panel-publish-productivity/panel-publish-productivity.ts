@@ -26,6 +26,11 @@ export class PanelPublishProductivity {
   types = [
     { name: 'Libro', tipo: 'libro',description: 'En esta seccion podras publicar libros.', },
     { name: 'Capítulo de Libro', tipo: 'capitulo_libro',description: 'En esta seccion podras publicar capitulos de libros.', },
+    { name: 'Participación en Comités de Evaluación', tipo: 'participacion_comites_ev', description: 'Publica tus participaciones en comités o eventos de evaluación académica o profesional.' },
+    { name: 'Procesos o Técnicas', tipo: 'proceso_tecnica', description: 'Comparte procesos o técnicas desarrolladas en tu ámbito profesional o académico.' },
+    { name: 'Revistas', tipo: 'revista', description: 'Publica información sobre revistas académicas o profesionales en las que has participado.' },
+    { name: 'Software', tipo: 'software', description: 'Comparte software desarrollado, incluyendo herramientas, aplicaciones o sistemas.' },
+    { name: 'Trabajos en Eventos', tipo: 'trabajo_eventos', description: 'Publica trabajos presentados en eventos académicos, conferencias o simposios.' }
   ];
 
 

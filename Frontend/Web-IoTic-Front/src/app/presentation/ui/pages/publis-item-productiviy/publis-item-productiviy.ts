@@ -15,6 +15,9 @@ import { CapBookService } from '../../../../services/information/cap-book.servic
 import { BookPeticion } from '../../../../models/Peticion/BookPeticion';
 import { CapBookPeticion } from '../../../../models/Peticion/CapBookPeticion';
 import Swal from 'sweetalert2';
+import { FormEvaluacion } from '../../templates/form-evaluacion/form-evaluacion';
+import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
+import { ParticipacionComitesEvPeticion } from '../../../../models/Peticion/informacion/ParticipacionComitesEvPeticion';
 
 
 @Component({
@@ -56,6 +59,7 @@ export class PublisItemProductiviy implements OnInit {
   formMap: any = {
     libro: FormBook,
     capitulo_libro: FormCapBook,
+    participacion_comites_ev: FormEvaluacion,
   };
 
   isLoading: boolean = false;
@@ -73,6 +77,7 @@ export class PublisItemProductiviy implements OnInit {
     private booksService: BooksService,
     private imageService: ImagesService,
     private capBookService: CapBookService,
+    private participacionComitesEvService: ParticipacionComitesEvService,
     private route: Router
     /**
      * Agregar servicios necesarios para cada tipo de formulario
@@ -82,11 +87,11 @@ export class PublisItemProductiviy implements OnInit {
   ) { }
 
   ngOnInit(): void {
-      this.router.paramMap.subscribe(params => {
+    this.router.paramMap.subscribe(params => {
       const tipoParam = params.get('tipo');
       if (tipoParam) {
         this.tipo = tipoParam;
-      }else {
+      } else {
         console.error('Tipo de productividad no proporcionado en la URL.');
       }
     });
@@ -177,7 +182,7 @@ export class PublisItemProductiviy implements OnInit {
           })
         )
         .subscribe({
-        next: () => resolve(),
+          next: () => resolve(),
           error: (err) => {
             // Mostrar notificación de error
             Swal.fire({
@@ -210,23 +215,23 @@ export class PublisItemProductiviy implements OnInit {
       this.route.navigate(['/productividad']);
     });
   }
-/**
- * Muestra un mensaje de error al usuario
- * @param titulo titulo de la notificación
- * @param mensaje mensaje de la notificación personalizado
- */
-private mostrarError(titulo: string, mensaje: string) {
-  Swal.fire({
-    icon: 'error',
-    title: titulo,
-    text: mensaje,
-    confirmButtonText: 'Aceptar',
-    buttonsStyling: true,
-    customClass: {
-      confirmButton: 'btn btn-primary'
-    }
-  });
-}
+  /**
+   * Muestra un mensaje de error al usuario
+   * @param titulo titulo de la notificación
+   * @param mensaje mensaje de la notificación personalizado
+   */
+  private mostrarError(titulo: string, mensaje: string) {
+    Swal.fire({
+      icon: 'error',
+      title: titulo,
+      text: mensaje,
+      confirmButtonText: 'Aceptar',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      }
+    });
+  }
 
 
   /**
@@ -255,27 +260,41 @@ private mostrarError(titulo: string, mensaje: string) {
         error: () => this.mostrarError('Error al guardar el capítulo', 'No se pudo guardar el capítulo.')
       });
     },
+    participacion_comites_ev: (payload: BaseProductivityDTO) => {
+      this.participacionComitesEvService.create(payload as ParticipacionComitesEvPeticion).subscribe({
+        next: () =>
+          this.mostrarExito(
+            'Participación guardada',
+            'La participación en comité de evaluación se ha guardado correctamente.'
+          ),
+        error: () =>
+          this.mostrarError(
+            'Error al guardar la participación',
+            'No se pudo guardar la participación en comité de evaluación.'
+          )
+      });
+    }
   };
 
 
-/**
- * guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
- * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
- * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
- * @param payload Datos del formulario ya con image_url si aplica
- * @returns 
- */
-guardarEntidad(payload: BaseProductivityDTO) {
-  this.isLoading = true;
-  const guardarFn = this.guardarMap[this.tipo];
+  /**
+   * guarda la entidad dependiendo del tipo, se debe colocar en cada caso el servicio correspondiente
+   * segun el tipo de productividad dispara un servicio u otro conviritiendo el payload al tipo de peticion correspondiente
+   * siempre usar asignacion de tipos para asegurar que el objeto payload cumple con la estructura requerida no usar any
+   * @param payload Datos del formulario ya con image_url si aplica
+   * @returns 
+   */
+  guardarEntidad(payload: BaseProductivityDTO) {
+    this.isLoading = true;
+    const guardarFn = this.guardarMap[this.tipo];
 
-  if (!guardarFn) {
-    console.error('No hay servicio definido para tipo:', this.tipo);
-    this.isLoading = false;
-    return;
+    if (!guardarFn) {
+      console.error('No hay servicio definido para tipo:', this.tipo);
+      this.isLoading = false;
+      return;
+    }
+
+    guardarFn(payload);
   }
-
-  guardarFn(payload);
-}
 
 }

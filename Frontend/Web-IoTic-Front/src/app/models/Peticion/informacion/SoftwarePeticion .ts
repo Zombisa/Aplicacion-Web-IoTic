@@ -1,14 +1,12 @@
-export interface SoftwarePeticion {
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface SoftwarePeticion extends BaseProductivityDTO {
   tituloDesarrollo: string;
-  tipoProductividad: string;
   etiquetas: string[];
   nivelAcceso: string;
   tipoProducto: string;
-  pais: string;
   responsable: string[];
   codigoRegistro?: string | null;
   descripcionFuncional: string;
   propiedadIntelectual: string;
-  image_r2?: string | null;
-  file_r2?: string | null;
 }

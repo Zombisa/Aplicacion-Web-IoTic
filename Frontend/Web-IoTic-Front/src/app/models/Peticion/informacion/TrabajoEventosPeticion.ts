@@ -1,16 +1,12 @@
-export interface TrabajoEventosPeticion {
-  titulo: string;
-  tipoProductividad: string;
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface TrabajoEventosPeticion extends BaseProductivityDTO {
   volumen: number;
   nombreSeminario: string;
   tipoPresentacion: string;
   tituloActas: string;
   isbn: number;
   paginas: number;
-  anio: number;
   etiquetas: string[];
   propiedadIntelectual: string;
-  autores: string[];
-  image_r2?: string | null;
-  file_r2?: string | null;
 }

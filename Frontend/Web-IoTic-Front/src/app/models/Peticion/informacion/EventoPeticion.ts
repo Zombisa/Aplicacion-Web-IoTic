@@ -1,11 +1,8 @@
-export interface EventoPeticion {
-  titulo: string;
-  tipoProductividad: string;
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface EventoPeticion extends BaseProductivityDTO{
   etiquetas: string[];
-  autores: string[];
   propiedadIntelectual: string;
   alcance: string;
   institucion: string;
-  image_r2?: string | null;
-  file_r2?: string | null;
 }

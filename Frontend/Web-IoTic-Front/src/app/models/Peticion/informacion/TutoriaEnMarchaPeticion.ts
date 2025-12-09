@@ -1,16 +1,12 @@
-export interface TutoriaEnMarchaPeticion {
-  titulo: string;
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface TutoriaEnMarchaPeticion extends BaseProductivityDTO {
   subtipoTitulo: string;
   tipoProductividad: string;
   descripcion: string;
-  pais: string;
-  anio: number;
   orientados: string[];
   programa: string;
   institucion: string;
-  autores: string[];
   etiquetasGTI: string[];
   licencia: string;
-  image_r2?: string | null;
-  file_r2?: string | null;
 }

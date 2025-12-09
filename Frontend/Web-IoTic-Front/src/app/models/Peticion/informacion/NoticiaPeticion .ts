@@ -1,6 +1,5 @@
-export interface NoticiaPeticion {
-  titulo: string;
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface NoticiaPeticion extends BaseProductivityDTO{
   contenido: string;
-  image_r2?: string | null;
-  file_r2?: string | null;
 }

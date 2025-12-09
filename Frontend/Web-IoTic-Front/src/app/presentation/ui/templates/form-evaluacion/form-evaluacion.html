@@ -1,0 +1,78 @@
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+    <!-- Upload Image Box -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
+        <label>País</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event.target.value)"
+        />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="institucion" placeholder=" " />
+        <label>Institución</label>
+      </div>
+
+      <!-- Etiquetas GTI -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event.target.value)"
+        />
+        <label>Etiquetas GTI (separadas por coma)</label>
+      </div>
+
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="licencia" placeholder=" " />
+        <label>Licencia</label>
+      </div>
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Guardar participación</button>
+    </div>
+  </div>
+</form>

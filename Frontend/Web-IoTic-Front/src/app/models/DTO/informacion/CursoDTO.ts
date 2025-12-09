@@ -1,8 +1,7 @@
-export interface CursoDTO {
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface CursoDTO extends BaseProductivityDTO {
   id: number;
-  usuario: number;
-  titulo: string;
-  tipoProductividad: string;
   etiquetas: string[];
   autores: string[];
   propiedadIntelectual: string;
@@ -10,5 +9,4 @@ export interface CursoDTO {
   institucion: string;
   fechaPublicacion: string; // ISO string
   link?: string | null;
-  image_r2?: string | null;
 }

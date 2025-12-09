@@ -1,11 +1,6 @@
-export interface ProcesoTecnicaPeticion {
-  titulo: string;
-  tipoProductividad: string;
-  pais: string;
-  anio: number;
-  autores: string[];
+import { BaseProductivityDTO } from "../../Common/BaseProductivityDTO";
+
+export interface ProcesoTecnicaPeticion extends BaseProductivityDTO {
   etiquetasGTI: string[];
   licencia: string;
-  image_r2?: string | null;
-  file_r2?: string | null;
 }
