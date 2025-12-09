@@ -94,6 +94,24 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             if comite_ev.usuario.uid_firebase != uid:
                 return Response ({'error': 'Solo puedes eliminar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
             
+            #eliminar imagen en el bucket de clouflare
+            # extraer solo el nombre de la imagen
+            image_path = comite_ev.image_r2.split("/")[-1]
+
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=image_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #eliminar archivo en el bucket de clouflare
+            # extraer solo el nombre del archivo
+            file_path = comite_ev.file_r2.split("/")[-1]
+
+            try:
+                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+            except Exception as e:
+                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             comite_ev.delete()
             return Response({'Participacion en comite o evento eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
         else:
