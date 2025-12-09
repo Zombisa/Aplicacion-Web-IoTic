@@ -180,8 +180,16 @@ class InventarioViewSet(viewsets.ModelViewSet):
                 "estado_fisico": "str",
                 "estado_admin": "str",
                 "observacion": "str",
-                "image_r2": "str"
+                "image_r2": "str (URL completa de la imagen)"
             }
+        
+        Comportamiento con imágenes:
+            - Si se envía una nueva URL de imagen y el ítem ya tenía una imagen diferente,
+              se verificará si la imagen anterior está siendo usada por:
+              * Otros ítems activos en el inventario
+              * Snapshots en el histórico de préstamos
+            - Solo se eliminará de Cloudflare R2 si NO está siendo usada en ningún lugar
+            - Esto previene pérdida de datos del histórico y permite compartir imágenes
         
         Returns:
             200 OK: Objeto Inventario actualizado
@@ -189,6 +197,31 @@ class InventarioViewSet(viewsets.ModelViewSet):
             400 Bad Request: Errores de validación
         """
         item = get_object_or_404(Inventario, pk=pk)
+
+        # Si viene una nueva imagen y ya tenía una diferente, verificar antes de eliminar
+        nueva_imagen = request.data.get('image_r2')
+        if nueva_imagen and item.image_r2 and nueva_imagen != item.image_r2:
+            imagen_anterior = item.image_r2
+            
+            # Verificar si otros items activos usan la misma imagen
+            items_con_misma_imagen = Inventario.objects.filter(
+                image_r2=imagen_anterior
+            ).count()
+            
+            # Verificar si existe en snapshots del histórico de préstamos
+            prestamos_con_imagen = Prestamo.objects.filter(
+                item_image_r2_snapshot=imagen_anterior
+            ).exists()
+            
+            # Solo eliminar si es el ÚNICO item usando esa imagen Y no está en histórico
+            if items_con_misma_imagen == 1 and not prestamos_con_imagen:
+                filename = imagen_anterior.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=filename)
+                except Exception as e:
+                    # Log del error pero continuar con la actualización
+                    print(f"Error eliminando imagen anterior de R2: {str(e)}")
+            # Si items_con_misma_imagen > 1 o prestamos_con_imagen == True, no eliminar
 
         serializer = InventarioSerializer(item, data=request.data, partial=True)
 
