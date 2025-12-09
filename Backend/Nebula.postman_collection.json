@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1ecf7f47-fafc-41a7-ab15-c5958b9b90a8",
+		"_postman_id": "33bafcd2-6f9b-4cfc-b50c-2dc3fc718d47",
 		"name": "Nebula",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40286637"
+		"_exporter_id": "38361461"
 	},
 	"item": [
 		{
@@ -2283,6 +2283,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/misNoticias/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"misNoticias",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2522,6 +2565,49 @@
 										"eventos",
 										"2",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/misEventos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"misEventos",
 										""
 									]
 								}
@@ -2771,6 +2857,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/misCursos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"misCursos",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -3006,6 +3135,49 @@
 										"capLibros",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/misCapLibros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"misCapLibros",
 										""
 									]
 								}
@@ -3250,6 +3422,49 @@
 										"jurados",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/misJurados/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"misJurados",
 										""
 									]
 								}
@@ -3794,6 +4009,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/misMaterialesDidacticos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"misMaterialesDidacticos",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4022,6 +4280,49 @@
 										"participacionComitesEv",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/misParticipaciones/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"misParticipaciones",
 										""
 									]
 								}
@@ -4260,6 +4561,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/misProcesosTenicas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"misProcesosTenicas",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4488,6 +4832,49 @@
 										"revistas",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/misRevistas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"misRevistas",
 										""
 									]
 								}
@@ -4726,6 +5113,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/misSoftware/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"misSoftware",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4954,6 +5384,49 @@
 										"trabajoEventos",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/miTrabajoEv/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"miTrabajoEv",
 										""
 									]
 								}
@@ -5192,6 +5665,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/miTutoriasCon/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"miTutoriasCon",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -5420,6 +5936,49 @@
 										"tutoriasEnMarcha",
 										"1",
 										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/miTutoriasMar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"miTutoriasMar",
 										""
 									]
 								}
