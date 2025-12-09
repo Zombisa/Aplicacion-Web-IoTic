@@ -251,21 +251,47 @@ class InventarioViewSet(viewsets.ModelViewSet):
         URL: /inventario/{id}/
         
         Restricciones:
-            - No se puede eliminar si tiene préstamos activos o históricos
-            - Protege la integridad referencial
+            - No se puede eliminar si tiene préstamos ACTIVOS (estado="Prestado")
+            - SÍ se puede eliminar si tiene préstamos DEVUELTOS (estado="Devuelto")
+              porque los snapshots del histórico conservan toda la información
+            - Protege la integridad referencial de préstamos en curso
         
         Returns:
             204 No Content: Eliminación exitosa
-            400 Bad Request: "No se puede eliminar un ítem con préstamos asociados."
+            400 Bad Request: "No se puede eliminar un ítem con préstamos activos."
             404 Not Found: Ítem no existe
         """
         item = get_object_or_404(Inventario, pk=pk)
 
-        if item.prestamos.exists():
+        # Solo bloquear si hay préstamos ACTIVOS (no devueltos)
+        if item.prestamos.filter(estado="Prestado").exists():
             return Response(
-                {"error": "No se puede eliminar un ítem con préstamos asociados."},
+                {"error": "No se puede eliminar un ítem con préstamos activos."},
                 status=400
             )
+
+        # Antes de eliminar, verificar si la imagen se puede eliminar de R2
+        imagen_a_eliminar = item.image_r2
+        
+        if imagen_a_eliminar:
+            # Verificar si otros items activos usan la misma imagen
+            items_con_misma_imagen = Inventario.objects.filter(
+                image_r2=imagen_a_eliminar
+            ).exclude(pk=pk).count()
+            
+            # Verificar si existe en snapshots del histórico de préstamos
+            prestamos_con_imagen = Prestamo.objects.filter(
+                item_image_r2_snapshot=imagen_a_eliminar
+            ).exists()
+            
+            # Solo eliminar si es el ÚNICO item usando esa imagen Y no está en histórico
+            if items_con_misma_imagen == 0 and not prestamos_con_imagen:
+                filename = imagen_a_eliminar.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=filename)
+                except Exception as e:
+                    # Log del error pero continuar con la eliminación del item
+                    print(f"Error eliminando imagen de R2: {str(e)}")
 
         item.delete()
         return Response({"message": "Ítem eliminado correctamente"}, status=204)
