@@ -35,7 +35,7 @@ def verificar_token(view_func):
 
         uid = decoded.get("uid")
         email = decoded.get("email")
-        role_claim = (decoded.get("role") or "usuario").lower().strip()
+        role_claim = (decoded.get("role") or "").lower().strip()
 
         # ------------------------------
         #  Sincronizar usuario en BD
@@ -51,11 +51,12 @@ def verificar_token(view_func):
             }
         )
 
-        # Asignar rol si existe
+        # Asignar rol si existe y es válido (Administrador/Mentor). Si no, dejar sin rol.
         try:
-            rol_obj = Rol.objects.get(nombre__iexact=role_claim)
-            usuario.rol = rol_obj
-            usuario.save()
+            if role_claim in ["admin", "administrador", "mentor"]:
+                rol_obj = Rol.objects.get(nombre__iexact=role_claim)
+                usuario.rol = rol_obj
+                usuario.save()
         except Rol.DoesNotExist:
             pass
 
