@@ -32,9 +32,9 @@ class MisionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
-        """Crea la misión única (requiere rol válido, 400 si ya existe o falla validación)."""
+        """Crea la misión única (requiere rol admin, 400 si ya existe o falla validación)."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         # Evitar más de un registro
@@ -52,9 +52,9 @@ class MisionViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
-        """Edita parcialmente la misión por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
+        """Edita parcialmente la misión por `pk` (admin únicamente); 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         mision = get_object_or_404(Mision, pk=pk)
@@ -100,9 +100,9 @@ class VisionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
-        """Crea la visión única (rol requerido, 400 si ya existe o falla validación)."""
+        """Crea la visión única (admin únicamente, 400 si ya existe o falla validación)."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         if Vision.objects.exists():
@@ -119,9 +119,9 @@ class VisionViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
-        """Edita parcialmente la visión por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
+        """Edita parcialmente la visión por `pk` (admin únicamente); 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         vision = get_object_or_404(Vision, pk=pk)
@@ -169,9 +169,9 @@ class HistoriaViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
-        """Crea la historia única (rol requerido; 400 si ya existe o falla validación)."""
+        """Crea la historia única (admin únicamente; 400 si ya existe o falla validación)."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         if Historia.objects.exists():
@@ -190,9 +190,9 @@ class HistoriaViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
-        """Edita parcialmente la historia por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
+        """Edita parcialmente la historia por `pk` (admin únicamente); 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
 
-        if verificarToken.validarRol(request) is not True:
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         historia = get_object_or_404(Historia, pk=pk)
@@ -228,8 +228,8 @@ class ObjetivoViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
-        """Crea un nuevo objetivo (rol requerido; 201 éxito; 400 si falla validación)."""
-        if verificarToken.validarRol(request) is not True:
+        """Crea un nuevo objetivo (admin únicamente; 201 éxito; 400 si falla validación)."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         serializer = ObjetivoSerializer(data=request.data)
@@ -247,8 +247,8 @@ class ObjetivoViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
-        """Edita parcialmente un objetivo por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
-        if verificarToken.validarRol(request) is not True:
+        """Edita parcialmente un objetivo por `pk` (admin únicamente); 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         instance = get_object_or_404(Objetivo, pk=pk)
@@ -262,8 +262,8 @@ class ObjetivoViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['delete'], url_path='eliminar')
     def eliminar(self, request, pk=None):
-        """Elimina un objetivo por `pk`; 404 si no existe; 403 si el rol es inválido."""
-        if verificarToken.validarRol(request) is not True:
+        """Elimina un objetivo por `pk` (admin únicamente); 404 si no existe; 403 si el rol es inválido."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         instance = get_object_or_404(Objetivo, pk=pk)
@@ -293,8 +293,8 @@ class ValorViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], url_path='agregar')
     def agregar(self, request):
-        """Crea un valor institucional (rol requerido; 201 éxito; 400 si falla validación)."""
-        if verificarToken.validarRol(request) is not True:
+        """Crea un valor institucional (admin únicamente; 201 éxito; 400 si falla validación)."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         serializer = ValorSerializer(data=request.data)
@@ -312,8 +312,8 @@ class ValorViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['put'], url_path='editar')
     def editar(self, request, pk=None):
-        """Edita parcialmente un valor por `pk`; 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
-        if verificarToken.validarRol(request) is not True:
+        """Edita parcialmente un valor por `pk` (admin únicamente); 404 si no existe, 400 si falla validación, 403 si el rol es inválido."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         instance = get_object_or_404(Valor, pk=pk)
@@ -327,8 +327,8 @@ class ValorViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['delete'], url_path='eliminar')
     def eliminar(self, request, pk=None):
-        """Elimina un valor por `pk`; 404 si no existe; 403 si el rol es inválido."""
-        if verificarToken.validarRol(request) is not True:
+        """Elimina un valor por `pk` (admin únicamente); 404 si no existe; 403 si el rol es inválido."""
+        if verificarToken.validarRolAdmin(request) is not True:
             return Response({'error': 'Permisos insuficientes'}, status=403)
 
         instance = get_object_or_404(Valor, pk=pk)
