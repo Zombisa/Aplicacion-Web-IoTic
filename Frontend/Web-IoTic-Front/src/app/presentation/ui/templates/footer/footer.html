@@ -1,0 +1,110 @@
+<footer class="footer-container">
+  <div class="container-fluid">
+    <div class="row footer-content">
+      <!-- Logos de la universidad -->
+      <div class="col-12 col-md-3 footer-logos">
+        <div class="university-info">
+          <h3 class="university-title">Universidad del Cauca</h3>
+          <p class="university-nit">NIT. 891500319-2</p>
+          
+          <!-- 
+            INSTRUCCIONES PARA AÑADIR IMÁGENES:
+            1. Crea la carpeta: src/assets/logos/
+            2. Coloca las imágenes con estos nombres:
+               - universidad-cauca.png
+               - gov-co.png
+               - icontec-iso.png
+               - iqnet.png
+            3. Las imágenes se cargarán automáticamente
+          -->
+          <div class="university-logos d-flex flex-wrap gap-2 mt-3">
+            <div class="logo-item">
+              <img src="assets/logos/universidad-cauca.png" alt="Universidad del Cauca" class="logo-img" 
+                   onerror="this.style.display='none'" />
+            </div>
+            <div class="logo-item">
+              <img src="assets/logos/gov-co.png" alt="gov.co" class="logo-img" 
+                   onerror="this.style.display='none'" />
+            </div>
+            <div class="logo-item">
+              <img src="assets/logos/icontec-iso.png" alt="icontec ISO 9001" class="logo-img" 
+                   onerror="this.style.display='none'" />
+            </div>
+            <div class="logo-item">
+              <img src="assets/logos/iqnet.png" alt="IQNET" class="logo-img" 
+                   onerror="this.style.display='none'" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información del Semillero - Layout horizontal -->
+      <div class="col-12 col-md-6 footer-semillero">
+        <h4 class="semillero-title">Semillero de investigación de la Universidad del Cauca</h4>
+        
+        <div class="semillero-grid">
+          <div class="semillero-col">
+            <div class="info-section">
+              <p class="info-label">MENTOR:</p>
+              <p class="info-value">Ph.D. Miguel Ángel Niño Zambrano</p>
+            </div>
+
+            <div class="info-section">
+              <p class="info-label">CONTACTO:</p>
+              <p class="info-value">manzamb@unicauca.edu.co</p>
+            </div>
+
+            <div class="info-section">
+              <p class="info-label">GRUPO DE INVESTIGACIÓN:</p>
+              <p class="info-value">GTI - Grupo de I+D en Tecnologías de la Información</p>
+            </div>
+          </div>
+
+          <div class="semillero-col">
+            <div class="info-section">
+              <p class="info-label">LÍNEAS DE INVESTIGACIÓN:</p>
+              <ul class="research-lines">
+                <li>Tecnologías Internet - Internet de Las Cosas</li>
+                <li>Gestión del conocimiento – Computación Inteligente</li>
+                <li>Gestión del Conocimiento – Recuperación de la Información y Web Semántica</li>
+              </ul>
+            </div>
+
+            <div class="info-section">
+              <p class="info-label">CONTACTO</p>
+              <p class="info-value">Dirección: Cra 2 - Cll 15 Norte - Tulcán. Oficina: 422 - 340</p>
+              <p class="info-value">Teléfono: 3005527545 - 3173209144</p>
+              <p class="info-value">
+                Instagram: 
+                <a href="https://www.instagram.com/ioticunicauca/" target="_blank" rel="noopener noreferrer">
+                  https://www.instagram.com/ioticunicauca/
+                </a>
+              </p>
+              <p class="info-value">Correo: iotic@unicauca.edu.co</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de desarrollo (derecha) -->
+      <div class="col-12 col-md-3 footer-dev">
+        <div class="dev-section">
+          <h5 class="dev-title">Equipo de desarrollo</h5>
+          <p class="dev-group">Grupo Nebula</p>
+          
+          <div class="developers-list">
+            <p class="dev-label">Desarrolladores:</p>
+            <ul class="developers">
+              <li *ngFor="let developer of developers">{{ developer }}</li>
+            </ul>
+          </div>
+
+          <div class="copyright">
+            <p>&copy; {{ currentYear }} Todos los derechos reservados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
