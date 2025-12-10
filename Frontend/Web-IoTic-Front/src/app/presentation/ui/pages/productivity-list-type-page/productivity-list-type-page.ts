@@ -73,6 +73,7 @@ export class ProductivityListTypePage {
       software: () => this.getList(this.softwareService.getAll()),
       revistas: () => this.getList(this.revistaService.getAll()),
       proceso_tecnica: () => this.getList(this.procesoTecnicaService.getAll()),
+      eventos: () => this.getList(this.trabajoEventosService.getAll()),
     };
 
     if (acciones[this.tipo]) {

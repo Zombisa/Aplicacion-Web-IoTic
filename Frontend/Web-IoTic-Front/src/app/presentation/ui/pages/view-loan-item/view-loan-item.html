@@ -6,7 +6,7 @@
 </div>
 
   <div class="container-fluid p-0">
-    <div class="row">
+    <div class="">
       <div class="col-12 p-0">
         <div class="banner-primary d-flex justify-content-center align-items-center flex-column">
           <h1 class="title">Revisemos el préstamo</h1>
@@ -24,16 +24,23 @@
     <section *ngIf="!showError && loanData" class="content-section">
       <div class="row g-0 h-100">
         <!-- Información de la persona (section-info-loan) - Mitad izquierda -->
-        <div class="col-12 col-lg-6 person-section-wrapper">
+        <div class="col-12 col-lg-5 person-section-wrapper">
           <app-section-info-loan [loanData]="loanData"></app-section-info-loan>
         </div>
 
         <!-- Información del item (section-info-item) - Mitad derecha -->
-        <div class="col-12 col-lg-6 item-section-wrapper">
-          <div *ngIf="item" class="h-100">
+        <div class="col-12 col-lg-7 item-section-wrapper">
+          <div *ngIf="item && isLoanActive()" class="h-100">
             <app-section-info-item
               [item]="item"
-              mode="loan"
+              [mode]="'loan'"
+              (functionEmitter)="handlerFunctionEmitter($event)">
+            </app-section-info-item>
+          </div>
+          <div *ngIf="item && !isLoanActive()" class="h-100">
+            <app-section-info-item
+              [item]="item"
+              [mode]="'view'"
               (functionEmitter)="handlerFunctionEmitter($event)">
             </app-section-info-item>
           </div>

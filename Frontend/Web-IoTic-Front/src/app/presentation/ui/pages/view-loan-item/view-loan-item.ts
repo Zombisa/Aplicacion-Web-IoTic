@@ -182,4 +182,12 @@ export class ViewLoanItem implements OnInit {
   onReturnCancelled(): void {
     this.showReturnModal = false;
   }
+
+
+  /**
+   * Consultar si el préstamo está activo
+   */
+  isLoanActive(): boolean {
+    return this.loanData?.estado === 'Prestado';
+  }
 }
