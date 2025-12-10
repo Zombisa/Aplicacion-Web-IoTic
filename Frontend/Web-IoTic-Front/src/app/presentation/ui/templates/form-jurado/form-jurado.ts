@@ -70,7 +70,7 @@ export class FormJurado implements OnChanges {
   private populateForm(data: JuradoDTO): void {
     this.form.patchValue({
       titulo: data.titulo,
-      tipoProductividad: data.tipoProductividad || 'Jurado - Comisiones evaluadoras de trabajo de grado',
+      tipoProductividad:  'Jurado',
       pais: data.pais,
       anio: data.anio,
       autores: data.autores || [],

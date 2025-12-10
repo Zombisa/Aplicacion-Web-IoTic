@@ -7,16 +7,46 @@
         <div class="container">
             <h1 class="title">Lista de {{ tipo.replace('_', ' ') | titlecase }}</h1>
             <div class="divider"></div>
+                
+            <div class="search-bar-wrapper container mt-4">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        class="search-input"
+                        placeholder="Buscar por título..."
+                        [(ngModel)]="searchTerm"
+                        (input)="filterItems()"
+                        aria-label="Buscar ítems por título">
+                    <button 
+                        *ngIf="searchTerm"
+                        type="button"
+                        class="clear-button"
+                        (click)="clearSearch()"
+                        aria-label="Limpiar búsqueda">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div *ngIf="searchTerm && filteredListTypes.length > 0" class="search-results-info">
+                    {{ filteredListTypes.length }} resultado(s) encontrado(s)
+                </div>
+        
+
+             </div>
+      
         </div>
         
     </section>
     <div class="content-wrapper">
-        
+    
         <div *ngIf="listTypes.length === 0" class="no-items">
-            <h2 class="No hay ítems para mostrar.">No hay ítems para mostrar.</h2>
+            <h2 class="title-sub">No hay ítems para mostrar.</h2>
         </div>
-        <div *ngIf="listTypes.length > 0" class="item-grid">
-            <div *ngFor="let item of listTypes" class="item-card" (click)="goTo(item.id!)">
+        <div *ngIf="listTypes.length > 0 && filteredListTypes.length === 0" class="no-items">
+            <h2 class="title-sub">No se encontraron ítems que coincidan con "{{ searchTerm }}"</h2>
+        </div>
+        <div *ngIf="filteredListTypes.length > 0" class="item-grid">
+            <div *ngFor="let item of filteredListTypes" class="item-card" (click)="goTo(item.id!)">
                 <div class="item-image-wrapper">
                     <img *ngIf="item.image_r2" [src]="item.image_r2" [alt]="item.titulo" class="item-image">
                     <div *ngIf="!item.image_r2" class="item-image-placeholder">

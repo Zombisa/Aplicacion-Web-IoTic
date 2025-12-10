@@ -145,7 +145,7 @@ export class PublisItemProductiviy implements OnInit {
 
   async onFormSubmit(dtoSubmit: FormSubmitPayload) {
     this.isLoading = true;
-
+    this.loadingService.show();
     try {
       // Imagen
       if (dtoSubmit.file_image) {
@@ -159,10 +159,11 @@ export class PublisItemProductiviy implements OnInit {
       }
 
       this.guardarEntidad(dtoSubmit.data);
-
+      this.loadingService.hide();
     } catch (error) {
       console.error("Error al subir archivos:", error);
       this.isLoading = false;
+      this.loadingService.hide();
     }
   }
 
@@ -232,7 +233,7 @@ export class PublisItemProductiviy implements OnInit {
       confirmButtonText: 'Aceptar',
       buttonsStyling: true
     }).then(() => {
-      this.route.navigate(['/productividad']);
+      this.route.navigate(['/productividad/panel']);
     });
   }
 

@@ -13,6 +13,7 @@ import { LoadingService } from '../../../../services/loading.service';
 import { BaseProductivityDTO } from '../../../../models/Common/BaseProductivityDTO';
 import { CommonEngine } from '@angular/ssr/node';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 
@@ -20,14 +21,15 @@ import { LoadingPage } from '../../components/loading-page/loading-page';
 @Component({
   selector: 'app-productivity-list-type-page',
   templateUrl: './productivity-list-type-page.html',
-  imports: [CommonModule, Header, LoadingPage],
+  imports: [CommonModule, Header, LoadingPage, FormsModule],
   styleUrl: './productivity-list-type-page.css'
 })
 export class ProductivityListTypePage {
 
   tipo: string = '';
   listTypes: BaseProductivityDTO[] = [];
-
+  filteredListTypes: BaseProductivityDTO[] = [];
+  searchTerm: string = '';
   constructor(
     private route:  Router,
     private router: ActivatedRoute,
@@ -88,6 +90,7 @@ export class ProductivityListTypePage {
     observable.subscribe({
       next: (resp: BaseProductivityDTO[]) => {
         this.listTypes = resp;
+        this.filteredListTypes = resp;
         console.log('Información del tipo:', this.tipo, resp);
         this.loadingService.hide();
       },
@@ -97,7 +100,31 @@ export class ProductivityListTypePage {
       }
     });
   }
+
+  /**
+   * Filtra la lista de ítems según el término de búsqueda
+   */
+  filterItems(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredListTypes = this.listTypes;
+    } else {
+      const searchLower = this.searchTerm.toLowerCase();
+      this.filteredListTypes = this.listTypes.filter(item =>
+        item.titulo?.toLowerCase().includes(searchLower)
+      );
+    }
+  }
+
+  /**
+   * Limpia el término de búsqueda
+   */
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.filterItems();
+  }
   goTo(id: number) {
     this.route.navigate(['/productividad', this.tipo, id]);
   }
 }
+  
+

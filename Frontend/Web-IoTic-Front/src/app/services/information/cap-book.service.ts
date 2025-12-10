@@ -32,7 +32,7 @@ export class CapBookService {
    */
   postCapBook(capBook: CapBookPeticion): Observable<CapBookDTO> {
     return this.http.post<CapBookDTO>(
-      `${this.config.apiUrlBackend}informacion/capLibros/agregar_capitulo_libro/`,
+      `${this.config.apiUrlBackend}informacion/capLibros/capitulo_libro/`,
       capBook
     ).pipe(
       catchError((error) => {
