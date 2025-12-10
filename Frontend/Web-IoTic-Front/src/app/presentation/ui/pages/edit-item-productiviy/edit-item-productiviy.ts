@@ -70,7 +70,7 @@ export class EditProductiviy implements OnInit {
 
   formMap: any = {
     libro: FormBook,
-    capitulo_libro: FormCapBook,
+    capitulo: FormCapBook,
     participacion_comites_ev: FormEvaluacion,
     proceso_tecnica: FormProcesoTecnica,
     revista: FormRevista,
@@ -270,7 +270,7 @@ export class EditProductiviy implements OnInit {
       });
     },
 
-    capitulo_libro: (payload) => {
+    capitulo: (payload) => {
       this.capBookService.editCapBook(this.id, payload as CapBookPeticion).subscribe({
         next: () => this.mostrarExito('Capítulo guardado', 'El capítulo se ha guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar capítulo', 'No se pudo guardar el capítulo.')

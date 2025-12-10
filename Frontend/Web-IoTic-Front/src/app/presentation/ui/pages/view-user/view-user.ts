@@ -111,12 +111,12 @@ export class ViewUser implements OnInit {
       'revista': 'revista',
       'software': 'software',
       'tutoria_concluida': 'tutoria-concluida',
-      'tutoria-en-marcha': 'tutoria-en-marcha',
-      'trabajo-eventos': 'trabajo-eventos',
-      'participacion-comites': 'participacion_comites_ev',
-      'material-didactico': 'material-didactico',
+      'tutoria_en_marcha': 'tutoria-en-marcha',
+      'trabajo_eventos': 'trabajo-eventos',
+      'participacion_comites_ev': 'participacion_comites_ev',
+      'material_didactico': 'material-didactico',
       'jurado': 'jurado',
-      'proceso-tecnica': 'proceso-tecnica'
+      'proceso_tecnica': 'proceso-tecnica'
     };
 
     const route = routeMap[event.tipo] || event.tipo;

@@ -50,7 +50,7 @@ export class CapBookService {
    */
   editCapBook(id: number, capBook: CapBookPeticion): Observable<CapBookDTO> {
     return this.http.put<CapBookDTO>(
-      `${this.config.apiUrlBackend}informacion/capLibros/${id}/editar_capitulo_libro/`,
+      `${this.config.apiUrlBackend}informacion/capLibros/${id}/capitulo_libro/`,
       capBook
     ).pipe(
       catchError((error) => {
@@ -68,7 +68,7 @@ export class CapBookService {
    */
   deleteCapBook(id: number): Observable<any> {
     return this.http.delete(
-      `${this.config.apiUrlBackend}informacion/capLibros/${id}/eliminar_capitulo_libro/`
+      `${this.config.apiUrlBackend}informacion/capLibros/${id}/capitulo_libro/`
     ).pipe(
       catchError((error) => {
         console.error('Error al eliminar capítulo de libro:', error);
