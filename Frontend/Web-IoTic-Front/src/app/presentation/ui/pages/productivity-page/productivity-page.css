@@ -36,10 +36,35 @@
 .card-route {
     height: 20rem;
     background-color: var(--color-primary);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: aliceblue;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
-.card-route h3{
+
+.card-route::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
+    z-index: 1;
+}
+
+.card-route:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-route h3 {
     font-size: clamp(1rem, 1.2rem, 1.5rem);
+    position: relative;
+    z-index: 2;
 }
 /* A partir de cierto ancho (por ejemplo 992px = pantallas grandes) */
 @media (min-width: 992px) {

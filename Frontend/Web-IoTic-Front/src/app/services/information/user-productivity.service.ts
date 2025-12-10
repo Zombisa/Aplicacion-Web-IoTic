@@ -29,7 +29,7 @@ export class UserProductivityService {
   // Mapeo de tipos de productividad a nombres legibles
   private tipoDisplayMap: Record<string, string> = {
     'libro': 'Libro',
-    'capitulo': 'Capítulo de libro',
+    'capitulos': 'Capítulo de libro',
     'curso': 'Curso corto',
     'evento': 'Evento/Seminario',
     'revista': 'Revista',

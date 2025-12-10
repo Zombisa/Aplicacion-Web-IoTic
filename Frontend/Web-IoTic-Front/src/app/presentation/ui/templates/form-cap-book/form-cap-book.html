@@ -1,107 +1,268 @@
-<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
-  <div class="row g-4">
-    
-    <!-- Upload Image Box -->
-    <section class="col-12 col-lg-6 column">
-      <div class="image-upload-box">
-        <input type="file"
-               #fileInput
-               class="file-input-hidden"
-               accept="image/*"
-               (change)="onFileSelected($event)" />
-        
-        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
-          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
-          <div *ngIf="!imagePreview" class="upload-placeholder">
-            <i class="fas fa-camera camera-icon"></i>
-            <p class="upload-text">Haz clic para subir imagen</p>
-          </div>
+<div class="container">
+  <h1 class="title">Capítulo de Libro</h1>
+  <div class="divider"></div>
+</div>
+
+<div class="row g-4">
+  <!-- COLUMNA ARCHIVOS -->
+  <section class="col-12 col-lg-6 column">
+    <!-- Imagen -->
+    <div class="image-upload-box">
+      <input
+        type="file"
+        #fileInput
+        class="file-input-hidden"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <div
+        class="upload-area"
+        (click)="fileInput.click()"
+        [class.has-image]="imagePreview"
+      >
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview-image"
+          alt="Vista previa"
+        />
+
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <i class="fas fa-camera camera-icon"></i>
+          <p class="upload-text">Haz clic para subir imagen</p>
         </div>
       </div>
-
-      <!-- Upload Document Box -->
-      <div class="document-upload-box">
-        <input type="file"
-               #documentInput
-               class="file-input-hidden"
-               accept=".pdf,.doc,.docx,.txt"
-               (change)="onDocumentSelected($event)" />
-        
-        <div class="document-upload-area" (click)="documentInput.click()">
-          <div class="document-upload-placeholder">
-            <i class="fas fa-file-alt document-icon"></i>
-            <p class="document-upload-text">
-              <span *ngIf="!selectedDocument">Haz clic para subir archivo (opcional)</span>
-              <span *ngIf="selectedDocument">{{ selectedDocument.name }}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Inputs -->
-    <section class="col-12 col-lg-6 column">
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
-        <label>Título</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
-        <label>País</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
-        <label>Año</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" placeholder=" " (change)="form.patchValue({ autores: $event.target.value.split(',') })" />
-        <label>Autores (separados por coma)</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="isbn" placeholder=" " />
-        <label>ISBN</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="volumen" placeholder=" " />
-        <label>Volumen</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="number" class="input-line" formControlName="paginaInicio" placeholder=" " />
-        <label>Página inicio</label>
-      </div>
-      <div class="input-container personality-camp">
-        <input type="number" class="input-line" formControlName="paginasFin" placeholder=" " />
-        <label>Pagina fin</label>
-      </div>
-
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="editorial" placeholder=" " />
-        <label>Editorial</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="number" class="input-line" formControlName="codigoEditorial" placeholder=" " />
-        <label>Código Editorial</label>
-      </div>
-
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
-        <label>Propiedad Intelectual</label>
-      </div>
-
-    </section>
-
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Guardar capitulo de libro</button>
     </div>
 
+    <!-- Documento -->
+    <div class="document-upload-box">
+      <input
+        type="file"
+        #documentInput
+        class="file-input-hidden"
+        accept=".pdf,.doc,.docx,.txt"
+        (change)="onDocumentSelected($event)"
+      />
+
+      <div class="document-upload-area" (click)="documentInput.click()">
+        <div class="document-upload-placeholder">
+          <i class="fas fa-file-alt document-icon"></i>
+          <p class="document-upload-text">
+            <span *ngIf="!selectedDocument">Haz clic para subir archivo (opcional)</span>
+            <span *ngIf="selectedDocument">{{ selectedDocument.name }}</span>
+          </p>
+        </div>
+      </div>
+
+      <button
+        *ngIf="selectedDocument"
+        type="button"
+        class="btn btn-danger mt-2"
+        (click)="removeFile()"
+      >
+        Quitar archivo ✖
+      </button>
+    </div>
+  </section>
+
+  <!-- COLUMNA FORMULARIO -->
+  <div class="col-12 col-lg-6">
+    <form (ngSubmit)="submitForm()" [formGroup]="form" class="column">
+      <section class="form card">
+        <!-- TITULO -->
+        <div class="input-container personality-camp">
+          <input
+            type="text"
+            class="input-line"
+            formControlName="titulo"
+            placeholder=" "
+          />
+          <label>Título</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('titulo')?.touched && form.get('titulo')?.invalid"
+          >
+            El título es obligatorio.
+          </small>
+        </div>
+
+        <!-- PAÍS -->
+        <div class="input-container personality-camp">
+          <input
+            type="text"
+            class="input-line"
+            formControlName="pais"
+            placeholder=" "
+          />
+          <label>País</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('pais')?.touched && form.get('pais')?.invalid"
+          >
+            El país es obligatorio.
+          </small>
+        </div>
+
+        <!-- AÑO -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="anio"
+            placeholder=" "
+          />
+          <label>Año</label>
+          <small>(Numérico)</small>
+          <small
+            class="text-danger"
+            *ngIf="form.get('anio')?.touched && form.get('anio')?.invalid"
+          >
+            El año es obligatorio.
+          </small>
+        </div>
+
+        <!-- AUTORES -->
+        <div class="input-container personality-camp">
+          <input
+            type="text"
+            class="input-line"
+            placeholder=" "
+            (change)="form.patchValue({ autores: $event.target.value.split(',') })"
+          />
+          <label>Autores</label>
+          <small>(separados por coma)</small>
+        </div>
+
+        <!-- ISBN -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="isbn"
+            placeholder=" "
+          />
+          <label>ISBN</label>
+          <small>(Numérico)</small>
+          <small
+            class="text-danger"
+            *ngIf="form.get('isbn')?.touched && form.get('isbn')?.invalid"
+          >
+            El ISBN es obligatorio.
+          </small>
+        </div>
+
+        <!-- VOLUMEN -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="volumen"
+            placeholder=" "
+          />
+          <label>Volumen</label>
+          <small>(Numérico)</small>
+          <small
+            class="text-danger"
+            *ngIf="form.get('volumen')?.touched && form.get('volumen')?.invalid"
+          >
+            El volumen es obligatorio.
+          </small>
+        </div>
+
+        <!-- PÁGINA INICIO -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="paginaInicio"
+            placeholder=" "
+          />
+          <label>Página inicio</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('paginaInicio')?.touched && form.get('paginaInicio')?.invalid"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+
+        <!-- PÁGINA FIN -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="paginasFin"
+            placeholder=" "
+          />
+          <label>Página fin</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('paginasFin')?.touched && form.get('paginasFin')?.invalid"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+
+        <!-- EDITORIAL -->
+        <div class="input-container personality-camp">
+          <input
+            type="text"
+            class="input-line"
+            formControlName="editorial"
+            placeholder=" "
+          />
+          <label>Editorial</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('editorial')?.touched && form.get('editorial')?.invalid"
+          >
+            La editorial es obligatoria.
+          </small>
+        </div>
+
+        <!-- CÓDIGO EDITORIAL -->
+        <div class="input-container personality-camp">
+          <input
+            type="number"
+            class="input-line"
+            formControlName="codigoEditorial"
+            placeholder=" "
+          />
+          <label>Código Editorial</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('codigoEditorial')?.touched && form.get('codigoEditorial')?.invalid"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+
+        <!-- PROPIEDAD INTELECTUAL -->
+        <div class="input-container personality-camp">
+          <input
+            type="text"
+            class="input-line"
+            formControlName="propiedadIntelectual"
+            placeholder=" "
+          />
+          <label>Propiedad Intelectual</label>
+          <small
+            class="text-danger"
+            *ngIf="form.get('propiedadIntelectual')?.touched && form.get('propiedadIntelectual')?.invalid"
+          >
+            La propiedad intelectual es obligatoria.
+          </small>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary mt-3"
+          [disabled]="form.invalid"
+        >
+          Guardar Capítulo de Libro
+        </button>
+      </section>
+    </form>
   </div>
-</form>
+</div>

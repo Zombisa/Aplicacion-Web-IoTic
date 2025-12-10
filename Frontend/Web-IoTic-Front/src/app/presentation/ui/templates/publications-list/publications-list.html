@@ -22,6 +22,14 @@
       <div class="publication-info">
         <h3 class="publication-title">{{ publication.titulo || 'Sin título' }}</h3>
         <p class="publication-type">{{ publication.tipoDisplay || publication.tipoProductividad }}</p>
+        <button 
+          type="button"
+          class="edit-button"
+          (click)="goToEdit($event, publication)"
+          title="Editar publicación"
+          aria-label="Editar publicación">
+          <i class="fas fa-pen-to-square"></i>
+        </button>
       </div>
     </div>
   </div>

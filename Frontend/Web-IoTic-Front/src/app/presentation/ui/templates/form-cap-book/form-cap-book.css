@@ -14,9 +14,11 @@
         padding: 3rem;
     }
 }
-
+.form{
+    padding: 2rem;
+}
 .column{
-    padding: 3rem;
+    
 }
 .personality-camp input.ng-valid + label::after {
     background-color: aliceblue;

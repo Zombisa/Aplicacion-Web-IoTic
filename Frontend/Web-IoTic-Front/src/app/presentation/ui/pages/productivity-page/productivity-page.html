@@ -22,8 +22,8 @@
       
       <div 
         class="card-route d-flex flex-column align-items-center justify-content-center animate-on-scroll animate-zoomIn"
-        [routerLink]="box.route">
-        
+        [routerLink]="box.route"
+        [style.backgroundImage]="'url(' + (box.image || box.imgae || box.images) + ')'">
       </div>
       <h3 class="title">{{ box.title }}</h3>
     </div>

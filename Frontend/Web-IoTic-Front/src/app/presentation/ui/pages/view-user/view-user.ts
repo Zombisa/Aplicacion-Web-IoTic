@@ -104,16 +104,16 @@ export class ViewUser implements OnInit {
   onPublicationClick(event: { id: number; tipo: string }): void {
     // Navegar a la página de visualización correspondiente
     const routeMap: Record<string, string> = {
-      'libro': 'libro',
-      'capitulo': 'capitulo',
+      'libro': 'libros',
+      'capitulo': 'capitulo_libro',
       'curso': 'curso',
-      'evento': 'evento',
+      'evento': 'trabajo_evento',
       'revista': 'revista',
       'software': 'software',
-      'tutoria-concluida': 'tutoria-concluida',
+      'tutoria_concluida': 'tutoria-concluida',
       'tutoria-en-marcha': 'tutoria-en-marcha',
       'trabajo-eventos': 'trabajo-eventos',
-      'participacion-comites': 'participacion-comites',
+      'participacion-comites': 'participacion_comites_ev',
       'material-didactico': 'material-didactico',
       'jurado': 'jurado',
       'proceso-tecnica': 'proceso-tecnica'

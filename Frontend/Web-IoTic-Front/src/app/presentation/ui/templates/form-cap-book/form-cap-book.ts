@@ -127,6 +127,13 @@ export class FormCapBook implements OnInit{
     this.selectedDocument = file;
   }
 
+  /**
+   * Elimina el documento seleccionado
+   */
+  removeFile() {
+    this.selectedDocument = null;
+  }
+
    /**
    * Envía el formulario al componente padre
    */
