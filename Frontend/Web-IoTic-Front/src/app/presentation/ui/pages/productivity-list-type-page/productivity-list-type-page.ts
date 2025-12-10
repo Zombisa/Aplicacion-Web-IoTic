@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
+import { MaterialDidacticoService } from '../../../../services/information/material-didactico.service';
+import { JuradoService } from '../../../../services/information/jurado.service';
 
 
 @Component({
@@ -44,6 +46,8 @@ export class ProductivityListTypePage {
     private softwareService: SoftwareService,
     private revistaService: RevistaService,
     private procesoTecnicaService: ProcesoTecnicaService,
+    private materialDidactico: MaterialDidacticoService,
+    private juradoService: JuradoService
   ) {}
   /**
    * Inicializa el componente y obtiene el tipo de productividad desde la ruta
@@ -66,14 +70,18 @@ export class ProductivityListTypePage {
     const acciones: Record<string, () => void> = {
       libros: () => this.getList(this.booksService.getBooks()),
       capitulos: () => this.getList(this.capBookService.getCapBooks()),
-      participacion_comites: () => this.getList(this.participacionComitesEvService.getAll()),
+      comites: () => this.getList(this.participacionComitesEvService.getAll()),
       tutorias_en_marcha: () => this.getList(this.tutoriaEnMarchaService.getAll()),
       tutorias_concluidas: () => this.getList(this.tutoriaConcluidaService.getAll()),
       trabajo_eventos: () => this.getList(this.trabajoEventosService.getAll()),
       software: () => this.getList(this.softwareService.getAll()),
       revistas: () => this.getList(this.revistaService.getAll()),
-      proceso_tecnica: () => this.getList(this.procesoTecnicaService.getAll()),
+      procesos: () => this.getList(this.procesoTecnicaService.getAll()),
       eventos: () => this.getList(this.trabajoEventosService.getAll()),
+      cursos: () => this.getList(this.procesoTecnicaService.getAll()),
+      organizacion: () => this.getList(this.trabajoEventosService.getAll()),
+      material: () => this.getList(this.materialDidactico.getAll()),
+      jurado: () => this.getList(this.juradoService.getAll()),
     };
 
     if (acciones[this.tipo]) {

@@ -74,7 +74,7 @@ export class FormSoftware implements OnInit{
       etiquetas: [[], Validators.required],
       nivelAcceso: ['', Validators.required],
       tipoProducto: ['', Validators.required],
-      codigoRegistro: [''],
+      codigoRegistro: ['DERAUTOR:', Validators.required, ],
       descripcionFuncional: ['', Validators.required],
       propiedadIntelectual: ['', Validators.required],
 

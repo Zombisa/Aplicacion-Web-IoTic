@@ -41,7 +41,8 @@
             <app-publications-list
               *ngIf="!loadingPublications"
               [publications]="publications"
-              (publicationClick)="onPublicationClick($event)">
+              (publicationClick)="onPublicationClick($event)"
+              class="container">
             </app-publications-list>
           </div>
         </div>
