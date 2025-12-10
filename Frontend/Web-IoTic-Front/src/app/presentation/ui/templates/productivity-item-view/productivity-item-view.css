@@ -1,0 +1,233 @@
+.productivity-item-container {
+  padding: 2rem;
+  color: var(--color-secondary, #ffffff);
+  background-color: var(--color-primary, #1a1a2e);
+  min-height: 100vh;
+}
+
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.item-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--color-secondary, #ffffff);
+  margin-bottom: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 0.5rem;
+}
+
+.metadata-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.metadata-item {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.metadata-label {
+  font-weight: 300;
+  color: var(--color-secondary, #ffffff);
+}
+
+.metadata-value {
+  font-weight: 400;
+  color: var(--color-secondary, #ffffff);
+}
+
+.tags-container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tag {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-secondary, #ffffff);
+}
+
+.content-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.left-column {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.image-container {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.item-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-container.placeholder {
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-content {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.placeholder-content i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.right-column {
+  padding-left: 2rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-secondary, #ffffff);
+  margin-bottom: 1.5rem;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-label {
+  font-weight: 300;
+  color: var(--color-secondary, #ffffff);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  font-weight: 400;
+  color: var(--color-secondary, #ffffff);
+}
+
+.authors-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.author-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.author-icon {
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.author-icon i {
+  font-size: 2rem;
+  color: var(--color-secondary, #ffffff);
+}
+
+.author-info {
+  width: 100%;
+}
+
+.author-name {
+  font-weight: 400;
+  color: var(--color-secondary, #ffffff);
+  margin-bottom: 0.5rem;
+}
+
+.author-role {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.link-section {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.link-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  padding: 0.75rem 3rem;
+  color: var(--color-secondary, #ffffff);
+  text-decoration: none;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+
+.link-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-section {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 2rem;
+    margin-top: 2rem;
+  }
+
+  .item-title {
+    font-size: 2rem;
+  }
+
+  .authors-section {
+    grid-template-columns: 1fr;
+  }
+}
+

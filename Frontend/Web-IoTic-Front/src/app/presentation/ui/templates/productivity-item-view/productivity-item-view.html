@@ -1,0 +1,107 @@
+<div class="productivity-item-container" *ngIf="item">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1 class="item-title">{{ item.titulo }}</h1>
+    <div class="metadata-row">
+      <div class="metadata-item" *ngIf="item.anio">
+        <span class="metadata-label">Año:</span>
+        <span class="metadata-value">{{ item.anio }}</span>
+      </div>
+      <div class="metadata-item" *ngIf="getFieldValue('paso')">
+        <span class="metadata-label">Paso:</span>
+        <span class="metadata-value">{{ getFieldValue('paso') }}</span>
+      </div>
+      <div class="metadata-item" *ngIf="getFieldValue('para')">
+        <span class="metadata-label">Para:</span>
+        <span class="metadata-value">{{ getFieldValue('para') }}</span>
+      </div>
+    </div>
+    
+    <!-- Tags -->
+    <div class="tags-container" *ngIf="item.etiquetas && item.etiquetas.length > 0">
+      <span class="tag" *ngFor="let tag of item.etiquetas; let i = index">
+        {{ tag }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-section">
+    <!-- Left Column: Image -->
+    <div class="left-column">
+      <div class="image-container" *ngIf="hasImage()">
+        <img [src]="item.image_r2" [alt]="item.titulo" class="item-image" />
+      </div>
+      <div class="image-container placeholder" *ngIf="!hasImage()">
+        <div class="placeholder-content">
+          <i class="bi bi-image"></i>
+          <p>Sin imagen</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: General Information -->
+    <div class="right-column">
+      <h2 class="section-title">Información general:</h2>
+      <div class="info-list">
+        <div class="info-item" *ngIf="item.anio">
+          <span class="info-label">Año:</span>
+          <span class="info-value">{{ item.anio }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('isbn')">
+          <span class="info-label">ISBN:</span>
+          <span class="info-value">{{ getFieldValue('isbn') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('volumen')">
+          <span class="info-label">Volumen:</span>
+          <span class="info-value">{{ getFieldValue('volumen') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('paginas')">
+          <span class="info-label">Páginas:</span>
+          <span class="info-value">{{ getFieldValue('paginas') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('editorial')">
+          <span class="info-label">Editorial:</span>
+          <span class="info-value">{{ getFieldValue('editorial') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('duracion')">
+          <span class="info-label">Duración:</span>
+          <span class="info-value">{{ getFieldValue('duracion') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('institucion')">
+          <span class="info-label">Institución:</span>
+          <span class="info-value">{{ getFieldValue('institucion') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('nombreSeminario')">
+          <span class="info-label">Seminario:</span>
+          <span class="info-value">{{ getFieldValue('nombreSeminario') }}</span>
+        </div>
+        <div class="info-item" *ngIf="getFieldValue('tipoPresentacion')">
+          <span class="info-label">Tipo de presentación:</span>
+          <span class="info-value">{{ getFieldValue('tipoPresentacion') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authors Section -->
+  <div class="authors-section" *ngIf="item.autores && item.autores.length > 0">
+    <div class="author-card" *ngFor="let autor of item.autores">
+      <div class="author-icon">
+        <i class="bi bi-person"></i>
+      </div>
+      <div class="author-info">
+        <div class="author-name">{{ autor }}</div>
+        <div class="author-role" *ngIf="getFieldValue('rol')">Rol: {{ getFieldValue('rol') }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Button (for courses) -->
+  <div class="link-section" *ngIf="getFieldValue('link')">
+    <a [href]="getFieldValue('link')" target="_blank" class="link-button">
+      Link
+    </a>
+  </div>
+</div>
+

@@ -16,6 +16,9 @@ import { UsersManagementPageComponent } from './presentation/ui/pages/users-mana
 import { EvaluationCommitteesPage } from './presentation/ui/pages/publication-templates/evaluation-committees/list/evaluation-committees-page';
 import { EvaluationCommitteeCreatePage } from './presentation/ui/pages/publication-templates/evaluation-committees/form/create-page/evaluation-committee-create-page';
 import { PublisItemProductiviy } from './presentation/ui/pages/publis-item-productiviy/publis-item-productiviy';
+import { ViewBookPage } from './presentation/ui/pages/view-book-page/view-book-page';
+import { ViewCoursePage } from './presentation/ui/pages/view-course-page/view-course-page';
+import { ViewEventWorkPage } from './presentation/ui/pages/view-event-work-page/view-event-work-page';
 
 export const routes: Routes = [
 
@@ -34,5 +37,8 @@ export const routes: Routes = [
      {path: 'publicaciones/comites', component: EvaluationCommitteesPage},
      {path: 'publicaciones/comites/nuevo', component: EvaluationCommitteeCreatePage},
      
-     {path: 'publicaciones/item-productivity/:tipo', component: PublisItemProductiviy}
+     {path: 'publicaciones/item-productivity/:tipo', component: PublisItemProductiviy},
+     {path: 'publicaciones/libros/:id', component: ViewBookPage},
+     {path: 'publicaciones/cursos/:id', component: ViewCoursePage},
+     {path: 'publicaciones/eventos/:id', component: ViewEventWorkPage}
 ];   

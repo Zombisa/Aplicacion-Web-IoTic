@@ -77,5 +77,20 @@ export class CapBookService {
     );
   }
 
+  /**
+   * Obtiene un capítulo de libro por ID desde el backend.
+   * @param id ID del capítulo de libro a obtener
+   * @returns CapBook encontrado
+   */
+  getCapBookById(id: number): Observable<CapBookDTO> {
+    return this.http.get<CapBookDTO>(
+      `${this.config.apiUrlBackend}informacion/capLibros/${id}/`
+    ).pipe(
+      catchError((error) => {
+        console.error('Error al obtener capítulo de libro por ID:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 
 }

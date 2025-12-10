@@ -74,5 +74,21 @@ export class BooksService {
         return throwError(() => error);
       })
     );
-  } 
+  }
+
+  /**
+   * Obtiene un libro por ID desde el backend.
+   * @param id ID del libro a obtener
+   * @returns Libro encontrado
+   */
+  getBookById(id: number): Observable<BookDTO> {
+    return this.http.get<BookDTO>(
+      `${this.config.apiUrlBackend}informacion/libros/${id}/`
+    ).pipe(
+      catchError(error => {
+        console.error('Error al obtener libro por ID:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }
