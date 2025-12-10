@@ -32,6 +32,23 @@ export class ProductivityListTypePage {
   listTypes: BaseProductivityDTO[] = [];
   filteredListTypes: BaseProductivityDTO[] = [];
   searchTerm: string = '';
+
+  private detailRouteMap: Record<string, string> = {
+    libros: 'libros',
+    capitulos: 'capitulos',
+    comites: 'comites',
+    procesos: 'procesos',
+    jurado: 'jurado',
+    revistas: 'revistas',
+    software: 'software',
+    trabajo_eventos: 'trabajo-eventos',
+    eventos: 'trabajo-eventos',
+    organizacion: 'trabajo-eventos',
+    cursos: 'cursos',
+    material: 'material', // mantiene actual comportamiento
+    tutorias_concluidas: 'tutorias_concluidas',
+    tutorias_en_marcha: 'tutorias_en_marcha'
+  };
   constructor(
     private route:  Router,
     private router: ActivatedRoute,
@@ -132,7 +149,8 @@ export class ProductivityListTypePage {
     this.filterItems();
   }
   goTo(id: number) {
-    this.route.navigate(['/productividad', this.tipo, id]);
+    const path = this.detailRouteMap[this.tipo] ?? this.tipo;
+    this.route.navigate(['/productividad', path, id]);
   }
 }
   

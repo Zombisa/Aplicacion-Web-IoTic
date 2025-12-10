@@ -32,6 +32,9 @@ import { ViewTutoriaConcluida } from './presentation/ui/pages/view-tutoria-concl
 import { ViewTutoriaEnMarcha } from './presentation/ui/pages/view-tutoria-en-marcha/view-tutoria-en-marcha';
 import { ViewTrabajoEventos } from './presentation/ui/pages/view-trabajo-eventos/view-trabajo-eventos';
 import { EditProductiviy } from './presentation/ui/pages/edit-item-productiviy/edit-item-productiviy';
+import { ViewProcesoTecnica } from './presentation/ui/pages/view-proceso-tecnica/view-proceso-tecnica';
+import { ViewComites } from './presentation/ui/pages/view-comites/view-comites';
+import { ViewJurado } from './presentation/ui/pages/view-jurado/view-jurado';
 
 export const routes: Routes = [
 
@@ -64,5 +67,10 @@ export const routes: Routes = [
      {path: 'productividad/tutorias_concluidas/:id', component: ViewTutoriaConcluida},
      {path: 'productividad/tutorias_en_marcha/:id', component: ViewTutoriaEnMarcha},
      {path: 'productividad/trabajo-eventos/:id', component: ViewTrabajoEventos},
+     {path: 'productividad/procesos/:id', component: ViewProcesoTecnica},
+     {path: 'productividad/proceso-tecnica/:id', component: ViewProcesoTecnica},
+     {path: 'productividad/comites/:id', component: ViewComites},
+     {path: 'productividad/participacion-comites/:id', component: ViewComites},
+     {path: 'productividad/jurado/:id', component: ViewJurado},
      {path: 'productividad/editar/:tipo/:id', component: EditProductiviy},
 ];
