@@ -6,21 +6,71 @@
 
   <!-- BANNER -->
   <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
-    <h1 class="title text-center">Curso corto</h1>
+    <h1 class="title text-center">Curso Corto</h1>
     <p class="text-help">Detalles y información del curso</p>
   </section>
 
-  <!-- CONTENEDOR DE LA INFORMACIÓN -->
-  <div class="container-fluid px-3 px-md-4 form-container">
-    <div class="row justify-content-center">
-      <div class="col-12 section-view-item">
-        <app-section-info-productivity
-          [item]="curso"
-          [itemImageUrl]="cursoImageUrl"
-          tipo="curso">
-        </app-section-info-productivity>
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="cursoImageUrl" [alt]="curso.titulo" class="book-image">
+               <a 
+                  *ngIf="curso?.file_r2 && curso.file_r2 !== ''"
+                  [href]="curso.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ curso.titulo || 'Título del Curso' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="curso?.autores && curso.autores.length">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ curso.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.fechaPublicacion">
+                    <h4 class="detail-label">Fecha de Publicación</h4>
+                    <p class="detail-value">{{ curso.fechaPublicacion | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.duracion">
+                    <h4 class="detail-label">Duración (horas)</h4>
+                    <p class="detail-value">{{ curso.duracion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.institucion">
+                    <h4 class="detail-label">Institución</h4>
+                    <p class="detail-value">{{ curso.institucion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ curso.propiedadIntelectual }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.etiquetas && curso.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ curso.etiquetas.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.link">
+                    <h4 class="detail-label">Enlace</h4>
+                    <p class="detail-value">
+                      <a [href]="curso.link" target="_blank" rel="noopener noreferrer" class="link-value">
+                        {{ curso.link }}
+                      </a>
+                    </p>
+                  </div>
+                </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+  </section>
 </div>
 
