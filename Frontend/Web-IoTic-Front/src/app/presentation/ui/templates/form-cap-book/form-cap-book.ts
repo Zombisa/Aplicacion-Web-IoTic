@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Header } from '../header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { BookDTO } from '../../../../models/DTO/BookDTO';
 import { CapBookDTO } from '../../../../models/DTO/CapBookDTO';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CapBookService } from '../../../../services/information/cap-book.service';
 
 @Component({
   selector: 'app-form-cap-book',
@@ -13,7 +14,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './form-cap-book.html',
   styleUrl: './form-cap-book.css',
 })
-export class FormCapBook implements OnChanges {
+export class FormCapBook implements OnInit{
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -21,22 +22,39 @@ export class FormCapBook implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del libro a editar */
-  @Input() bookData!: CapBookDTO;
+  @Input() idInput!: number;
+  bookData!: CapBookDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
   
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceCapBook: CapBookService
+  ) {
     this.form = this.buildForm();
   }
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.editMode && this.bookData) {
-      this.populateForm(this.bookData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {
+    this.serviceCapBook.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.bookData = data;
+        this.populateForm(this.bookData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el capítulo de libro:', err);
+      }
+    }); 
+  }
+
   /**
+   
    * 
    * @returns Construye el formulario reactivo para capítulos de libros
    */
@@ -75,12 +93,12 @@ export class FormCapBook implements OnChanges {
       editorial: data.editorial,
       codigoEditorial: data.codigoEditorial,
       propiedadIntelectual: data.propiedadIntelectual,
-      image_url: (data as any).image_url || data.image_r2 || '',
+      imagePreview:  data.image_r2 || '',
     });
 
     // Si trae imagen, mostrar preview
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if (data.image_r2) {
+      this.imagePreview = data.image_r2!;
     }
   }
   /**

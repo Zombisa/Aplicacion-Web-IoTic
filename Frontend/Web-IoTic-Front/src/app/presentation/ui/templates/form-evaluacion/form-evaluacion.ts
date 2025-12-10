@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { ParticipacionComitesEvDTO } from '../../../../models/DTO/informacion/ParticipacionComitesEvDTO';
+import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
 
 @Component({
     selector: 'app-form-evaluacion',
@@ -11,7 +12,7 @@ import { ParticipacionComitesEvDTO } from '../../../../models/DTO/informacion/Pa
     templateUrl: './form-evaluacion.html',
     styleUrls: ['./form-evaluacion.css']
 })
-export class FormEvaluacion implements OnChanges {
+export class FormEvaluacion implements OnInit{
 
     @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,22 +20,37 @@ export class FormEvaluacion implements OnChanges {
     @Input() editMode: boolean = false;
 
     /** Datos a editar */
-    @Input() evaluationData!: ParticipacionComitesEvDTO;
+    @Input() idInput!: number;
+    evaluationData!: ParticipacionComitesEvDTO;
 
     form: FormGroup;
     selectedFile: File | null = null;
     selectedDocument: File | null = null;
     imagePreview: string | null = null;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder,
+        private serviceEvaluation: ParticipacionComitesEvService
+    ) {
         this.form = this.buildForm();
     }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (this.editMode && this.evaluationData) {
-            this.populateForm(this.evaluationData);
+    ngOnInit(): void {
+        if (this.editMode && this.idInput) {
+            this.cargarInfo();
         }
     }
+
+    private cargarInfo() {
+        this.serviceEvaluation.getById(this.idInput).subscribe({
+            next: (data) => {
+                console.log(data);
+                this.evaluationData = data;
+                this.populateForm(this.evaluationData);
+            },
+            error: (err) => {
+                console.error('Error al cargar la participación en comités de evaluación:', err);
+            }
+        }); 
+    }   
 
     /**
      * Construye el formulario reactivo para participación en comités de evaluación
@@ -70,11 +86,11 @@ export class FormEvaluacion implements OnChanges {
             institucion: data.institucion,
             etiquetasGTI: data.etiquetasGTI || [],
             licencia: data.licencia,
-            image_url: (data as any).image_url || data.image_r2 || ''
+            image_url:  data.image_r2 || ''
         });
 
-        if ((data as any).image_url || data.image_r2) {
-            this.imagePreview = (data as any).image_url || data.image_r2!;
+        if ( data.image_r2) {
+            this.imagePreview =  data.image_r2!;
         }
     }
 

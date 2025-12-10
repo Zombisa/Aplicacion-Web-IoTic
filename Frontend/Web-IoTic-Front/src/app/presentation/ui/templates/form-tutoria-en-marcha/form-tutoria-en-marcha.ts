@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TutoriaEnMarchaDTO } from '../../../../models/DTO/informacion/TutoriaEnMarchaDTO';
+import { TutoriaEnMarchaService } from '../../../../services/information/tutoria-en-marcha.service';
 
 @Component({
   selector: 'app-form-tutoria-en-marcha',
@@ -11,27 +12,42 @@ import { TutoriaEnMarchaDTO } from '../../../../models/DTO/informacion/TutoriaEn
   templateUrl: './form-tutoria-en-marcha.html',
   styleUrls: ['./form-tutoria-en-marcha.css']
 })
-export class FormTutoriaEnMarcha implements OnChanges {
+export class FormTutoriaEnMarcha implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
   @Input() editMode: boolean = false;
-  @Input() data!: TutoriaEnMarchaDTO;
+  @Input() idInput!: number;
+  data!: TutoriaEnMarchaDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private  serviceTutoria: TutoriaEnMarchaService
+  ) {
     this.form = this.buildForm();
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.data) {
-      this.populateForm(this.data);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {  
+    this.serviceTutoria.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.data = data;
+        this.populateForm(this.data);
+      },
+      error: (err) => {
+        console.error('Error al cargar la tutoría en marcha:', err);
+      }
+    }); 
+  }
+
 
   private buildForm(): FormGroup {
     return this.fb.group({

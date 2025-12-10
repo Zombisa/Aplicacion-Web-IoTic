@@ -54,14 +54,15 @@ import { JuradoPeticion } from '../../../../models/Peticion/informacion/JuradoPe
 import { EventoPeticion } from '../../../../models/Peticion/informacion/EventoPeticion';
 
 @Component({
-  selector: 'app-publis-item-productiviy',
+  selector: 'app-edit-item-productiviy',
   imports: [CommonModule, Header, LoadingPage],
-  templateUrl: './publis-item-productiviy.html',
-  styleUrl: './publis-item-productiviy.css'
+  templateUrl: './edit-item-productiviy.html',
+  styleUrl: './edit-item-productiviy.css'
 })
-export class PublisItemProductiviy implements OnInit {
+export class EditProductiviy implements OnInit {
 
   tipo: string = '';
+  id!: number;
   currentFormRef!: ComponentRef<any>;
 
   @ViewChild('formContainer', { read: ViewContainerRef })
@@ -107,14 +108,14 @@ export class PublisItemProductiviy implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.router.paramMap.subscribe(params => {
-      const tipoParam = params.get('tipo');
-      if (tipoParam) {
-        this.tipo = tipoParam;
-      } else {
-        console.error('Tipo de productividad no proporcionado en la URL.');
-      }
-    });
+  this.router.paramMap.subscribe(params => {
+    this.tipo = params.get('tipo') ?? '';
+
+    const idParam = params.get('id');
+    this.id =  Number(idParam) ;
+
+    console.log("ID (number):", this.id);
+  });
   }
 
   ngAfterViewInit(): void {
@@ -139,6 +140,8 @@ export class PublisItemProductiviy implements OnInit {
     this.formContainer.clear();
 
     this.currentFormRef = this.formContainer.createComponent(formComponent);
+    this.currentFormRef.instance.editMode = true; 
+      this.currentFormRef.instance.idInput = this.id;   
 
     this.currentFormRef.instance.formSubmit.subscribe((payload: FormSubmitPayload) => {
       console.log("Formulario recibido en padre:", payload);
@@ -191,6 +194,7 @@ export class PublisItemProductiviy implements OnInit {
         .pipe(
           switchMap((resp) => {
             data.image_path = resp.file_path;
+            console.log("Ruta de la imagen establecida en el data:", data.image_path);
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
         )
@@ -260,91 +264,91 @@ export class PublisItemProductiviy implements OnInit {
 
   private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
     libro: (payload) => {
-      this.booksService.postBook(payload as BookPeticion).subscribe({
+      this.booksService.editBook(this.id, payload as BookPeticion).subscribe({
         next: () => this.mostrarExito('Libro guardado', 'El libro se ha guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar libro', 'No se pudo guardar el libro.')
       });
     },
 
     capitulo_libro: (payload) => {
-      this.capBookService.postCapBook(payload as CapBookPeticion).subscribe({
+      this.capBookService.editCapBook(this.id, payload as CapBookPeticion).subscribe({
         next: () => this.mostrarExito('Capítulo guardado', 'El capítulo se ha guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar capítulo', 'No se pudo guardar el capítulo.')
       });
     },
 
     participacion_comites_ev: (payload) => {
-      this.participacionComitesEvService.create(payload as ParticipacionComitesEvPeticion).subscribe({
+      this.participacionComitesEvService.update(this.id ,payload as ParticipacionComitesEvPeticion).subscribe({
         next: () => this.mostrarExito('Participación guardada', 'Datos guardados correctamente.'),
         error: () => this.mostrarError('Error al guardar participación', 'No se pudo guardar.')
       });
     },
 
     tutoria_en_marcha: (payload) => {
-      this.tutoriaEnMarchaService.create(payload as TutoriaEnMarchaPeticion).subscribe({
+      this.tutoriaEnMarchaService.update(this.id ,payload as TutoriaEnMarchaPeticion).subscribe({
         next: () => this.mostrarExito('Tutoría en marcha guardada', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     tutoria_concluida: (payload) => {
-      this.tutoriaConcluidaService.create(payload as TutoriaConcluidaPeticion).subscribe({
+      this.tutoriaConcluidaService.update(this.id ,payload as TutoriaConcluidaPeticion).subscribe({
         next: () => this.mostrarExito('Tutoría concluida guardada', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     trabajo_eventos: (payload) => {
-      this.trabajoEventosService.create(payload as TrabajoEventosPeticion).subscribe({
+      this.trabajoEventosService.update(this.id ,payload as TrabajoEventosPeticion).subscribe({
         next: () => this.mostrarExito('Trabajo guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     software: (payload) => {
-      this.softwareService.create(payload as SoftwarePeticion).subscribe({
+      this.softwareService.update(this.id ,payload as SoftwarePeticion).subscribe({
         next: () => this.mostrarExito('Software guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     revista: (payload) => {
-      this.revistaService.create(payload as RevistaPeticion).subscribe({
+      this.revistaService.update(this.id ,payload as RevistaPeticion).subscribe({
         next: () => this.mostrarExito('Revista guardada', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     proceso_tecnica: (payload) => {
-      this.procesoTecnicaService.create(payload as ProcesoTecnicaPeticion).subscribe({
+      this.procesoTecnicaService.update(this.id ,payload as ProcesoTecnicaPeticion).subscribe({
         next: () => this.mostrarExito('Proceso técnico guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     curso: (payload) => {
-      this.cursoService.create(payload as CursoPeticion).subscribe({
+      this.cursoService.update(this.id ,payload as CursoPeticion).subscribe({
         next: () => this.mostrarExito('Curso guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar curso', 'No se pudo guardar.')
       });
     },
 
     material_didactico: (payload) => {
-      this.materialDidacticoService.create(payload as MaterialDidacticoPeticion).subscribe({
+      this.materialDidacticoService.update(this.id ,payload as MaterialDidacticoPeticion).subscribe({
         next: () => this.mostrarExito('Material didáctico guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     jurado: (payload) => {
-      this.juradoService.create(payload as JuradoPeticion).subscribe({
+      this.juradoService.update(this.id ,payload as JuradoPeticion).subscribe({
         next: () => this.mostrarExito('Jurado guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
     evento: (payload) => {
-      this.eventoService.create(payload as EventoPeticion).subscribe({
+      this.eventoService.update(this.id ,payload as EventoPeticion).subscribe({
         next: () => this.mostrarExito('Evento guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });

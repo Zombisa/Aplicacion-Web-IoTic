@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { ProcesoTecnicaDTO } from '../../../../models/DTO/informacion/ProcesoTecnicaDTO';
+import { ProcesoTecnicaService } from '../../../../services/information/proceso-tecnica.service';
 
 @Component({
   selector: 'app-form-proceso-tecnica',
@@ -11,12 +12,13 @@ import { ProcesoTecnicaDTO } from '../../../../models/DTO/informacion/ProcesoTec
   templateUrl: './form-proceso-tecnica.html',
   styleUrls: ['./form-proceso-tecnica.css']
 })
-export class FormProcesoTecnica implements OnChanges {
+export class FormProcesoTecnica implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
   /** Modo editar */
-  @Input() editMode: boolean = false;
+  @Input() idInput!: number;
+   editMode: boolean = false;
 
   /** Datos del proceso/técnica a editar */
   @Input() procesoData!: ProcesoTecnicaDTO;
@@ -26,18 +28,29 @@ export class FormProcesoTecnica implements OnChanges {
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceProceso: ProcesoTecnicaService
+  ) {
     this.form = this.buildForm();
   }
-
-  /**
-   * Detecta cambios en los @Input
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.procesoData) {
-      this.populateForm(this.procesoData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {  
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {
+    this.serviceProceso.getById(this.idInput).subscribe({  
+      next: (data) => {     
+        console.log(data);
+        this.procesoData = data;
+        this.populateForm(this.procesoData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el proceso/técnica:', err);
+      }
+    }); 
+  } 
+
 
   /**
    * Construye el formulario reactivo para Proceso/Técnica
@@ -71,11 +84,11 @@ export class FormProcesoTecnica implements OnChanges {
       autores: data.autores || [],
       etiquetasGTI: data.etiquetasGTI || [],
       licencia: data.licencia,
-      image_url: (data as any).image_url || data.image_r2 || ''
+      imagePreview: data.image_r2 || ''
     });
 
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if ( data.image_r2) {
+      this.imagePreview =  data.image_r2!;
     }
   }
 

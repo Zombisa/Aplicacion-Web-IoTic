@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
+import { RevistaService } from '../../../../services/information/revista.service';
 
 @Component({
   selector: 'app-form-revista',
@@ -11,7 +12,7 @@ import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
   templateUrl: './form-revista.html',
   styleUrls: ['./form-revista.css']
 })
-export class FormRevista implements OnChanges {
+export class FormRevista implements OnInit{
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -26,18 +27,29 @@ export class FormRevista implements OnChanges {
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceRevista: RevistaService
+  ) {
     this.form = this.buildForm();
   }
-
-  /**
-   * Detecta cambios en los @Input
-   */
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnInit(): void {
     if (this.editMode && this.revistaData) {
-      this.populateForm(this.revistaData);
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {
+    this.serviceRevista.getById(this.revistaData.id!).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.revistaData = data;
+        this.populateForm(this.revistaData);
+      },
+      error: (err) => {
+        console.error('Error al cargar la revista:', err);
+      }
+    });
+  }
+
 
   /**
    * Construye el formulario reactivo para revistas
@@ -85,11 +97,11 @@ export class FormRevista implements OnChanges {
       responsable: data.responsable || [],
       linkDescargaArticulo: (data as any).linkDescargaArticulo || '',
       linksitioWeb: (data as any).linksitioWeb || '',
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url: data.image_r2 || ''
     });
 
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if (data.image_r2) {
+      this.imagePreview =  data.image_r2!;
     }
   }
 

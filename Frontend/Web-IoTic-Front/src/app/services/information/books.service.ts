@@ -50,7 +50,7 @@ export class BooksService {
    */
   editBook(id: number, book: BookPeticion): Observable<BookDTO> {
     return this.http.put<BookDTO>(
-      `${this.config.apiUrlBackend}informacion/libros/${id}/editar_libro/`,
+      `${this.config.apiUrlBackend}informacion/libros/${id}/libro/`,
       book
     ).pipe(
       catchError(error => {

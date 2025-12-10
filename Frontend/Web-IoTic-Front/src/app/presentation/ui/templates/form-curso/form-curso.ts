@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { CursoDTO } from '../../../../models/DTO/informacion/CursoDTO';
+import { CursoService } from '../../../../services/information/curso.service';
 
 @Component({
   selector: 'app-form-curso',
@@ -11,7 +12,7 @@ import { CursoDTO } from '../../../../models/DTO/informacion/CursoDTO';
   templateUrl: './form-curso.html',
   styleUrls: ['./form-curso.css']
 })
-export class FormCurso implements OnChanges {
+export class FormCurso implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,25 +20,37 @@ export class FormCurso implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del curso a editar */
-  @Input() cursoData!: CursoDTO;
+  @Input() idInput!: number;
+  cursoData!: CursoDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceCurso: CursoService
+  ) {
     this.form = this.buildForm();
   }
-
-  /**
-   * Detecta cambios en los inputs
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.cursoData) {
-      this.populateForm(this.cursoData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {
+    this.serviceCurso.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.cursoData = data;
+        this.populateForm(this.cursoData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el curso:', err);
+      }
+    }); 
+  }
+
 
   /**
    * Construye el formulario reactivo para cursos
@@ -79,12 +92,12 @@ export class FormCurso implements OnChanges {
       duracion: data.duracion,
       institucion: data.institucion,
       link: data.link || '',
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url: data.image_r2 || ''
     });
 
     // Si trae imagen, mostrar preview
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if (data.image_r2) {
+      this.imagePreview = data.image_r2!;
     }
   }
 

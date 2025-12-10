@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TutoriaConcluidaDTO } from '../../../../models/DTO/informacion/TutoriaConcluidaDTO';
+import { TutoriaConcluidaService } from '../../../../services/information/tutoria-concluida.service';
 
 @Component({
   selector: 'app-form-tutoria-concluida',
@@ -11,7 +12,7 @@ import { TutoriaConcluidaDTO } from '../../../../models/DTO/informacion/TutoriaC
   templateUrl: './form-tutoria-concluida.html',
   styleUrls: ['./form-tutoria-concluida.css']
 })
-export class FormTutoriaConcluida implements OnChanges {
+export class FormTutoriaConcluida implements OnInit{
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,22 +20,38 @@ export class FormTutoriaConcluida implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos de la tutoría a editar */
-  @Input() data!: TutoriaConcluidaDTO;
+  @Input() idInput!: number;
+  data!: TutoriaConcluidaDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceTutoria: TutoriaConcluidaService
+  ) {
     this.form = this.buildForm();
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.data) {
-      this.populateForm(this.data);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {  
+    this.serviceTutoria.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.data = data;
+        this.populateForm(this.data);
+      },
+      error: (err) => {
+        console.error('Error al cargar la tutoría concluida:', err);
+      }
+    }); 
+  }
+
+
 
   /**
    * Construye el formulario reactivo para tutoría concluida
@@ -74,11 +91,11 @@ export class FormTutoriaConcluida implements OnChanges {
       autores: data.autores || [],
       etiquetasGTI: data.etiquetasGTI || [],
       licencia: data.licencia,
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url:  data.image_r2 || ''
     });
 
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if ( data.image_r2) {
+      this.imagePreview = data.image_r2!;
     }
   }
 

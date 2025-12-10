@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO'; // ajusta la ruta si es distinta
+import { SoftwareService } from '../../../../services/information/software.service';
 
 @Component({
   selector: 'app-form-software',
@@ -11,7 +12,7 @@ import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO'; //
   templateUrl: './form-software.html',
   styleUrls: ['./form-software.css']
 })
-export class FormSoftware implements OnChanges {
+export class FormSoftware implements OnInit{
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,25 +20,41 @@ export class FormSoftware implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del software a editar */
-  @Input() softwareData!: SoftwareDTO;
+  @Input() idInput!: number;
+  softwareData!: SoftwareDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceSoftware: SoftwareService
+  ) {
     this.form = this.buildForm();
+  }
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
+    }
+  }
+  private cargarInfo() {
+    this.serviceSoftware.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.softwareData = data;
+        this.populateForm(this.softwareData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el software:', err);
+      }
+    }); 
   }
 
   /**
    * Detecta cambios en los inputs
    */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.softwareData) {
-      this.populateForm(this.softwareData);
-    }
-  }
+
 
   /**
    * Construye el formulario reactivo para software
@@ -89,12 +106,12 @@ export class FormSoftware implements OnChanges {
       descripcionFuncional: data.descripcionFuncional,
       propiedadIntelectual: data.propiedadIntelectual,
 
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url: data.image_r2 || ''
     });
 
     // Si trae imagen, mostrar preview
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if ( data.image_r2) {
+      this.imagePreview = data.image_r2!;
     }
   }
 

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { EventoDTO } from '../../../../models/DTO/informacion/EventoDTO';
+import { EventoService } from '../../../../services/information/evento.service';
 
 @Component({
   selector: 'app-form-evento',
@@ -11,7 +12,7 @@ import { EventoDTO } from '../../../../models/DTO/informacion/EventoDTO';
   templateUrl: './form-evento.html',
   styleUrls: ['./form-evento.css']
 })
-export class FormEvento implements OnChanges {
+export class FormEvento implements OnInit{
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,25 +20,37 @@ export class FormEvento implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del evento a editar */
-  @Input() eventoData!: EventoDTO;
+  @Input() idInput!: number;
+   eventoData!: EventoDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceEvento: EventoService
+  ) {
     this.form = this.buildForm();
   }
-
-  /**
-   * Detecta cambios en los inputs
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.eventoData) {
-      this.populateForm(this.eventoData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {
+    this.serviceEvento.getById(this.idInput).subscribe({
+      next: (data) => {     
+        console.log(data);
+        this.eventoData = data;
+        this.populateForm(this.eventoData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el evento:', err);
+      }
+    }); 
+  }
+
 
   /**
    * Construye el formulario reactivo para eventos
@@ -77,12 +90,12 @@ export class FormEvento implements OnChanges {
       propiedadIntelectual: data.propiedadIntelectual,
       alcance: data.alcance,
       institucion: data.institucion,
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url:  data.image_r2 || ''
     });
 
     // Si trae imagen, mostrar preview
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if ( data.image_r2) {
+      this.imagePreview = data.image_r2!;
     }
   }
 

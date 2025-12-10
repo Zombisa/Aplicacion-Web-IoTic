@@ -31,6 +31,7 @@ import { ViewSoftware } from './presentation/ui/pages/view-software/view-softwar
 import { ViewTutoriaConcluida } from './presentation/ui/pages/view-tutoria-concluida/view-tutoria-concluida';
 import { ViewTutoriaEnMarcha } from './presentation/ui/pages/view-tutoria-en-marcha/view-tutoria-en-marcha';
 import { ViewTrabajoEventos } from './presentation/ui/pages/view-trabajo-eventos/view-trabajo-eventos';
+import { EditProductiviy } from './presentation/ui/pages/edit-item-productiviy/edit-item-productiviy';
 
 export const routes: Routes = [
 
@@ -54,13 +55,14 @@ export const routes: Routes = [
      {path: 'productividad/lista/:tipo', component: ProductivityListTypePage},
      {path: 'productividad/panel', component: PanelPublishProductivity},
      {path: 'productividad/panel/formulario/:tipo', component: PublisItemProductiviy},
-     {path: 'productividad/libro/:id', component: ViewBook},
-     {path: 'productividad/capitulo/:id', component: ViewCapBook},
+     {path: 'productividad/libros/:id', component: ViewBook},
+     {path: 'productividad/capitulos/:id', component: ViewCapBook},
      {path: 'productividad/curso/:id', component: ViewCurso},
      {path: 'productividad/evento/:id', component: ViewEvento},
-     {path: 'productividad/revista/:id', component: ViewRevista},
+     {path: 'productividad/revistas/:id', component: ViewRevista},
      {path: 'productividad/software/:id', component: ViewSoftware},
-     {path: 'productividad/tutoria-concluida/:id', component: ViewTutoriaConcluida},
-     {path: 'productividad/tutoria-en-marcha/:id', component: ViewTutoriaEnMarcha},
+     {path: 'productividad/tutorias_concluidas/:id', component: ViewTutoriaConcluida},
+     {path: 'productividad/tutorias_en_marcha/:id', component: ViewTutoriaEnMarcha},
      {path: 'productividad/trabajo-eventos/:id', component: ViewTrabajoEventos},
+     {path: 'productividad/editar/:tipo/:id', component: EditProductiviy},
 ];

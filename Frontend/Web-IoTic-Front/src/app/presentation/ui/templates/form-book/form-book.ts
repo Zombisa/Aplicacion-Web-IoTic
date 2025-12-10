@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { BookDTO } from '../../../../models/DTO/BookDTO';
 import Swal from 'sweetalert2';
+import { BooksService } from '../../../../services/information/books.service';
 
 @Component({
   selector: 'app-form-book',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
   templateUrl: './form-book.html',
   styleUrls: ['./form-book.css']
 })
-export class FormBook implements OnChanges {
+export class FormBook implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -20,23 +21,36 @@ export class FormBook implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del libro a editar */
-  @Input() bookData!: BookDTO;
-
+  @Input() idInput!: number;
+  bookData!: BookDTO;
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+      private serviceBook: BooksService
+  ) {
     this.form = this.buildForm();
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.editMode && this.bookData) {
-      this.populateForm(this.bookData);
+  ngOnInit() {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
   }
 
+  private cargarInfo() {
+    this.serviceBook.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.bookData = data;
+        this.populateForm(this.bookData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el libro:', err);
+      }
+    }); 
+  }
   private buildForm(): FormGroup {
     return this.fb.group({
       titulo: ['', Validators.required],
@@ -66,12 +80,13 @@ export class FormBook implements OnChanges {
       editorial: data.editorial,
       codigoEditorial: data.codigoEditorial,
       propiedadIntelectual: data.propiedadIntelectual,
-      image_url: data.image_url || ''
+      imagePreview: data.image_r2 || ''
     });
 
-    if (data.image_url) {
-      this.imagePreview = data.image_url;
+    if (data.image_r2) {
+      this.imagePreview = data.image_r2;
     }
+
   }
 
   onFileSelected(event: any) {

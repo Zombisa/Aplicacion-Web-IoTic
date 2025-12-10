@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TrabajoEventosDTO } from '../../../../models/DTO/informacion/TrabajoEventosDTO';
+import { TrabajoEventosService } from '../../../../services/information/trabajo-eventos.service';
 
 @Component({
   selector: 'app-form-trabajo-eventos',
@@ -11,7 +12,7 @@ import { TrabajoEventosDTO } from '../../../../models/DTO/informacion/TrabajoEve
   templateUrl: './form-trabajo-eventos.html',
   styleUrls: ['./form-trabajo-eventos.css']
 })
-export class FormTrabajoEventos implements OnChanges {
+export class FormTrabajoEventos implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
   @Input() editMode: boolean = false;
@@ -22,15 +23,30 @@ export class FormTrabajoEventos implements OnChanges {
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceTrabajoEventos: TrabajoEventosService
+  ) {
     this.form = this.buildForm();
   }
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit(): void {
     if (this.editMode && this.data) {
-      this.populateForm(this.data);
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {  
+    this.serviceTrabajoEventos.getById(this.data.id!).subscribe({  
+      next: (data) => {     
+        console.log(data);
+        this.data = data;
+        this.populateForm(this.data);
+      },
+      error: (err) => {
+        console.error('Error al cargar el trabajo en evento:', err);
+      }
+    }); 
+  }
+
+
 
   private buildForm(): FormGroup {
     return this.fb.group({
@@ -72,11 +88,11 @@ export class FormTrabajoEventos implements OnChanges {
       paginas: data.paginas,
       etiquetas: data.etiquetas || [],
       propiedadIntelectual: data.propiedadIntelectual,
-      image_url: (data as any).image_url || data.image_r2 || ''
+      image_url:  data.image_r2 || ''
     });
 
-    if ((data as any).image_url || data.image_r2) {
-      this.imagePreview = (data as any).image_url || data.image_r2!;
+    if ( data.image_r2) {
+      this.imagePreview =  data.image_r2!;
     }
   }
 

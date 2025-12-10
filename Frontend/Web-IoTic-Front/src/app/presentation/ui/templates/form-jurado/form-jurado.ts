@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { JuradoDTO } from '../../../../models/DTO/informacion/JuradoDTO';
+import { JuradoService } from '../../../../services/information/jurado.service';
 
 @Component({
   selector: 'app-form-jurado',
@@ -11,7 +12,7 @@ import { JuradoDTO } from '../../../../models/DTO/informacion/JuradoDTO';
   templateUrl: './form-jurado.html',
   styleUrls: ['./form-jurado.css']
 })
-export class FormJurado implements OnChanges {
+export class FormJurado implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,25 +20,37 @@ export class FormJurado implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del jurado a editar */
-  @Input() juradoData!: JuradoDTO;
+  @Input() idInput!: number;
+  juradoData!: JuradoDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private serviceJurado: JuradoService
+  ) {
     this.form = this.buildForm();
   }
-
-  /**
-   * Detecta cambios en los inputs
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.juradoData) {
-      this.populateForm(this.juradoData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {  
+      this.cargarInfo();
     }
   }
+  private cargarInfo() {  
+    this.serviceJurado.getById(this.idInput).subscribe({  
+      next: (data) => {     
+        console.log(data);
+        this.juradoData = data;
+        this.populateForm(this.juradoData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el jurado:', err);
+      }
+    }); 
+  }
+
 
   /**
    * Construye el formulario reactivo para jurado
