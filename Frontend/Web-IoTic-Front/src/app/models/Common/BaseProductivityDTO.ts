@@ -1,4 +1,5 @@
 export interface BaseProductivityDTO {
+  id: number;
   titulo:string;
   tipoProductividad: string;
   pais: string;

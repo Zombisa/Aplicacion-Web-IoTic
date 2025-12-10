@@ -2,6 +2,7 @@ import { BaseProductivityDTO } from "../Common/BaseProductivityDTO";
 
 
 export interface BookDTO extends BaseProductivityDTO{
+    
     isbn: string;
     volumen: string;
     paginas: number;

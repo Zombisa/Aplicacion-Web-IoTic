@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BooksService } from '../../../../services/information/books.service';
 import { CapBookService } from '../../../../services/information/cap-book.service';
 import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 
+
 @Component({
   selector: 'app-productivity-list-type-page',
   templateUrl: './productivity-list-type-page.html',
@@ -28,6 +29,8 @@ export class ProductivityListTypePage {
   listTypes: BaseProductivityDTO[] = [];
 
   constructor(
+    private route:  Router,
+    private router: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
     private booksService: BooksService,
@@ -59,14 +62,14 @@ export class ProductivityListTypePage {
    */
   private listarSegunTipo() {
     const acciones: Record<string, () => void> = {
-      libro: () => this.getList(this.booksService.getBooks()),
-      capitulo_libro: () => this.getList(this.capBookService.getCapBooks()),
+      libros: () => this.getList(this.booksService.getBooks()),
+      capitulos: () => this.getList(this.capBookService.getCapBooks()),
       participacion_comites: () => this.getList(this.participacionComitesEvService.getAll()),
       tutoria_en_marcha: () => this.getList(this.tutoriaEnMarchaService.getAll()),
-      tutoria_concluida: () => this.getList(this.tutoriaConcluidaService.getAll()),
+      tutoria_concluidas: () => this.getList(this.tutoriaConcluidaService.getAll()),
       trabajo_eventos: () => this.getList(this.trabajoEventosService.getAll()),
       software: () => this.getList(this.softwareService.getAll()),
-      revista: () => this.getList(this.revistaService.getAll()),
+      revistas: () => this.getList(this.revistaService.getAll()),
       proceso_tecnica: () => this.getList(this.procesoTecnicaService.getAll()),
     };
 
@@ -93,5 +96,8 @@ export class ProductivityListTypePage {
         this.loadingService.hide();
       }
     });
+  }
+  goTo(id: number) {
+    this.route.navigate(['/productividad', this.tipo, id]);
   }
 }

@@ -3,18 +3,31 @@
     <div class="header-wrapper">
         <app-header></app-header>
     </div>
-    <div class="content-wrapper">
-        <h2 class="title">Lista de {{ tipo.replace('_', ' ') | titlecase }}</h2>
-        <div *ngIf="listTypes.length === 0" class="no-items">
-            No hay ítems para mostrar.
+    <section class="banner-primary d-flex align-items-center justify-content-between   ">
+        <div class="container">
+            <h1 class="title">Lista de {{ tipo.replace('_', ' ') | titlecase }}</h1>
+            <div class="divider"></div>
         </div>
-        <ul *ngIf="listTypes.length > 0" class="item-list">
-            <li *ngFor="let item of listTypes" class="item">
-                <div class="item-content">
-                    <h3>{{ item.titulo||  'Sin título' }}</h3>
-                    <!-- Agrega más campos según el tipo de ítem -->
+        
+    </section>
+    <div class="content-wrapper">
+        
+        <div *ngIf="listTypes.length === 0" class="no-items">
+            <h2 class="No hay ítems para mostrar.">No hay ítems para mostrar.</h2>
+        </div>
+        <div *ngIf="listTypes.length > 0" class="item-grid">
+            <div *ngFor="let item of listTypes" class="item-card" (click)="goTo(item.id!)">
+                <div class="item-image-wrapper">
+                    <img *ngIf="item.image_r2" [src]="item.image_r2" [alt]="item.titulo" class="item-image">
+                    <div *ngIf="!item.image_r2" class="item-image-placeholder">
+                        <i class="fas fa-book"></i>
+                    </div>
                 </div>
-            </li>
-        </ul>
+                <div class="item-info">
+                    <h3 class="item-title">{{ item.titulo || 'Sin título' }}</h3>
+                    <small> {{item.tipoProductividad}} </small>
+                </div>
+            </div>
+        </div>
 </div>
   
