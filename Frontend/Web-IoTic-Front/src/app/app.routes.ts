@@ -40,7 +40,7 @@ export const routes: Routes = [
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
      { path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard] },
      { path: 'usuarios/add', component: AddUser, canActivate: [AuthGuard, AdminGuard] },
-     { path: 'usuarios/view/:id', component: ViewUser, canActivate: [AuthGuard, AdminGuard] },
+     { path: 'usuarios/view/:id', component: ViewUser, canActivate: [AuthGuard] },
      { path: 'inventario', component: InventoryPageComponent},
      {path: 'who-we-are', component: WhoWeAre},
      {path: 'who-we-are/edit', component: EditWhoWeAre, canActivate: [AdminGuard]},

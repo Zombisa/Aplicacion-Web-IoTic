@@ -27,6 +27,12 @@ section {
   padding-bottom: 3rem;
 }
 
+.user-content {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
 @media (max-width: 768px) {
   .banner-primary {
     height: 30rem;
@@ -42,6 +48,10 @@ section {
 
   section {
     padding-bottom: 2rem;
+  }
+
+  .user-content {
+    padding: 1rem 0;
   }
 }
 

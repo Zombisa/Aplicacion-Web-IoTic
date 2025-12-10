@@ -8,11 +8,13 @@ import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { SectionInfoUser } from '../../templates/section-info-user/section-info-user';
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
+import { PublicationsList } from '../../templates/publications-list/publications-list';
+import { UserProductivityService, UserProductivityItem } from '../../../../services/information/user-productivity.service';
 
 @Component({
   selector: 'app-view-user',
   standalone: true,
-  imports: [CommonModule, Header, LoadingPage, SectionInfoUser, ConfirmationModal],
+  imports: [CommonModule, Header, LoadingPage, SectionInfoUser, ConfirmationModal, PublicationsList],
   templateUrl: './view-user.html',
   styleUrls: ['./view-user.css']
 })
@@ -22,12 +24,15 @@ export class ViewUser implements OnInit {
   showDeleteModal = false;
   showError = false;
   errorMessage = '';
+  publications: UserProductivityItem[] = [];
+  loadingPublications = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private usersService: UsersService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private userProductivityService: UserProductivityService
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +60,8 @@ export class ViewUser implements OnInit {
         if (foundUser) {
           this.user = foundUser;
           this.loadingService.hide();
+          // Cargar publicaciones del usuario
+          this.loadUserPublications();
         } else {
           this.showError = true;
           this.errorMessage = 'Usuario no encontrado.';
@@ -68,6 +75,54 @@ export class ViewUser implements OnInit {
         this.loadingService.hide();
       }
     });
+  }
+
+  /**
+   * Cargar publicaciones del usuario
+   */
+  loadUserPublications(): void {
+    if (!this.userId) return;
+    
+    this.loadingPublications = true;
+    this.userProductivityService.getProductivityByUserId(this.userId).subscribe({
+      next: (publications) => {
+        this.publications = publications;
+        this.loadingPublications = false;
+        console.log('Publicaciones del usuario:', publications);
+      },
+      error: (error) => {
+        console.error('Error al cargar publicaciones del usuario:', error);
+        this.publications = [];
+        this.loadingPublications = false;
+      }
+    });
+  }
+
+  /**
+   * Manejar click en una publicación
+   */
+  onPublicationClick(event: { id: number; tipo: string }): void {
+    // Navegar a la página de visualización correspondiente
+    const routeMap: Record<string, string> = {
+      'libro': 'libro',
+      'capitulo': 'capitulo',
+      'curso': 'curso',
+      'evento': 'evento',
+      'revista': 'revista',
+      'software': 'software',
+      'tutoria-concluida': 'tutoria-concluida',
+      'tutoria-en-marcha': 'tutoria-en-marcha',
+      'trabajo-eventos': 'trabajo-eventos',
+      'participacion-comites': 'participacion-comites',
+      'material-didactico': 'material-didactico',
+      'jurado': 'jurado',
+      'proceso-tecnica': 'proceso-tecnica'
+    };
+
+    const route = routeMap[event.tipo] || event.tipo;
+    if (route && event.id) {
+      this.router.navigate(['/productividad', route, event.id]);
+    }
   }
 
   /**
