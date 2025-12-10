@@ -21,6 +21,7 @@ import { AdminGuard } from './guards/admin-guard-guard';
 import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
 import { AddUser } from './presentation/ui/pages/add-user/add-user';
 import { ViewUser } from './presentation/ui/pages/view-user/view-user';
+import { ProductivityListTypePage } from './presentation/ui/pages/productivity-list-type-page/productivity-list-type-page';
 
 export const routes: Routes = [
 
@@ -41,6 +42,7 @@ export const routes: Routes = [
      {path: 'prestamos/pretamo/:id', component: ViewLoanItem},
      {path: 'inventario/history', component: ViewHistoryLoan},
      {path: 'productividad', component: ProductivityPage},
+     {path: 'productividad/lista/:tipo', component: ProductivityListTypePage},
      {path: 'productividad/panel', component: PanelPublishProductivity},
      {path: 'productividad/panel/formulario/:tipo', component: PublisItemProductiviy},
 ];

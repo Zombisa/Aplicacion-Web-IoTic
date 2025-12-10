@@ -18,7 +18,7 @@ export class BooksService {
    */
   getBooks(): Observable<BookDTO[]> {
     return this.http.get<BookDTO[]>(
-      `${this.config.apiUrlBackend}informacion/libros/listar_libros/`
+      `${this.config.apiUrlBackend}informacion/libros/libros`
     ).pipe(
       catchError(error => {
         console.error('Error al obtener libros:', error);

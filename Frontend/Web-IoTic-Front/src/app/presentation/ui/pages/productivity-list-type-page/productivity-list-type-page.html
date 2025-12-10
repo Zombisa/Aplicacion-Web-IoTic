@@ -1,0 +1,20 @@
+<app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+    <div class="header-wrapper">
+        <app-header></app-header>
+    </div>
+    <div class="content-wrapper">
+        <h2 class="title">Lista de {{ tipo.replace('_', ' ') | titlecase }}</h2>
+        <div *ngIf="listTypes.length === 0" class="no-items">
+            No hay ítems para mostrar.
+        </div>
+        <ul *ngIf="listTypes.length > 0" class="item-list">
+            <li *ngFor="let item of listTypes" class="item">
+                <div class="item-content">
+                    <h3>{{ item.titulo||  'Sin título' }}</h3>
+                    <!-- Agrega más campos según el tipo de ítem -->
+                </div>
+            </li>
+        </ul>
+</div>
+  

@@ -16,7 +16,7 @@ export class CapBookService {
    */
   getCapBooks(): Observable<CapBookDTO[]> {
     return this.http.get<CapBookDTO[]>(
-      `${this.config.apiUrlBackend}informacion/capitulos_libros/listar_capitulos_libros/`
+      `${this.config.apiUrlBackend}informacion/capLibros/capitulos_libro/`
     ).pipe(
       catchError((error) => {
         console.error('Error al obtener capítulos de libros:', error);
