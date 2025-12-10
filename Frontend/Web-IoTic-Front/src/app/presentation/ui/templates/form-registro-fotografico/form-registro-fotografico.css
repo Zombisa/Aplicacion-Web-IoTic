@@ -1,0 +1,30 @@
+.form-registro-card {
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 0;
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary, #26418f);
+}
+
+.preview-wrapper {
+  max-width: 320px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.preview-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.invalid-feedback {
+  font-size: 0.75rem;
+  color: #dc3545;
+}

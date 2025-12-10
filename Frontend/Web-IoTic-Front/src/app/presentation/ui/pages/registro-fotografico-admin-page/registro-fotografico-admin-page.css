@@ -1,0 +1,14 @@
+.header-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.registro-admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}

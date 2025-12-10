@@ -1,0 +1,21 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+
+<div *ngIf="!(loadingService.loading$ | async)">
+
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Registro fotográfico</h1>
+    <p class="text-help">Memorias visuales de nuestras actividades</p>
+  </section>
+
+  <!-- CONTENEDOR DE GALERÍA -->
+  <div class="container-fluid px-3 px-md-4 py-4 registro-page-container">
+    <app-gallery-registro-fotografico
+      [registros]="registros">
+    </app-gallery-registro-fotografico>
+  </div>
+</div>
