@@ -250,3 +250,19 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='tutMar')
+    def getTutMarById(self, request, pk):
+        """Obtiene una tutoria en marcha por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                tutMar = TutoriaEnMarcha.objects.get(pk=pk)
+            except TutoriaEnMarcha.DoesNotExist:
+                return Response({'error': 'tutoria en marcha no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = TutoriaEnMarchaSerializer(tutMar)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

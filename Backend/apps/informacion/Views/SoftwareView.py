@@ -250,3 +250,19 @@ class SoftwareViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='soft')
+    def getSoftwareById(self, request, pk):
+        """Obtiene un software por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                soft = Software.objects.get(pk=pk)
+            except Software.DoesNotExist:
+                return Response({'error': 'software no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = SoftwareSerializer(soft)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

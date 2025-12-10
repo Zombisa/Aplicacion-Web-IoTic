@@ -250,3 +250,20 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+        
+        
+    @action(detail=True, methods=['get'], url_path='pro')
+    def getProcesoTecnicaById(self, request, pk):
+        """Obtiene un proceso/tecnica por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                pro = ProcesoTecnica.objects.get(pk=pk)
+            except ProcesoTecnica.DoesNotExist:
+                return Response({'error': 'proceso/tecnica no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ProcesoTecnicaSerializer(pro)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

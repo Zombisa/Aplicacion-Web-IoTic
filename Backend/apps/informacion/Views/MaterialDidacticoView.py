@@ -250,3 +250,19 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+        
+    @action(detail=True, methods=['get'], url_path='mat')
+    def getMaterialById(self, request, pk):
+        """Obtiene un material por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                mat = MaterialDidactico.objects.get(pk=pk)
+            except MaterialDidactico.DoesNotExist:
+                return Response({'error': 'material no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = MaterialDidacticoSerializer(mat)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

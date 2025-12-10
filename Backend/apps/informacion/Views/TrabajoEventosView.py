@@ -250,3 +250,19 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='trab')
+    def getTrabajoById(self, request, pk):
+        """Obtiene un trabajo por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                trab = TrabajoEventos.objects.get(pk=pk)
+            except TrabajoEventos.DoesNotExist:
+                return Response({'error': 'Trabajo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = TrabajoEventosSerializer(trab)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

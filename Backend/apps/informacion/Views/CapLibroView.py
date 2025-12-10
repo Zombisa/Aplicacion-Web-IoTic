@@ -252,3 +252,19 @@ class CapLibroViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='capLib')
+    def getCapLibById(self, request, pk):
+        """Obtiene un capítulo de libro por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                cap = CapLibro.objects.get(pk=pk)
+            except CapLibro.DoesNotExist:
+                return Response({'error': 'Capítulo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = CapLibroSerializer(cap)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

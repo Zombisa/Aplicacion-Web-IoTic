@@ -249,3 +249,19 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+        
+    @action(detail=True, methods=['get'], url_path='partCom')
+    def getPartComById(self, request, pk):
+        """Obtiene una participacion por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                partCom = ParticipacionComitesEv.objects.get(pk=pk)
+            except ParticipacionComitesEv.DoesNotExist:
+                return Response({'error': 'participacion no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ParticipacionComitesEvSerializer(partCom)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

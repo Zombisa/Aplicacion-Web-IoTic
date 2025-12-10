@@ -251,3 +251,19 @@ class EventoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='eve')
+    def getEventoById(self, request, pk):
+        """Obtiene un curso por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                ev = Evento.objects.get(pk=pk)
+            except Evento.DoesNotExist:
+                return Response({'error': 'evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = EventoSerializer(ev)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

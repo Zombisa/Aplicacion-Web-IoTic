@@ -248,3 +248,19 @@ class LibroViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='lib')
+    def getLibroById(self, request, pk):
+        """Obtiene un libro por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                lib = Libro.objects.get(pk=pk)
+            except Libro.DoesNotExist:
+                return Response({'error': 'libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = LibroSerializer(lib)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

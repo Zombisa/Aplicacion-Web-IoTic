@@ -251,3 +251,19 @@ class RevistaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='rev')
+    def getRevistaById(self, request, pk):
+        """Obtiene una revista por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                rev = Revista.objects.get(pk=pk)
+            except Revista.DoesNotExist:
+                return Response({'error': 'revista no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = RevistaSerializer(rev)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

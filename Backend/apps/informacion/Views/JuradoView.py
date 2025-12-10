@@ -249,3 +249,19 @@ class JuradoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+        
+    @action(detail=True, methods=['get'], url_path='jur')
+    def getJuradoById(self, request, pk):
+        """Obtiene un jurado por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                jur = Jurado.objects.get(pk=pk)
+            except Jurado.DoesNotExist:
+                return Response({'error': 'jurado no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = JuradoSerializer(jur)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

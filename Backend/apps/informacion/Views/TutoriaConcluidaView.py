@@ -250,3 +250,19 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+        
+    @action(detail=True, methods=['get'], url_path='tutCon')
+    def getTutConById(self, request, pk):
+        """Obtiene una tutoria concluida por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                tutCon = TutoriaConcluida.objects.get(pk=pk)
+            except TutoriaConcluida.DoesNotExist:
+                return Response({'error': 'tutoria concluida no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = TutoriaConcluidaSerializer(tutCon)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

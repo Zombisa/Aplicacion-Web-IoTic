@@ -251,3 +251,19 @@ class NoticiaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='noti')
+    def getNoticiaById(self, request, pk):
+        """Obtiene una noticia por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                noti = Noticia.objects.get(pk=pk)
+            except Noticia.DoesNotExist:
+                return Response({'error': 'Noticia no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = NoticiaSerializer(noti)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)

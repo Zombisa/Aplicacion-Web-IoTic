@@ -252,3 +252,19 @@ class CursoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=True, methods=['get'], url_path='cur')
+    def getCursoById(self, request, pk):
+        """Obtiene un curso por ID (requiere rol válido)."""
+
+        if verificarToken.validarRol(request) is True:
+            try:
+                curso = Curso.objects.get(pk=pk)
+            except Curso.DoesNotExist:
+                return Response({'error': 'Curso no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = CursoSerializer(curso)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Token expirado o invalido.'},
+                            status=status.HTTP_403_FORBIDDEN)
