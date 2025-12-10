@@ -1,21 +1,46 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Header } from '../../templates/header/header';
 import { ScrollAnimationServices } from '../../../../services/scroll-animation.service';
+import { UserProductivityService, UserProductivityItem } from '../../../../services/information/user-productivity.service';
+import { LoadingService } from '../../../../services/loading.service';
+import { LoadingPage } from '../../components/loading-page/loading-page';
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, Header],
+  imports: [CommonModule, Header, LoadingPage],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
-export class HomePage implements AfterViewInit, AfterViewInit, OnDestroy{
+export class HomePage implements OnInit, AfterViewInit, OnDestroy{
 
       private observer!: IntersectionObserver;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private scrollAnimations: ScrollAnimationServices,
+      public latestPublications: Record<string, UserProductivityItem | null> = {};
+      public publicationTypes: Array<{key: string, label: string}> = [
+        { key: 'libro', label: 'Libro' },
+        { key: 'capitulo', label: 'Capítulo de libro' },
+        { key: 'curso', label: 'Curso corto' },
+        { key: 'evento', label: 'Evento/Seminario' },
+        { key: 'revista', label: 'Revista' },
+        { key: 'software', label: 'Software' },
+        { key: 'tutoria_concluida', label: 'Tutoría concluida' },
+        { key: 'tutoria_en_marcha', label: 'Tutoría en marcha' },
+        { key: 'trabajo_eventos', label: 'Trabajo en eventos' },
+        { key: 'participacion_comites', label: 'Participación en comités' },
+        { key: 'material_didactico', label: 'Material didáctico' },
+        { key: 'jurado', label: 'Jurado' },
+        { key: 'proceso_tecnica', label: 'Proceso o técnica' }
+      ];
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object, 
+    private scrollAnimations: ScrollAnimationServices,
     private elementRef: ElementRef,
+    private userProductivityService: UserProductivityService,
+    public loadingService: LoadingService,
+    private router: Router
      ) {}
 
     public mensajes: string[] = [
@@ -25,6 +50,72 @@ export class HomePage implements AfterViewInit, AfterViewInit, OnDestroy{
     'Descubre nuestros proyectos y publicaciones',
     'Juntos generamos conocimiento y cambio'
   ];
+
+  ngOnInit(): void {
+    this.loadLatestPublications();
+  }
+
+  /**
+   * Carga las últimas publicaciones de cada tipo
+   */
+  loadLatestPublications(): void {
+    this.loadingService.show();
+    this.userProductivityService.getLatestPublicationsByType().subscribe({
+      next: (publications) => {
+        this.latestPublications = publications;
+        this.loadingService.hide();
+        console.log('Últimas publicaciones cargadas:', publications);
+      },
+      error: (error) => {
+        console.error('Error al cargar últimas publicaciones:', error);
+        this.loadingService.hide();
+      }
+    });
+  }
+
+  /**
+   * Obtiene las publicaciones que tienen datos (no null)
+   */
+  getAvailablePublications(): Array<{key: string, label: string, publication: UserProductivityItem}> {
+    return this.publicationTypes
+      .filter(type => this.latestPublications[type.key] !== null)
+      .map(type => ({
+        key: type.key,
+        label: type.label,
+        publication: this.latestPublications[type.key]!
+      }));
+  }
+
+  /**
+   * Navega a la página de visualización de una publicación
+   */
+  navigateToPublication(tipo: string, id: number): void {
+    const routeMap: Record<string, string> = {
+      'libro': 'libros',
+      'capitulo': 'capitulos',
+      'curso': 'cursos',
+      'evento': 'eventos',
+      'revista': 'revistas',
+      'software': 'software',
+      'tutoria-concluida': 'tutorias_concluidas',
+      'tutoria-en-marcha': 'tutorias_en_marcha',
+      'trabajo-eventos': 'trabajo-eventos',
+      'participacion-comites': 'participacion-comites',
+      'material-didactico': 'material-didactico', // Si no existe ruta, redirigir a lista
+      'jurado': 'jurado',
+      'proceso-tecnica': 'procesos'
+    };
+
+    const route = routeMap[tipo];
+    if (route) {
+      this.router.navigate([`/productividad/${route}`, id]);
+    } else {
+      // Si no hay ruta específica, redirigir a la lista de ese tipo
+      console.warn(`No hay ruta específica para el tipo: ${tipo}, redirigiendo a lista`);
+      this.router.navigate([`/productividad/lista/${tipo}`]);
+    }
+  }
+
      ngAfterViewInit() {
   if (isPlatformBrowser(this.platformId)) {
     // Agregar un pequeño delay para asegurar que el DOM esté completamente renderizado

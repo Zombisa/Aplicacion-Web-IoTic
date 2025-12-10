@@ -253,5 +253,58 @@ export class UserProductivityService {
       })
     );
   }
+
+  /**
+   * Obtiene la última publicación de cada tipo de productividad
+   * @returns Observable con un objeto que contiene la última publicación de cada tipo
+   */
+  getLatestPublicationsByType(): Observable<Record<string, UserProductivityItem | null>> {
+    // Consultar todos los tipos de productividad en paralelo
+    return forkJoin({
+      libros: this.booksService.getBooks().pipe(catchError(() => of([]))),
+      capitulos: this.capBookService.getCapBooks().pipe(catchError(() => of([]))),
+      cursos: this.cursoService.getAll().pipe(catchError(() => of([]))),
+      eventos: this.eventoService.getAll().pipe(catchError(() => of([]))),
+      revistas: this.revistaService.getAll().pipe(catchError(() => of([]))),
+      software: this.softwareService.getAll().pipe(catchError(() => of([]))),
+      tutoriasConcluidas: this.tutoriaConcluidaService.getAll().pipe(catchError(() => of([]))),
+      tutoriasEnMarcha: this.tutoriaEnMarchaService.getAll().pipe(catchError(() => of([]))),
+      trabajosEventos: this.trabajoEventosService.getAll().pipe(catchError(() => of([]))),
+      participacionComites: this.participacionComitesEvService.getAll().pipe(catchError(() => of([]))),
+      materialDidactico: this.materialDidacticoService.getAll().pipe(catchError(() => of([]))),
+      jurados: this.juradoService.getAll().pipe(catchError(() => of([]))),
+      procesosTecnicas: this.procesoTecnicaService.getAll().pipe(catchError(() => of([])))
+    }).pipe(
+      map(results => {
+        const latestPublications: Record<string, UserProductivityItem | null> = {};
+
+        // Función auxiliar para obtener la última publicación de un array
+        const getLatest = (items: BaseProductivityDTO[], tipo: string, tipoDisplay: string): UserProductivityItem | null => {
+          if (!items || items.length === 0) return null;
+          // Ordenar por ID descendente (asumiendo que IDs más altos son más recientes)
+          const sorted = [...items].sort((a, b) => b.id - a.id);
+          const latest = sorted[0];
+          return { ...latest, tipo, tipoDisplay };
+        };
+
+        // Obtener la última publicación de cada tipo
+        latestPublications['libro'] = getLatest(results.libros as BaseProductivityDTO[], 'libro', this.tipoDisplayMap['libro']);
+        latestPublications['capitulo'] = getLatest(results.capitulos as BaseProductivityDTO[], 'capitulo', this.tipoDisplayMap['capitulo'] || 'Capítulo de libro');
+        latestPublications['curso'] = getLatest(results.cursos as BaseProductivityDTO[], 'curso', this.tipoDisplayMap['curso']);
+        latestPublications['evento'] = getLatest(results.eventos as BaseProductivityDTO[], 'evento', this.tipoDisplayMap['evento']);
+        latestPublications['revista'] = getLatest(results.revistas as BaseProductivityDTO[], 'revista', this.tipoDisplayMap['revista'] || 'Revista');
+        latestPublications['software'] = getLatest(results.software as BaseProductivityDTO[], 'software', this.tipoDisplayMap['software']);
+        latestPublications['tutoria_concluida'] = getLatest(results.tutoriasConcluidas as BaseProductivityDTO[], 'tutoria-concluida', this.tipoDisplayMap['tutoria_concluida']);
+        latestPublications['tutoria_en_marcha'] = getLatest(results.tutoriasEnMarcha as BaseProductivityDTO[], 'tutoria-en-marcha', this.tipoDisplayMap['tutoria_en_marcha']);
+        latestPublications['trabajo_eventos'] = getLatest(results.trabajosEventos as BaseProductivityDTO[], 'trabajo-eventos', this.tipoDisplayMap['trabajo_eventos']);
+        latestPublications['participacion_comites'] = getLatest(results.participacionComites as BaseProductivityDTO[], 'participacion-comites', this.tipoDisplayMap['participacion_comites']);
+        latestPublications['material_didactico'] = getLatest(results.materialDidactico as BaseProductivityDTO[], 'material-didactico', this.tipoDisplayMap['material_didactico']);
+        latestPublications['jurado'] = getLatest(results.jurados as BaseProductivityDTO[], 'jurado', this.tipoDisplayMap['jurado']);
+        latestPublications['proceso_tecnica'] = getLatest(results.procesosTecnicas as BaseProductivityDTO[], 'proceso-tecnica', this.tipoDisplayMap['proceso_tecnica']);
+
+        return latestPublications;
+      })
+    );
+  }
 }
 
