@@ -38,7 +38,7 @@ export class Header implements OnInit, OnDestroy {
       { path: '/who-we-are', icon: 'groups', label: 'Quienes somos', show: true },
       { path: '/productividad', icon: 'widgets', label: 'Proyectos', show: true},
       { path: '/inventario', icon: 'inventory_2', label: 'Inventario', show: isAdmin },
-      { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: true},
+      { path: '/mentores-publicaciones', icon: 'people', label: 'Mentores', show: true},
       { path: '/user', icon: 'person', label: 'Perfil', show: true }
     ];
   });
