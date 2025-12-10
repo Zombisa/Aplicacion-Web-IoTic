@@ -1,0 +1,26 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Tutoría en marcha</h1>
+    <p class="text-help">Detalles y información de la tutoría</p>
+  </section>
+
+  <!-- CONTENEDOR DE LA INFORMACIÓN -->
+  <div class="container-fluid px-3 px-md-4 form-container">
+    <div class="row justify-content-center">
+      <div class="col-12 section-view-item">
+        <app-section-info-productivity
+          [item]="tutoria"
+          [itemImageUrl]="tutoriaImageUrl"
+          tipo="tutoria-en-marcha">
+        </app-section-info-productivity>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -22,6 +22,15 @@ import { UsersManagementPageComponent } from './presentation/ui/pages/users-mana
 import { AddUser } from './presentation/ui/pages/add-user/add-user';
 import { ViewUser } from './presentation/ui/pages/view-user/view-user';
 import { ProductivityListTypePage } from './presentation/ui/pages/productivity-list-type-page/productivity-list-type-page';
+import { ViewBook } from './presentation/ui/pages/view-book/view-book';
+import { ViewCurso } from './presentation/ui/pages/view-curso/view-curso';
+import { ViewEvento } from './presentation/ui/pages/view-evento/view-evento';
+import { ViewCapBook } from './presentation/ui/pages/view-cap-book/view-cap-book';
+import { ViewRevista } from './presentation/ui/pages/view-revista/view-revista';
+import { ViewSoftware } from './presentation/ui/pages/view-software/view-software';
+import { ViewTutoriaConcluida } from './presentation/ui/pages/view-tutoria-concluida/view-tutoria-concluida';
+import { ViewTutoriaEnMarcha } from './presentation/ui/pages/view-tutoria-en-marcha/view-tutoria-en-marcha';
+import { ViewTrabajoEventos } from './presentation/ui/pages/view-trabajo-eventos/view-trabajo-eventos';
 
 export const routes: Routes = [
 
@@ -45,4 +54,13 @@ export const routes: Routes = [
      {path: 'productividad/lista/:tipo', component: ProductivityListTypePage},
      {path: 'productividad/panel', component: PanelPublishProductivity},
      {path: 'productividad/panel/formulario/:tipo', component: PublisItemProductiviy},
+     {path: 'productividad/libro/:id', component: ViewBook},
+     {path: 'productividad/capitulo/:id', component: ViewCapBook},
+     {path: 'productividad/curso/:id', component: ViewCurso},
+     {path: 'productividad/evento/:id', component: ViewEvento},
+     {path: 'productividad/revista/:id', component: ViewRevista},
+     {path: 'productividad/software/:id', component: ViewSoftware},
+     {path: 'productividad/tutoria-concluida/:id', component: ViewTutoriaConcluida},
+     {path: 'productividad/tutoria-en-marcha/:id', component: ViewTutoriaEnMarcha},
+     {path: 'productividad/trabajo-eventos/:id', component: ViewTrabajoEventos},
 ];

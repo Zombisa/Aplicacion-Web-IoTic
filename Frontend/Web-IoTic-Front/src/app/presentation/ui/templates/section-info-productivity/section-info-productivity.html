@@ -1,0 +1,108 @@
+<div class="container-fluid px-3 px-md-4">
+  <div class="row">
+    <!-- Columna izquierda: Título, info básica e imagen -->
+    <div class="col-12 col-lg-7 left-column">
+      <!-- Título -->
+      <h1 class="productivity-title">{{ item?.titulo || 'Sin título' }}</h1>
+      
+      <!-- Información básica -->
+      <div class="basic-info">
+        <p *ngIf="item?.anio" class="info-line">
+          <span class="label">Año:</span>
+          <span class="value">{{ item.anio }}</span>
+        </p>
+        <p *ngIf="item?.paso" class="info-line">
+          <span class="label">paso:</span>
+          <span class="value">{{ item.paso }}</span>
+        </p>
+      </div>
+
+      <!-- Etiquetas -->
+      <div class="tags-container" *ngIf="item?.etiquetas && item.etiquetas.length > 0">
+        <span *ngFor="let etiqueta of item.etiquetas" class="tag-badge">
+          {{ etiqueta }}
+        </span>
+      </div>
+
+      <!-- Imagen -->
+      <div class="image-container">
+        <img [src]="getImageUrl()" alt="Imagen de productividad" class="productivity-image" />
+      </div>
+    </div>
+
+    <!-- Columna derecha: Información general -->
+    <div class="col-12 col-lg-5 right-column">
+      <div class="info-section">
+        <h2 class="section-title">Información general:</h2>
+        <div class="info-list">
+          <p *ngIf="item?.anio" class="info-item">
+            <span class="info-label">Anio:</span>
+            <span class="info-value">{{ item.anio }}</span>
+          </p>
+          <p *ngIf="item?.isbn" class="info-item">
+            <span class="info-label">isbn:</span>
+            <span class="info-value">{{ item.isbn }}</span>
+          </p>
+          <p *ngIf="item?.volumen" class="info-item">
+            <span class="info-label">volumen:</span>
+            <span class="info-value">{{ item.volumen }}</span>
+          </p>
+          <p *ngIf="item?.paginas" class="info-item">
+            <span class="info-label">paginas:</span>
+            <span class="info-value">{{ item.paginas }}</span>
+          </p>
+          <p *ngIf="item?.editorial" class="info-item">
+            <span class="info-label">Editorial</span>
+            <span class="info-value">{{ item.editorial }}</span>
+          </p>
+          <p *ngIf="item?.institucion" class="info-item">
+            <span class="info-label">Institución:</span>
+            <span class="info-value">{{ item.institucion }}</span>
+          </p>
+          <p *ngIf="item?.duracion" class="info-item">
+            <span class="info-label">Duración:</span>
+            <span class="info-value">{{ item.duracion }} horas</span>
+          </p>
+          <p *ngIf="item?.alcance" class="info-item">
+            <span class="info-label">Alcance:</span>
+            <span class="info-value">{{ item.alcance }}</span>
+          </p>
+          <p *ngIf="item?.issn" class="info-item">
+            <span class="info-label">ISSN:</span>
+            <span class="info-value">{{ item.issn }}</span>
+          </p>
+          <p *ngIf="item?.fasc" class="info-item">
+            <span class="info-label">Fascículo:</span>
+            <span class="info-value">{{ item.fasc }}</span>
+          </p>
+          <p *ngIf="item?.fechaPublicacion" class="info-item">
+            <span class="info-label">Fecha de publicación:</span>
+            <span class="info-value">{{ item.fechaPublicacion | date: 'dd/MM/yyyy' }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Autores -->
+      <div class="authors-section" *ngIf="item?.autores && item.autores.length > 0">
+        <div class="author-card" *ngFor="let autor of item.autores">
+          <div class="author-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="author-info">
+            <p class="author-name">{{ autor || 'Nombre autor' }}</p>
+            <p class="author-role">RoL:</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón de link -->
+      <button 
+        *ngIf="hasLink()" 
+        class="link-button"
+        (click)="openLink()">
+        Link
+      </button>
+    </div>
+  </div>
+</div>
+

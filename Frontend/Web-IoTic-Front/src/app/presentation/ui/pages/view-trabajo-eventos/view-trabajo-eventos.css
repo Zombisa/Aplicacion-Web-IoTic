@@ -1,0 +1,23 @@
+.banner-primary {
+  background-color: var(--color-primary);
+  height: 40rem;
+}
+
+.title {
+  color: var(--color-secondary);
+}
+
+.text-help {
+  color: white;
+  margin-top: 1px;
+  font-weight: 300;
+}
+
+.form-container {
+  padding: 3rem 0;
+}
+
+.section-view-item {
+  margin-top: 2rem;
+}
+
