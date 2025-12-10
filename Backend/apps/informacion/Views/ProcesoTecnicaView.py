@@ -110,7 +110,7 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
            return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
            
-    @action(detail=True, methods=['delete'], url_path='proceso_tecnica')
+    @action(detail=True, methods=['delete'], url_path='Proceso_tecnica')
     def eliminar_proceso_tecnica(self, request, pk):
         """Elimina un proceso/técnica por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

@@ -111,7 +111,7 @@ class RevistaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='revista')
+    @action(detail=True, methods=['delete'], url_path='Revista')
     def eliminar_revista(self, request, pk):
         """Elimina una revista por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

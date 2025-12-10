@@ -111,7 +111,7 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='comite_ev')
+    @action(detail=True, methods=['delete'], url_path='Comite_ev')
     def eliminar_comite_ev(self, request, pk):
         """Elimina una participación por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -148,7 +148,7 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=False, methods=['get'], url_path='listar_comites_ev')
+    @action(detail=False, methods=['get'], url_path='Comites_ev')
     def listar_comites_ev(self, request):
         """Lista todas las participaciones (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:

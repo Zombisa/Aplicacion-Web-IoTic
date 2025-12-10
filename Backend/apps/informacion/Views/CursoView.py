@@ -112,7 +112,7 @@ class CursoViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
 
-    @action(detail=True, methods=['delete'], url_path='curso')
+    @action(detail=True, methods=['delete'], url_path='Curso')
     def eliminar_curso(self, request, pk):
         """Elimina un curso por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

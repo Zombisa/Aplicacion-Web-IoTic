@@ -111,7 +111,7 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='software')
+    @action(detail=True, methods=['delete'], url_path='Software')
     def eliminar_software(self, request, pk):
         """Elimina un software por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -149,7 +149,7 @@ class SoftwareViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=False, methods=['get'], url_path='software')
+    @action(detail=False, methods=['get'], url_path='Software')
     def listar_software(self, request):
         """Lista todo el software (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:

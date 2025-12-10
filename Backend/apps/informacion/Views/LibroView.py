@@ -111,7 +111,7 @@ class LibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='libros')
+    @action(detail=True, methods=['delete'], url_path='Libros')
     def eliminar_libro(self, request, pk):
         """Elimina un libro por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
@@ -149,7 +149,7 @@ class LibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
         
-    @action(detail=False, methods=['get'], url_path='libros')
+    @action(detail=False, methods=['get'], url_path='Libros')
     def listar_libros(self, request):
         """Lista todos los libros (requiere rol válido)."""
         if verificarToken.validarRol(request) is True:

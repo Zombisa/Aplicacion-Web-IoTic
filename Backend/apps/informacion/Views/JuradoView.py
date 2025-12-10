@@ -110,7 +110,7 @@ class JuradoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
-    @action(detail=True, methods=['delete'], url_path='jurado')
+    @action(detail=True, methods=['delete'], url_path='Jurado')
     def eliminar_jurado(self, request, pk):
         """Elimina un jurado por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

@@ -111,7 +111,7 @@ class TutoriaConcluidaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='tutoria_concluida')
+    @action(detail=True, methods=['delete'], url_path='Tutoria_concluida')
     def eliminar_tutoria_concluida(self, request, pk):
         """Elimina una tutoría concluida por `pk`; 404 si no existe; 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is True:

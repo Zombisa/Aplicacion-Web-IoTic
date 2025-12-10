@@ -111,7 +111,7 @@ class NoticiaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='noticia')
+    @action(detail=True, methods=['delete'], url_path='Noticia')
     def eliminar_noticia(self, request, pk):
         """Elimina una noticia por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

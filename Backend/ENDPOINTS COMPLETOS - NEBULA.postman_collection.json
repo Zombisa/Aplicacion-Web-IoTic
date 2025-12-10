@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0d7fa112-ad2f-4ae6-9504-c097a7a5181b",
+		"_postman_id": "89d6f6e2-575a-4a93-829a-0f833badc229",
 		"name": "ENDPOINTS COMPLETOS - NEBULA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40286637"
+		"_exporter_id": "38361461"
 	},
 	"item": [
 		{
@@ -2058,7 +2058,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_token}}",
 											"type": "string"
 										}
 									]
@@ -2197,7 +2197,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/noticias/2/noticia/",
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/1/Noticia/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -2210,8 +2210,8 @@
 										"api",
 										"informacion",
 										"noticias",
-										"2",
-										"noticia",
+										"1",
+										"Noticia",
 										""
 									]
 								}
@@ -2319,6 +2319,50 @@
 										"informacion",
 										"noticias",
 										"misNoticias",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NoticiaById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/1/noti/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"1",
+										"noti",
 										""
 									]
 								}
@@ -2484,7 +2528,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/evento/",
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/Evento/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -2498,7 +2542,7 @@
 										"informacion",
 										"eventos",
 										"1",
-										"evento",
+										"Evento",
 										""
 									]
 								}
@@ -2606,6 +2650,50 @@
 										"informacion",
 										"eventos",
 										"misEventos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EventoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/eve/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"1",
+										"eve",
 										""
 									]
 								}
@@ -2771,7 +2859,7 @@
 									"raw": "{\r\n  \"duracion\": \"60min\"\r\n}"
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/cursos/2/curso/",
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/1/Curso/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -2784,8 +2872,8 @@
 										"api",
 										"informacion",
 										"cursos",
-										"2",
-										"curso",
+										"1",
+										"Curso",
 										""
 									]
 								}
@@ -2898,6 +2986,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "CursoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/1/cur/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"1",
+										"cur",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2964,7 +3096,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"titulo\": \"Introducción a la Inteligencia Artificial\",\r\n  \"tipoProductividad\": \"Capítulo de libro científico\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 978,\r\n  \"volumen\": 1,\r\n  \"paginaInicio\": 45,\r\n  \"paginaFin\": 50,\r\n  \"editorial\": \"Editorial Universitaria\",\r\n  \"codigoEditorial\": 12345,\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-001\",\r\n  \"autores\": [\"María González\", \"Juan Pérez\", \"Ana Rodríguez\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"raw": "{\r\n  \"titulo\": \"Introducción a la Inteligencia Artificial\",\r\n  \"tipoProductividad\": \"Capítulo de libro científico\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 978,\r\n  \"volumen\": 1,\r\n  \"paginaInicio\": 45,\r\n  \"paginasFin\": 50,\r\n  \"editorial\": \"Editorial Universitaria\",\r\n  \"codigoEditorial\": 12345,\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-001\",\r\n  \"autores\": [\"María González\", \"Juan Pérez\", \"Ana Rodríguez\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3054,7 +3186,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/capitulo_libro/",
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/Capitulo_libro/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3068,7 +3200,7 @@
 										"informacion",
 										"capLibros",
 										"1",
-										"capitulo_libro",
+										"Capitulo_libro",
 										""
 									]
 								}
@@ -3176,6 +3308,50 @@
 										"informacion",
 										"capLibros",
 										"misCapLibros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CapLibroById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/capLib/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"capLib",
 										""
 									]
 								}
@@ -3341,7 +3517,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/jurado/",
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/Jurado/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3355,7 +3531,7 @@
 										"informacion",
 										"jurados",
 										"1",
-										"jurado",
+										"Jurado",
 										""
 									]
 								}
@@ -3468,6 +3644,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "juradoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/jur/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"jur",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -3497,7 +3717,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/libros",
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/Libros/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3509,7 +3729,9 @@
 									"path": [
 										"api",
 										"informacion",
-										"libros"
+										"libros",
+										"Libros",
+										""
 									]
 								}
 							},
@@ -3626,7 +3848,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/libros/",
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/Libros/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3640,7 +3862,7 @@
 										"informacion",
 										"libros",
 										"1",
-										"libros",
+										"Libros",
 										""
 									]
 								}
@@ -3758,6 +3980,50 @@
 										"informacion",
 										"libros",
 										"misLibros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LibroById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/lib/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"1",
+										"lib",
 										""
 									]
 								}
@@ -3923,7 +4189,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/material_did/",
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/Material_did/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -3937,7 +4203,7 @@
 										"informacion",
 										"materialDidactico",
 										"1",
-										"material_did",
+										"Material_did",
 										""
 									]
 								}
@@ -4050,6 +4316,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "MaterialById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/mat/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"mat",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4072,7 +4382,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/comites_ev/",
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/Comites_ev/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -4085,7 +4395,7 @@
 										"api",
 										"informacion",
 										"participacionComitesEv",
-										"comites_ev",
+										"Comites_ev",
 										""
 									]
 								}
@@ -4199,7 +4509,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/comite_ev/",
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/Comite_ev/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -4213,7 +4523,7 @@
 										"informacion",
 										"participacionComitesEv",
 										"1",
-										"comite_ev",
+										"Comite_ev",
 										""
 									]
 								}
@@ -4321,6 +4631,50 @@
 										"informacion",
 										"participacionComitesEv",
 										"misParticipaciones",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "participacionById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/partCom/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"partCom",
 										""
 									]
 								}
@@ -4475,7 +4829,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/proceso_tecnica/",
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/Proceso_tecnica/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -4489,7 +4843,7 @@
 										"informacion",
 										"procesosTecnicas",
 										"1",
-										"proceso_tecnica",
+										"Proceso_tecnica",
 										""
 									]
 								}
@@ -4597,6 +4951,50 @@
 										"informacion",
 										"procesosTecnicas",
 										"misProcesosTenicas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "procesoTecById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/pro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"pro",
 										""
 									]
 								}
@@ -4751,7 +5149,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/revista/",
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/Revista/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -4765,7 +5163,7 @@
 										"informacion",
 										"revistas",
 										"1",
-										"revista",
+										"Revista",
 										""
 									]
 								}
@@ -4878,6 +5276,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "RevistaById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/rev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"rev",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4900,7 +5342,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/software/software/",
+									"raw": "http://127.0.0.1:8000/api/informacion/software/Software/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -4913,7 +5355,7 @@
 										"api",
 										"informacion",
 										"software",
-										"software",
+										"Software",
 										""
 									]
 								}
@@ -5027,7 +5469,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/software/1/software/",
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/Software/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -5041,7 +5483,7 @@
 										"informacion",
 										"software",
 										"1",
-										"software",
+										"Software",
 										""
 									]
 								}
@@ -5135,7 +5577,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/software/misSoftware/",
+									"raw": "http://127.0.0.1:8000/api/informacion/software/miSoftware/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -5148,7 +5590,51 @@
 										"api",
 										"informacion",
 										"software",
-										"misSoftware",
+										"miSoftware",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fundamentos de Inteligencia\",\r\n  \"tipoProductividad\": \"Libro de texto universitario\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 97895,\r\n  \"volumen\": 1,\r\n  \"paginas\": 350,\r\n  \"editorial\": \"Editorial Universidad del Cauca\",\r\n  \"codigoEditorial\": \"EUC-2024-045\",\r\n  \"etiquetas\": [\"inteligencia artificial\", \"machine learning\", \"educación superior\", \"tecnología\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-004\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. Laura Martínez\", \"MSc. Roberto Silva\"],\r\n  \"image_path\": \"urlcloudflare\",\r\n  \"archivo_path\": \"urlarchivo\"\r\n}"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/soft/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"soft",
 										""
 									]
 								}
@@ -5303,7 +5789,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/trabajo_evento/",
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/Trabajo_evento/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -5317,7 +5803,7 @@
 										"informacion",
 										"trabajoEventos",
 										"1",
-										"trabajo_evento",
+										"Trabajo_evento",
 										""
 									]
 								}
@@ -5425,6 +5911,50 @@
 										"informacion",
 										"trabajoEventos",
 										"miTrabajoEv",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "trabajoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/trab/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"trab",
 										""
 									]
 								}
@@ -5579,7 +6109,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/tutoria_concluida/",
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/Tutoria_concluida/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -5593,7 +6123,7 @@
 										"informacion",
 										"tutoriasConcluidas",
 										"1",
-										"tutoria_concluida",
+										"Tutoria_concluida",
 										""
 									]
 								}
@@ -5701,6 +6231,50 @@
 										"informacion",
 										"tutoriasConcluidas",
 										"miTutoriasCon",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "tutoConById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/tutCon/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"tutCon",
 										""
 									]
 								}
@@ -5855,7 +6429,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/tutoria_en_marcha/",
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/Tutoria_en_marcha/",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -5869,7 +6443,7 @@
 										"informacion",
 										"tutoriasEnMarcha",
 										"1",
-										"tutoria_en_marcha",
+										"Tutoria_en_marcha",
 										""
 									]
 								}
@@ -5977,6 +6551,50 @@
 										"informacion",
 										"tutoriasEnMarcha",
 										"miTutoriasMar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "tutoMarById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/tutMar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"tutMar",
 										""
 									]
 								}

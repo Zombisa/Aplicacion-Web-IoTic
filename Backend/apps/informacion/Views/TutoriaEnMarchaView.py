@@ -111,7 +111,7 @@ class TutoriaEnMarchaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='tutoria_en_marcha')
+    @action(detail=True, methods=['delete'], url_path='Tutoria_en_marcha')
     def eliminar_tutoria_en_marcha(self, request, pk):
         """Elimina una tutoría en marcha por `pk`; 404 si no existe; 403 si el rol es inválido."""
         if verificarToken.validarRol(request) is True:

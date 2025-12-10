@@ -113,7 +113,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='capitulo_libro')
+    @action(detail=True, methods=['delete'], url_path='Capitulo_libro')
     def eliminar_capitulo_libro(self, request, pk):
         """Elimina un capítulo por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:

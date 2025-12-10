@@ -111,7 +111,7 @@ class TrabajoEventosViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
     
-    @action(detail=True, methods=['delete'], url_path='trabajo_evento')
+    @action(detail=True, methods=['delete'], url_path='Trabajo_evento')
     def eliminar_trabajo_evento(self, request, pk):
         """Elimina un trabajo en evento por `pk`; 404 si no existe."""
         if verificarToken.validarRol(request) is True:
