@@ -1,6 +1,7 @@
 .banner-primary {
   background-color: var(--color-primary);
-  height: 40rem;
+  height: 30rem;
+  padding-top: 10rem;
 }
 
 .title {
@@ -21,3 +22,76 @@
   margin-top: 2rem;
 }
 
+.banner-container {
+  background-color: var(--color-primary);
+  padding: 3rem 0;
+}
+
+.title-section {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Imagen del Libro */
+.book-image {
+  width: 100%;
+  height: auto;
+  max-height: 50rem;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.book-image:hover {
+  transform: scale(1.02);
+}
+
+/* Detalles del Libro */
+.book-details {
+  padding: 0 1rem;
+}
+
+.detail-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5rem 0;
+}
+
+.detail-value {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .book-details {
+    padding: 0;
+    margin-top: 2rem;
+  }
+
+  .title-section {
+    font-size: 1.75rem;
+  }
+
+  .book-image {
+    max-height: 400px;
+  }
+}

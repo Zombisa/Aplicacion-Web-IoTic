@@ -3,7 +3,12 @@
     <div class="row g-0 align-items-stretch">
       <!-- Columna imagen (izquierda) -->
       <div class="col-12 col-md-5 p-0 item-image-wrapper">
-        <img class="item-image" [src]="itemImageUrl" alt="Imagen del ítem" />
+        <img 
+          class="item-image" 
+          [src]="item.image_r2 && item.image_r2.trim() !== '' ? item.image_r2 : itemImageUrl"
+          alt="Imagen del ítem"
+        />
+
       </div>
 
       <!-- Columna información (derecha) -->

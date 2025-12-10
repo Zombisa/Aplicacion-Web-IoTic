@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-book',
-  imports: [CommonModule, Header, LoadingPage, SectionInfoProductivity],
+  imports: [CommonModule, Header, LoadingPage],
   templateUrl: './view-book.html',
   styleUrl: './view-book.css'
 })
