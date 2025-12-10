@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RegistroFotograficoDTO } from '../../../../models/DTO/RegistroFotograficoDTO';
 import { RegistroFotograficoPeticion } from '../../../../models/Peticion/RegistroFotograficoPeticion';
 import { RegistroFotograficoService } from '../../../../services/registro-fotografico.service';
+import { ImagesService } from '../../../../services/common/images.service';
+import { of } from 'rxjs';
+import { finalize, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-registro-fotografico',
@@ -38,7 +41,8 @@ export class FormRegistroFotografico implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private registroService: RegistroFotograficoService
+    private registroService: RegistroFotograficoService,
+    private imagesService: ImagesService
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +56,9 @@ export class FormRegistroFotografico implements OnInit {
   private initForm(): void {
     this.form = this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(200)]],
-      fecha: [null], // puedes agregar Validators.required si lo necesitas
+      fecha: [null],
       descripcion: ['', [Validators.maxLength(500)]],
-      file_path: ['', this.modo === 'create' ? Validators.required : []] // requerido al crear
+      file_path: ['', this.modo === 'create' ? Validators.required : []]
     });
   }
 
@@ -99,9 +103,8 @@ export class FormRegistroFotografico implements OnInit {
 
     /**
      * IMPORTANTE:
-     * Aquí solo guardamos un nombre de archivo en file_path para tener algo.
-     * Cuando conectes el flujo de URL firmada + subida a R2,
-     * deberías remplazar esto por el `key`/`file_path` que te devuelva el backend.
+     * Aquí solo guardamos un nombre de archivo en file_path para que pase la validación.
+     * El file_path REAL lo devolvemos cuando subimos la imagen a R2 con URL firmada.
      */
     this.form.get('file_path')?.setValue(file.name);
     this.form.get('file_path')?.markAsDirty();
@@ -114,45 +117,59 @@ export class FormRegistroFotografico implements OnInit {
       return;
     }
 
+    // Validación extra: en create, obligamos a tener imagen
+    if (this.modo === 'create' && !this.selectedFile) {
+      this.form.get('file_path')?.setErrors({ required: true });
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.saving = true;
 
-    // Construimos el payload para el backend
-    const payload: RegistroFotograficoPeticion = {
-      titulo: this.form.value.titulo,
-      fecha: this.form.value.fecha,
-      descripcion: this.form.value.descripcion,
-      file_path: this.form.value.file_path
-    };
+    // 1. Si hay archivo seleccionado, lo subimos a R2
+    // 2. Si no (modo edición sin cambiar imagen), usamos el file_path actual del form
+    const filePath$ = this.selectedFile
+      ? this.imagesService.uploadCompressedImage(this.selectedFile)
+      : of(this.form.value.file_path);
 
-    /**
-     * NOTA:
-     * Por ahora esto solo envía el `file_path` tal cual.
-     * Cuando conectemos la subida a R2, antes de llamar a create/update
-     * tendrás que:
-     *  1. Pedir URL firmada al backend.
-     *  2. Hacer PUT del archivo a esa URL.
-     *  3. Usar el `file_path` correcto en este payload.
-     */
+    filePath$
+      .pipe(
+        switchMap((filePath: string) => {
+          // Construimos el payload para el backend
+          const payload: RegistroFotograficoPeticion = {
+            titulo: this.form.value.titulo,
+            fecha: this.form.value.fecha,
+            descripcion: this.form.value.descripcion,
+            file_path: filePath
+          };
 
-    const request$ =
-      this.modo === 'create' || this.id == null
-        ? this.registroService.create(payload)
-        : this.registroService.update(this.id, payload);
+          // Según modo → create o update
+          if (this.modo === 'create' || !this.id) {
+            return this.registroService.create(payload);
+          } else {
+            return this.registroService.update(this.id, payload);
+          }
+        }),
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.saved.emit();
 
-    request$.subscribe({
-      next: () => {
-        this.saving = false;
-        this.saved.emit();
-        if (this.modo === 'create') {
-          this.form.reset();
-          this.selectedFile = null;
-          this.imagePreviewUrl = null;
+          // Si es create, limpiamos el form
+          if (this.modo === 'create') {
+            this.form.reset();
+            this.selectedFile = null;
+            this.imagePreviewUrl = null;
+          }
+        },
+        error: (err) => {
+          console.error('Error al guardar registro fotográfico:', err);
+          // Aquí puedes mostrar un Swal o un error en pantalla
         }
-      },
-      error: () => {
-        this.saving = false;
-      }
-    });
+      });
   }
 
   onCancel(): void {
