@@ -46,7 +46,7 @@ export class FormJurado implements OnChanges {
     return this.fb.group({
       // BaseProductivity
       titulo: ['', Validators.required],
-      tipoProductividad: ['Jurado - Comisiones evaluadoras de trabajo de grado', Validators.required],
+      tipoProductividad: ['Jurado', Validators.required],
       pais: ['', Validators.required],
       anio: ['', Validators.required],
       autores: [[], Validators.required],
