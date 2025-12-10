@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
-import { SectionInfoProductivity } from '../../templates/section-info-productivity/section-info-productivity';
 import { LoadingService } from '../../../../services/loading.service';
 import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
 import { ParticipacionComitesEvDTO } from '../../../../models/DTO/informacion/ParticipacionComitesEvDTO';
@@ -11,7 +10,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-comites',
-  imports: [CommonModule, Header, LoadingPage, SectionInfoProductivity],
+  imports: [CommonModule, Header, LoadingPage],
   templateUrl: './view-comites.html',
   styleUrl: './view-comites.css'
 })

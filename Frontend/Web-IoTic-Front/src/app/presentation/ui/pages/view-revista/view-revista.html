@@ -10,17 +10,86 @@
     <p class="text-help">Detalles y información de la revista</p>
   </section>
 
-  <!-- CONTENEDOR DE LA INFORMACIÓN -->
-  <div class="container-fluid px-3 px-md-4 form-container">
-    <div class="row justify-content-center">
-      <div class="col-12 section-view-item">
-        <app-section-info-productivity
-          [item]="revista"
-          [itemImageUrl]="revistaImageUrl"
-          tipo="revista">
-        </app-section-info-productivity>
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="revistaImageUrl" [alt]="revista.titulo" class="book-image">
+               <a 
+                  *ngIf="revista?.file_r2 && revista.file_r2 !== ''"
+                  [href]="revista.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ revista.titulo || 'Título de la Revista' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="revista?.autores && revista.autores.length">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ revista.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ revista.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ revista.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.issn">
+                    <h4 class="detail-label">ISSN</h4>
+                    <p class="detail-value">{{ revista.issn }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.volumen">
+                    <h4 class="detail-label">Volumen</h4>
+                    <p class="detail-value">{{ revista.volumen }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.fasc">
+                    <h4 class="detail-label">Fascículo</h4>
+                    <p class="detail-value">{{ revista.fasc }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.paginas">
+                    <h4 class="detail-label">Páginas</h4>
+                    <p class="detail-value">{{ revista.paginas }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.responsable && revista.responsable.length">
+                    <h4 class="detail-label">Responsable</h4>
+                    <p class="detail-value">{{ revista.responsable.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.linkDescargaArticulo">
+                    <h4 class="detail-label">Descarga de Artículo</h4>
+                    <p class="detail-value">
+                      <a [href]="revista.linkDescargaArticulo" target="_blank" rel="noopener noreferrer" class="link-value">
+                        <i class="fas fa-link"></i> Acceder al artículo
+                      </a>
+                    </p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="revista?.linksitioWeb">
+                    <h4 class="detail-label">Sitio Web</h4>
+                    <p class="detail-value">
+                      <a [href]="revista.linksitioWeb" target="_blank" rel="noopener noreferrer" class="link-value">
+                        <i class="fas fa-globe"></i> Visitar sitio web
+                      </a>
+                    </p>
+                  </div>
+                </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+  </section>
 </div>
 

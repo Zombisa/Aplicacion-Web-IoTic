@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
-import { SectionInfoProductivity } from '../../templates/section-info-productivity/section-info-productivity';
 import { LoadingService } from '../../../../services/loading.service';
 import { TutoriaEnMarchaService } from '../../../../services/information/tutoria-en-marcha.service';
 import { TutoriaEnMarchaDTO } from '../../../../models/DTO/informacion/TutoriaEnMarchaDTO';
@@ -11,7 +10,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-tutoria-en-marcha',
-  imports: [CommonModule, Header, LoadingPage, SectionInfoProductivity],
+  imports: [CommonModule, Header, LoadingPage],
   templateUrl: './view-tutoria-en-marcha.html',
   styleUrl: './view-tutoria-en-marcha.css'
 })

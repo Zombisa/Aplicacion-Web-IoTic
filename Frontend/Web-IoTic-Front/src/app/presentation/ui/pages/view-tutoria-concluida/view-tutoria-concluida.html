@@ -6,21 +6,77 @@
 
   <!-- BANNER -->
   <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
-    <h1 class="title text-center">Tutoría concluida</h1>
+    <h1 class="title text-center">Tutoría Concluida</h1>
     <p class="text-help">Detalles y información de la tutoría</p>
   </section>
 
-  <!-- CONTENEDOR DE LA INFORMACIÓN -->
-  <div class="container-fluid px-3 px-md-4 form-container">
-    <div class="row justify-content-center">
-      <div class="col-12 section-view-item">
-        <app-section-info-productivity
-          [item]="tutoria"
-          [itemImageUrl]="tutoriaImageUrl"
-          tipo="tutoria-concluida">
-        </app-section-info-productivity>
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="tutoriaImageUrl" [alt]="tutoria.titulo" class="book-image">
+               <a 
+                  *ngIf="tutoria?.file_r2 && tutoria.file_r2 !== ''"
+                  [href]="tutoria.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ tutoria.titulo || 'Título de Tutoría' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="tutoria?.autores && tutoria.autores.length">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ tutoria.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ tutoria.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ tutoria.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.programa">
+                    <h4 class="detail-label">Programa</h4>
+                    <p class="detail-value">{{ tutoria.programa }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.institucion">
+                    <h4 class="detail-label">Institución</h4>
+                    <p class="detail-value">{{ tutoria.institucion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.orientados && tutoria.orientados.length">
+                    <h4 class="detail-label">Orientados</h4>
+                    <p class="detail-value">{{ tutoria.orientados.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.fechaPublicacion">
+                    <h4 class="detail-label">Fecha de Publicación</h4>
+                    <p class="detail-value">{{ tutoria.fechaPublicacion | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.licencia">
+                    <h4 class="detail-label">Licencia</h4>
+                    <p class="detail-value">{{ tutoria.licencia }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.etiquetasGTI && tutoria.etiquetasGTI.length">
+                    <h4 class="detail-label">Etiquetas GTI</h4>
+                    <p class="detail-value">{{ tutoria.etiquetasGTI.join(', ') }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+  </section>
 </div>
 

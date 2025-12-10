@@ -1,7 +1,7 @@
+/* filepath: /home/santiago/Documentos/8 Semestre/Proyecto I/proyecto_git/help-frontend/Aplicacion-Web-IoTic/Frontend/Web-IoTic-Front/src/app/presentation/ui/pages/view-material-didactico/view-material-didactico.css */
 .banner-primary {
   background-color: var(--color-primary);
-  height: 20rem;
-  padding-top: 10rem;
+  height: 40rem;
 }
 
 .title {
@@ -12,14 +12,6 @@
   color: white;
   margin-top: 1px;
   font-weight: 300;
-}
-
-.form-container {
-  padding: 3rem 0;
-}
-
-.section-view-item {
-  margin-top: 2rem;
 }
 
 .banner-container {
@@ -34,7 +26,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* Imagen del Curso */
+/* Imagen del Material */
 .book-image {
   width: 100%;
   height: auto;
@@ -47,33 +39,6 @@
 
 .book-image:hover {
   transform: scale(1.02);
-}
-
-/* Contenedor de Video de YouTube */
-.video-container {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* Relación 16:9 */
-  height: 0;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  margin-bottom: 1rem;
-}
-
-.youtube-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-radius: 12px;
-  transition: box-shadow 0.3s ease;
-}
-
-.video-container:hover .youtube-video {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* Botón de Descarga */
@@ -107,7 +72,11 @@
   transform: translateY(0);
 }
 
-/* Detalles del Curso */
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+/* Detalles del Material */
 .book-details {
   padding: 0 1rem;
 }
@@ -138,10 +107,6 @@
   margin: 0;
 }
 
-.mt-3 {
-  margin-top: 1rem !important;
-}
-
 /* Responsive */
 @media (max-width: 991px) {
   .book-details {
@@ -156,9 +121,4 @@
   .book-image {
     max-height: 400px;
   }
-
-  .video-container {
-    padding-bottom: 56.25%;
-  }
 }
-
