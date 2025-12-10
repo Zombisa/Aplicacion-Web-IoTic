@@ -72,7 +72,37 @@ class ParticipacionComitesEvViewSet(viewsets.ModelViewSet):
             if comite_ev.usuario.uid_firebase != uid:
                 return Response ({'error': 'Solo puedes editar tus publicaciones'}, status=status.HTTP_403_FORBIDDEN)
             
-            serializer = ParticipacionComitesEvSerializer(comite_ev, data=request.data, partial=True)
+            #gestion para actualizar una imagen (se elimina y se sube otra en r2)
+            data = request.data.copy()
+            image_path = data.pop('image_path', None)
+            if image_path and not data.get('image_r2'):
+                data['image_r2'] = f"{settings.R2_BUCKET_PATH}/{image_path}"
+            
+            nueva_imagen = data.get('image_r2')
+            if nueva_imagen and comite_ev.image_r2 and nueva_imagen != comite_ev.image_r2:
+                imagen_anterior = comite_ev.image_r2
+                filename = imagen_anterior.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=filename)
+                except Exception as e:
+                    # Log del error pero continuar con la actualización
+                    print(f"Error eliminando imagen anterior de R2: {str(e)}")
+            
+            #gestion para actualizar un archivo (se elimina y se sube otro en r2)
+            file_path = data.pop('archivo_path', None)
+            if file_path and not data.get('file_r2'):
+                data['file_r2'] = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                
+            nuevo_archivo = data.get('file_r2')
+            if nuevo_archivo and comite_ev.file_r2 and nuevo_archivo != comite_ev.file_r2:
+                archivo_anterior = comite_ev.file_r2
+                filename = archivo_anterior.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=filename)
+                except Exception as e:
+                    print(f"Error eliminando archivo anterior de R2: {str(e)}")
+            
+            serializer = ParticipacionComitesEvSerializer(comite_ev, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
