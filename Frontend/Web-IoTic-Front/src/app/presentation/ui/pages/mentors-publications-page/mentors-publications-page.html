@@ -1,0 +1,30 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+  
+  <div class="page-container">
+    <div class="title-section">
+      <h1 class="page-title">Publicaciones por Usuario</h1>
+      <p class="page-subtitle">Usuarios con publicaciones registradas</p>
+      <div class="title-divider"></div>
+    </div>
+
+    <section class="content-section">
+      <div *ngIf="usersWithPublications.length === 0" class="no-mentors">
+        <p>No se encontraron usuarios con publicaciones registradas.</p>
+      </div>
+
+      <div *ngIf="usersWithPublications.length > 0" class="mentors-list">
+        <app-mentor-publications-card
+          *ngFor="let userData of usersWithPublications"
+          [mentor]="userData.user"
+          [publications]="userData.publications"
+          [isLoading]="userData.isLoading">
+        </app-mentor-publications-card>
+      </div>
+    </section>
+  </div>
+</div>
+

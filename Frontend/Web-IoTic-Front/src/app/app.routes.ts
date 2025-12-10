@@ -37,6 +37,7 @@ import { ViewProcesoTecnica } from './presentation/ui/pages/view-proceso-tecnica
 import { ViewComites } from './presentation/ui/pages/view-comites/view-comites';
 import { ViewJurado } from './presentation/ui/pages/view-jurado/view-jurado';
 import { MyProfile } from './presentation/ui/pages/my-profile/my-profile';
+import { MentorsPublicationsPage } from './presentation/ui/pages/mentors-publications-page/mentors-publications-page';
 
 export const routes: Routes = [
 
@@ -76,4 +77,5 @@ export const routes: Routes = [
      {path: 'productividad/participacion-comites/:id', component: ViewComites},
      {path: 'productividad/jurado/:id', component: ViewJurado},
      {path: 'productividad/editar/:tipo/:id', component: EditProductiviy},
+     {path: 'mentores-publicaciones', component: MentorsPublicationsPage},
 ];

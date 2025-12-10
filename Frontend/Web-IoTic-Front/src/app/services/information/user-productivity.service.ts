@@ -29,6 +29,7 @@ export class UserProductivityService {
   // Mapeo de tipos de productividad a nombres legibles
   private tipoDisplayMap: Record<string, string> = {
     'libro': 'Libro',
+    'capitulo': 'Capítulo de libro',
     'capitulos': 'Capítulo de libro',
     'curso': 'Curso corto',
     'evento': 'Evento/Seminario',
@@ -65,6 +66,8 @@ export class UserProductivityService {
    * @returns Observable con lista de publicaciones del usuario
    */
   getProductivityByUserId(userId: number): Observable<UserProductivityItem[]> {
+    console.log(`Buscando publicaciones para usuario ID: ${userId}`);
+    
     // Consultar todos los tipos de productividad en paralelo
     return forkJoin({
       libros: this.booksService.getBooks().pipe(catchError(() => of([]))),
@@ -83,85 +86,169 @@ export class UserProductivityService {
     }).pipe(
       map(results => {
         const allItems: UserProductivityItem[] = [];
+        
+        console.log(`Resultados recibidos para usuario ${userId}:`, {
+          libros: (results.libros as BaseProductivityDTO[])?.length || 0,
+          capitulos: (results.capitulos as BaseProductivityDTO[])?.length || 0,
+          cursos: (results.cursos as BaseProductivityDTO[])?.length || 0,
+          eventos: (results.eventos as BaseProductivityDTO[])?.length || 0,
+          revistas: (results.revistas as BaseProductivityDTO[])?.length || 0,
+          software: (results.software as BaseProductivityDTO[])?.length || 0,
+          tutoriasConcluidas: (results.tutoriasConcluidas as BaseProductivityDTO[])?.length || 0,
+          tutoriasEnMarcha: (results.tutoriasEnMarcha as BaseProductivityDTO[])?.length || 0,
+          trabajosEventos: (results.trabajosEventos as BaseProductivityDTO[])?.length || 0,
+          participacionComites: (results.participacionComites as BaseProductivityDTO[])?.length || 0,
+          materialDidactico: (results.materialDidactico as BaseProductivityDTO[])?.length || 0,
+          jurados: (results.jurados as BaseProductivityDTO[])?.length || 0,
+          procesosTecnicas: (results.procesosTecnicas as BaseProductivityDTO[])?.length || 0
+        });
 
         // Filtrar y agregar libros
         const libros = (results.libros as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            // Manejar casos donde usuario puede ser número o string
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            const matches = itemUsuario === userId;
+            if (matches) {
+              console.log(`Libro encontrado para usuario ${userId}:`, item.titulo);
+            }
+            return matches;
+          })
           .map(item => ({ ...item, tipo: 'libro', tipoDisplay: this.tipoDisplayMap['libro'] }));
         allItems.push(...libros);
 
         // Filtrar y agregar capítulos
         const capitulos = (results.capitulos as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
-          .map(item => ({ ...item, tipo: 'capitulo', tipoDisplay: this.tipoDisplayMap['capitulo'] }));
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            const matches = itemUsuario === userId;
+            if (matches) {
+              console.log(`Capítulo encontrado para usuario ${userId}:`, item.titulo);
+            }
+            return matches;
+          })
+          .map(item => ({ ...item, tipo: 'capitulo', tipoDisplay: this.tipoDisplayMap['capitulo'] || 'Capítulo de libro' }));
         allItems.push(...capitulos);
 
         // Filtrar y agregar cursos
         const cursos = (results.cursos as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'curso', tipoDisplay: this.tipoDisplayMap['curso'] }));
         allItems.push(...cursos);
 
         // Filtrar y agregar eventos
         const eventos = (results.eventos as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'evento', tipoDisplay: this.tipoDisplayMap['evento'] }));
         allItems.push(...eventos);
 
         // Filtrar y agregar revistas
         const revistas = (results.revistas as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
-          .map(item => ({ ...item, tipo: 'revista', tipoDisplay: this.tipoDisplayMap['revista'] }));
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
+          .map(item => ({ ...item, tipo: 'revista', tipoDisplay: this.tipoDisplayMap['revista'] || 'Revista' }));
         allItems.push(...revistas);
+        
+        if (revistas.length > 0) {
+          console.log(`Revistas encontradas para usuario ${userId}:`, revistas.length);
+        }
 
         // Filtrar y agregar software
         const software = (results.software as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'software', tipoDisplay: this.tipoDisplayMap['software'] }));
         allItems.push(...software);
 
         // Filtrar y agregar tutorías concluidas
         const tutoriasConcluidas = (results.tutoriasConcluidas as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'tutoria-concluida', tipoDisplay: this.tipoDisplayMap['tutoria_concluida'] }));
         allItems.push(...tutoriasConcluidas);
 
         // Filtrar y agregar tutorías en marcha
         const tutoriasEnMarcha = (results.tutoriasEnMarcha as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'tutoria-en-marcha', tipoDisplay: this.tipoDisplayMap['tutoria_en_marcha'] }));
         allItems.push(...tutoriasEnMarcha);
 
         // Filtrar y agregar trabajos en eventos
         const trabajosEventos = (results.trabajosEventos as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'trabajo-eventos', tipoDisplay: this.tipoDisplayMap['trabajo_eventos'] }));
         allItems.push(...trabajosEventos);
 
         // Filtrar y agregar participación en comités
         const participacionComites = (results.participacionComites as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'participacion-comites', tipoDisplay: this.tipoDisplayMap['participacion_comites'] }));
         allItems.push(...participacionComites);
 
         // Filtrar y agregar material didáctico
         const materialDidactico = (results.materialDidactico as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'material-didactico', tipoDisplay: this.tipoDisplayMap['material_didactico'] }));
         allItems.push(...materialDidactico);
 
         // Filtrar y agregar jurados
         const jurados = (results.jurados as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'jurado', tipoDisplay: this.tipoDisplayMap['jurado'] }));
         allItems.push(...jurados);
 
         // Filtrar y agregar procesos o técnicas
         const procesosTecnicas = (results.procesosTecnicas as BaseProductivityDTO[])
-          .filter(item => item.usuario === userId)
+          .filter(item => {
+            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
+            return itemUsuario === userId;
+          })
           .map(item => ({ ...item, tipo: 'proceso-tecnica', tipoDisplay: this.tipoDisplayMap['proceso_tecnica'] }));
         allItems.push(...procesosTecnicas);
 
+        console.log(`Total de publicaciones encontradas para usuario ${userId}: ${allItems.length}`);
+        console.log(`Desglose por tipo:`, {
+          libros: allItems.filter(i => i.tipo === 'libro').length,
+          capitulos: allItems.filter(i => i.tipo === 'capitulo').length,
+          cursos: allItems.filter(i => i.tipo === 'curso').length,
+          eventos: allItems.filter(i => i.tipo === 'evento').length,
+          revistas: allItems.filter(i => i.tipo === 'revista').length,
+          software: allItems.filter(i => i.tipo === 'software').length,
+          tutoriasConcluidas: allItems.filter(i => i.tipo === 'tutoria-concluida').length,
+          tutoriasEnMarcha: allItems.filter(i => i.tipo === 'tutoria-en-marcha').length,
+          trabajosEventos: allItems.filter(i => i.tipo === 'trabajo-eventos').length,
+          participacionComites: allItems.filter(i => i.tipo === 'participacion-comites').length,
+          materialDidactico: allItems.filter(i => i.tipo === 'material-didactico').length,
+          jurados: allItems.filter(i => i.tipo === 'jurado').length,
+          procesosTecnicas: allItems.filter(i => i.tipo === 'proceso-tecnica').length
+        });
         return allItems;
       })
     );
