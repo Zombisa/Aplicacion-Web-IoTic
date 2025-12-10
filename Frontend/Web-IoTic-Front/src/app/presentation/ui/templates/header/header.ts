@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Component, computed, inject, signal, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { NgForm } from '@angular/forms';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header implements OnDestroy {
+export class Header implements OnInit, OnDestroy {
   public router = inject(Router);
   private authService = inject(AuthService);
   private subscription = new Subscription();
@@ -37,13 +37,36 @@ export class Header implements OnDestroy {
       { path: '/home', icon: 'home', label: 'Inicio', show: true },
       { path: '/who-we-are', icon: 'groups', label: 'Quienes somos', show: true },
       { path: '/productividad', icon: 'widgets', label: 'Proyectos', show: true},
-      { path: '/inventario', icon: 'inventory_2', label: 'Inventario', show: true },
+      { path: '/inventario', icon: 'inventory_2', label: 'Inventario', show: isAdmin },
       { path: '/usuarios', icon: 'people', label: 'Quienes somos', show: true},
       { path: '/user', icon: 'person', label: 'Perfil', show: true }
     ];
   });
 
   constructor() {}
+
+  ngOnInit(): void {
+    // Suscribirse al estado de autenticación
+    this.subscription.add(
+      this.authService.currentUser.subscribe(user => {
+        this.isLoggedIn.set(!!user);
+        this.hasAuthenticatedUser.set(!!user);
+        if (user) {
+          this.userName.set(user.displayName || user.email || null);
+        } else {
+          this.userName.set(null);
+          this.isAdmin.set(false);
+        }
+      })
+    );
+
+    // Suscribirse al estado de admin
+    this.subscription.add(
+      this.authService.isAdmin().subscribe(isAdmin => {
+        this.isAdmin.set(isAdmin);
+      })
+    );
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
