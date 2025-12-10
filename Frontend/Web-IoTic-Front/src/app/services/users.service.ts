@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, map } from 'rxjs';
 import { UserDTO } from '../models/DTO/UserDTO';
 import { AppConfigService } from './common/app-config.service';
 
@@ -94,6 +94,23 @@ export class UsersService {
     return this.http.get<UserDTO>(`${this.config.apiUrlBackend}usuarios/${userId}/`).pipe(
       catchError(error => {
         console.error('Error al obtener usuario por ID:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Obtiene el usuario actual basado en el email de Firebase
+   * @param email Email del usuario autenticado
+   */
+  getCurrentUserByEmail(email: string): Observable<UserDTO | null> {
+    return this.getUsers().pipe(
+      map(users => {
+        const user = users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+        return user || null;
+      }),
+      catchError(error => {
+        console.error('Error al obtener usuario actual:', error);
         return throwError(() => error);
       })
     );

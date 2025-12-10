@@ -25,9 +25,35 @@
         <mat-icon class="me-1">logout</mat-icon>
       </button>
     </div>
-    <!-- Sección de Acciones -->
+    <!-- Sección de Mi Perfil (para admin y mentor) -->
+    <div class="actions-section" *ngIf="isAdminOrMentor$ | async">
+      <h2 class="actions-title">Mi Perfil</h2>
+      <div class="actions-divider"></div>
+      
+      <div class="actions-grid">
+        <!-- Tarjeta de Mi Perfil -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Ver mi perfil</h3>
+            <mat-icon class="action-icon">person</mat-icon>
+            <button class="btn-action" (click)="navigateTo('/mi-perfil')">Pulsa aqui</button>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Publicaciones -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Publicaciones</h3>
+            <mat-icon class="action-icon">article</mat-icon>
+            <button class="btn-action" (click)="navigateTo('productividad/panel')">Pulsa aqui</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Acciones (solo para admin) -->
     <div class="actions-section" *ngIf="isAdmin$ | async">
-      <h2 class="actions-title">Acciones</h2>
+      <h2 class="actions-title">Acciones de Administrador</h2>
       <div class="actions-divider"></div>
       
       <div class="actions-grid">
@@ -48,20 +74,14 @@
             <button class="btn-action" (click)="navigateTo('/usuarios')">Pulsa aqui</button>
           </div>
         </div>
+        
+        <!-- Tarjeta de Edición de Who We Are -->
         <div class="action-card">
           <div class="action-card-content">
-            <h3 class="action-card-title">Publicaciones</h3>
-            <mat-icon class="action-icon">Publicacion </mat-icon>
-            <button class="btn-action" (click)="navigateTo('productividad/panel')">Pulsa aqui</button>
+            <h3 class="action-card-title">Editar ¿Quiénes somos?</h3>
+            <mat-icon class="action-icon">edit_note</mat-icon>
+            <button class="btn-action" (click)="navigateTo('who-we-are/edit')">Pulsa aqui</button>
           </div>
         </div>
-                <!-- Tarjeta de Edición de Who We Are -->
-                <div class="action-card">
-                  <div class="action-card-content">
-                    <h3 class="action-card-title">Editar ¿Quiénes somos?</h3>
-                    <mat-icon class="action-icon">edit_note</mat-icon>
-                    <button class="btn-action" (click)="navigateTo('who-we-are/edit')">Pulsa aqui</button>
-                  </div>
-                </div>
-              </div>
       </div>
+    </div>

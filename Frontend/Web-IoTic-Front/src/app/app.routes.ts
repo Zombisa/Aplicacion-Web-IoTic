@@ -18,6 +18,7 @@ import { PublisItemProductiviy } from './presentation/ui/pages/publis-item-produ
 import { PanelPublishProductivity } from './presentation/ui/pages/panel-publish-productivity/panel-publish-productivity';
 import { EditWhoWeAre } from './presentation/ui/pages/edit-who-we-are/edit-who-we-are';
 import { AdminGuard } from './guards/admin-guard-guard';
+import { AdminOrMentorGuard } from './guards/admin-or-mentor-guard';
 import { UsersManagementPageComponent } from './presentation/ui/pages/users-management-page/users-management-page';
 import { AddUser } from './presentation/ui/pages/add-user/add-user';
 import { ViewUser } from './presentation/ui/pages/view-user/view-user';
@@ -35,6 +36,7 @@ import { EditProductiviy } from './presentation/ui/pages/edit-item-productiviy/e
 import { ViewProcesoTecnica } from './presentation/ui/pages/view-proceso-tecnica/view-proceso-tecnica';
 import { ViewComites } from './presentation/ui/pages/view-comites/view-comites';
 import { ViewJurado } from './presentation/ui/pages/view-jurado/view-jurado';
+import { MyProfile } from './presentation/ui/pages/my-profile/my-profile';
 
 export const routes: Routes = [
 
@@ -42,6 +44,7 @@ export const routes: Routes = [
      { path: 'login', component: LoginPage },
      { path: 'home', component: HomePage },
      { path: 'user', component: UserPage, canActivate: [AuthGuard] },
+     { path: 'mi-perfil', component: MyProfile, canActivate: [AuthGuard] },
      { path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard] },
      { path: 'usuarios/add', component: AddUser, canActivate: [AuthGuard, AdminGuard] },
      { path: 'usuarios/view/:id', component: ViewUser, canActivate: [AuthGuard] },
@@ -56,8 +59,8 @@ export const routes: Routes = [
      {path: 'inventario/history', component: ViewHistoryLoan},
      {path: 'productividad', component: ProductivityPage},
      {path: 'productividad/lista/:tipo', component: ProductivityListTypePage},
-     {path: 'productividad/panel', component: PanelPublishProductivity},
-     {path: 'productividad/panel/formulario/:tipo', component: PublisItemProductiviy},
+     {path: 'productividad/panel', component: PanelPublishProductivity, canActivate: [AuthGuard, AdminOrMentorGuard]},
+     {path: 'productividad/panel/formulario/:tipo', component: PublisItemProductiviy, canActivate: [AuthGuard, AdminOrMentorGuard]},
      {path: 'productividad/libros/:id', component: ViewBook},
      {path: 'productividad/capitulos/:id', component: ViewCapBook},
      {path: 'productividad/cursos/:id', component: ViewCurso},

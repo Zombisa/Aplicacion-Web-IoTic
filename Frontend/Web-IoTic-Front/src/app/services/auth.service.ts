@@ -207,6 +207,35 @@ export class AuthService {
         );
   }
   /**
+   * 
+   * @returns Un observable que emite true si el usuario tiene el rol de mentor, false en caso contrario.
+   */
+  isMentor(): Observable<boolean> {
+        return this.getUserClaims().pipe(
+          map(claims => {
+            const role = claims && claims['role'];
+            const isMentor = role === 'mentor';
+            return isMentor;
+          })
+        );
+  }
+
+  /**
+   * Verifica si el usuario tiene rol de administrador o mentor
+   * @returns Un observable que emite true si el usuario tiene el rol de admin o mentor, false en caso contrario.
+   */
+  public isAdminOrMentor(): Observable<boolean> {
+    return this.getUserClaims().pipe(
+      map(claims => {
+        if (!claims) {
+          return false;
+        }
+        const role = claims['role'];
+        return role === 'admin' || role === 'mentor';
+      })
+    );
+  }
+  /**
    * Cierra la sesión del usuario actualmente autenticado.
    */
   logout() {

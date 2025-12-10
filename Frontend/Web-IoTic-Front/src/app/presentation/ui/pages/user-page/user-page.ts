@@ -17,6 +17,7 @@ import { map, startWith } from 'rxjs/operators';
 export class UserPage implements OnInit {
   user$!: Observable<User | null>;
   isAdmin$!: Observable<boolean>;
+  isAdminOrMentor$!: Observable<boolean>;
   constructor(public router: Router, private authService: AuthService) {}
   ngOnInit(): void {
     this.user$ = this.authService.currentUser;
@@ -25,6 +26,13 @@ export class UserPage implements OnInit {
       map(isAdmin => {
         console.log('¿Es admin?:', isAdmin);
         return isAdmin;
+      })
+    );
+    this.isAdminOrMentor$ = this.authService.isAdminOrMentor().pipe(
+      startWith(false),
+      map(isAdminOrMentor => {
+        console.log('¿Es admin o mentor?:', isAdminOrMentor);
+        return isAdminOrMentor;
       })
     );
     this.user$.subscribe(user => {
