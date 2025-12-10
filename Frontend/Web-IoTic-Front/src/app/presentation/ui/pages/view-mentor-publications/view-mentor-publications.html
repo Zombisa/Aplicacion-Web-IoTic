@@ -1,0 +1,95 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid">
+    <!-- Banner del usuario -->
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="banner-primary d-flex justify-content-start align-items-center px-4">
+          <div class="user-avatar me-4">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="user-info">
+            <h2 class="user-name-banner">{{ getFullName() }}</h2>
+            <p class="user-email">{{ user?.email }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="showError" class="alert alert-danger mt-4 mx-4" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Contenido principal -->
+    <section *ngIf="!showError && user" class="user-content">
+      <div class="container-fluid px-3 px-md-4">
+        <div class="row">
+          <!-- Información del usuario -->
+          <div class="col-12 col-md-6 mb-4">
+            <div class="info-section">
+              <h3 class="info-label">Nombre</h3>
+              <p class="info-value">{{ user.nombre || '—' }}</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 mb-4">
+            <div class="info-section">
+              <h3 class="info-label">Apellido</h3>
+              <p class="info-value">{{ user.apellido || '—' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publicaciones del usuario -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2 class="publications-title">Publicaciones</h2>
+          </div>
+        </div>
+
+        <div *ngIf="loadingPublications" class="text-center py-4">
+          <p>Cargando publicaciones...</p>
+        </div>
+
+        <div *ngIf="!loadingPublications && publications.length === 0" class="no-publications">
+          <p>No hay publicaciones para mostrar.</p>
+        </div>
+
+        <div *ngIf="!loadingPublications && publications.length > 0" class="publications-grid">
+          <div 
+            *ngFor="let publication of publications" 
+            class="publication-card"
+            (click)="navigateToPublication(publication.tipo, publication.id)">
+            <div class="publication-image-wrapper">
+              <img 
+                *ngIf="publication.image_r2" 
+                [src]="publication.image_r2" 
+                [alt]="publication.titulo" 
+                class="publication-image">
+              <div *ngIf="!publication.image_r2" class="publication-image-placeholder">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="publication-info">
+              <h3 class="publication-title">{{ publication.titulo || 'Sin título' }}</h3>
+              <p class="publication-type">{{ publication.tipoDisplay || publication.tipoProductividad }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+

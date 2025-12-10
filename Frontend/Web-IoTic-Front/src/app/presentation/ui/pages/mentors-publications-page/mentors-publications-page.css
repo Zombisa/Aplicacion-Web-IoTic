@@ -47,10 +47,49 @@
   font-size: 1.125rem;
 }
 
-.mentors-list {
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.user-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.user-icon {
+  width: 80px;
+  height: 80px;
+  color: #6c757d;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  word-break: break-word;
 }
 
 /* Responsive */
