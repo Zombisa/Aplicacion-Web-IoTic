@@ -2098,7 +2098,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{access_tokenMentor}}",
+											"value": "{{access_token}}",
 											"type": "string"
 										}
 									]
@@ -2107,7 +2107,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"titulo\": \"Noticia nueva\",\r\n  \"contenido\": \"El semillero presentó nuevos proyectos de automatización.\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"raw": "{\r\n  \"titulo\": \"Noticia otra\",\r\n  \"contenido\": \"El semillero presentó nuevos proyectos de automatización.\",\r\n  \"image_path\": \"url cloudflare\",\r\n  \"archivo_path\": \"url archivo\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6649,6 +6649,55 @@
 										"informacion",
 										"urlfirmada",
 										"files",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Publicaciones",
+					"item": [
+						{
+							"name": "Todas las publicaciones by Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/publicaciones/2/Publicaciones/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"publicaciones",
+										"2",
+										"Publicaciones",
 										""
 									]
 								}

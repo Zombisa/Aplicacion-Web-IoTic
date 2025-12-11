@@ -15,6 +15,7 @@ from apps.informacion.Views.ProcesoTecnicaView import ProcesoTecnicaViewSet
 from apps.informacion.Views.TutoriaConcluidaView import TutoriaConcluidaViewSet
 from apps.informacion.Views.TutoriaEnMarchaView import TutoriaEnMarchaViewSet
 from apps.informacion.Views.GenerarUrlR2 import GenerarURLR2ViewSet
+from apps.informacion.Views.PublicacionesView import PublicacionesViewSet
 from apps.informacion.Views.RegistroFotograficoView import RegistroFotograficoViewSet
 from apps.informacion.Views.ProductividadView import (
     MisionViewSet, VisionViewSet, HistoriaViewSet,
@@ -43,6 +44,7 @@ router.register(r'vision', VisionViewSet, basename='vision')
 router.register(r'historia', HistoriaViewSet, basename='historia')
 router.register(r'objetivos', ObjetivoViewSet, basename='objetivos')
 router.register(r'valores', ValorViewSet, basename='valores')
+router.register(r'publicaciones', PublicacionesViewSet, basename='publicaciones')
 
 urlpatterns = [
     path('', include(router.urls)),
