@@ -166,3 +166,41 @@
 .btn-outline-secondary {
     width: 100%;
 }
+
+.document-button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.document-button:hover {
+    background-color: #0056b3;
+}
+
+.document-button.file-loaded {
+    background-color: #28a745;
+}
+
+.remove-button {
+    width: 100%;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.remove-button:hover {
+    background-color: #c82333;
+}

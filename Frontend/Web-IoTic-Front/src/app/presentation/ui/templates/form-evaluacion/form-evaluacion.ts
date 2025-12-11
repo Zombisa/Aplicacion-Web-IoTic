@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { ParticipacionComitesEvDTO } from '../../../../models/DTO/informacion/ParticipacionComitesEvDTO';
 import { ParticipacionComitesEvService } from '../../../../services/information/participacion-comites-ev.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-form-evaluacion',
@@ -140,8 +141,11 @@ export class FormEvaluacion implements OnInit{
      * Elimina el documento seleccionado
      */
     removeFile(): void {
-        this.selectedDocument = null;
-        this.existingDocumentName = null;
+        if (this.existingDocumentName) {
+            this.existingDocumentName = null;
+        } else {
+            this.selectedDocument = null;
+        }
     }
 
     /**
@@ -153,6 +157,27 @@ export class FormEvaluacion implements OnInit{
             return;
         }
 
+        // Si estamos en modo edición y el usuario removió el documento existente
+        if (this.editMode && !this.existingDocumentName && this.evaluationData.file_r2) {
+            this.serviceEvaluation.deleteFile(this.evaluationData.id!).subscribe({
+                next: () => this.emitirFormulario(),
+                error: (err: any) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el documento'
+                    });
+                }
+            });
+        } else {
+            this.emitirFormulario();
+        }
+    }
+
+    /**
+     * Emite el formulario con los datos convertidos
+     */
+    private emitirFormulario(): void {
         // Preparar datos
         const formData = { ...this.form.value };
         

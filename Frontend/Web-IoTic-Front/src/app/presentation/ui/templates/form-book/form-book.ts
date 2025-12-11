@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { BookDTO } from '../../../../models/DTO/BookDTO';
@@ -27,6 +27,7 @@ export class FormBook implements OnInit {
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
       private serviceBook: BooksService
@@ -92,6 +93,10 @@ export class FormBook implements OnInit {
     if (data.image_r2) {
       this.imagePreview = data.image_r2;
     }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
+    }
   }
 
   onFileSelected(event: any) {
@@ -128,7 +133,11 @@ export class FormBook implements OnInit {
   }
 
   removeFile() {
-    this.selectedDocument = null;
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
   }
 
   private resetForm() {
@@ -143,6 +152,31 @@ export class FormBook implements OnInit {
       return;
     }
 
+    // Si en modo editar se quitó un documento existente, eliminarlo del servidor antes de emitir
+    if (this.editMode && !this.existingDocumentName && this.bookData.file_r2) {
+      this.serviceBook.deleteFile(this.bookData.id!).subscribe({
+        next: () => {
+          this.emitirFormulario();
+        },
+        error: (err: any) => {
+          console.error("Error al eliminar documento:", err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar documento',
+            text: 'No se pudo eliminar el documento. Intenta de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
     // Preparar datos
     const formData = { ...this.form.value };
     

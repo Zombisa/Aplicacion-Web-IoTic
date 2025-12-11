@@ -1,7 +1,8 @@
+<h1 class="title">Tutoria en marcha</h1>
 <form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
   <div class="row g-4">
 
-    <!-- Upload Image -->
+    <!-- Upload Image and Document -->
     <section class="col-12 col-lg-6 column">
       <div class="image-upload-box">
         <input
@@ -27,26 +28,31 @@
             <p class="upload-text">Haz clic para subir imagen</p>
           </div>
         </div>
-      </div>
 
-      <!-- Upload Document Box -->
-      <div class="document-upload-box">
+        <!-- Document Upload Buttons -->
         <input
           type="file"
           #documentInput
-          class="file-input-hidden"
-          accept=".pdf,.doc,.docx,.txt"
+          hidden
           (change)="onDocumentSelected($event)" />
-        
-        <div class="document-upload-area" (click)="documentInput.click()">
-          <div class="document-upload-placeholder">
-            <i class="fas fa-file-alt document-icon"></i>
-            <p class="document-upload-text">
-              <span *ngIf="!selectedDocument">Haz clic para subir archivo (opcional)</span>
-              <span *ngIf="selectedDocument">{{ selectedDocument.name }}</span>
-            </p>
-          </div>
-        </div>
+
+        <button
+          class="btn btn-outline-secondary mt-3"
+          (click)="documentInput.click()"
+          [class.file-loaded]="selectedDocument || existingDocumentName"
+          type="button"
+        >
+          {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+        </button>
+
+        <button
+          *ngIf="selectedDocument || existingDocumentName"
+          class="btn btn-danger mt-2"
+          (click)="removeFile()"
+          type="button"
+        >
+          Quitar archivo ✖
+        </button>
       </div>
     </section>
 
@@ -131,13 +137,15 @@
         <label>Licencia</label>
       </div>
 
-    </section>
-
-    <div class="col-12">
+          <div class="col-12">
       <button type="submit" class="btn btn-primary">
         Guardar Tutoría en Marcha
       </button>
     </div>
+
+    </section>
+
+
 
   </div>
 </form>

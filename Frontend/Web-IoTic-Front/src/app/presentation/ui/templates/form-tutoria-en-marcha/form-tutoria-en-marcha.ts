@@ -24,6 +24,7 @@ export class FormTutoriaEnMarcha implements OnInit {
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private  serviceTutoria: TutoriaEnMarchaService
@@ -90,6 +91,10 @@ export class FormTutoriaEnMarcha implements OnInit {
     if (data.image_r2) {
       this.imagePreview = data.image_r2;
     }
+
+    if ((data as any).file_r2) {
+      this.existingDocumentName = (data as any).file_r2;
+    }
   }
 
   /** --- Métodos para arrays --- */
@@ -126,6 +131,14 @@ export class FormTutoriaEnMarcha implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
     this.selectedDocument = file;
+  }
+
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
   }
 
   /** --- Submit --- */

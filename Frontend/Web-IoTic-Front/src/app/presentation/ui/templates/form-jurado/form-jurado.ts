@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { JuradoDTO } from '../../../../models/DTO/informacion/JuradoDTO';
 import { JuradoService } from '../../../../services/information/jurado.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-jurado',
@@ -27,6 +28,7 @@ export class FormJurado implements OnInit {
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private serviceJurado: JuradoService
@@ -99,6 +101,10 @@ export class FormJurado implements OnInit {
     if ((data as any).image_url || data.image_r2) {
       this.imagePreview = (data as any).image_url || data.image_r2!;
     }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
+    }
   }
 
   /**
@@ -166,6 +172,17 @@ export class FormJurado implements OnInit {
   }
 
   /**
+   * Quita el archivo documento seleccionado
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /**
    * Envía el formulario al componente padre
    */
   submitForm(): void {
@@ -174,6 +191,27 @@ export class FormJurado implements OnInit {
       return;
     }
 
+    // Si estamos en modo edición y el usuario removió el documento existente
+    if (this.editMode && !this.existingDocumentName && this.juradoData.file_r2) {
+      this.serviceJurado.deleteFile(this.juradoData.id!).subscribe({
+        next: () => this.emitirFormulario(),
+        error: (err: any) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el documento'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario con los datos convertidos
+   */
+  private emitirFormulario(): void {
     const payload: FormSubmitPayload = {
       data: this.form.value,
       file_image: this.selectedFile,

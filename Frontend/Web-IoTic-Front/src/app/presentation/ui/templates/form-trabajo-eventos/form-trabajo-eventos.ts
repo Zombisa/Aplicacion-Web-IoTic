@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TrabajoEventosDTO } from '../../../../models/DTO/informacion/TrabajoEventosDTO';
 import { TrabajoEventosService } from '../../../../services/information/trabajo-eventos.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-trabajo-eventos',
@@ -22,6 +23,7 @@ export class FormTrabajoEventos implements OnInit {
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private serviceTrabajoEventos: TrabajoEventosService
@@ -36,7 +38,7 @@ export class FormTrabajoEventos implements OnInit {
   private cargarInfo() {  
     this.serviceTrabajoEventos.getById(this.data.id!).subscribe({  
       next: (data) => {     
-        console.log(data);
+        console.log("CARGADO:",data);
         this.data = data;
         this.populateForm(this.data);
       },
@@ -52,9 +54,9 @@ export class FormTrabajoEventos implements OnInit {
     return this.fb.group({
       // BaseProductivity
       titulo: ['', Validators.required],
-      tipoProductividad: ['Trabajo en Evento', Validators.required],
-      pais: ['', Validators.required],
+      tipoProductividad: ['Trabajo evento'],
       anio: ['', Validators.required],
+      pais: ['', Validators.required],
       autores: [[], Validators.required],
 
       // Campos propios de TrabajoEventos
@@ -64,7 +66,7 @@ export class FormTrabajoEventos implements OnInit {
       tituloActas: ['', Validators.required],
       isbn: ['', Validators.required],
       paginas: ['', Validators.required],
-      etiquetas: [[]],
+      etiquetas: [[],Validators.required],
       propiedadIntelectual: ['', Validators.required],
       image_url: ['']
     });
@@ -74,9 +76,9 @@ export class FormTrabajoEventos implements OnInit {
     this.form.patchValue({
       // BaseProductivity
       titulo: data.titulo,
-      tipoProductividad: data.tipoProductividad || 'Trabajo en Evento',
-      pais: data.pais,
+      tipoProductividad: data.tipoProductividad,
       anio: data.anio,
+      pais: data.pais,
       autores: data.autores || [],
 
       // Campos propios de TrabajoEventos
@@ -93,6 +95,10 @@ export class FormTrabajoEventos implements OnInit {
 
     if ( data.image_r2) {
       this.imagePreview =  data.image_r2!;
+    }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
     }
   }
 
@@ -123,12 +129,44 @@ export class FormTrabajoEventos implements OnInit {
     this.selectedDocument = file;
   }
 
+  /**
+   * Quita el archivo documento seleccionado
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
   submitForm() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    // Si estamos en modo edición y el usuario removió el documento existente
+    if (this.editMode && !this.existingDocumentName && this.data.file_r2) {
+      this.serviceTrabajoEventos.deleteFile(this.data.id!).subscribe({
+        next: () => this.emitirFormulario(),
+        error: (err: any) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el documento'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
     const dtoSubmit: FormSubmitPayload = {
       data: this.form.value,
       file_image: this.selectedFile,
@@ -136,5 +174,8 @@ export class FormTrabajoEventos implements OnInit {
     };
 
     this.formSubmit.emit(dtoSubmit);
-  }
-}
+ }
+ }
+  
+
+

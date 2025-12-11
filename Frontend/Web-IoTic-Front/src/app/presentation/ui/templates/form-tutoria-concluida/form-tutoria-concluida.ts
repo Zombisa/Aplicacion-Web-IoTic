@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TutoriaConcluidaDTO } from '../../../../models/DTO/informacion/TutoriaConcluidaDTO';
 import { TutoriaConcluidaService } from '../../../../services/information/tutoria-concluida.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-tutoria-concluida',
@@ -27,6 +28,7 @@ export class FormTutoriaConcluida implements OnInit{
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private serviceTutoria: TutoriaConcluidaService
@@ -60,9 +62,9 @@ export class FormTutoriaConcluida implements OnInit{
     return this.fb.group({
       // BaseProductivity
       titulo: ['', Validators.required],
-      tipoProductividad: ['Tutoría concluida', Validators.required],
       pais: ['', Validators.required],
-      anio: ['', Validators.required], // puedes cambiar a number si quieres
+      tipoProductividad: ['Tutoria conlcuida'],
+      anio: ['', Validators.required],
 
       // Campos propios
       orientados: [[], Validators.required],
@@ -83,6 +85,7 @@ export class FormTutoriaConcluida implements OnInit{
   private populateForm(data: TutoriaConcluidaDTO): void {
     this.form.patchValue({
       titulo: data.titulo,
+
       pais: data.pais,
       anio: data.anio,
       orientados: data.orientados || [],
@@ -96,6 +99,10 @@ export class FormTutoriaConcluida implements OnInit{
 
     if ( data.image_r2) {
       this.imagePreview = data.image_r2!;
+    }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
     }
   }
 
@@ -144,7 +151,31 @@ export class FormTutoriaConcluida implements OnInit{
   onDocumentSelected(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
+
+    const maxSize = 20 * 1024 * 1024; // 20 MB
+    if (file.size > maxSize) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Archivo demasiado grande',
+        text: 'El archivo supera el tamaño máximo permitido de 20 MB.',
+        confirmButtonText: 'Aceptar'
+      });
+      event.target.value = ""; // limpiar input
+      return;
+    }
+
     this.selectedDocument = file;
+  }
+
+  /**
+   * Quita el archivo documento seleccionado
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
   }
 
   /**
@@ -156,6 +187,31 @@ export class FormTutoriaConcluida implements OnInit{
       return;
     }
 
+    // Si en modo editar se quitó un documento existente, eliminarlo del servidor antes de emitir
+    if (this.editMode && !this.existingDocumentName && this.data.file_r2) {
+      this.serviceTutoria.deleteFile(this.data.id!).subscribe({
+        next: () => {
+          this.emitirFormulario();
+        },
+        error: (err: any) => {
+          console.error("Error al eliminar documento:", err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar documento',
+            text: 'No se pudo eliminar el documento. Intenta de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
     const payload: FormSubmitPayload = {
       data: this.form.value,
       file_image: this.selectedFile,

@@ -79,8 +79,8 @@ export class EditProductiviy implements OnInit {
     revista: FormRevista,
     software: FormSoftware,
     'trabajo-eventos': FormTrabajoEventos,
-    tutoria_en_marcha: FormTutoriaEnMarcha,
-    tutoria_concluida: FormTutoriaConcluida,
+    'tutoria-en-marcha': FormTutoriaEnMarcha,
+    'tutoria-concluida': FormTutoriaConcluida,
     curso: FormCurso,
     material_didactico: FormMaterialDidactico,
     jurado: FormJurado,
@@ -306,14 +306,14 @@ export class EditProductiviy implements OnInit {
       });
     },
 
-    tutoria_en_marcha: (payload) => {
+    'tutoria-en-marcha': (payload) => {
       this.tutoriaEnMarchaService.update(this.id ,payload as TutoriaEnMarchaPeticion).subscribe({
         next: () => this.mostrarExito('Tutoría en marcha guardada', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
       });
     },
 
-    tutoria_concluida: (payload) => {
+    'tutoria-concluida': (payload) => {
       this.tutoriaConcluidaService.update(this.id ,payload as TutoriaConcluidaPeticion).subscribe({
         next: () => this.mostrarExito('Tutoría concluida guardada', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')

@@ -91,4 +91,20 @@ export class BooksService {
       })
     );
   }
+
+  /**
+   * Elimina un archivo de un libro del backend.
+   * @param id ID del libro cuyo archivo se va a eliminar
+   * @returns 
+   */
+  deleteFile(id: number): Observable<any> {
+    return this.http.delete<any>(
+      `${this.config.apiUrlBackend}informacion/libros/${id}/archivo/`
+    ).pipe(
+      catchError(error => {
+        console.error('Error al eliminar archivo del libro:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

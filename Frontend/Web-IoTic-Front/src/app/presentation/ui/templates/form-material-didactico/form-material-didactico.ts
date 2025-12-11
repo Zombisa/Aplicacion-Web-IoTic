@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { MaterialDidacticoDTO } from '../../../../models/DTO/informacion/MaterialDidacticoDTO';
+import { MaterialDidacticoService } from '../../../../services/information/material-didactico.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-material-didactico',
@@ -11,7 +13,7 @@ import { MaterialDidacticoDTO } from '../../../../models/DTO/informacion/Materia
   templateUrl: './form-material-didactico.html',
   styleUrls: ['./form-material-didactico.css']
 })
-export class FormMaterialDidactico implements OnChanges {
+export class FormMaterialDidactico implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -19,24 +21,36 @@ export class FormMaterialDidactico implements OnChanges {
   @Input() editMode: boolean = false;
 
   /** Datos del material didáctico a editar */
-  @Input() materialData!: MaterialDidacticoDTO;
+  @Input() idInput!: number;
+  materialData!: MaterialDidacticoDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private serviceMaterialDidactico: MaterialDidacticoService) {
     this.form = this.buildForm();
   }
 
-  /**
-   * Detecta cambios en los inputs
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.editMode && this.materialData) {
-      this.populateForm(this.materialData);
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
     }
+  }
+
+  private cargarInfo(): void {
+    this.serviceMaterialDidactico.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.materialData = data;
+        this.populateForm(this.materialData);
+      },
+      error: (err) => {
+        console.error('Error al cargar el material didáctico:', err);
+      }
+    });
   }
 
   /**
@@ -81,6 +95,10 @@ export class FormMaterialDidactico implements OnChanges {
     // Si trae imagen, mostrar preview
     if ((data as any).image_url || data.image_r2) {
       this.imagePreview = (data as any).image_url || data.image_r2!;
+    }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
     }
   }
 
@@ -135,6 +153,17 @@ export class FormMaterialDidactico implements OnChanges {
   }
 
   /**
+   * Quita el archivo documento seleccionado
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /**
    * Envía el formulario al componente padre
    */
   submitForm(): void {
@@ -143,6 +172,27 @@ export class FormMaterialDidactico implements OnChanges {
       return;
     }
 
+    // Si estamos en modo edición y el usuario removió el documento existente
+    if (this.editMode && !this.existingDocumentName && this.materialData.file_r2) {
+      this.serviceMaterialDidactico.deleteFile(this.materialData.id!).subscribe({
+        next: () => this.emitirFormulario(),
+        error: (err: any) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el documento'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario con los datos convertidos
+   */
+  private emitirFormulario(): void {
     const payload: FormSubmitPayload = {
       data: this.form.value,
       file_image: this.selectedFile,

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { CursoDTO } from '../../../../models/DTO/informacion/CursoDTO';
 import { CursoService } from '../../../../services/information/curso.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-curso',
@@ -27,6 +28,7 @@ export class FormCurso implements OnInit {
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private serviceCurso: CursoService
@@ -106,6 +108,10 @@ export class FormCurso implements OnInit {
     if (data.image_r2) {
       this.imagePreview = data.image_r2!;
     }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
+    }
   }
 
   /**
@@ -131,9 +137,50 @@ export class FormCurso implements OnInit {
   }
 
   /**
+   * Elimina el archivo de documento seleccionado o existente (solo visualmente)
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /**
    * Envía el formulario al componente padre
    */
   submitForm(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    // Si en modo editar se quitó un documento existente, eliminarlo del servidor antes de emitir
+    if (this.editMode && !this.existingDocumentName && this.cursoData.file_r2) {
+      this.serviceCurso.deleteFile(this.cursoData.id!).subscribe({
+        next: () => {
+          this.emitirFormulario();
+        },
+        error: (err: any) => {
+          console.error("Error al eliminar documento:", err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar documento',
+            text: 'No se pudo eliminar el documento. Intenta de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
