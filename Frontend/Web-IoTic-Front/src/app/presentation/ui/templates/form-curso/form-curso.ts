@@ -60,11 +60,11 @@ export class FormCurso implements OnInit {
       // BaseProductivity
       titulo: ['', Validators.required],
       tipoProductividad: ['Curso de duración corta', Validators.required],
-      pais: ['', Validators.required],
-      anio: ['', Validators.required],
+      autoresString: ['', Validators.required],
       autores: [[], Validators.required],
 
       // Campos propios de Curso
+      etiquetasString: ['', Validators.required],
       etiquetas: [[], Validators.required],
       propiedadIntelectual: ['', Validators.required],
       duracion: ['', Validators.required],
@@ -81,12 +81,22 @@ export class FormCurso implements OnInit {
    * @param data datos del curso a editar
    */
   private populateForm(data: CursoDTO): void {
+    console.log("Populating form with data:", data);
+    
+    // Convertir arrays a strings separados por coma para los inputs
+    const autoresString = (data.autores && Array.isArray(data.autores))
+      ? data.autores.join(', ')
+      : '';
+    const etiquetasString = (data.etiquetas && Array.isArray(data.etiquetas))
+      ? data.etiquetas.join(', ')
+      : '';
+
     this.form.patchValue({
       titulo: data.titulo,
       tipoProductividad: data.tipoProductividad || 'Curso de duración corta',
-      pais: data.pais,
-      anio: data.anio,
+      autoresString: autoresString,
       autores: data.autores || [],
+      etiquetasString: etiquetasString,
       etiquetas: data.etiquetas || [],
       propiedadIntelectual: data.propiedadIntelectual,
       duracion: data.duracion,
@@ -159,9 +169,31 @@ export class FormCurso implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-
+    
+    // Preparar datos: convertir strings a arrays si es necesario
+    const formData = { ...this.form.value };
+    
+    // Si los valores de autores y etiquetas aún son strings, convertirlos
+    if (typeof formData.autores === 'string') {
+      formData.autores = formData.autores
+        .split(',')
+        .map((a: string) => a.trim())
+        .filter((a: string) => a);
+    }
+    if (typeof formData.etiquetas === 'string') {
+      formData.etiquetas = formData.etiquetas
+        .split(',')
+        .map((e: string) => e.trim())
+        .filter((e: string) => e);
+    }
+    
+    // Remover los campos string ya que no los necesitamos en la petición
+    delete formData.autoresString;
+    delete formData.etiquetasString;
+    
+    console.log("Enviando:", formData);
     const payload: FormSubmitPayload = {
-      data: this.form.value,
+      data: formData,
       file_image: this.selectedFile,
       file_document: this.selectedDocument
     };

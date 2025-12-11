@@ -50,23 +50,12 @@
         <label>Título del curso</label>
       </div>
 
-      <!-- País -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
-        <label>País</label>
-      </div>
-
-      <!-- Año -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
-        <label>Año</label>
-      </div>
-
       <!-- Autores -->
       <div class="input-container personality-camp">
         <input
           type="text"
           class="input-line"
+          formControlName="autoresString"
           placeholder=" "
           (change)="onAutoresChange($event)" />
         <label>Autores (separados por coma)</label>
@@ -89,6 +78,7 @@
         <input
           type="text"
           class="input-line"
+          formControlName="etiquetasString"
           placeholder=" "
           (change)="onEtiquetasChange($event)" />
         <label>Etiquetas (separadas por coma)</label>
