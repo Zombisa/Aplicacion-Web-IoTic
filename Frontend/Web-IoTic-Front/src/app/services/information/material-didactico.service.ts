@@ -14,7 +14,7 @@ export class MaterialDidacticoService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<MaterialDidacticoDTO[]> {
-    return this.api.get<MaterialDidacticoDTO[]>(`${this.basePath}/materiales_did/`);
+    return this.api.get<MaterialDidacticoDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<MaterialDidacticoDTO> {

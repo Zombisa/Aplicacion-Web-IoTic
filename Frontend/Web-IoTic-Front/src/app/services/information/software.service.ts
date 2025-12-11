@@ -14,8 +14,7 @@ export class SoftwareService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<SoftwareDTO[]> {
-    // listar_software usa url_path='software'
-    return this.api.get<SoftwareDTO[]>(`${this.basePath}/Software/`);
+    return this.api.get<SoftwareDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<SoftwareDTO> {

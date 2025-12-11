@@ -14,7 +14,7 @@ export class NoticiaService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<NoticiaDTO[]> {
-    return this.api.get<NoticiaDTO[]>(`${this.basePath}/noticias/`);
+    return this.api.get<NoticiaDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<NoticiaDTO> {

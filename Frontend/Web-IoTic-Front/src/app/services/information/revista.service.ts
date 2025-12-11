@@ -14,7 +14,7 @@ export class RevistaService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<RevistaDTO[]> {
-    return this.api.get<RevistaDTO[]>(`${this.basePath}/revistas/`);
+    return this.api.get<RevistaDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<RevistaDTO> {

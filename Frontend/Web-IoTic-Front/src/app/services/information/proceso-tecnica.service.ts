@@ -14,7 +14,7 @@ export class ProcesoTecnicaService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<ProcesoTecnicaDTO[]> {
-    return this.api.get<ProcesoTecnicaDTO[]>(`${this.basePath}/procesos_tecnicas/`);
+    return this.api.get<ProcesoTecnicaDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<ProcesoTecnicaDTO> {

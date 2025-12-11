@@ -14,7 +14,7 @@ export class JuradoService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<JuradoDTO[]> {
-    return this.api.get<JuradoDTO[]>(`${this.basePath}/jurados/`);
+    return this.api.get<JuradoDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<JuradoDTO> {

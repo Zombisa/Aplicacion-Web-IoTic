@@ -14,7 +14,7 @@ export class TrabajoEventosService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<TrabajoEventosDTO[]> {
-    return this.api.get<TrabajoEventosDTO[]>(`${this.basePath}/trabajos_eventos/`);
+    return this.api.get<TrabajoEventosDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<TrabajoEventosDTO> {

@@ -14,7 +14,7 @@ export class EventoService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<EventoDTO[]> {
-    return this.api.get<EventoDTO[]>(`${this.basePath}/eventos/`);
+    return this.api.get<EventoDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<EventoDTO> {

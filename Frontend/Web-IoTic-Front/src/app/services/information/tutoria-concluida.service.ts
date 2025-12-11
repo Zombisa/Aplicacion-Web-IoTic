@@ -14,7 +14,7 @@ export class TutoriaConcluidaService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<TutoriaConcluidaDTO[]> {
-    return this.api.get<TutoriaConcluidaDTO[]>(`${this.basePath}/tutorias_concluidas/`);
+    return this.api.get<TutoriaConcluidaDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<TutoriaConcluidaDTO> {
