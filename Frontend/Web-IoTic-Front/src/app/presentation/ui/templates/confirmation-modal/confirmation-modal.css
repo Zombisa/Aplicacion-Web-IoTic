@@ -56,7 +56,20 @@
   margin: 0;
   color: #495057;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+.modal-message p {
+  margin-bottom: 0.5rem;
+}
+
+.modal-message p:last-child {
+  margin-bottom: 0;
+}
+
+.modal-message strong {
+  color: #212529;
+  font-weight: 600;
 }
 
 /* Modal Footer */

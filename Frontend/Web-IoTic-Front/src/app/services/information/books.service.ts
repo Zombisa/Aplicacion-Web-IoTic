@@ -67,7 +67,7 @@ export class BooksService {
    */
   deleteBook(id: number): Observable<void> {
     return this.http.delete<void>(
-      `${this.config.apiUrlBackend}informacion/libros/${id}/eliminar_libro/`
+      `${this.config.apiUrlBackend}informacion/libros/${id}/Libros/`
     ).pipe(
       catchError(error => {
         console.error('Error al eliminar libro:', error);

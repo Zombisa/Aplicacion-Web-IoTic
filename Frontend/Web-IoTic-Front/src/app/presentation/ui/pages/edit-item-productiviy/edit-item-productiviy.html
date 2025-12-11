@@ -19,10 +19,31 @@
 
     <div class="container-flui contaier-content">
         <div class="container">
+            <div class="d-flex justify-content-end mb-3" *ngIf="isAdminOrMentor$ | async">
+                <button 
+                    type="button" 
+                    class="btn btn-danger btn-sm"
+                    (click)="confirmDelete()"
+                    title="Eliminar publicación">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
             <ng-container #formContainer></ng-container>
         </div>
         <!-- Aquí se inyecta dinámicamente el formulario -->
 
     </div>
+
+    <app-confirmation-modal
+        [isVisible]="showDeleteModal"
+        title="Eliminar publicación"
+        [message]="deleteModalMessage"
+        confirmText="Sí, eliminar"
+        cancelText="Cancelar"
+        confirmButtonClass="btn-danger"
+        icon="fas fa-trash-alt"
+        (confirmed)="onDeleteConfirmed()"
+        (cancelled)="onDeleteCancelled()">
+    </app-confirmation-modal>
 </div>  
   
