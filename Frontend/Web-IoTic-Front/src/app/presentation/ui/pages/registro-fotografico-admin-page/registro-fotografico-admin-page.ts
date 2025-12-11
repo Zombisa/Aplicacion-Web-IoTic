@@ -30,7 +30,7 @@ export class RegistroFotograficoAdminPage implements OnInit {
   registros: RegistroFotograficoDTO[] = [];
 
   // control del formulario de arriba
-  modo: 'create' | 'edit' = 'create';
+  modo: 'create'  = 'create';
   selectedId: number | null = null;
 
   constructor(

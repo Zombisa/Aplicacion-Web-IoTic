@@ -35,12 +35,6 @@
             *ngIf="showActions">
             <button
               type="button"
-              class="btn btn-outline-primary btn-sm"
-              (click)="onEdit(reg, $event)">
-              Editar
-            </button>
-            <button
-              type="button"
               class="btn btn-outline-danger btn-sm"
               (click)="onDelete(reg, $event)">
               Eliminar
@@ -57,7 +51,7 @@
   <div class="registro-empty text-center py-5">
     <p class="mb-1 fw-semibold">Aún no hay registros fotográficos publicados.</p>
     <p class="small text-muted mb-0">
-      Cuando se publiquen fotos desde el panel de administrador, aparecerán aquí.
+      Cuando se publiquen fotos desde el panel, aparecerán aquí.
     </p>
   </div>
 </ng-template>
