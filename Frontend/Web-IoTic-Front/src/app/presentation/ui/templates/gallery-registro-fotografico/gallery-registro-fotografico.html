@@ -1,0 +1,52 @@
+<div class="registro-gallery" *ngIf="registros?.length; else emptyTpl">
+  <div class="registro-grid">
+    <div class="registro-item" *ngFor="let reg of registros">
+      <div class="registro-image-wrapper">
+        <img
+          [src]="reg.foto_r2"
+          [alt]="reg.titulo || 'Registro fotográfico'"
+          class="registro-image"
+        />
+      </div>
+
+      <div class="registro-info">
+        <h3 class="registro-title">
+          {{ reg.titulo || 'Sin título' }}
+        </h3>
+
+        <div class="registro-meta">
+          <div class="registro-line">
+            <span class="registro-label">Descripción</span>
+            <span class="registro-value">
+              {{ reg.descripcion || ' - ' }}
+            </span>
+          </div>
+
+          <div class="registro-line">
+            <span class="registro-label">Fecha</span>
+            <span class="registro-value">
+              {{ reg.fecha ? (reg.fecha | date : 'dd/MM/yyyy') : ' - ' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="registro-actions" *ngIf="showActions">
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="onDelete(reg, $event)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyTpl>
+  <div class="registro-empty text-center py-5">
+    <p class="mb-1 fw-semibold">Aún no hay registros fotográficos publicados.</p>
+    <p class="small text-muted mb-0">Cuando se publiquen fotos desde el panel, aparecerán aquí.</p>
+  </div>
+</ng-template>

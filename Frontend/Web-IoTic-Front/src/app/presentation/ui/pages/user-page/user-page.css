@@ -1,0 +1,144 @@
+.background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-secondary-light);
+  z-index: -1;
+  pointer-events: none;
+}
+.app-container {
+  margin-top: 20rem;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+.header-wrapper {
+  width: 100%;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+app-header {
+  display: inline-block;
+}
+
+.main-content {
+  padding: 0 1rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+
+
+.card{
+
+    border-radius: 8px;
+    border-color: aliceblue;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin: 1rem 0;
+    width: 100%;
+    height: auto;
+}
+
+.icon-user{
+    width: 50px;
+    height: 50px;
+    color: var(--color-primary);
+}
+
+/* Sección de Acciones */
+.actions-section {
+  margin-top: 3rem;
+  padding: 2rem 0;
+}
+
+.actions-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.actions-divider {
+  height: 3px;
+  width: 100px;
+  background-color: var(--color-secondary);
+  margin-bottom: 2rem;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.action-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.action-card-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.action-icon {
+  font-size: 5rem;
+  width: 5rem;
+  height: 5rem;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.btn-action {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.btn-action:hover {
+  background-color: #f8f9fa;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-card {
+    padding: 1.5rem;
+  }
+}

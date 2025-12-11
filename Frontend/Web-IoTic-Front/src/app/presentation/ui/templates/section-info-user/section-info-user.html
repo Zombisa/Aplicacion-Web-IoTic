@@ -1,0 +1,36 @@
+<div class="user-card card shadow-sm mx-auto" *ngIf="user">
+  <button 
+    *ngIf="mode === 'edit'" 
+    class="btn-danger" 
+    (click)="onDelete()"
+    type="button"
+    title="Eliminar usuario">
+    <i class="bi bi-trash"></i>
+  </button>
+
+  <div class="title-card">
+    <h2>{{ user.nombre }} {{ user.apellido }}</h2>
+  </div>
+
+  <div class="text-card-item">
+    <p class="text-label">Email</p>
+    <p>{{ user.email || '—' }}</p>
+  </div>
+
+  <div class="text-card-item">
+    <p class="text-label">Rol</p>
+    <p>{{ user.rol || '—' }}</p>
+  </div>
+
+  <div class="text-card-item">
+    <p class="text-label">Fecha de Registro</p>
+    <p>{{ formatDate(user.fechaRegistro) }}</p>
+  </div>
+
+  <div class="section-estados">
+    <div [ngClass]="getEstadoClass()">
+      <p class="text-label">Estado</p>
+      <p>{{ getEstadoText() }}</p>
+    </div>
+  </div>
+</div>

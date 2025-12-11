@@ -1,0 +1,32 @@
+<app-loading-page *ngIf="loadingService.loading$ | async" ></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+    <div class="header-wrapper">
+        <app-header></app-header>
+    </div>
+    <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
+        <section class="page-title d-flex flex-column align-items-center">
+            <h1 class="title">Panel de Publicación de Productividad</h1>
+            <p class=" text">Selecciona el tipo de productividad que deseas publicar:</p>
+        </section>
+       
+    </div>
+   <section class="container-fluid dark-card resume d-flex justify-content-center align-items-center">
+        <div class="row d-flex justify-content-center align-items-center w-100">
+            <div *ngFor="let type of types" class="col-12 p-3">
+            <div class="divider"></div>
+            <div class="container-fluid text-center d-flex flex-column flex-lg-row justify-content-lg-around align-items-center p-4 shadow-sm rounded box-type">
+                <div class="d-flex flex-column align-items-center align-items-lg-start text-card mb-3 mb-lg-0">
+                <h5 class="titleOption text-capitalize">{{ type.name }}</h5>
+                <p class="textOption" *ngIf="type.description">
+                    {{ type.description }}
+                </p>
+                </div>
+                <button (click)="gotoForm(type.tipo)" class="btn btn-outline-light p-3">
+                Publicar 
+                </button>
+            </div>
+            </div>
+        </div>
+    </section>
+
+</div>

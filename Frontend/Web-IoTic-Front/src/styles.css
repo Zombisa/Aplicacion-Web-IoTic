@@ -1,0 +1,262 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  /* Colores primarios */
+  --color-primary: #202136;
+  --color-primary-light: #213D84;
+  
+  /* Colores secundarios */
+  --color-secondary: #F3A537;
+  --color-secondary-dark: #888f97;
+  --color-secondary-light: #ccd3d0;
+  
+  /* Colores de estado */
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+  
+  /* Colores de texto */
+  --color-text-primary: #212529;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #adb5bd;
+  --color-text-white: #ffffff;
+  
+  /* Colores de fondo */
+  --color-bg-primary: #ECF4F1;
+
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.header-wrapper {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  /* Remover display: flex, justify-content, align-items */
+}
+
+/* ========================================
+   ANIMACIONES - Keyframes
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   ESTADOS INICIALES
+   ======================================== */
+
+.animate-on-scroll {
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* ========================================
+   CLASES DE ANIMACIÓN ACTIVAS
+   ======================================== */
+
+.animate-on-scroll.animate-fadeInUp.is-visible {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-slideInLeft.is-visible {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-slideInRight.is-visible {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.animate-on-scroll.animate-zoomIn.is-visible {
+  animation: zoomIn 0.6s ease-out forwards;
+}
+
+/* ========================================
+   BANNER PRINCIPAL
+   ======================================== */
+
+.banner-primary .title {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+/* ========================================
+   BANNER PRINCIPAL
+   Uso:
+   Los botones tienen tamaños variables con porcentajes
+   deben definicr una clase padre en el componente a aplicar para definir el ancho 
+   que la seccion debe ocupar, los botones se ajustaran a esa seccion automaticamente
+
+   btn-primray => Acciones primarias, guardar, enviar, hacer
+
+   btn-outline-secondary => Acciones secundarias: editar, devolver 
+   ======================================== */
+
+
+.btn-primary{
+    color: white;
+    background-color: var(--color-primary);
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-primary:hover {
+    background-color: var(--color-primary);
+    border-color: transparent;
+}
+.btn-primary:disabled {
+  background-color: #b3b3b3;   /* Gris */
+  border-color: transparent;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-outline-secondary{
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    background-color: #f6f9ff;
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-danger{
+    color: var(--color-danger);
+    border: 2px solid var(--color-danger);
+    background-color: #f6f9ff;
+    border-radius: 20px;
+    width: 50%;
+    height: 3rem;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+.btn-danger:hover{
+  background-color: var(--color-danger);
+  color: white;
+}
+.btn-outline-secondary:hover{
+  background-color: #e6e7e9;
+  color: #202136;
+}
+
+/* Media query para pantallas pequeñas (<576px) */
+@media (max-width: 575.98px) {
+    .btn-primary,
+    .btn-outline-secondary {
+        width: 100%;  /* Ocupa todo el ancho disponible */
+    }
+}
+
+
+/* ========================================
+   INPUTS
+   Uso:
+   los inputs tienen tamaños variables, deben crear una seccion o div en el padre para ajustar sus tamaños
+   ======================================== */
+/* Contenedor para input + label */
+.input-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Input */
+.input-line {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #cfcfcf;
+  padding: 0.8rem 0 0.2rem 0; /* espacio para label */
+  font-size: 1rem;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.3s;
+}
+
+.input-line:focus {
+  border-bottom-color: #1976d2;
+}
+
+.input-line::placeholder {
+  color: transparent; /* placeholder oculto */
+}
+
+/* Label */
+.input-container label {
+  color: var(--color-primary);
+  position: absolute;
+  left: 0;
+  top: 0.8rem; /* posición inicial sobre el input */
+  font-weight: 800;
+
+  pointer-events: none;
+  transition: all 0.3s ease;
+  transform: translateY(5px); /* label baja */
+}
+
+/* Cuando el input está enfocado o tiene texto */
+.input-line:focus + label,
+.input-line:not(:placeholder-shown) + label {
+  transform: translateY(-30px); /* label vuelve arriba */
+  font-size: 0.75rem;       /* opcional: tamaño más pequeño */
+}
+
+/* Estilo general de advertencias */
+.invalid-feedback {
+    display: block;               
+    font-size: 0.875rem;          
+    
+    background-color: #ffe6e6;    
+    padding: 0.5rem 0.75rem;      
+    border-radius: 5px;           
+    margin-top: 0.25rem;          
+    animation: fadeIn 0.3s ease-in-out; 
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

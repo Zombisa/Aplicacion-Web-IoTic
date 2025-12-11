@@ -1,0 +1,77 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Tutoría en Marcha</h1>
+    <p class="text-help">Información detallada de la tutoría</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="tutoriaImageUrl" [alt]="tutoria.titulo" class="book-image">
+               <a 
+                  *ngIf="tutoria?.file_r2 && tutoria.file_r2 !== ''"
+                  [href]="tutoria.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ tutoria.titulo || 'Título de Tutoría' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="tutoria?.subtipoTitulo">
+                    <h4 class="detail-label">Subtipo de Título</h4>
+                    <p class="detail-value">{{ tutoria.subtipoTitulo }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.descripcion">
+                    <h4 class="detail-label">Descripción</h4>
+                    <p class="detail-value">{{ tutoria.descripcion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.programa">
+                    <h4 class="detail-label">Programa</h4>
+                    <p class="detail-value">{{ tutoria.programa }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.institucion">
+                    <h4 class="detail-label">Institución</h4>
+                    <p class="detail-value">{{ tutoria.institucion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.orientados && tutoria.orientados.length">
+                    <h4 class="detail-label">Orientados</h4>
+                    <p class="detail-value">{{ tutoria.orientados.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.fechaPublicacion">
+                    <h4 class="detail-label">Fecha de Publicación</h4>
+                    <p class="detail-value">{{ tutoria.fechaPublicacion | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.licencia">
+                    <h4 class="detail-label">Licencia</h4>
+                    <p class="detail-value">{{ tutoria.licencia }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="tutoria?.etiquetasGTI && tutoria.etiquetasGTI.length">
+                    <h4 class="detail-label">Etiquetas GTI</h4>
+                    <p class="detail-value">{{ tutoria.etiquetasGTI.join(', ') }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

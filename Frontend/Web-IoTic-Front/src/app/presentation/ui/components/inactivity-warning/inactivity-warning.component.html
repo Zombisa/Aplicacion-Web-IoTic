@@ -1,0 +1,32 @@
+<!-- Modal de advertencia de inactividad -->
+<div *ngIf="showWarning" class="inactivity-warning-overlay">
+  <div class="inactivity-warning-modal">
+    <div class="warning-header">
+      <i class="fas fa-clock warning-icon"></i>
+      <h4 class="warning-title">Sesión por expirar</h4>
+    </div>
+    
+    <div class="warning-body">
+      <p class="warning-message">
+        Tu sesión se cerrará automáticamente en:
+      </p>
+      <div class="countdown-timer">
+        <span class="time-display">{{ formatTime(timeLeft) }}</span>
+      </div>
+      <p class="warning-subtitle">
+        Haz clic en "Continuar" para mantener tu sesión activa
+      </p>
+    </div>
+    
+    <div class="warning-actions">
+      <button 
+        type="button" 
+        class="btn btn-primary extend-btn"
+        
+      >
+        <i class="fas fa-refresh me-2"></i>
+        Continuar sesión
+      </button>
+    </div>
+  </div>
+</div>

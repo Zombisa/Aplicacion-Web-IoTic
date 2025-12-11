@@ -1,0 +1,70 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)" class="who-we-are-container">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <section class="dark-section container-fluid">
+    <!-- Título Principal -->
+    <div class="main-title-container">
+      <h1 class="main-title">¿Quiénes somos?</h1>
+    </div>
+
+    <!-- Contenedor de Visión y Misión -->
+    <div class="vision-mision-container">
+      <!-- Visión -->
+      <div class="vision-block content-block">
+        <h2 class="section-heading">Visión</h2>
+        <p class="section-content-text" *ngIf="vision?.contenido">
+          {{ vision?.contenido }}
+        </p>
+        <p class="section-content-text placeholder" *ngIf="!vision?.contenido">
+          No hay información de visión disponible.
+        </p>
+      </div>
+
+      <!-- Misión  -->
+      <div class="mision-block content-block">
+        <h2 class="section-heading">Misión</h2>
+        <p class="section-content-text" *ngIf="mision?.contenido">
+          {{ mision?.contenido }}
+        </p>
+        <p class="section-content-text placeholder" *ngIf="!mision?.contenido">
+          No hay información de misión disponible.
+        </p>
+      </div>
+    </div>
+
+    <!-- Valores  -->
+    <div class="valores-block content-block" *ngIf="valores.length > 0">
+      <h2 class="section-heading">Valores</h2>
+      <ol class="valores-list">
+        <li *ngFor="let valor of valores">
+          <strong>{{ valor.titulo }}:</strong> {{ valor.contenido }}
+        </li>
+      </ol>
+    </div>
+
+    <!-- Objetivos  -->
+    <div class="objetivos-container" *ngIf="objetivos.length > 0">
+      <h2 class="section-heading">Objetivos</h2>
+      <div class="objetivos-grid">
+        <div class="objetivo-card" *ngFor="let objetivo of objetivos">
+          <h3 class="objetivo-card-title">{{ objetivo.titulo }}</h3>
+          <p class="objetivo-card-content">{{ objetivo.contenido }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Historia -->
+  <section class="light-section container-fluid">
+    <!-- Historia -->
+    <div class="historia-block" *ngIf="historia?.contenido">
+      <h2 class="section-heading orange historia-title">Historia</h2>
+      <p class="historia-content">
+        {{ historia?.contenido }}
+      </p>
+    </div>
+  </section>
+</div>

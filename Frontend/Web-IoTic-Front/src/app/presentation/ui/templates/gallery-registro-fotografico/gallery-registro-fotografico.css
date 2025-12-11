@@ -1,0 +1,116 @@
+.registro-gallery {
+  padding: 1rem;
+}
+
+/* GRID PRINCIPAL: 2 horizontales por fila */
+.registro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* 2 columnas */
+  gap: 1rem;
+}
+
+/* CARD HORIZONTAL PEQUEÑA */
+.registro-item {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: #d4d9d7;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform .15s ease, box-shadow .15s ease;
+  cursor: pointer;
+  min-height: 150px;
+  /* altura razonable */
+}
+
+.registro-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+}
+
+/* IMAGEN: ocupa aprox mitad, no gigante */
+.registro-image-wrapper {
+  flex: 0 0 60%;
+  /*  ancho del card */
+  max-width: 60%;
+  height: 350px;
+  /*  controlas la altura aquí */
+  overflow: hidden;
+  background: #e4e4e4;
+}
+
+.registro-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* INFO A LA DERECHA */
+.registro-info {
+  flex: 1;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* TÍTULO GRANDE ARRIBA */
+.registro-title {
+  font-size: 2rem;
+  /* grande pero no exagerado (4rem era mucho) */
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+  /* espacio hasta “Descripción” */
+}
+
+.registro-field {
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+}
+
+/* CADA BLOQUE (label + valor) */
+.registro-line {
+  display: flex;
+  flex-direction: column;
+}
+
+/* “Descripción” / “Fecha” */
+.registro-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Valor mostrado (puede quedar vacío) */
+.registro-value {
+  font-size: 0.9rem;
+  color: #333;
+  min-height: 1.1rem;
+  /* deja espacio aunque esté vacío */
+}
+
+/* Acciones al final del bloque */
+.registro-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+}
+
+/* Responsive: en móvil 1 card por fila */
+@media (max-width: 768px) {
+  .registro-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .registro-item {
+    min-height: 160px;
+  }
+
+  .registro-image-wrapper {
+    flex: 0 0 40%;
+    height: 150px;
+  }
+}

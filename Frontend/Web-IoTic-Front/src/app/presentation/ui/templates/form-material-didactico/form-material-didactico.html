@@ -1,0 +1,118 @@
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+    
+    <!-- Upload Image Box -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)" />
+        
+        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Document Box -->
+      <div class="document-upload-box">
+        <input
+          type="file"
+          #documentInput
+          class="file-input-hidden"
+          accept=".pdf,.doc,.docx,.txt"
+          (change)="onDocumentSelected($event)" />
+        
+        <button 
+          type="button" 
+          class="document-button" 
+          [class.file-loaded]="selectedDocument || existingDocumentName"
+          (click)="documentInput.click()">
+          {{ selectedDocument ? 'Archivo seleccionado ✔' : existingDocumentName ? 'Tiene un documento subido ✔' : 'Subir archivo' }}
+        </button>
+
+        <button 
+          *ngIf="selectedDocument || existingDocumentName" 
+          type="button" 
+          class="remove-button" 
+          (click)="removeFile()">
+          Quitar archivo ✖
+        </button>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+
+      <!-- Título -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título del material</label>
+      </div>
+
+      <!-- País -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
+        <label>País</label>
+      </div>
+
+      <!-- Año -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event)" />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <!-- Descripción -->
+      <div class="input-container personality-camp">
+        <textarea
+          class="input-line"
+          formControlName="descripcion"
+          rows="3"
+          placeholder=" "
+        ></textarea>
+        <label>Descripción</label>
+      </div>
+
+      <!-- Etiquetas GTI -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event)" />
+        <label>Etiquetas GTI (separadas por coma)</label>
+      </div>
+
+      <!-- Licencia -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="licencia" placeholder=" " />
+        <label>Licencia</label>
+      </div>
+
+    </section>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">
+        Guardar material didáctico
+      </button>
+    </div>
+
+  </div>
+</form>
+

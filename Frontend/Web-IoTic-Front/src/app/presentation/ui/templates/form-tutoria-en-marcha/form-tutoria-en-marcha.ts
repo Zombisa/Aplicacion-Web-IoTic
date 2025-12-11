@@ -1,0 +1,159 @@
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
+import { TutoriaEnMarchaDTO } from '../../../../models/DTO/informacion/TutoriaEnMarchaDTO';
+import { TutoriaEnMarchaService } from '../../../../services/information/tutoria-en-marcha.service';
+
+@Component({
+  selector: 'app-form-tutoria-en-marcha',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './form-tutoria-en-marcha.html',
+  styleUrls: ['./form-tutoria-en-marcha.css']
+})
+export class FormTutoriaEnMarcha implements OnInit {
+
+  @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
+
+  @Input() editMode: boolean = false;
+  @Input() idInput!: number;
+  data!: TutoriaEnMarchaDTO;
+
+  form: FormGroup;
+  selectedFile: File | null = null;
+  selectedDocument: File | null = null;
+  imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
+
+  constructor(private fb: FormBuilder,
+    private  serviceTutoria: TutoriaEnMarchaService
+  ) {
+    this.form = this.buildForm();
+  }
+  ngOnInit(): void {
+    if (this.editMode && this.idInput) {
+      this.cargarInfo();
+    }
+  }
+  private cargarInfo() {  
+    this.serviceTutoria.getById(this.idInput).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.data = data;
+        this.populateForm(this.data);
+      },
+      error: (err) => {
+        console.error('Error al cargar la tutoría en marcha:', err);
+      }
+    }); 
+  }
+
+
+  private buildForm(): FormGroup {
+    return this.fb.group({
+      titulo: ['', Validators.required],
+      subtipoTitulo: ['', Validators.required],
+      tipoProductividad: ['Tutoría en marcha', Validators.required],
+
+      descripcion: ['', Validators.required],
+      pais: ['', Validators.required],
+      anio: ['', Validators.required],
+
+      orientados: [[]],
+      programa: ['', Validators.required],
+      institucion: ['', Validators.required],
+
+      autores: [[]],
+      etiquetasGTI: [[]],
+      licencia: ['', Validators.required],
+
+      image_url: ['']
+    });
+  }
+
+  private populateForm(data: TutoriaEnMarchaDTO): void {
+    this.form.patchValue({
+      titulo: data.titulo,
+      subtipoTitulo: data.subtipoTitulo,
+      descripcion: data.descripcion,
+      pais: data.pais,
+      anio: data.anio,
+      orientados: data.orientados || [],
+      programa: data.programa,
+      institucion: data.institucion,
+      autores: data.autores || [],
+      etiquetasGTI: data.etiquetasGTI || [],
+      licencia: data.licencia,
+      image_url: (data as any).image_url || data.image_r2 || ''
+    });
+
+    if (data.image_r2) {
+      this.imagePreview = data.image_r2;
+    }
+
+    if ((data as any).file_r2) {
+      this.existingDocumentName = (data as any).file_r2;
+    }
+  }
+
+  /** --- Métodos para arrays --- */
+
+  onOrientadosChange(value: string): void {
+    const orientados = value.split(',').map(v => v.trim()).filter(v => v);
+    this.form.patchValue({ orientados });
+  }
+
+  onAutoresChange(value: string): void {
+    const autores = value.split(',').map(v => v.trim()).filter(v => v);
+    this.form.patchValue({ autores });
+  }
+
+  onEtiquetasChange(value: string): void {
+    const etiquetasGTI = value.split(',').map(v => v.trim()).filter(v => v);
+    this.form.patchValue({ etiquetasGTI });
+  }
+
+  /** --- Imagen --- */
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreview = reader.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  /** --- Documento --- */
+  onDocumentSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedDocument = file;
+  }
+
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /** --- Submit --- */
+  submitForm(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload: FormSubmitPayload = {
+      data: this.form.value,
+      file_image: this.selectedFile,
+      file_document: this.selectedDocument
+    };
+
+    this.formSubmit.emit(payload);
+  }
+}

@@ -1,0 +1,159 @@
+.inactivity-warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.inactivity-warning-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.3s ease-out;
+  text-align: center;
+}
+
+.warning-header {
+  margin-bottom: 1.5rem;
+}
+
+.warning-icon {
+  font-size: 3rem;
+  color: #ff9800;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+.warning-title {
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.warning-body {
+  margin-bottom: 2rem;
+}
+
+.warning-message {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.countdown-timer {
+  margin: 1.5rem 0;
+}
+
+.time-display {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ff5722;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: countdownPulse 1s infinite;
+}
+
+.warning-subtitle {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.warning-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.extend-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  border: none;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.extend-btn:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.extend-btn:active {
+  transform: translateY(0);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes countdownPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .inactivity-warning-modal {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .warning-icon {
+    font-size: 2.5rem;
+  }
+  
+  .time-display {
+    font-size: 2.5rem;
+  }
+  
+  .warning-title {
+    font-size: 1.3rem;
+  }
+}

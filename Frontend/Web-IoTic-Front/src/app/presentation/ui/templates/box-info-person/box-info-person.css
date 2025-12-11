@@ -1,0 +1,13 @@
+.box-info-person{
+    background-color: wheat;
+    padding: 3rem;
+}
+
+
+.name{
+    font-size: 1rem;
+    font-weight: 800;
+}
+.personality-camp input.ng-valid + label::after {
+    background-color: aliceblue;
+}

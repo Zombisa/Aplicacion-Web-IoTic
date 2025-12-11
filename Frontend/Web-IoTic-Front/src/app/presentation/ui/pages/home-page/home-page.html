@@ -1,0 +1,161 @@
+<div class="app-container">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+  <div class="container-fluid d-flex align-items-center banner-primary">
+    <div class="container">
+      <div class="row w-100 d-flex justify-content-center align-items-center">
+            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center align-items-md-start" id="title-banner-home">
+              <h1 class="text-white text-center text-md-start" id="title-home">
+                Conoce el Semillero de IoTic
+              </h1>
+              <p class="text-white-50 mt-3 text-center text-md-start hero-subtitle">
+                Innovación, investigación y tecnología al servicio del conocimiento
+              </p>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-end" *ngIf="heroFotos && heroFotos.length > 0">
+              <div class="hero-photo-container">
+                <img
+                  *ngIf="heroFotos[currentHeroIndex]?.foto_r2"
+                  [src]="heroFotos[currentHeroIndex].foto_r2"
+                  [alt]="heroFotos[currentHeroIndex].titulo || 'Registro fotográfico'"
+                  class="hero-photo-image"
+                />
+              </div>
+          </div>
+    </div>
+    </div>
+   
+  </div>
+
+
+
+  <section class="py-5 registro-fotografico">
+    <div class="container">
+      <div class="row text-center mb-4">
+        <div class="col-12 d-flex flex-column align-items-center">
+          <h2 class="display-6 mb-3">Registro Fotográfico</h2>
+          <p class="lead text-muted fw-bold">
+            Momentos destacados de nuestro grupo de investigación, momentos que siempre quedan
+            guardados en nuestra memoria.
+          </p>
+          <div class="registro-divider mb-4"></div>
+
+          <!-- Carrusel de fotos -->
+          <div
+            id="registroFotograficoCarousel"
+            class="carousel slide registro-carousel"
+            *ngIf="registrosFotograficosSlides.length > 0"
+          >
+            <!-- Slides -->
+            <div class="carousel-inner">
+              <div
+                *ngFor="let slide of registrosFotograficosSlides; let i = index"
+                class="carousel-item"
+                [class.active]="i === 0"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center gap-4 registro-slide-row"
+                >
+                  <div *ngFor="let reg of slide" class="registro-item">
+                    <img
+                      [src]="reg.foto_r2"
+                      [alt]="reg.titulo || 'Registro fotográfico'"
+                      class="registro-image"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controles -->
+            <button
+              class="carousel-control-prev registro-control"
+              type="button"
+              data-bs-target="#registroFotograficoCarousel"
+              data-bs-slide="prev"
+            >
+              <span class="registro-arrow">&#x2190;</span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button
+              class="carousel-control-next registro-control"
+              type="button"
+              data-bs-target="#registroFotograficoCarousel"
+              data-bs-slide="next"
+            >
+              <span class="registro-arrow">&#x2192;</span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+          </div>
+
+          <!-- Texto mostrado si aún no hay fotos -->
+          <div *ngIf="registrosFotograficosSlides.length === 0" class="text-muted small">
+            Aún no hay registros fotográficos publicados.
+          </div>
+
+          <button class="btn btn-outline-primary mt-3" (click)="goToRegistroFotografico()">
+            Ver galería completa
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Últimas Publicaciones -->
+  <app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+  <section
+    *ngIf="!(loadingService.loading$ | async) && getAvailablePublications().length > 0"
+    class="container-fluid py-5 latest-publications-section"
+  >
+    <div class="container">
+      <div class="row">
+        <div *ngFor="let item of getAvailablePublications()" class="col-12 col-md-6 mb-4">
+          <div class="publication-card d-flex align-items-center p-4 bg-white shadow-sm rounded">
+            <!-- Imagen/Placeholder -->
+            <div class="publication-image me-4">
+              <div class="image-placeholder d-flex align-items-center justify-content-center">
+                <img
+                  *ngIf="item.publication.image_r2"
+                  [src]="item.publication.image_r2"
+                  [alt]="item.publication.titulo"
+                  class="img-fluid rounded"
+                />
+                <div *ngIf="!item.publication.image_r2" class="placeholder-icon">
+                  <svg
+                    width="60"
+                    height="60"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información de la publicación -->
+            <div class="publication-info flex-grow-1">
+              <h5 class="publication-title mb-2 fw-bold">Última publicación:</h5>
+              <p class="publication-type mb-1 text-muted small">{{ item.label }}</p>
+              <p class="publication-name mb-1 fw-semibold">{{ item.publication.titulo }}</p>
+              <p class="publication-year mb-2 text-muted small" *ngIf="item.publication.anio">
+                Año: {{ item.publication.anio }}
+              </p>
+              <button
+                class="btn btn-sm btn-outline-primary mt-2"
+                (click)="navigateToPublication(item.publication.tipo, item.publication.id)"
+              >
+                Ver más
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

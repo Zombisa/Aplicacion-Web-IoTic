@@ -1,0 +1,33 @@
+.banner-primary {
+  background-color: var(--color-primary);
+  height: 32vh;
+}
+
+.title {
+  margin-top: 10rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 4rem, 6rem);
+  color: #fff7f7;
+}
+
+.content-section {
+  background-color: white;
+  padding: 2rem 1rem;
+  min-height: 50vh;
+}
+
+.container-fluid {
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-section {
+    padding: 1rem 0.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}

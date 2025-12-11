@@ -1,0 +1,46 @@
+<div class="history-filters-container">
+  <!-- Barra de búsqueda -->
+  <div class="search-bar-container">
+    <div class="search-input-wrapper">
+      <mat-icon class="search-icon-left">filter_list</mat-icon>
+      <input
+        type="text"
+        class="search-input"
+        [value]="searchText"
+        (input)="onSearchChange($any($event.target).value)"
+        placeholder="Buscar por descripción del item o nombre de la persona..."
+      />
+      <mat-icon class="search-icon-right">search</mat-icon>
+    </div>
+  </div>
+
+  <!-- Pestañas de filtro -->
+  <div class="filter-tabs">
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'vigentes'"
+      (click)="onFilterClick('vigentes')"
+      type="button"
+    >
+      En vigencia
+    </button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'todos'"
+      (click)="onFilterClick('todos')"
+      type="button"
+    >
+      Todos
+    </button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'atrasados'"
+      (click)="onFilterClick('atrasados')"
+      type="button"
+    >
+      Atrasados
+    </button>
+  </div>
+</div>
+
+

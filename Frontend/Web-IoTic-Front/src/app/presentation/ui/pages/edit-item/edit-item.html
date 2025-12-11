@@ -1,0 +1,30 @@
+<div class="header-wrapper">
+    <app-header></app-header>
+</div>
+<section class="banner-primary">
+    <div class="d-flex justify-content-center align-items-center py-3 py-md-5">
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <h1 class="title text-center">Editemos el item</h1>
+        </div>
+    </div>
+    
+    <!-- Contenedor responsive mejorado -->
+    <div class="container px-3 px-md-4 form-container py-3 py-md-5">
+        <div class=" ">
+            <div class="">
+                <div class=" rounded-4 p-3 p-md-4 border-0">
+                    <div class="section-edit-item">
+                        <app-form-item
+                            #itemFormComponent
+                            [mode]="'edit'"
+                            [item]="item"
+                            (submitted)="handleSubmit($event)"
+                            (deactivateItem)="handleDeactivateItem()"
+                            (deleteItem)="handleDeleteItem()">
+                        </app-form-item>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

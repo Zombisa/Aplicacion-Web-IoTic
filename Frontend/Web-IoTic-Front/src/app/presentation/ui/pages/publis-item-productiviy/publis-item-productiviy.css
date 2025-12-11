@@ -1,0 +1,83 @@
+body, html {
+  min-height: 100vh;
+  width: 100vw;
+  background: #2f4e7c;
+  margin: 0;
+  padding: 0;
+}
+
+.contaier-content {
+  background-color: #fafafa;
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+  .contaier-content {
+    padding: 3rem 2rem;
+  }
+}
+
+.background-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: #f5f7fa;
+}
+
+
+.banner-primary {
+  height: 40vh;
+  min-height: 250px;
+  background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-secondary-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  opacity: 0.95;
+}
+
+
+.block-text-primary {
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .block-text-primary {
+    padding: 3rem;
+  }
+}
+
+/* Divider igual en ambas ramas */
+.divider {
+  height: 3px;
+  width: 15rem;
+  background-color: var(--color-secondary-dark);
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+/* Se conserva y se unifican ambas versiones: iguales */
+.section-banner {
+  color: var(--color-primary);
+  height: 30vh;
+}
+
+.section-banner p {
+  font-size: clamp(3vh, 4vh, 5vh);
+}

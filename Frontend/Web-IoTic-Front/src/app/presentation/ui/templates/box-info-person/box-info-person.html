@@ -1,0 +1,19 @@
+<div class="box-info-person-container d-flex flex-column align-items-center justify-content-center">
+    <div class="box-info-person d-flex align-items-center justify-content-center">
+        <i class=""></i>
+    </div>
+    
+    <!-- Modo visualizar: solo muestra el nombre -->
+    <p *ngIf="!edit" class="name">{{nameInput}}</p>
+    
+    <!-- Modo editar: muestra el input -->
+    <div *ngIf="edit" class="input-container personality-camp">
+        <input 
+            type="text" 
+            class="input-line" 
+            [value]="nameInput"
+            (input)="onNameChange($event)" 
+            placeholder=" " />
+        <label>Nombre</label>
+    </div>
+</div>

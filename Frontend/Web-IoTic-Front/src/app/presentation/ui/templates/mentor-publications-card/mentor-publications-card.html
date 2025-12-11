@@ -1,0 +1,27 @@
+<div class="mentor-card" *ngIf="mentor">
+  <div class="mentor-header">
+    <div class="mentor-info">
+      <h3 class="mentor-name" (click)="goToUserProfile()">{{ getFullName() }}</h3>
+      <div class="mentor-details">
+        <span class="mentor-email">{{ mentor.email }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="publications-section">
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Cargando publicaciones...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && publications.length === 0" class="no-publications">
+      <p>Este usuario no tiene publicaciones registradas.</p>
+    </div>
+
+    <app-publications-list 
+      *ngIf="!isLoading && publications.length > 0"
+      [publications]="publications"
+      (publicationClick)="onPublicationClick($event)">
+    </app-publications-list>
+  </div>
+</div>
+

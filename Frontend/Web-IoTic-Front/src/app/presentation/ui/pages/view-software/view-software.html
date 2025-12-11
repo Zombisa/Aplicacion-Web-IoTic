@@ -1,0 +1,97 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Software</h1>
+    <p class="text-help">Detalles y información del software</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="softwareImageUrl" [alt]="software.titulo" class="book-image">
+               <a 
+                  *ngIf="software?.file_r2 && software.file_r2 !== ''"
+                  [href]="software.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ software.titulo || 'Título del Software' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="software?.tituloDesarrollo">
+                    <h4 class="detail-label">Título de Desarrollo</h4>
+                    <p class="detail-value">{{ software.tituloDesarrollo }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.autores && software.autores.length">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ software.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ software.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ software.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.tipoProducto">
+                    <h4 class="detail-label">Tipo de Producto</h4>
+                    <p class="detail-value">{{ software.tipoProducto }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.nivelAcceso">
+                    <h4 class="detail-label">Nivel de Acceso</h4>
+                    <p class="detail-value">{{ software.nivelAcceso }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.codigoRegistro">
+                    <h4 class="detail-label">Código de Registro</h4>
+                    <p class="detail-value">{{ software.codigoRegistro }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.responsable && software.responsable.length">
+                    <h4 class="detail-label">Responsable</h4>
+                    <p class="detail-value">{{ software.responsable.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.fechaPublicacion">
+                    <h4 class="detail-label">Fecha de Publicación</h4>
+                    <p class="detail-value">{{ software.fechaPublicacion | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.descripcionFuncional">
+                    <h4 class="detail-label">Descripción Funcional</h4>
+                    <p class="detail-value">{{ software.descripcionFuncional }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.etiquetas && software.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ software.etiquetas.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="software?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ software.propiedadIntelectual }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

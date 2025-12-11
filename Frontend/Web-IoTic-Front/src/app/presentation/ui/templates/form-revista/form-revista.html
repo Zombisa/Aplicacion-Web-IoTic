@@ -1,0 +1,246 @@
+<div class="container">
+  <h1 class="title">Revista</h1>
+  <div class="divider"></div>
+</div>
+
+<div class="row g-4">
+  <!-- COLUMNA ARCHIVOS -->
+  <section class="col-12 col-lg-6 column">
+    <div class="image-upload-box">
+      <input
+        type="file"
+        #fileInput
+        class="file-input-hidden"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <div
+        class="upload-area"
+        (click)="fileInput.click()"
+        [class.has-image]="imagePreview"
+      >
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview-image"
+          alt="Vista previa"
+        />
+
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <i class="fas fa-camera camera-icon"></i>
+          <p class="upload-text">Haz clic para subir imagen</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENTO -->
+      <input
+        type="file"
+        #documentInput
+        hidden
+        (change)="onDocumentSelected($event)"
+      />
+
+      <button
+        class="btn btn-outline-secondary mt-3"
+        (click)="documentInput.click()"
+        [class.file-loaded]="selectedDocument || existingDocumentName"
+      >
+        {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+      </button>
+
+      <button
+        *ngIf="selectedDocument || existingDocumentName"
+        class="btn btn-danger mt-2"
+        (click)="removeFile()"
+      >
+        Quitar archivo ✖
+      </button>
+    </div>
+  </section>
+
+  <!-- COLUMNA FORMULARIO -->
+  <div class="col-12 col-lg-6">
+    <form
+      (ngSubmit)="submitForm()"
+      [formGroup]="form"
+      class="column"
+    >
+      <div class="row g-4">
+        <!-- FORMULARIO -->
+        <section class="form card">
+          <!-- TITULO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="titulo"
+              placeholder=" "
+              maxlength="70"
+            />
+            <label>Título del artículo</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('titulo')?.touched &&
+                form.get('titulo')?.invalid
+              "
+            >
+              El título es obligatorio.
+            </small>
+          </div>
+
+
+
+          <!-- AUTORES -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="autoresString"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Autores</label>
+            <small>(separados por coma)</small>
+          </div>
+
+          <!-- ISSN -->
+          <div class="input-container personality-camp">
+            <input
+              type="number"
+              class="input-line"
+              formControlName="issn"
+              placeholder=" "
+              maxlength="8"
+              inputmode="numeric"
+            />
+            <label>ISSN</label>
+            <small>(Numérico)</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('issn')?.touched &&
+                form.get('issn')?.invalid
+              "
+            >
+              El ISSN es obligatorio.
+            </small>
+          </div>
+
+          <!-- VOLUMEN -->
+          <div class="input-container personality-camp">
+            <input
+              type="number"
+              class="input-line"
+              formControlName="volumen"
+              placeholder=" "
+              inputmode="numeric"
+            />
+            <label>Volumen</label>
+            <small>(Numérico)</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('volumen')?.touched &&
+                form.get('volumen')?.invalid
+              "
+            >
+              El volumen es obligatorio.
+            </small>
+          </div>
+
+          <!-- FASCÍCULO -->
+          <div class="input-container personality-camp">
+            <input
+              type="number"
+              class="input-line"
+              formControlName="fasc"
+              placeholder=" "
+              inputmode="numeric"
+            />
+            <label>Fascículo</label>
+            <small>(Numérico)</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('fasc')?.touched &&
+                form.get('fasc')?.invalid
+              "
+            >
+              El fascículo es obligatorio.
+            </small>
+          </div>
+
+          <!-- PÁGINAS -->
+          <div class="input-container personality-camp">
+            <input
+              type="number"
+              class="input-line"
+              formControlName="paginas"
+              placeholder=" "
+              maxlength="50"
+              inputmode="numeric"
+            />
+            <label>Páginas</label>
+            <small>(Numérico)</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('paginas')?.touched &&
+                form.get('paginas')?.invalid
+              "
+            >
+              Las páginas son obligatorias.
+            </small>
+          </div>
+
+          <!-- RESPONSABLES -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="responsableString"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Responsables</label>
+            <small>(separados por coma)</small>
+          </div>
+
+          <!-- LINK DESCARGA ARTÍCULO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="linkDescargaArticulo"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Link de descarga del artículo</label>
+          </div>
+
+          <!-- LINK SITIO WEB -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="linksitioWeb"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Link del sitio web de la revista</label>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary mt-3"
+            [disabled]="form.invalid"
+          >
+            Guardar Revista
+          </button>
+        </section>
+      </div>
+    </form>
+  </div>
+</div>

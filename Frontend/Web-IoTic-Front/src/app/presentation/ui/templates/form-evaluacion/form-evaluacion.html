@@ -1,0 +1,208 @@
+<div class="container">
+  <h1 class="title">Participación en Comités de Evaluación</h1>
+  <div class="divider"></div>
+</div>
+
+<div class="row g-4">
+  <!-- COLUMNA ARCHIVOS -->
+  <section class="col-12 col-lg-6 column">
+    <div class="image-upload-box">
+      <input
+        type="file"
+        #fileInput
+        class="file-input-hidden"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <div
+        class="upload-area"
+        (click)="fileInput.click()"
+        [class.has-image]="imagePreview"
+      >
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview-image"
+          alt="Vista previa"
+        />
+
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <i class="fas fa-camera camera-icon"></i>
+          <p class="upload-text">Haz clic para subir imagen</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENTO -->
+      <input
+        type="file"
+        #documentInput
+        hidden
+        (change)="onDocumentSelected($event)"
+      />
+
+      <button
+        class="btn btn-outline-secondary mt-3"
+        (click)="documentInput.click()"
+        [class.file-loaded]="selectedDocument || existingDocumentName"
+      >
+        {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+      </button>
+
+      <button
+        *ngIf="selectedDocument || existingDocumentName"
+        class="btn btn-danger mt-2"
+        (click)="removeFile()"
+      >
+        Quitar archivo ✖
+      </button>
+    </div>
+  </section>
+
+  <!-- COLUMNA FORMULARIO -->
+  <div class="col-12 col-lg-6">
+    <form
+      (ngSubmit)="submitForm()"
+      [formGroup]="form"
+      class="column"
+    >
+      <div class="row g-4">
+        <!-- FORMULARIO -->
+        <section class="form card">
+          <!-- TITULO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="titulo"
+              placeholder=" "
+            />
+            <label>Título</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('titulo')?.touched &&
+                form.get('titulo')?.invalid
+              "
+            >
+              El título es obligatorio.
+            </small>
+          </div>
+
+          <!-- PAÍS -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="pais"
+              placeholder=" "
+            />
+            <label>País</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('pais')?.touched &&
+                form.get('pais')?.invalid
+              "
+            >
+              El país es obligatorio.
+            </small>
+          </div>
+
+          <!-- AÑO -->
+          <div class="input-container personality-camp">
+            <input
+              type="number"
+              class="input-line"
+              formControlName="anio"
+              placeholder=" "
+            />
+            <label>Año</label>
+            <small>(Numérico)</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('anio')?.touched &&
+                form.get('anio')?.invalid
+              "
+            >
+              El año es obligatorio.
+            </small>
+          </div>
+
+          <!-- AUTORES -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="autoresString"
+              placeholder=" "
+            />
+            <label>Autores</label>
+            <small>(separados por coma)</small>
+          </div>
+
+          <!-- INSTITUCIÓN -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="institucion"
+              placeholder=" "
+            />
+            <label>Institución</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('institucion')?.touched &&
+                form.get('institucion')?.invalid
+              "
+            >
+              La institución es obligatoria.
+            </small>
+          </div>
+
+          <!-- ETIQUETAS GTI -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="etiquetasGTIString"
+              placeholder=" "
+            />
+            <label>Etiquetas GTI</label>
+            <small>(separadas por coma)</small>
+          </div>
+
+          <!-- LICENCIA -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="licencia"
+              placeholder=" "
+            />
+            <label>Licencia</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('licencia')?.touched &&
+                form.get('licencia')?.invalid
+              "
+            >
+              La licencia es obligatoria.
+            </small>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary mt-3"
+            [disabled]="form.invalid"
+          >
+            Guardar Participación
+          </button>
+        </section>
+      </div>
+    </form>
+  </div>
+</div>

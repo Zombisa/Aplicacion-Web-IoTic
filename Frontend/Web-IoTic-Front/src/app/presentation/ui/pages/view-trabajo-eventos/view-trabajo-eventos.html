@@ -1,0 +1,92 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Trabajo en Eventos</h1>
+    <p class="text-help">Detalles y información del trabajo</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="trabajoImageUrl" [alt]="trabajo.titulo" class="book-image">
+               <a 
+                  *ngIf="trabajo?.file_r2 && trabajo.file_r2 !== ''"
+                  [href]="trabajo.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ trabajo.titulo || 'Título del Trabajo' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="trabajo?.autores">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ trabajo.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ trabajo.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ trabajo.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.nombreSeminario">
+                    <h4 class="detail-label">Nombre del Seminario</h4>
+                    <p class="detail-value">{{ trabajo.nombreSeminario }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.tipoPresentacion">
+                    <h4 class="detail-label">Tipo de Presentación</h4>
+                    <p class="detail-value">{{ trabajo.tipoPresentacion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.tituloActas">
+                    <h4 class="detail-label">Título de Actas</h4>
+                    <p class="detail-value">{{ trabajo.tituloActas }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.volumen">
+                    <h4 class="detail-label">Volumen</h4>
+                    <p class="detail-value">{{ trabajo.volumen }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.isbn">
+                    <h4 class="detail-label">ISBN</h4>
+                    <p class="detail-value">{{ trabajo.isbn }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.paginas">
+                    <h4 class="detail-label">Páginas</h4>
+                    <p class="detail-value">{{ trabajo.paginas }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.etiquetas && trabajo.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ trabajo.etiquetas.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="trabajo?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ trabajo.propiedadIntelectual }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

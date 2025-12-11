@@ -1,0 +1,128 @@
+.banner-primary{
+  background: var(--color-primary);
+  height: 150vh;
+
+}
+.title{
+    color: white;
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+    font-weight: 600;
+    font-family: "Roboto", sans-serif;
+}
+.form-back{
+    background-color: white;
+    height: 50rem;
+    width: 50rem;
+    
+}
+.person-section{
+  background-color: var(--color-secondary-light);
+  padding: 10rem;
+
+}
+.item-sectio{
+  background-color: white;
+  padding: 2rem;
+}
+.form-container{
+  position: relative;
+  z-index: 2;
+}
+
+.form-label {
+    color: var(--color-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+}
+
+
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.is-valid {
+    border-color: #198754 !important;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+/*/* Padding progresivo para .person-section y mejoras responsive */
+
+/* Móviles extra pequeños (≤576px) */
+@media (max-width: 576px) {
+  .banner-primary .title {
+    font-size: 1.8rem !important;
+  }
+  .banner-primary{
+    height: 350vh;
+  }
+  .person-section {
+    padding: 2rem; /* menor padding en móviles */
+  }
+
+  .form-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .card {
+    margin: 0 0.5rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+/* Móviles medianos / tablets pequeñas (576px - 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .banner-primary .title {
+    font-size: 2.2rem !important;
+  }
+  .banner-primary{
+    height: 290vh;
+  }
+  .person-section {
+    padding: 2rem;
+  }
+}
+
+/* Tablets grandes / laptops pequeñas (768px - 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .form-control-md-lg,
+  .form-select-md-lg {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+  }
+
+  .form-label.small {
+    font-size: 1rem;
+  }
+    .banner-primary{
+    height: 160vh;
+  }
+
+  .person-section {
+    padding: 2rem;
+  }
+}
+
+/* Escritorio (≥992px) */
+@media (min-width: 992px) {
+  .person-section {
+    padding: 5rem; /* padding máximo en escritorio */
+  }
+}
+
+/* Inputs y labels generales */
+.form-label.small {
+  font-size: 0.9rem;
+}

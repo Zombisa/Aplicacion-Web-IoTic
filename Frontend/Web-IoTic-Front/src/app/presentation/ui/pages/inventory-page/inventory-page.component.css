@@ -1,0 +1,40 @@
+.banner-primary{
+  background-color: var(--color-primary);
+  height: 70vh;
+}
+.title{
+  margin-top: 10rem;
+  font-family: "Roboto", sans-serif;
+  font: 600;
+  font-size: clamp(1rem, 3rem, 5rem);
+  color: var(--color-secondary);
+}
+
+.divider{
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-text-secondary);
+}
+.text{
+  font-family: "Roboto", sans-serif;
+  color: white;
+}
+.resume{
+  color: white;
+  border-color: white;
+}
+.dark-card{
+  padding: 5rem;
+  background-color: var(--color-primary);
+  color: white;
+}
+.text-card{
+  min-width: 70%;
+}
+.titleOption{
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
+}
+.textOption{
+  color: var(--color-secondary-dark)
+}

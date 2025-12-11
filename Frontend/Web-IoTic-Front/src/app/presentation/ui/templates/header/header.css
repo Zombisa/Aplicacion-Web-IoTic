@@ -1,0 +1,145 @@
+.header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: clamp(320px, 88vw, 1600px);
+  /* No necesitas position: fixed aquí ya que está en el wrapper */
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 10rem;
+  cursor: pointer;
+  border-radius: 30px;
+  color: #333;
+  transition: all 0.25s ease;
+  height: 100%;
+  background-color: #fff;
+  border-color: black;
+}
+
+
+.nav-item:hover {
+  background-color: #f3f4f6;
+}
+
+.nav-label {
+  font-size: 14px;
+}
+.navbar {
+  width: 70%;
+}
+
+
+
+/* Mantener la estética del collapse en mobile */
+.navbar-collapse {
+  background-color: #fff;
+  border-radius: 30px;
+  
+}
+
+/* Ajustes para que los nav-items se distribuyan equitativamente */
+@media (min-width: 992px) {
+  .container-fluid .row {
+    margin: 0;
+  }
+  
+  .col-lg {
+    flex: 1;
+    max-width: none;
+  }
+  
+  /* Mantener el ancho expandido cuando está activo en desktop */
+  .active-col {
+    flex: 1.5 !important;
+    
+  }
+}
+
+/* Estilos para mobile - nav items en lista vertical */
+@media (max-width: 991.98px) {
+  .nav-item {
+    width: auto !important;
+    justify-content: flex-start !important;
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0;
+    border-radius: 20px;
+  }
+  
+  .nav-item.active {
+    width: auto !important;
+    color: #fff;
+  }
+  
+  .nav-label {
+    display: inline !important;
+    font-size: 14px;
+  }
+}
+
+/* User section estilos */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.user-mobile-section {
+  border-top: 1px solid #e9ecef !important;
+}
+
+.user-mobile-section .user-info,
+.user-mobile-section .logout-btn {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
+}
+
+.login-section {
+  margin-left: auto;
+}
+
+/* Logo styles */
+.logo-section {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.logo-image {
+  max-height: 3rem;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Responsive adjustments para pantallas muy pequeñas */
+@media (max-width: 576px) {
+  .header-container {
+    margin-top: 1rem;
+    max-width: 98%;
+    padding: 8px;
+  }
+  
+  .logo-image {
+    max-height: 2rem;
+    width: auto;
+  }
+}
+
+/* Asegurar que el collapse funcione correctamente */
+.navbar-collapse.collapsing,
+.navbar-collapse.show {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}

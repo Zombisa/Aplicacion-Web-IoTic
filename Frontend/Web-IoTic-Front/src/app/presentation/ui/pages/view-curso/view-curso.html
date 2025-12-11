@@ -1,0 +1,83 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Curso Corto</h1>
+    <p class="text-help">Detalles y información del curso</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container p-4">
+         <div class="row">
+            <div class="col-12 mb-4 p-4">
+              <h2 class="title-section">{{ curso.titulo || 'Título del Curso' }}</h2>
+               <!-- Video de YouTube -->
+               <div class="video-container" *ngIf="youtubeEmbedUrl">
+                  <iframe 
+                     [src]="youtubeEmbedUrl" 
+                     class="youtube-video"
+                     allowfullscreen 
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                     loading="lazy">
+                  </iframe>
+               </div>
+               
+               <!-- Imagen como fallback si no hay URL de YouTube -->
+               <img 
+                  *ngIf="!youtubeEmbedUrl" 
+                  [src]="cursoImageUrl" 
+                  [alt]="curso.titulo" 
+                  class="book-image">
+               
+               <a 
+                  *ngIf="curso?.file_r2 && curso.file_r2 !== ''"
+                  [href]="curso.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12  mb-4">
+                <div class="book-details">
+                  <div class="detail-item" *ngIf="curso?.autores && curso.autores.length">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ curso.autores.join(', ') }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.fechaPublicacion">
+                    <h4 class="detail-label">Fecha de Publicación</h4>
+                    <p class="detail-value">{{ curso.fechaPublicacion | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.duracion">
+                    <h4 class="detail-label">Duración (horas)</h4>
+                    <p class="detail-value">{{ curso.duracion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.institucion">
+                    <h4 class="detail-label">Institución</h4>
+                    <p class="detail-value">{{ curso.institucion }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ curso.propiedadIntelectual }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="curso?.etiquetas && curso.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ curso.etiquetas.join(', ') }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

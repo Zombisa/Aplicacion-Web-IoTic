@@ -1,0 +1,102 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+
+<div *ngIf="!(loadingService.loading$ | async)" class="">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid">
+    <!-- Banner del usuario -->
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="banner-primary  d-flex justify-content-center align-items-center px-4">
+          <div class="user-avatar me-4">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="user-info">
+            <h2 class="user-name-banner">{{ getFullName() }}</h2>
+            <p class="user-email">{{ user?.email }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="showError" class="alert alert-danger mt-4 mx-4" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Contenido principal -->
+    <section *ngIf="!showError && user" class="user-content">
+      <div class="container-fluid px-3 px-md-4">
+        <div class="row">
+          <!-- Información del usuario -->
+          <div class="col-12 col-md-6 mb-4">
+            <div class="info-section">
+              <h3 class="info-label">Nombre</h3>
+              <p class="info-value">{{ user.nombre || '—' }}</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 mb-4">
+            <div class="info-section">
+              <h3 class="info-label">Apellido</h3>
+              <p class="info-value">{{ user.apellido || '—' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publicaciones del usuario -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2 class="publications-title">Publicaciones</h2>
+          </div>
+
+          <!-- Filtro por título -->
+          <div class="col-12 col-md-6 col-lg-5 mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Filtrar publicaciones por título..."
+              [value]="searchTerm"
+              (input)="onFilterChange($any($event.target).value)"
+            />
+          </div>
+        </div>
+
+        <div *ngIf="loadingPublications" class="text-center py-4">
+          <p>Cargando publicaciones...</p>
+        </div>
+
+        <div *ngIf="!loadingPublications && filteredPublicationsByType.length === 0" class="no-publications">
+          <p>No hay publicaciones para mostrar.</p>
+        </div>
+
+        <div *ngIf="!loadingPublications && filteredPublicationsByType.length > 0" class="publications-sections">
+          <div
+            *ngFor="let section of filteredPublicationsByType; trackBy: trackBySection"
+            class="publication-type-section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <i class="fas fa-folder-open me-2"></i>
+                {{ section.tipoDisplay }}
+              </h3>
+              <span class="section-count badge bg-primary">{{ section.publications.length }}</span>
+            </div>
+            <div class="section-content">
+              <app-publications-list
+                [publications]="section.publications"
+                [showTitle]="false"
+                [showEditButton]="showEditButton"
+                (publicationClick)="navigateToPublication($event.tipo, $event.id)">
+              </app-publications-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+

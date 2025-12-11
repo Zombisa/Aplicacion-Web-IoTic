@@ -1,0 +1,67 @@
+<div class="loan-card" [style.border-left-color]="getStatusColor()">
+  <div class="loan-card-content row">
+    <div class="loan-image-section col-sm-3 col-md-2 col-12 text-center">
+
+      <!-- Si existe imagen -->
+      <img
+        *ngIf="loan.item.image_r2; else noImg"
+        class="loan-image"
+        [src]="loan.item.image_r2"
+        
+      />
+
+      <!-- Si NO existe imagen -->
+      <ng-template #noImg>
+        <i class="bi bi-image fs-1 text-secondary"></i>
+      </ng-template>
+
+    </div>
+
+    <!-- Información del Item y Persona -->
+     <div class="cal-sm-9 col-md-10 cal-12">
+        <div class="loan-info-section">
+            <div class="item-name">{{ getItemName() }}</div>
+
+            <div class="person-info">
+              <div class="info-row">
+                <span class="info-label">A nombre:</span>
+                <span class="info-value">{{ loan.nombre_persona }}</span>
+              </div>
+
+              <div class="info-row" *ngIf="loan.correo">
+                <span class="info-label">Correo:</span>
+                <span class="info-value">{{ loan.correo }}</span>
+              </div>
+                            
+            </div>
+          </div>
+
+          <!-- Información adicional y acciones -->
+          <div class="loan-details-section">
+            <div class="details-column">
+              <div class="info-row" *ngIf="loan.telefono">
+                <span class="info-label">Telefono:</span>
+                <span class="info-value">{{ loan.telefono }}</span>
+              </div>
+
+              <div class="info-row">
+                <span class="info-label">Fecha limite:</span>
+                <span class="info-value">{{ formatDateLimit() }}</span>
+              </div>
+              <div class="status-badge" [class.overdue]="isOverdue()" [class.loaned]="!isOverdue()">
+                {{ getStatusLabel() }}
+              </div>
+            </div>
+
+            <div class="d-flex flex-column align-items-center gap-2">
+
+
+              <button class="btn-view-loan" (click)="onViewLoan()">
+                Ver pretamo
+              </button>
+            </div>
+          </div>
+     </div>
+  </div>
+</div>
+

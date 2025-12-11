@@ -1,0 +1,20 @@
+<app-loading-page *ngIf="false"></app-loading-page>
+
+<div class="header-wrapper">
+  <app-header></app-header>
+</div>
+
+<section class="banner-primary d-flex justify-content-center align-items-center flex-column text-center">
+  <h1 class="title">
+    {{ modo === 'create' ? 'Nuevo Registro Fotográfico' : 'Editar Registro Fotográfico' }}
+  </h1>
+</section>
+
+<div class="container-fluid px-3 px-md-4 py-4 add-registro-container">
+  <app-form-registro-fotografico
+    [modo]="modo"
+    [id]="id"
+    (saved)="onSaved()"
+    (cancel)="onCancel()">
+  </app-form-registro-fotografico>
+</div>
