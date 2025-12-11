@@ -1,9 +1,22 @@
-.registro-page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .banner-primary{
   background-color: var(--color-secondary-light);
-  height: 56vh;
+  height: 66vh;
+  border-bottom: 30vh;
+}
+.title{
+  margin-top: 10rem;
+  font-family: "Roboto", sans-serif;
+  font: 600;
+  font-size: clamp(1rem, 3rem, 5rem);
+}
+.text-help{
+  font-family: "Roboto", sans-serif;
+}
+
+.registro-page-bg {
+  background-color: var(--color-secondary-light);
+  min-height: 100vh;
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 4rem;
 }
