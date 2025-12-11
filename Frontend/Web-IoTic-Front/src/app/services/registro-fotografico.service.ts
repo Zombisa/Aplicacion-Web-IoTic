@@ -16,7 +16,7 @@ export class RegistroFotograficoService {
   ) {}
 
   private get baseUrl(): string {
-    return `${this.appConfig.apiUrlBackend}/informacion/registrosFotograficos/`;
+    return `${this.appConfig.apiUrlBackend}informacion/registrosFotograficos/`;
   }
 
   /** LISTAR todos los registros (GET /registrosFotograficos/) */
