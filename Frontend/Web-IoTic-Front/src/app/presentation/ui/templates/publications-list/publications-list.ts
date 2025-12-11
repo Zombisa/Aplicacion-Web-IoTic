@@ -11,6 +11,7 @@ import { UserProductivityItem } from '../../../../services/information/user-prod
 })
 export class PublicationsList {
   @Input() publications: UserProductivityItem[] = [];
+  @Input() showTitle: boolean = true; // Controla si se muestra el título
   @Output() publicationClick = new EventEmitter<{ id: number; tipo: string }>();
 
   constructor(private router: Router) {}

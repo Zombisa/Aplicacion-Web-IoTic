@@ -11,6 +11,12 @@ import { ConfirmationModal } from '../../templates/confirmation-modal/confirmati
 import { PublicationsList } from '../../templates/publications-list/publications-list';
 import { UserProductivityService, UserProductivityItem } from '../../../../services/information/user-productivity.service';
 
+interface PublicationsByType {
+  tipo: string;
+  tipoDisplay: string;
+  publications: UserProductivityItem[];
+}
+
 @Component({
   selector: 'app-view-user',
   standalone: true,
@@ -25,7 +31,25 @@ export class ViewUser implements OnInit {
   showError = false;
   errorMessage = '';
   publications: UserProductivityItem[] = [];
+  publicationsByType: PublicationsByType[] = [];
   loadingPublications = false;
+  
+  // Orden de los tipos de productividad para mostrar
+  private readonly typeOrder: string[] = [
+    'libro',
+    'capitulo',
+    'revista',
+    'curso',
+    'evento',
+    'software',
+    'tutoria-concluida',
+    'tutoria-en-marcha',
+    'trabajo-eventos',
+    'participacion-comites',
+    'material-didactico',
+    'jurado',
+    'proceso-tecnica'
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -86,16 +110,138 @@ export class ViewUser implements OnInit {
     this.loadingPublications = true;
     this.userProductivityService.getProductivityByUserId(this.userId).subscribe({
       next: (publications) => {
-        this.publications = publications;
+        console.log('Publicaciones recibidas del servicio:', publications);
+        console.log('Cantidad total:', publications.length);
+        
+        // Validar que las publicaciones tengan el campo tipo
+        const validPublications = publications.filter(pub => {
+          if (!pub.tipo) {
+            console.warn('Publicación sin tipo encontrada:', pub);
+            return false;
+          }
+          return true;
+        });
+        
+        if (validPublications.length !== publications.length) {
+          console.warn(`${publications.length - validPublications.length} publicaciones fueron filtradas por falta de tipo`);
+        }
+        
+        this.publications = validPublications;
+        this.groupPublicationsByType();
         this.loadingPublications = false;
-        console.log('Publicaciones del usuario:', publications);
       },
       error: (error) => {
         console.error('Error al cargar publicaciones del usuario:', error);
         this.publications = [];
+        this.publicationsByType = [];
         this.loadingPublications = false;
       }
     });
+  }
+
+  /**
+   * Agrupa las publicaciones por tipo de productividad
+   */
+  groupPublicationsByType(): void {
+    console.log('Iniciando agrupación de publicaciones. Total:', this.publications.length);
+    
+    // Limpiar array anterior
+    this.publicationsByType = [];
+    
+    if (!this.publications || this.publications.length === 0) {
+      console.log('No hay publicaciones para agrupar');
+      return;
+    }
+    
+    const grouped = new Map<string, UserProductivityItem[]>();
+    
+    // Agrupar publicaciones por tipo
+    this.publications.forEach((publication, index) => {
+      const tipo = publication.tipo;
+      const tipoDisplay = publication.tipoDisplay || tipo;
+      
+      // Log para debugging
+      if (index < 5) { // Solo log de las primeras 5 para no saturar
+        console.log(`Publicación ${index + 1}: tipo="${tipo}", tipoDisplay="${tipoDisplay}", titulo="${publication.titulo}"`);
+      }
+      
+      if (!tipo) {
+        console.warn('Publicación sin tipo:', publication);
+        return;
+      }
+      
+      if (!grouped.has(tipo)) {
+        grouped.set(tipo, []);
+      }
+      grouped.get(tipo)!.push(publication);
+    });
+    
+    console.log('Tipos encontrados después de agrupar:', Array.from(grouped.keys()));
+    console.log('Cantidad por tipo:', Array.from(grouped.entries()).map(([tipo, pubs]) => `${tipo}: ${pubs.length}`));
+    
+    // Mapeo de tipos a nombres legibles (por si falta tipoDisplay)
+    const tipoDisplayMap: Record<string, string> = {
+      'libro': 'Libro',
+      'capitulo': 'Capítulo de libro',
+      'revista': 'Revista',
+      'curso': 'Curso corto',
+      'evento': 'Evento/Seminario',
+      'software': 'Software',
+      'tutoria-concluida': 'Tutoría concluida',
+      'tutoria-en-marcha': 'Tutoría en marcha',
+      'trabajo-eventos': 'Trabajo en eventos',
+      'participacion-comites': 'Participación en comités',
+      'material-didactico': 'Material didáctico',
+      'jurado': 'Jurado',
+      'proceso-tecnica': 'Proceso o técnica'
+    };
+    
+    // Convertir a array y ordenar según el orden definido
+    this.publicationsByType = this.typeOrder
+      .map(tipo => {
+        const publications = grouped.get(tipo);
+        if (publications && publications.length > 0) {
+          const firstPub = publications[0];
+          return {
+            tipo,
+            tipoDisplay: firstPub.tipoDisplay || tipoDisplayMap[tipo] || tipo,
+            publications: [...publications] // Crear copia del array
+          };
+        }
+        return null;
+      })
+      .filter((item): item is PublicationsByType => item !== null);
+    
+    // Agregar tipos que no están en el orden definido (por si acaso)
+    grouped.forEach((publications, tipo) => {
+      if (!this.typeOrder.includes(tipo)) {
+        console.warn(`Tipo no esperado encontrado: ${tipo}, agregándolo al final`);
+        const firstPub = publications[0];
+        this.publicationsByType.push({
+          tipo,
+          tipoDisplay: firstPub.tipoDisplay || tipoDisplayMap[tipo] || tipo,
+          publications: [...publications]
+        });
+      }
+    });
+    
+    // Ordenar las publicaciones dentro de cada sección (opcional: por fecha o ID)
+    this.publicationsByType.forEach(section => {
+      section.publications.sort((a, b) => {
+        // Ordenar por ID descendente (más recientes primero)
+        return (b.id || 0) - (a.id || 0);
+      });
+    });
+    
+    console.log(`Publicaciones agrupadas en ${this.publicationsByType.length} secciones:`, 
+      this.publicationsByType.map(s => `${s.tipoDisplay} (${s.publications.length})`));
+  }
+
+  /**
+   * TrackBy function para mejorar el rendimiento del *ngFor
+   */
+  trackBySection(index: number, section: PublicationsByType): string {
+    return section.tipo;
   }
 
   /**

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError, map } from 'rxjs';
+import { Observable, catchError, throwError, map, of } from 'rxjs';
 import { UserDTO } from '../models/DTO/UserDTO';
 import { AppConfigService } from './common/app-config.service';
 
@@ -26,10 +26,24 @@ export class UsersService {
   constructor(private http: HttpClient, private config: AppConfigService) {}
 
   getUsers(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(`${this.config.apiUrlBackend}usuarios/`).pipe(
+    const url = `${this.config.apiUrlBackend}usuarios/`;
+    console.log('Obteniendo usuarios desde:', url);
+    return this.http.get<UserDTO[]>(url).pipe(
+      map(users => {
+        console.log(`Usuarios obtenidos: ${users?.length || 0} usuarios`);
+        return users || [];
+      }),
       catchError(error => {
         console.error('Error al obtener usuarios:', error);
-        return throwError(() => error);
+        console.error('Detalles del error:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          error: error.error
+        });
+        // Retornar array vacío en lugar de lanzar error para que la UI no se rompa
+        return of([]);
       })
     );
   }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { BaseProductivityDTO } from '../../models/Common/BaseProductivityDTO';
 import { BooksService } from './books.service';
@@ -15,10 +16,30 @@ import { ParticipacionComitesEvService } from './participacion-comites-ev.servic
 import { MaterialDidacticoService } from './material-didactico.service';
 import { JuradoService } from './jurado.service';
 import { ProcesoTecnicaService } from './proceso-tecnica.service';
+import { AppConfigService } from '../common/app-config.service';
 
 export interface UserProductivityItem extends BaseProductivityDTO {
   tipo: string; // Tipo de productividad para navegación
   tipoDisplay: string; // Nombre legible del tipo
+}
+
+// Interfaz para la respuesta del endpoint de publicaciones del backend
+interface PublicacionesBackendResponse {
+  usuario_id: number;
+  'capitulos de libro': BaseProductivityDTO[];
+  'cursos': BaseProductivityDTO[];
+  'eventos': BaseProductivityDTO[];
+  'jurados': BaseProductivityDTO[];
+  'libros': BaseProductivityDTO[];
+  'materiales didacticos': BaseProductivityDTO[];
+  'noticias': BaseProductivityDTO[];
+  'participaciones en comites de evaluacion': BaseProductivityDTO[];
+  'procesos o tecnicas': BaseProductivityDTO[];
+  'revistas': BaseProductivityDTO[];
+  'software': BaseProductivityDTO[];
+  'trabajo en eventos': BaseProductivityDTO[];
+  'tutorias concluidas': BaseProductivityDTO[];
+  'tutorias en marcha': BaseProductivityDTO[];
 }
 
 @Injectable({
@@ -44,7 +65,27 @@ export class UserProductivityService {
     'proceso_tecnica': 'Proceso o técnica'
   };
 
+  // Mapeo de las claves del backend a los tipos del frontend
+  private backendToFrontendTypeMap: Record<string, { tipo: string; tipoDisplay: string }> = {
+    'capitulos de libro': { tipo: 'capitulo', tipoDisplay: 'Capítulo de libro' },
+    'cursos': { tipo: 'curso', tipoDisplay: 'Curso corto' },
+    'eventos': { tipo: 'evento', tipoDisplay: 'Evento/Seminario' },
+    'jurados': { tipo: 'jurado', tipoDisplay: 'Jurado' },
+    'libros': { tipo: 'libro', tipoDisplay: 'Libro' },
+    'materiales didacticos': { tipo: 'material-didactico', tipoDisplay: 'Material didáctico' },
+    'noticias': { tipo: 'noticia', tipoDisplay: 'Noticia' },
+    'participaciones en comites de evaluacion': { tipo: 'participacion-comites', tipoDisplay: 'Participación en comités' },
+    'procesos o tecnicas': { tipo: 'proceso-tecnica', tipoDisplay: 'Proceso o técnica' },
+    'revistas': { tipo: 'revista', tipoDisplay: 'Revista' },
+    'software': { tipo: 'software', tipoDisplay: 'Software' },
+    'trabajo en eventos': { tipo: 'trabajo-eventos', tipoDisplay: 'Trabajo en eventos' },
+    'tutorias concluidas': { tipo: 'tutoria-concluida', tipoDisplay: 'Tutoría concluida' },
+    'tutorias en marcha': { tipo: 'tutoria-en-marcha', tipoDisplay: 'Tutoría en marcha' }
+  };
+
   constructor(
+    private http: HttpClient,
+    private config: AppConfigService,
     private booksService: BooksService,
     private capBookService: CapBookService,
     private cursoService: CursoService,
@@ -61,177 +102,58 @@ export class UserProductivityService {
   ) {}
 
   /**
-   * Obtiene todas las publicaciones de un usuario específico
+   * Obtiene todas las publicaciones de un usuario específico usando el endpoint del backend
    * @param userId ID del usuario en la base de datos
    * @returns Observable con lista de publicaciones del usuario
    */
   getProductivityByUserId(userId: number): Observable<UserProductivityItem[]> {
-    console.log(`Buscando publicaciones para usuario ID: ${userId}`);
+    console.log(`Buscando publicaciones para usuario ID: ${userId} usando endpoint del backend`);
     
-    // Consultar todos los tipos de productividad en paralelo
-    return forkJoin({
-      libros: this.booksService.getBooks().pipe(catchError(() => of([]))),
-      capitulos: this.capBookService.getCapBooks().pipe(catchError(() => of([]))),
-      cursos: this.cursoService.getAll().pipe(catchError(() => of([]))),
-      eventos: this.eventoService.getAll().pipe(catchError(() => of([]))),
-      revistas: this.revistaService.getAll().pipe(catchError(() => of([]))),
-      software: this.softwareService.getAll().pipe(catchError(() => of([]))),
-      tutoriasConcluidas: this.tutoriaConcluidaService.getAll().pipe(catchError(() => of([]))),
-      tutoriasEnMarcha: this.tutoriaEnMarchaService.getAll().pipe(catchError(() => of([]))),
-      trabajosEventos: this.trabajoEventosService.getAll().pipe(catchError(() => of([]))),
-      participacionComites: this.participacionComitesEvService.getAll().pipe(catchError(() => of([]))),
-      materialDidactico: this.materialDidacticoService.getAll().pipe(catchError(() => of([]))),
-      jurados: this.juradoService.getAll().pipe(catchError(() => of([]))),
-      procesosTecnicas: this.procesoTecnicaService.getAll().pipe(catchError(() => of([])))
-    }).pipe(
-      map(results => {
+    const url = `${this.config.apiUrlBackend}informacion/publicaciones/${userId}/Publicaciones/`;
+    console.log(`URL completa: ${url}`);
+    
+    return this.http.get<PublicacionesBackendResponse>(url).pipe(
+      map(response => {
+        console.log(`Respuesta completa del backend:`, response);
         const allItems: UserProductivityItem[] = [];
         
-        console.log(`Resultados recibidos para usuario ${userId}:`, {
-          libros: (results.libros as BaseProductivityDTO[])?.length || 0,
-          capitulos: (results.capitulos as BaseProductivityDTO[])?.length || 0,
-          cursos: (results.cursos as BaseProductivityDTO[])?.length || 0,
-          eventos: (results.eventos as BaseProductivityDTO[])?.length || 0,
-          revistas: (results.revistas as BaseProductivityDTO[])?.length || 0,
-          software: (results.software as BaseProductivityDTO[])?.length || 0,
-          tutoriasConcluidas: (results.tutoriasConcluidas as BaseProductivityDTO[])?.length || 0,
-          tutoriasEnMarcha: (results.tutoriasEnMarcha as BaseProductivityDTO[])?.length || 0,
-          trabajosEventos: (results.trabajosEventos as BaseProductivityDTO[])?.length || 0,
-          participacionComites: (results.participacionComites as BaseProductivityDTO[])?.length || 0,
-          materialDidactico: (results.materialDidactico as BaseProductivityDTO[])?.length || 0,
-          jurados: (results.jurados as BaseProductivityDTO[])?.length || 0,
-          procesosTecnicas: (results.procesosTecnicas as BaseProductivityDTO[])?.length || 0
+        if (!response) {
+          console.warn(`Respuesta vacía o inválida del backend para usuario ${userId}`);
+          return allItems;
+        }
+        
+        console.log(`Respuesta recibida del backend para usuario ${userId}:`, {
+          'capitulos de libro': response['capitulos de libro']?.length || 0,
+          'cursos': response['cursos']?.length || 0,
+          'eventos': response['eventos']?.length || 0,
+          'jurados': response['jurados']?.length || 0,
+          'libros': response['libros']?.length || 0,
+          'materiales didacticos': response['materiales didacticos']?.length || 0,
+          'noticias': response['noticias']?.length || 0,
+          'participaciones en comites de evaluacion': response['participaciones en comites de evaluacion']?.length || 0,
+          'procesos o tecnicas': response['procesos o tecnicas']?.length || 0,
+          'revistas': response['revistas']?.length || 0,
+          'software': response['software']?.length || 0,
+          'trabajo en eventos': response['trabajo en eventos']?.length || 0,
+          'tutorias concluidas': response['tutorias concluidas']?.length || 0,
+          'tutorias en marcha': response['tutorias en marcha']?.length || 0
         });
 
-        // Filtrar y agregar libros
-        const libros = (results.libros as BaseProductivityDTO[])
-          .filter(item => {
-            // Manejar casos donde usuario puede ser número o string
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            const matches = itemUsuario === userId;
-            if (matches) {
-              console.log(`Libro encontrado para usuario ${userId}:`, item.titulo);
-            }
-            return matches;
-          })
-          .map(item => ({ ...item, tipo: 'libro', tipoDisplay: this.tipoDisplayMap['libro'] }));
-        allItems.push(...libros);
-
-        // Filtrar y agregar capítulos
-        const capitulos = (results.capitulos as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            const matches = itemUsuario === userId;
-            if (matches) {
-              console.log(`Capítulo encontrado para usuario ${userId}:`, item.titulo);
-            }
-            return matches;
-          })
-          .map(item => ({ ...item, tipo: 'capitulo', tipoDisplay: this.tipoDisplayMap['capitulo'] || 'Capítulo de libro' }));
-        allItems.push(...capitulos);
-
-        // Filtrar y agregar cursos
-        const cursos = (results.cursos as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'curso', tipoDisplay: this.tipoDisplayMap['curso'] }));
-        allItems.push(...cursos);
-
-        // Filtrar y agregar eventos
-        const eventos = (results.eventos as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'evento', tipoDisplay: this.tipoDisplayMap['evento'] }));
-        allItems.push(...eventos);
-
-        // Filtrar y agregar revistas
-        const revistas = (results.revistas as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'revista', tipoDisplay: this.tipoDisplayMap['revista'] || 'Revista' }));
-        allItems.push(...revistas);
-        
-        if (revistas.length > 0) {
-          console.log(`Revistas encontradas para usuario ${userId}:`, revistas.length);
-        }
-
-        // Filtrar y agregar software
-        const software = (results.software as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'software', tipoDisplay: this.tipoDisplayMap['software'] }));
-        allItems.push(...software);
-
-        // Filtrar y agregar tutorías concluidas
-        const tutoriasConcluidas = (results.tutoriasConcluidas as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'tutoria-concluida', tipoDisplay: this.tipoDisplayMap['tutoria_concluida'] }));
-        allItems.push(...tutoriasConcluidas);
-
-        // Filtrar y agregar tutorías en marcha
-        const tutoriasEnMarcha = (results.tutoriasEnMarcha as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'tutoria-en-marcha', tipoDisplay: this.tipoDisplayMap['tutoria_en_marcha'] }));
-        allItems.push(...tutoriasEnMarcha);
-
-        // Filtrar y agregar trabajos en eventos
-        const trabajosEventos = (results.trabajosEventos as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'trabajo-eventos', tipoDisplay: this.tipoDisplayMap['trabajo_eventos'] }));
-        allItems.push(...trabajosEventos);
-
-        // Filtrar y agregar participación en comités
-        const participacionComites = (results.participacionComites as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'participacion-comites', tipoDisplay: this.tipoDisplayMap['participacion_comites'] }));
-        allItems.push(...participacionComites);
-
-        // Filtrar y agregar material didáctico
-        const materialDidactico = (results.materialDidactico as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'material-didactico', tipoDisplay: this.tipoDisplayMap['material_didactico'] }));
-        allItems.push(...materialDidactico);
-
-        // Filtrar y agregar jurados
-        const jurados = (results.jurados as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'jurado', tipoDisplay: this.tipoDisplayMap['jurado'] }));
-        allItems.push(...jurados);
-
-        // Filtrar y agregar procesos o técnicas
-        const procesosTecnicas = (results.procesosTecnicas as BaseProductivityDTO[])
-          .filter(item => {
-            const itemUsuario = typeof item.usuario === 'string' ? parseInt(item.usuario, 10) : item.usuario;
-            return itemUsuario === userId;
-          })
-          .map(item => ({ ...item, tipo: 'proceso-tecnica', tipoDisplay: this.tipoDisplayMap['proceso_tecnica'] }));
-        allItems.push(...procesosTecnicas);
+        // Procesar cada tipo de publicación del backend
+        Object.keys(this.backendToFrontendTypeMap).forEach(backendKey => {
+          const publications = response[backendKey as keyof PublicacionesBackendResponse];
+          const typeMapping = this.backendToFrontendTypeMap[backendKey];
+          
+          if (publications && Array.isArray(publications) && publications.length > 0) {
+            console.log(`Procesando ${publications.length} publicaciones de tipo: ${backendKey}`);
+            const mappedItems: UserProductivityItem[] = publications.map(item => ({
+              ...item,
+              tipo: typeMapping.tipo,
+              tipoDisplay: typeMapping.tipoDisplay
+            }));
+            allItems.push(...mappedItems);
+          }
+        });
 
         console.log(`Total de publicaciones encontradas para usuario ${userId}: ${allItems.length}`);
         console.log(`Desglose por tipo:`, {
@@ -249,7 +171,20 @@ export class UserProductivityService {
           jurados: allItems.filter(i => i.tipo === 'jurado').length,
           procesosTecnicas: allItems.filter(i => i.tipo === 'proceso-tecnica').length
         });
+        
         return allItems;
+      }),
+      catchError(error => {
+        console.error(`Error al obtener publicaciones del usuario ${userId}:`, error);
+        console.error(`Detalles del error:`, {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          error: error.error
+        });
+        // Retornar array vacío en lugar de lanzar error para que la UI no se rompa
+        return of([]);
       })
     );
   }
@@ -259,23 +194,40 @@ export class UserProductivityService {
    * @returns Observable con un objeto que contiene la última publicación de cada tipo
    */
   getLatestPublicationsByType(): Observable<Record<string, UserProductivityItem | null>> {
+    console.log('Cargando últimas publicaciones de cada tipo...');
     // Consultar todos los tipos de productividad en paralelo
     return forkJoin({
-      libros: this.booksService.getBooks().pipe(catchError(() => of([]))),
-      capitulos: this.capBookService.getCapBooks().pipe(catchError(() => of([]))),
-      cursos: this.cursoService.getAll().pipe(catchError(() => of([]))),
-      eventos: this.eventoService.getAll().pipe(catchError(() => of([]))),
-      revistas: this.revistaService.getAll().pipe(catchError(() => of([]))),
-      software: this.softwareService.getAll().pipe(catchError(() => of([]))),
-      tutoriasConcluidas: this.tutoriaConcluidaService.getAll().pipe(catchError(() => of([]))),
-      tutoriasEnMarcha: this.tutoriaEnMarchaService.getAll().pipe(catchError(() => of([]))),
-      trabajosEventos: this.trabajoEventosService.getAll().pipe(catchError(() => of([]))),
-      participacionComites: this.participacionComitesEvService.getAll().pipe(catchError(() => of([]))),
-      materialDidactico: this.materialDidacticoService.getAll().pipe(catchError(() => of([]))),
-      jurados: this.juradoService.getAll().pipe(catchError(() => of([]))),
-      procesosTecnicas: this.procesoTecnicaService.getAll().pipe(catchError(() => of([])))
+      libros: this.booksService.getBooks().pipe(catchError((err) => { console.error('Error al obtener libros:', err); return of([]); })),
+      capitulos: this.capBookService.getCapBooks().pipe(catchError((err) => { console.error('Error al obtener capítulos:', err); return of([]); })),
+      cursos: this.cursoService.getAll().pipe(catchError((err) => { console.error('Error al obtener cursos:', err); return of([]); })),
+      eventos: this.eventoService.getAll().pipe(catchError((err) => { console.error('Error al obtener eventos:', err); return of([]); })),
+      revistas: this.revistaService.getAll().pipe(catchError((err) => { console.error('Error al obtener revistas:', err); return of([]); })),
+      software: this.softwareService.getAll().pipe(catchError((err) => { console.error('Error al obtener software:', err); return of([]); })),
+      tutoriasConcluidas: this.tutoriaConcluidaService.getAll().pipe(catchError((err) => { console.error('Error al obtener tutorías concluidas:', err); return of([]); })),
+      tutoriasEnMarcha: this.tutoriaEnMarchaService.getAll().pipe(catchError((err) => { console.error('Error al obtener tutorías en marcha:', err); return of([]); })),
+      trabajosEventos: this.trabajoEventosService.getAll().pipe(catchError((err) => { console.error('Error al obtener trabajos en eventos:', err); return of([]); })),
+      participacionComites: this.participacionComitesEvService.getAll().pipe(catchError((err) => { console.error('Error al obtener participación en comités:', err); return of([]); })),
+      materialDidactico: this.materialDidacticoService.getAll().pipe(catchError((err) => { console.error('Error al obtener material didáctico:', err); return of([]); })),
+      jurados: this.juradoService.getAll().pipe(catchError((err) => { console.error('Error al obtener jurados:', err); return of([]); })),
+      procesosTecnicas: this.procesoTecnicaService.getAll().pipe(catchError((err) => { console.error('Error al obtener procesos o técnicas:', err); return of([]); }))
     }).pipe(
       map(results => {
+        console.log('Resultados de forkJoin recibidos:', {
+          libros: (results.libros as BaseProductivityDTO[])?.length || 0,
+          capitulos: (results.capitulos as BaseProductivityDTO[])?.length || 0,
+          cursos: (results.cursos as BaseProductivityDTO[])?.length || 0,
+          eventos: (results.eventos as BaseProductivityDTO[])?.length || 0,
+          revistas: (results.revistas as BaseProductivityDTO[])?.length || 0,
+          software: (results.software as BaseProductivityDTO[])?.length || 0,
+          tutoriasConcluidas: (results.tutoriasConcluidas as BaseProductivityDTO[])?.length || 0,
+          tutoriasEnMarcha: (results.tutoriasEnMarcha as BaseProductivityDTO[])?.length || 0,
+          trabajosEventos: (results.trabajosEventos as BaseProductivityDTO[])?.length || 0,
+          participacionComites: (results.participacionComites as BaseProductivityDTO[])?.length || 0,
+          materialDidactico: (results.materialDidactico as BaseProductivityDTO[])?.length || 0,
+          jurados: (results.jurados as BaseProductivityDTO[])?.length || 0,
+          procesosTecnicas: (results.procesosTecnicas as BaseProductivityDTO[])?.length || 0
+        });
+        
         const latestPublications: Record<string, UserProductivityItem | null> = {};
 
         // Función auxiliar para obtener la última publicación de un array
@@ -302,7 +254,12 @@ export class UserProductivityService {
         latestPublications['jurado'] = getLatest(results.jurados as BaseProductivityDTO[], 'jurado', this.tipoDisplayMap['jurado']);
         latestPublications['proceso_tecnica'] = getLatest(results.procesosTecnicas as BaseProductivityDTO[], 'proceso-tecnica', this.tipoDisplayMap['proceso_tecnica']);
 
+        console.log('Últimas publicaciones procesadas:', Object.keys(latestPublications).filter(k => latestPublications[k] !== null).length, 'tipos con publicaciones');
         return latestPublications;
+      }),
+      catchError(error => {
+        console.error('Error en getLatestPublicationsByType:', error);
+        return of({});
       })
     );
   }

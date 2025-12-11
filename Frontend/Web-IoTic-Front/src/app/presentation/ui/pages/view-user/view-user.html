@@ -16,13 +16,13 @@
     </div>
 
     <!-- Mensaje de error -->
-    <div *ngIf="showError" class="alert alert-danger mt-4 mx-4" role="alert">
+    <div *ngIf="showError" class="alert alert-danger mt-3 mt-md-4 mx-2 mx-md-4" role="alert">
       {{ errorMessage }}
     </div>
 
     <!-- Contenido principal -->
     <section *ngIf="!showError && user" class="user-content">
-      <div class="container-fluid px-3 px-md-4">
+      <div class="container-fluid px-2 px-md-3 px-lg-4">
         <div class="row">
           <!-- Información del usuario -->
           <div class="col-12">
@@ -34,16 +34,48 @@
           </div>
           
           <!-- Publicaciones del usuario -->
-          <div class="col-12 mt-4">
-            <div *ngIf="loadingPublications" class="text-center py-4">
-              <p>Cargando publicaciones...</p>
+          <div class="col-12 mt-3 mt-md-4">
+            <div *ngIf="loadingPublications" class="text-center py-3 py-md-4">
+              <p class="mb-0">Cargando publicaciones...</p>
             </div>
-            <app-publications-list
-              *ngIf="!loadingPublications"
-              [publications]="publications"
-              (publicationClick)="onPublicationClick($event)"
-              class="container">
-            </app-publications-list>
+            
+            <!-- Mensaje cuando no hay publicaciones -->
+            <div *ngIf="!loadingPublications && publicationsByType.length === 0" class="no-publications-message">
+              <p class="text-muted">Este usuario no tiene publicaciones registradas.</p>
+            </div>
+            
+            <!-- Secciones de publicaciones por tipo -->
+            <div *ngIf="!loadingPublications && publicationsByType.length > 0" class="publications-sections">
+              <div 
+                *ngFor="let section of publicationsByType; trackBy: trackBySection" 
+                class="publication-type-section">
+                <div class="section-header">
+                  <h3 class="section-title">
+                    <i class="fas fa-folder-open me-2"></i>
+                    {{ section.tipoDisplay }}
+                  </h3>
+                  <span class="section-count badge bg-primary">{{ section.publications.length }}</span>
+                </div>
+                <div class="section-content">
+                  <app-publications-list
+                    [publications]="section.publications"
+                    [showTitle]="false"
+                    (publicationClick)="onPublicationClick($event)">
+                  </app-publications-list>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Debug: Mostrar información si no hay secciones pero sí hay publicaciones -->
+            <div *ngIf="!loadingPublications && publicationsByType.length === 0 && publications.length > 0" 
+                 class="alert alert-warning mt-3">
+              <p><strong>Advertencia:</strong> Hay {{ publications.length }} publicaciones pero no se pudieron agrupar por tipo.</p>
+              <p class="small mb-0">Tipos encontrados: 
+                <span *ngFor="let pub of publications.slice(0, 5); let last = last">
+                  "{{ pub.tipo }}"<span *ngIf="!last">, </span>
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       </div>

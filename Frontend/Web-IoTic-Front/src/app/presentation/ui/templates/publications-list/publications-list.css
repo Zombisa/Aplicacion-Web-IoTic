@@ -122,15 +122,126 @@
   box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive - Tablet */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .publications-container {
+    padding: 1.5rem 0;
+  }
+
   .publications-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .publication-image-wrapper {
+    height: 180px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .publications-container {
+    padding: 1rem 0;
+  }
+
+  .publications-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .publications-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1rem;
   }
 
   .publication-image-wrapper {
-    height: 150px;
+    height: 140px;
+  }
+
+  .publication-info {
+    padding: 0.75rem;
+  }
+
+  .publication-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .publication-type {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .edit-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Responsive - Mobile pequeño */
+@media (max-width: 576px) {
+  .publications-container {
+    padding: 0.75rem 0;
+  }
+
+  .publications-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .publications-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .publication-card {
+    border-radius: 6px;
+  }
+
+  .publication-image-wrapper {
+    height: 120px;
+  }
+
+  .publication-image-placeholder {
+    font-size: 2rem;
+  }
+
+  .publication-info {
+    padding: 0.6rem;
+  }
+
+  .publication-title {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .publication-type {
+    font-size: 0.75rem;
+  }
+
+  .edit-button {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+
+  .no-publications {
+    padding: 2rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive - Mobile muy pequeño */
+@media (max-width: 400px) {
+  .publications-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .publication-image-wrapper {
+    height: 180px;
   }
 }
 
