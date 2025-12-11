@@ -93,7 +93,7 @@ class CapLibroViewSet(viewsets.ModelViewSet):
             #gestion para actualizar un archivo (se elimina y se sube otro en r2)
             file_path = data.pop('archivo_path', None)
             if file_path and not data.get('file_r2'):
-                data['file_r2'] = f"{settings.R2_BUCKET_PATH}/{file_path}"
+                data['file_r2'] = f"{settings.R2_BUCKET_FILES_PATH}/{file_path}"
                 
             nuevo_archivo = data.get('file_r2')
             if nuevo_archivo and cap_libro.file_r2 and nuevo_archivo != cap_libro.file_r2:
