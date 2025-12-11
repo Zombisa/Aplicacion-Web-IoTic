@@ -1,0 +1,96 @@
+<div class="app-container container-fluid ">
+  <div class="header-wrapper mb-3">
+    <app-header></app-header>
+  </div>
+
+  <main class="main-content">
+    <div class="card shadow-sm p-3 d-flex flex-row align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <mat-icon class="me-3 icon-user" style="font-size: 3rem; color: #6c757d;">account_circle</mat-icon>
+        <div class="user-details">
+          <ng-container *ngIf="user$ | async as user; else loading">
+            <h5 class="mb-1 fw-semibold">
+              {{ user.displayName || user.email || 'Usuario sin nombre' }}
+            </h5>
+            <p class="mb-0 text-muted small">
+              {{ user.email || 'Sin email' }}
+            </p>
+          </ng-container>
+          <ng-template #loading>
+            <span>Cargando usuario...</span>
+          </ng-template>
+        </div>
+      </div>
+      <button class="btn btn-outline-danger d-flex align-items-center" (click)="logout()">
+        <mat-icon class="me-1">logout</mat-icon>
+      </button>
+    </div>
+    <!-- Sección de Mi Perfil (para admin y mentor) -->
+    <div class="actions-section" *ngIf="isAdminOrMentor$ | async">
+      <h2 class="actions-title">Mi Perfil</h2>
+      <div class="actions-divider"></div>
+      
+      <div class="actions-grid">
+        <!-- Tarjeta de Mi Perfil -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Ver mi perfil</h3>
+            <mat-icon class="action-icon">person</mat-icon>
+            <button class="btn-action" (click)="navigateTo('/mi-perfil')">Pulsa aqui</button>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Publicaciones -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Publicaciones</h3>
+            <mat-icon class="action-icon">article</mat-icon>
+            <button class="btn-action" (click)="navigateTo('productividad/panel')">Pulsa aqui</button>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Registro Fotográfico -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Registro Fotográfico</h3>
+            <mat-icon class="action-icon">photo_camera</mat-icon>
+            <button class="btn-action" (click)="navigateTo('admin/registro-fotografico')">Pulsa aqui</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Acciones (solo para admin) -->
+    <div class="actions-section" *ngIf="isAdmin$ | async">
+      <h2 class="actions-title">Acciones de Administrador</h2>
+      <div class="actions-divider"></div>
+      
+      <div class="actions-grid">
+        <!-- Tarjeta de Gestión de Inventario -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Gestion de inventario</h3>
+            <mat-icon class="action-icon">inventory_2</mat-icon>
+            <button class="btn-action" (click)="navigateTo('/inventario')">Pulsa aqui</button>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Gestión de Usuarios -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Gestion de usuarios</h3>
+            <mat-icon class="action-icon">groups</mat-icon>
+            <button class="btn-action" (click)="navigateTo('/usuarios')">Pulsa aqui</button>
+          </div>
+        </div>
+        
+        <!-- Tarjeta de Edición de Who We Are -->
+        <div class="action-card">
+          <div class="action-card-content">
+            <h3 class="action-card-title">Editar ¿Quiénes somos?</h3>
+            <mat-icon class="action-icon">edit_note</mat-icon>
+            <button class="btn-action" (click)="navigateTo('who-we-are/edit')">Pulsa aqui</button>
+          </div>
+        </div>
+      </div>
+    </div>

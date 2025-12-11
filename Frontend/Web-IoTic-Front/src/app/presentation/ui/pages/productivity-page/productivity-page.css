@@ -1,0 +1,83 @@
+.banner-primary{
+    height: 40vh;
+    background-color: var(--color-secondary-light);
+    
+}
+.title{
+    font-size: 1.3rem;
+    padding: 0 0rem 1rem 1rem ;
+}
+.block-text-primary {
+  padding-left: 2rem; /* valor por defecto en pantallas pequeñas */
+}
+.divider{
+    height: 3px;
+    width: 15rem;
+    background-color: var(--color-secondary-dark);
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+.section-banner{
+    color: var(--color-primary);
+    height: 30vh;
+}
+.section-banner p{
+    font-size: clamp(3vh, 4vh, 5vh);
+}
+
+.section-options{
+    background-color: var(--color-secondary-light);
+}
+.block-options{
+    width: 80%;
+    margin-top: 3rem;
+}
+
+.card-route {
+    height: 20rem;
+    background-color: var(--color-primary);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: aliceblue;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card-route::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
+    z-index: 1;
+}
+
+.card-route:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-route h3 {
+    font-size: clamp(1rem, 1.2rem, 1.5rem);
+    position: relative;
+    z-index: 2;
+}
+/* A partir de cierto ancho (por ejemplo 992px = pantallas grandes) */
+@media (min-width: 992px) {
+  .block-text-primary {
+    padding-left: 8rem;
+    
+  }
+}
+
+.block-options .col-12 {
+  margin-bottom: 1rem; /* aumenta la separación vertical */
+}
+
+.block-options .card-route {
+  margin: 1.4rem; /* aumenta separación entre columnas horizontal y vertical */
+}

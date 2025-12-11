@@ -1,0 +1,48 @@
+<div class="rounded-4 p-3 p-md-4 border-0 mt-4 mt-md-0">
+
+    <div class="p-4 row">
+            <div class="d-flex justify-content-center align-items-center mt-4 mt-md-0 section-title ">
+        <h5 class="card-title mb-3">Item</h5>
+    </div>
+        <div class="image-upload-box">   
+            <div class="upload-area">
+                <img 
+                [src]="itemDetails?.image_r2 ? itemDetails?.image_r2 : 'Web-IoTic-Front/src/assets/img/item-placeholder.svg'" 
+                class="preview-image" 
+
+                />
+                <i class="fas fa-camera camera-icon"></i>
+                <p class="upload-text"></p>
+            </div>
+        </div>
+
+        <div class="divider shadow-lg"> </div>
+        <div class="col-12 col-lg-4 mb-3">
+            <h2 class="title-item">Serial</h2>
+            <p> {{itemDetails?.serial}} </p>
+        </div>
+        <div class="col-12 col-lg-4 mb-3">
+            <h2 class="title-item">Descripcion</h2>
+            <p> {{itemDetails?.descripcion}} </p>
+        </div>
+        <div class="col-12 col-lg-4 mb-3">
+            <h2 class="title-item">Fecha de registro</h2>
+            <p> {{ itemDetails?.fecha_registro | date:'dd \'de\' MMMM \'de\' yyyy, h:mm a' }}</p>
+        </div>
+
+        <div class="col-12 col-lg-6 mb-3">
+            <h2 class="title-item">Estado administrativo</h2>
+            <p> {{itemDetails?.estado_admin}} </p>
+        </div>
+        <div class="col-12 col-lg-6 mb-3">
+            <h2 class="title-item">Estado fisico</h2>
+            <p> {{itemDetails?.estado_fisico}} </p>
+        </div>
+        <div class="mb-3">
+            <h2 class="title-item">Observacion</h2>
+            <p> {{itemDetails?.observacion}} </p>
+        </div>
+        
+        
+    </div>
+</div>

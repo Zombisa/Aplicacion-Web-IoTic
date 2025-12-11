@@ -1,0 +1,38 @@
+<div class="publications-container">
+  <h2 *ngIf="showTitle" class="publications-title">Publicaciones</h2>
+  
+  <div *ngIf="publications.length === 0" class="no-publications">
+    <p>No hay publicaciones para mostrar.</p>
+  </div>
+
+  <div *ngIf="publications.length > 0" class="publications-grid">
+    <div 
+      *ngFor="let publication of publications" 
+      class="publication-card"
+      (click)="onPublicationClick(publication)">
+      <div class="publication-image-wrapper">
+        <img 
+          [src]="getImageUrl(publication)" 
+          [alt]="publication.titulo" 
+          class="publication-image">
+        <div *ngIf="!publication.image_r2" class="publication-image-placeholder">
+          <i class="fas fa-book"></i>
+        </div>
+      </div>
+      <div class="publication-info">
+        <h3 class="publication-title">{{ publication.titulo || 'Sin título' }}</h3>
+        <p class="publication-type">{{ publication.tipoDisplay || publication.tipoProductividad }}</p>
+        <button 
+          *ngIf="showEditButton"
+          type="button"
+          class="edit-button"
+          (click)="goToEdit($event, publication)"
+          title="Editar publicación"
+          aria-label="Editar publicación">
+           Editar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

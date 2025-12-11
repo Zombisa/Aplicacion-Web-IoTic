@@ -1,0 +1,87 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Capítulo de Libro</h1>
+    <p class="text-help">Información detallada del capítulo</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="capBookImageUrl" [alt]="capBook.titulo" class="book-image">
+               <a 
+                  *ngIf="capBook?.file_r2 && capBook.file_r2 !== ''"
+                  [href]="capBook.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ capBook.titulo || 'Título del Capítulo' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="capBook?.autores">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ capBook.autores }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ capBook.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ capBook.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.isbn">
+                    <h4 class="detail-label">ISBN</h4>
+                    <p class="detail-value">{{ capBook.isbn }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.volumen">
+                    <h4 class="detail-label">Volumen</h4>
+                    <p class="detail-value">{{ capBook.volumen }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.paginaInicio">
+                    <h4 class="detail-label">Página Inicio</h4>
+                    <p class="detail-value">{{ capBook.paginaInicio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.paginasFin">
+                    <h4 class="detail-label">Página Fin</h4>
+                    <p class="detail-value">{{ capBook.paginasFin }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.editorial">
+                    <h4 class="detail-label">Editorial</h4>
+                    <p class="detail-value">{{ capBook.editorial }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.codigoEditorial">
+                    <h4 class="detail-label">Código Editorial</h4>
+                    <p class="detail-value">{{ capBook.codigoEditorial }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="capBook?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ capBook.propiedadIntelectual }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

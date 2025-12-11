@@ -1,0 +1,31 @@
+
+<div class="header-wrapper">
+  <app-header></app-header>
+</div>
+<section class="banner-primary container-fluid d-flex align-items-center p-4  ">
+    <div class="block-text-primary mt-4">
+        <h1 class="animate-on-scroll animate-fadeInUp">
+            Productividad
+        </h1>
+        <div class="divider"></div>
+        <p>
+            Bienvenido a tu zona de productividad, aqui podras encontrar todo lo que necesitas crecer. 
+        </p>
+    </div>
+</section>
+
+<section class="container-fluid section-options d-flex justify-content-center justify-content-center ">
+  <div class="row block-options ">
+    <div 
+      class="col-12 col-md-6  col-lg-4 mb-2"
+      *ngFor="let box of routesBox">
+      
+      <div 
+        class="card-route d-flex flex-column align-items-center justify-content-center animate-on-scroll animate-zoomIn"
+        [routerLink]="box.route"
+        [style.backgroundImage]="'url(' + (box.image || box.imgae || box.images) + ')'">
+      </div>
+      <h3 class="title">{{ box.title }}</h3>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,112 @@
+<div class="form-create-user-container">
+    <h3 class="form-title">Crear Nuevo Usuario</h3>
+    
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form" novalidate>
+      <!-- Nombre -->
+      <div class="input-container personality-camp mt-2">
+        <input 
+          type="text" 
+          class="input-line" 
+          formControlName="nombre" 
+          placeholder=" "
+          [class.is-invalid]="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched"
+        >
+        <label>Nombre <span class="text-danger">*</span></label>
+        <div class="invalid-feedback" *ngIf="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched">
+          <small *ngIf="userForm.get('nombre')?.errors?.['required']">El nombre es obligatorio</small>
+          <small *ngIf="userForm.get('nombre')?.errors?.['minlength']">Debe tener al menos 2 caracteres</small>
+        </div>
+      </div>
+        <!-- Apellido -->
+    <div class="input-container personality-camp mt-2">
+        <input 
+          type="text" 
+          class="input-line" 
+          formControlName="apellido" 
+          placeholder=" "
+          [class.is-invalid]="userForm.get('apellido')?.invalid && userForm.get('apellido')?.touched"
+        >
+        <label>Apellido <span class="text-danger">*</span></label>
+        <div class="invalid-feedback" *ngIf="userForm.get('apellido')?.invalid && userForm.get('apellido')?.touched">
+          <small *ngIf="userForm.get('apellido')?.errors?.['required']">El apellido es obligatorio</small>
+          <small *ngIf="userForm.get('apellido')?.errors?.['minlength']">Debe tener al menos 2 caracteres</small>
+        </div>
+      </div>
+        <!-- Email -->
+        <div class="input-container personality-camp mt-2">
+            <input 
+              type="email" 
+              class="input-line" 
+              formControlName="email" 
+              placeholder=" "
+              [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+            >
+            <label>Email <span class="text-danger">*</span></label>
+            <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              <small *ngIf="userForm.get('email')?.errors?.['required']">El email es obligatorio</small>
+              <small *ngIf="userForm.get('email')?.errors?.['email']">Debe ser un email válido</small>
+            </div>
+          </div>
+          <!-- Contraseña -->
+    <div class="input-container personality-camp mt-2">
+        <input 
+          type="password" 
+          class="input-line" 
+          formControlName="contrasena" 
+          placeholder=" "
+          [class.is-invalid]="userForm.get('contrasena')?.invalid && userForm.get('contrasena')?.touched"
+        >
+        <label>Contraseña <span class="text-danger">*</span></label>
+        <div class="invalid-feedback" *ngIf="userForm.get('contrasena')?.invalid && userForm.get('contrasena')?.touched">
+          <small *ngIf="userForm.get('contrasena')?.errors?.['required']">La contraseña es obligatoria</small>
+          <small *ngIf="userForm.get('contrasena')?.errors?.['minlength']">Debe tener al menos 6 caracteres</small>
+        </div>
+      </div>
+        <!-- Confirmar Contraseña -->
+        <div class="input-container personality-camp mt-2">
+            <input 
+              type="password" 
+              class="input-line" 
+              formControlName="confirmarContrasena" 
+              placeholder=" "
+              [class.is-invalid]="userForm.get('confirmarContrasena')?.invalid && userForm.get('confirmarContrasena')?.touched"
+            >
+            <label>Confirmar Contraseña <span class="text-danger">*</span></label>
+            <div class="invalid-feedback" *ngIf="userForm.get('confirmarContrasena')?.invalid && userForm.get('confirmarContrasena')?.touched">
+              <small *ngIf="userForm.get('confirmarContrasena')?.errors?.['required']">Debe confirmar la contraseña</small>
+              <small *ngIf="userForm.get('confirmarContrasena')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</small>
+            </div>
+          </div>
+            <!-- Rol -->
+    <div class="input-container personality-camp mt-2">
+        <select 
+          class="input-line form-select" 
+          formControlName="rol"
+          [class.is-invalid]="userForm.get('rol')?.invalid && userForm.get('rol')?.touched"
+        >
+          <option value="">Seleccione un rol</option>
+          <option *ngFor="let rol of roles" [value]="rol.nombre">
+            {{ rol.nombre }}
+          </option>
+        </select>
+        <label>Rol <span class="text-danger">*</span></label>
+        <div class="invalid-feedback" *ngIf="userForm.get('rol')?.invalid && userForm.get('rol')?.touched">
+          Debe seleccionar un rol
+        </div>
+      </div>
+          <!-- Botones -->
+    <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-4">
+        <button type="button" class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-outline-secondary px-3 px-md-4 order-3 order-sm-2" (click)="resetForm()">
+          Limpiar
+        </button>
+        <button type="submit" class="btn btn-primary px-3 px-md-4 order-1 order-sm-3" [disabled]="userForm.invalid">
+          Crear Usuario
+        </button>
+      </div>
+    </form>
+  </div>
+
+

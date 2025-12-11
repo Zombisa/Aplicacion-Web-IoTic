@@ -1,0 +1,87 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
+    <h1 class="title text-center">Libro</h1>
+    <p class="text-help">Información detallada del libro</p>
+  </section>
+
+  
+  <section class="banner-container">
+      <div class="container">
+         <div class="row">
+            <div class="col-12 col-lg-6 mb-4 p-4">
+               <img [src]="bookImageUrl" [alt]="book.titulo" class="book-image">
+               <a 
+                  *ngIf="book?.file_r2 && book.file_r2 !== ''"
+                  [href]="book.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="book-details">
+                  <h2 class="title-section">{{ book.titulo || 'Título del Libro' }}</h2>
+                  
+                  <div class="detail-item" *ngIf="book?.autores">
+                    <h4 class="detail-label">Autores</h4>
+                    <p class="detail-value">{{ book.autores }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.anio">
+                    <h4 class="detail-label">Año</h4>
+                    <p class="detail-value">{{ book.anio }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.pais">
+                    <h4 class="detail-label">País</h4>
+                    <p class="detail-value">{{ book.pais }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.isbn">
+                    <h4 class="detail-label">ISBN</h4>
+                    <p class="detail-value">{{ book.isbn }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.volumen">
+                    <h4 class="detail-label">Volumen</h4>
+                    <p class="detail-value">{{ book.volumen }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.paginas">
+                    <h4 class="detail-label">Páginas</h4>
+                    <p class="detail-value">{{ book.paginas }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.editorial">
+                    <h4 class="detail-label">Editorial</h4>
+                    <p class="detail-value">{{ book.editorial }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.codigoEditorial">
+                    <h4 class="detail-label">Código Editorial</h4>
+                    <p class="detail-value">{{ book.codigoEditorial }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.propiedadIntelectual">
+                    <h4 class="detail-label">Propiedad Intelectual</h4>
+                    <p class="detail-value">{{ book.propiedadIntelectual }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.etiquetas && book.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ book.etiquetas.join(', ') }}</p>
+                  </div>
+                </div>
+            </div>
+         </div>
+      </div>
+  </section>
+</div>
+

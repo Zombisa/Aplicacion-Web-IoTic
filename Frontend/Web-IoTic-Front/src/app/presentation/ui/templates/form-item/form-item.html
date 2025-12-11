@@ -1,0 +1,129 @@
+<form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class=" form-item shadow card" novalidate>
+
+  <div class="row ">
+
+    <!-- IMAGEN -->
+      <section class="col-12 col-md-4">
+        <div class="image-upload-box">
+          <input type="file"
+                 #fileInput
+                 class="file-input-hidden"
+                 accept="image/*"
+                 (change)="onFileSelected($event)" />
+          
+          <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+            <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
+            <div *ngIf="!imagePreview" class="upload-placeholder text-center">
+              <i class="fas fa-camera camera-icon"></i>
+              <p class="upload-text">Imagen</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+    <div class="col-12 col-md-8">
+      <div class="p-3 ">              <!-- Descripción -->
+        <div class=" input-container personality-camp">
+          <input type="text" class="input-line" formControlName="descripcion" placeholder=" ">
+          <label>Descripción <span class="text-danger">*</span></label>
+          <div class="invalid-feedback" *ngIf="itemForm.get('descripcion')?.invalid && itemForm.get('descripcion')?.touched">
+            <small *ngIf="itemForm.get('descripcion')?.errors?.['required']">La descripción es obligatoria</small>
+            <small *ngIf="itemForm.get('descripcion')?.errors?.['minlength']">Debe tener al menos 10 caracteres</small>
+          </div>
+        </div>
+
+        <!-- Estados -->
+        <div class="row g-3 section-estados mb-4">
+          
+          <!-- Estado físico -->
+          <div class="col-12 col-md-6 mb-4">
+            <h4 class="text-state-subtitle">Estado físico</h4>
+            <div class="box-state d-flex align-items-center"
+                [ngClass]="{ 
+                  'warning-state': itemForm.get('estado_fisico')?.value === 'Bueno',
+                  'bad-warning': itemForm.get('estado_fisico')?.value === 'Dañado' 
+                }">
+              <select class="form-select mt-2" formControlName="estado_fisico">
+                <option value="">Seleccione estado</option>
+                <option value="Excelente">Excelente</option>
+                <option value="Bueno">Bueno</option>
+                <option value="Dañado">Dañado</option>
+              </select>
+            </div>
+
+            <div class="invalid-feedback" *ngIf="itemForm.get('estado_fisico')?.invalid && itemForm.get('estado_fisico')?.touched">
+              Debe seleccionar un estado físico
+            </div>
+          </div>
+
+          <!-- Estado administrativo -->
+          <div class="col-12 col-md-6 mt-3" *ngIf="!isLoan">
+            <h4 class="text-state-subtitle">Estado administrativo</h4>
+            <div class="box-state d-flex align-items-center"
+                [ngClass]="{ 
+                  'bad-warning': itemForm.get('estado_admin')?.value === 'Prestado',
+                  'warning-state-no-loan': itemForm.get('estado_admin')?.value === 'No prestar' 
+                }">
+              <select class="form-select mt-2" formControlName="estado_admin">
+                <option value="">Seleccione estado</option>
+                <option value="Disponible">Disponible</option>
+                <option *ngIf="mode === 'create'" value="Prestado">Prestado</option>
+                <option value="No prestar">No prestar</option>
+              </select>
+            </div>
+
+            <div class="invalid-feedback" *ngIf="itemForm.get('estado_admin')?.invalid && itemForm.get('estado_admin')?.touched">
+              Debe seleccionar un estado administrativo
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Observación -->
+        <div class="input-container personality-camp ">
+          <input type="text" class="input-line" formControlName="observacion" placeholder=" ">
+          <label>Observación (Opcional)</label>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="input-container personality-camp mt-2" *ngIf="mode === 'create'">
+          <input type="number" class="input-line" formControlName="cantidad" placeholder=" " min="1">
+          <label>Cantidad <span class="text-danger">*</span></label>
+          <div class="invalid-feedback" *ngIf="itemForm.get('cantidad')?.invalid && itemForm.get('cantidad')?.touched">
+            <small *ngIf="itemForm.get('cantidad')?.errors?.['required']">La cantidad es obligatoria</small>
+            <small *ngIf="itemForm.get('cantidad')?.errors?.['min']">Debe ser mayor que 0</small>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3">
+          <!-- Botón Limpiar solo en modo create -->
+          <button *ngIf="mode === 'create'" 
+                  type="button" 
+                  class="btn btn-outline-secondary px-3 px-md-4 order-2 order-sm-1"
+                  (click)="resetForm()">
+            Limpiar
+          </button>
+
+          <!-- Botones de acción solo en modo edit -->
+          <button *ngIf="mode === 'edit'" 
+                  type="button" 
+                  class="btn btn-outline-warning px-3 px-md-4 order-2 order-sm-1"
+                  (click)="onDeactivateItem()">
+            Dar de baja
+          </button>
+
+
+          <button type="submit" 
+                  class="btn btn-primary px-3 px-md-4 order-1 order-sm-3"
+                  [disabled]="itemForm.invalid">
+            {{ mode === 'create' ? 'Agregar Item' : 'Guardar Cambios' }}
+          </button>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+</form>

@@ -1,0 +1,132 @@
+.banner-primary {
+  background-color: var(--color-primary);
+  height: 30rem;
+  padding-top: 10rem;
+}
+
+.title {
+  color: var(--color-secondary);
+}
+
+.text-help {
+  color: white;
+  margin-top: 1px;
+  font-weight: 300;
+}
+
+.form-container {
+  padding: 3rem 0;
+}
+
+.section-view-item {
+  margin-top: 2rem;
+}
+
+.banner-container {
+  background-color: var(--color-primary);
+  padding: 3rem 0;
+}
+
+.title-section {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Imagen del Libro */
+.book-image {
+  width: 100%;
+  height: auto;
+  max-height: 50rem;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.book-image:hover {
+  transform: scale(1.02);
+}
+
+/* Botón de Descarga */
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+  width: 100%;
+  text-align: center;
+}
+
+.btn-download:hover {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-download:active {
+  transform: translateY(0);
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+/* Detalles del Libro */
+.book-details {
+  padding: 0 1rem;
+}
+
+.detail-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5rem 0;
+}
+
+.detail-value {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .book-details {
+    padding: 0;
+    margin-top: 2rem;
+  }
+
+  .title-section {
+    font-size: 1.75rem;
+  }
+
+  .book-image {
+    max-height: 400px;
+  }
+}

@@ -1,0 +1,98 @@
+<div class="form-registro-wrapper" *ngIf="!loading; else loadingTpl">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- CUADRO PARA LA IMAGEN -->
+    <div class="image-box" (click)="fileInput.click()">
+      <ng-container *ngIf="!imagePreviewUrl; else previewTpl">
+        <span class="image-box-text">Subir imagen</span>
+      </ng-container>
+
+      <ng-template #previewTpl>
+        <img
+          [src]="imagePreviewUrl"
+          alt="Previsualización"
+          class="image-box-preview" />
+      </ng-template>
+
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden />
+    </div>
+
+    <div class="error-text" *ngIf="hasError('file_path', 'required')">
+      La fotografía es obligatoria para crear el registro.
+    </div>
+
+    <!-- CAMPOS TIPO SUBRAYADO -->
+
+    <!-- TÍTULO -->
+    <div class="field-line">
+      <label class="field-label">Título *</label>
+      <input
+        type="text"
+        class="field-input"
+        formControlName="titulo" />
+      <div class="field-underline"></div>
+    </div>
+    <div class="error-text" *ngIf="hasError('titulo', 'required')">
+      El título es obligatorio.
+    </div>
+    <div class="error-text" *ngIf="hasError('titulo', 'maxlength')">
+      Máximo 200 caracteres.
+    </div>
+
+    <!-- FECHA -->
+    <div class="field-line">
+      <label class="field-label">Fecha</label>
+      <input
+        type="date"
+        class="field-input"
+        formControlName="fecha" />
+      <div class="field-underline"></div>
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="field-line">
+      <label class="field-label">Descripción</label>
+      <input
+        type="text"
+        class="field-input"
+        formControlName="descripcion"
+        placeholder="" />
+      <div class="field-underline"></div>
+    </div>
+    <div class="error-text" *ngIf="hasError('descripcion', 'maxlength')">
+      Máximo 500 caracteres.
+    </div>
+
+    <!-- BOTONES INFERIORES TIPO PASTILLA -->
+    <div class="actions-row">
+      <button
+        type="button"
+        class="btn-pill btn-pill-secondary"
+        (click)="onCancel()"
+        [disabled]="saving">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn-pill btn-pill-primary"
+        [disabled]="saving || form.invalid">
+        {{ saving ? 'Guardando…' : (modo === 'create' ? 'Publicar' : 'Guardar cambios') }}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando…</span>
+    </div>
+  </div>
+</ng-template>

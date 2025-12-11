@@ -1,0 +1,98 @@
+<div class="inventory-container">
+  <!-- Sección de Filtros -->
+  <div class="filters-section">
+    <div class="filters-header">
+      <h3>Filtros de Búsqueda</h3>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="filteredData.length < inventoryData.length">
+        Limpiar Filtros
+      </button>
+    </div>
+
+    <div class="filters-grid">
+      <!-- Búsqueda por texto -->
+      <div class="filter-group">
+        <label for="searchText">Buscar:</label>
+        <input
+          type="text"
+          id="searchText"
+          [(ngModel)]="filters.searchText"
+          (input)="applyFilters()"
+          placeholder="Descripcción, serie o observación..."
+          class="filter-input"
+        />
+      </div>
+
+   
+      <!-- Filtro de Estado Físico -->
+      <div class="filter-group">
+        <label for="estadoFisico">Estado Físico:</label>
+        <select
+          id="estadoFisico"
+          [(ngModel)]="filters.estadoFisico"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosFisicos" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro de Estado Administrativo -->
+      <div class="filter-group">
+        <label for="estadoAdministrativo">Estado Administrativo:</label>
+        <select
+          id="estadoAdministrativo"
+          [(ngModel)]="filters.estadoAdministrativo"
+          (change)="applyFilters()"
+          class="filter-select"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosAdministrativos" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Información de resultados -->
+    <div class="results-info">
+      Mostrando <strong>{{ getResultsCount() }}</strong> de <strong>{{ inventoryData.length }}</strong> elementos
+    </div>
+  </div>
+
+  <!-- Tabla de Inventario -->
+  <div class="table-wrapper">
+    <table class="inventory-table" >
+      <thead>
+        <tr>
+          <th>Serial</th>
+          <th>Descripción</th>
+          <th>Estado Físico</th>
+          <th>Estado Admin</th>
+          <th>Observación</th>
+          <th>Fecha Registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of  paginatedData()" class="table-row" (click)="selectItem(item)">
+          <td>{{ item.serial }}</td>
+          <td>{{ item.descripcion }}</td>
+          <td>{{ item.estado_fisico }}</td>
+          <td>{{ item.estado_admin }}</td>
+          <td>{{ item.observacion || '-' }}</td>
+          <td>{{ item.fecha_registro | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-container p-2">
+      <button (click)="previousPage()" class="button-arrow" [disabled]="currentPage === 1">  &lt; </button>
+
+      <span>{{ currentPage }} de {{ totalPages() }}</span>
+
+      <button (click)="nextPage()" class="button-arrow" [disabled]="currentPage === totalPages()">  &gt; </button>
+    </div>
+
+    
+</div>

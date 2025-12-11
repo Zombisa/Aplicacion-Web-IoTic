@@ -1,0 +1,88 @@
+.edit-who-we-are-container {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  .header-wrapper {
+    width: 100%;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  
+  app-header {
+    display: inline-block;
+  }
+  .banner-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .banner-primary .title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .navigation-buttons button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .edit-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-primary);
+  }
+  
+  .section-content {
+    margin-top: 1rem;
+  }
+
+  /* Responsive */
+@media (max-width: 768px) {
+    .banner-primary .title {
+      font-size: 2rem;
+    }
+  
+    .edit-section {
+      padding: 1.5rem;
+    }
+  
+    .section-title {
+      font-size: 1.5rem;
+    }
+  
+    .navigation-buttons {
+      flex-direction: column;
+    }
+  
+    .navigation-buttons button {
+      width: 100%;
+      justify-content: center;
+    }
+  }

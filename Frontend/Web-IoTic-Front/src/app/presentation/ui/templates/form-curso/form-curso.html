@@ -1,0 +1,136 @@
+<div class="container">
+  <h1 class="title">Curso Corto</h1>
+  <div class="divider"></div>
+</div>
+
+<div class="row g-4">
+  <!-- COLUMNA ARCHIVOS -->
+  <section class="col-12 col-lg-6 column">
+    <div class="image-upload-box">
+      <input
+        type="file"
+        #fileInput
+        class="file-input-hidden"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <div
+        class="upload-area"
+        (click)="fileInput.click()"
+        [class.has-image]="imagePreview"
+      >
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview-image"
+          alt="Vista previa"
+        />
+
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <i class="fas fa-camera camera-icon"></i>
+          <p class="upload-text">Haz clic para subir imagen</p>
+        </div>
+      </div>
+
+      <!-- Upload Document -->
+      <input
+        type="file"
+        #documentInput
+        hidden
+        (change)="onDocumentSelected($event)"
+      />
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary mt-3"
+        (click)="documentInput.click()"
+        [class.file-loaded]="selectedDocument || existingDocumentName"
+      >
+        {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+      </button>
+
+      <button
+        *ngIf="selectedDocument || existingDocumentName"
+        type="button"
+        class="btn btn-danger mt-2"
+        (click)="removeFile()"
+      >
+        Quitar archivo ✖
+      </button>
+    </div>
+  </section>
+
+  <!-- COLUMNA FORMULARIO -->
+  <div class="col-12 col-lg-6">
+    <form
+      (ngSubmit)="submitForm()"
+      [formGroup]="form"
+      class="column"
+    >
+      <div class="row g-4">
+        <!-- FORMULARIO -->
+        <section class="form card">
+
+      <!-- Título -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título del curso</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          formControlName="autoresString"
+          placeholder=" " />
+        <label>Autores (separados por coma)</label>
+      </div>
+
+      <!-- Institución -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="institucion" placeholder=" " />
+        <label>Institución</label>
+      </div>
+
+      <!-- Duración -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="duracion" placeholder=" " />
+        <label>Duración (horas)</label>
+      </div>
+
+      <!-- Etiquetas -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          formControlName="etiquetasString"
+          placeholder=" " />
+        <label>Etiquetas (separadas por coma)</label>
+      </div>
+
+      <!-- Propiedad Intelectual -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="propiedadIntelectual" placeholder=" " />
+        <label>Propiedad Intelectual</label>
+      </div>
+
+      <!-- Link (opcional) -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="link" placeholder=" " />
+        <label>Link (opcional)</label>
+      </div>
+          <button
+            type="submit"
+            class="btn btn-primary mt-3"
+            [disabled]="form.invalid"
+          >
+            Guardar curso
+          </button>
+        </section>
+      </div>
+    </form>
+  </div>
+</div>
+

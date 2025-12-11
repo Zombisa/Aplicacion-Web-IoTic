@@ -1,0 +1,111 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+
+<div *ngIf="!(loadingService.loading$ | async)">
+  <div class="header-wrapper">
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="banner-primary d-flex justify-content-center align-items-center flex-column">
+          <h1 class="title">Revisemos el usuario</h1>
+          <p class="text-help">Detalles y estado actual del usuario</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="showError" class="alert alert-danger mt-3 mt-md-4 mx-2 mx-md-4" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Contenido principal -->
+    <section *ngIf="!showError && user" class="user-content">
+      <div class="container-fluid px-2 px-md-3 px-lg-4">
+        <div class="row">
+          <!-- Información del usuario -->
+          <div class="col-12">
+            <app-section-info-user
+              [user]="user"
+              [mode]="sectionMode"
+              (functionEmitter)="handlerFunctionEmitter($event)">
+            </app-section-info-user>
+          </div>
+          
+          <!-- Publicaciones del usuario -->
+          <div class="col-12 mt-3 mt-md-4 container-publications">
+            <!-- Filtro por título -->
+            <div class="row mb-3">
+              <div class="col-12 col-md-6 col-lg-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Filtrar publicaciones por título..."
+                  [value]="searchTerm"
+                  (input)="onFilterChange($any($event.target).value)"
+                />
+              </div>
+            </div>
+
+            <div *ngIf="loadingPublications" class="text-center py-3 py-md-4">
+              <p class="mb-0">Cargando publicaciones...</p>
+            </div>
+            
+            <!-- Mensaje cuando no hay publicaciones -->
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length === 0" class="no-publications-message">
+              <p class="text-muted">No hay publicaciones registradas con ese título.</p>
+            </div>
+            
+            <!-- Secciones de publicaciones por tipo -->
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length > 0" class="publications-sections">
+              <div 
+                *ngFor="let section of filteredPublicationsByType; trackBy: trackBySection" 
+                class="publication-type-section">
+                <div class="section-header">
+                  <h3 class="section-title">
+                    <i class="fas fa-folder-open me-2"></i>
+                    {{ section.tipoDisplay }}
+                  </h3>
+                  <span class="section-count badge bg-primary">{{ section.publications.length }}</span>
+                </div>
+                <div class="section-content">
+                  <app-publications-list
+                    [publications]="section.publications"
+                    [showTitle]="false"
+                    [showEditButton]="canEditPublications"
+                    (publicationClick)="onPublicationClick($event)">
+                  </app-publications-list>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Debug: Mostrar información si no hay secciones pero sí hay publicaciones -->
+            <div *ngIf="!loadingPublications && publicationsByType.length === 0 && publications.length > 0" 
+                 class="alert alert-warning mt-3">
+              <p><strong>Advertencia:</strong> Hay {{ publications.length }} publicaciones pero no se pudieron agrupar por tipo.</p>
+              <p class="small mb-0">Tipos encontrados: 
+                <span *ngFor="let pub of publications.slice(0, 5); let last = last">
+                  "{{ pub.tipo }}"<span *ngIf="!last">, </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <app-confirmation-modal
+    [isVisible]="showDeleteModal"
+    title="Confirmar eliminación"
+    [message]="user ? '¿Estás seguro de que deseas eliminar a ' + user.nombre + ' ' + user.apellido + '? Esta acción no se puede deshacer.' : ''"
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    confirmButtonClass="btn-danger"
+    icon="fas fa-exclamation-triangle"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()">
+  </app-confirmation-modal>
+</div>

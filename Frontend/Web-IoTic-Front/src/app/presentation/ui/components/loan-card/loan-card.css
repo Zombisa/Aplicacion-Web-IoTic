@@ -1,0 +1,167 @@
+.loan-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border-left: 5px solid;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Imagen responsiva al lado izquierdo */
+
+.loan-image-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  max-width: 120px;
+}
+
+.loan-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.loan-card-content {
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.loan-info-section {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.loan-details-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+
+
+.info-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  max-width: 100px;
+}
+
+.status-badge.overdue {
+  background-color: #dc3545;
+  color: white;
+}
+
+.status-badge.loaned {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn-view-loan {
+  background-color: #e9ecef;
+  color: #333;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-view-loan:hover {
+  background-color: #dee2e6;
+  color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .loan-card-content {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .loan-image-section {
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .loan-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .loan-details-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions-column {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .item-name {
+    font-size: 1rem;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+

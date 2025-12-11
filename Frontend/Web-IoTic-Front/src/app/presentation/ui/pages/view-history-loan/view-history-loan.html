@@ -1,0 +1,32 @@
+<app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
+<div *ngIf="!(loadingService.loading$ | async)">
+    <div class="header-wrapper">
+        <app-header></app-header>
+    </div>
+
+    <!-- Banner de título -->
+    <section class="banner-primary container-fluid d-flex justify-content-center align-items-center">
+        <section class="page-title d-flex flex-column align-items-center">
+            <h1 class="title">Historico</h1>
+        </section>
+    </section>
+
+    <!-- Contenido principal -->
+    <section class="container">
+        <div class="container-fluid">
+            <!-- Filtros y búsqueda -->
+            <app-history-filters
+                [searchText]="searchText"
+                [activeFilter]="activeFilter"
+                (searchChange)="onSearchChange($event)"
+                (filterChange)="onFilterChange($event)">
+            </app-history-filters>
+
+            <!-- Lista de préstamos -->
+            <app-loans-history-list
+                [loans]="displayedLoans"
+                [searchText]="searchText">
+            </app-loans-history-list>
+        </div>
+    </section>
+</div>

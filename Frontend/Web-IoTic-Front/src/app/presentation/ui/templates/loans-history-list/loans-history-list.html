@@ -1,0 +1,18 @@
+<div class="loans-history-list-container">
+  <!-- Lista de préstamos -->
+  <div class="loans-list" *ngIf="hasLoans(); else noLoans">
+    <app-loan-card
+      *ngFor="let loan of filteredLoans"
+      [loan]="loan">
+    </app-loan-card>
+  </div>
+
+  <!-- Mensaje cuando no hay préstamos -->
+  <ng-template #noLoans>
+    <div class="no-loans-message">
+      <p>No se encontraron préstamos</p>
+    </div>
+  </ng-template>
+</div>
+
+

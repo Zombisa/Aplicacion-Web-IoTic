@@ -1,0 +1,60 @@
+# Node modules
+/node_modules
+
+# Build output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Angular cache
+/.angular/cache
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Miscellaneous
+.sass-cache/
+.connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+.history/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Firebase and environment (do not commit secrets)
+firebase.json
+firestore.rules
+firestore.indexes.json
+.firebaserc
+
+# Angular environment files (do not commit secrets)
+src/environment/*.ts
+src/app/environment/*.ts
+
+# Server files (if generated)
+main.server.ts
+server.ts

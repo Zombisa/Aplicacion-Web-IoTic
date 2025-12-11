@@ -1,0 +1,151 @@
+<h1 class="title">Tutoria en marcha</h1>
+<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
+  <div class="row g-4">
+
+    <!-- Upload Image and Document -->
+    <section class="col-12 col-lg-6 column">
+      <div class="image-upload-box">
+        <input
+          type="file"
+          #fileInput
+          class="file-input-hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)" />
+
+        <div
+          class="upload-area"
+          (click)="fileInput.click()"
+          [class.has-image]="imagePreview">
+          
+          <img
+            *ngIf="imagePreview"
+            [src]="imagePreview"
+            class="preview-image"
+            alt="Vista previa" />
+
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="fas fa-camera camera-icon"></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+          </div>
+        </div>
+
+        <!-- Document Upload Buttons -->
+        <input
+          type="file"
+          #documentInput
+          hidden
+          (change)="onDocumentSelected($event)" />
+
+        <button
+          class="btn btn-outline-secondary mt-3"
+          (click)="documentInput.click()"
+          [class.file-loaded]="selectedDocument || existingDocumentName"
+          type="button"
+        >
+          {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+        </button>
+
+        <button
+          *ngIf="selectedDocument || existingDocumentName"
+          class="btn btn-danger mt-2"
+          (click)="removeFile()"
+          type="button"
+        >
+          Quitar archivo ✖
+        </button>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="col-12 col-lg-6 column">
+
+      <!-- Título -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
+        <label>Título</label>
+      </div>
+
+      <!-- Subtipo -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="subtipoTitulo" placeholder=" " />
+        <label>Subtipo de tutoría</label>
+      </div>
+
+      <!-- Descripción -->
+      <div class="input-container personality-camp">
+        <textarea class="input-line" rows="3" formControlName="descripcion" placeholder=" "></textarea>
+        <label>Descripción</label>
+      </div>
+
+      <!-- País -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
+        <label>País</label>
+      </div>
+
+      <!-- Año -->
+      <div class="input-container personality-camp">
+        <input type="number" class="input-line" formControlName="anio" placeholder=" " />
+        <label>Año</label>
+      </div>
+
+      <!-- Orientados -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onOrientadosChange($event.target.value)" />
+        <label>Estudiantes orientados (coma)</label>
+      </div>
+
+      <!-- Programa -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="programa" placeholder=" " />
+        <label>Programa</label>
+      </div>
+
+      <!-- Institución -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="institucion" placeholder=" " />
+        <label>Institución</label>
+      </div>
+
+      <!-- Autores -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onAutoresChange($event.target.value)" />
+        <label>Autores (coma)</label>
+      </div>
+
+      <!-- Etiquetas GTI -->
+      <div class="input-container personality-camp">
+        <input
+          type="text"
+          class="input-line"
+          placeholder=" "
+          (change)="onEtiquetasChange($event.target.value)" />
+        <label>Etiquetas GTI (coma)</label>
+      </div>
+
+      <!-- Licencia -->
+      <div class="input-container personality-camp">
+        <input type="text" class="input-line" formControlName="licencia" placeholder=" " />
+        <label>Licencia</label>
+      </div>
+
+          <div class="col-12">
+      <button type="submit" class="btn btn-primary">
+        Guardar Tutoría en Marcha
+      </button>
+    </div>
+
+    </section>
+
+
+
+  </div>
+</form>
