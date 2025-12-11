@@ -168,3 +168,10 @@ class RegistroFotograficoViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Token expirado o invalido.'},
                             status=status.HTTP_403_FORBIDDEN)
+    
+    @action(detail=False, methods=['get'], url_path='public')
+    def list_public(self, request):
+        """Lista pública sin autenticación."""
+        registros = RegistroFotografico.objects.all()
+        serializer = RegistroFotograficoSerializer(registros, many=True)
+        return Response(serializer.data)

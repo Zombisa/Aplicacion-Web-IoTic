@@ -2368,6 +2368,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2695,6 +2722,33 @@
 										"1",
 										"eve",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos"
 									]
 								}
 							},
@@ -3030,6 +3084,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -3353,6 +3434,33 @@
 										"1",
 										"capLib",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros"
 									]
 								}
 							},
@@ -3684,6 +3792,33 @@
 										"1",
 										"jur",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados"
 									]
 								}
 							},
@@ -4029,6 +4164,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4360,6 +4522,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4676,6 +4865,33 @@
 										"1",
 										"partCom",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv"
 									]
 								}
 							},
@@ -5000,6 +5216,30 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -5320,6 +5560,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -5379,7 +5646,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tituloDesarrollo\": \"Sistema de Gestión de Investigación Académica\",\r\n  \"tipoProductividad\": \"Software de gestión\",\r\n  \"etiquetas\": [\"gestión académica\", \"investigación\", \"python\", \"django\", \"web\"],\r\n  \"nivelAcceso\": \"Público\",\r\n  \"tipoProducto\": \"Aplicación web\",\r\n  \"pais\": \"Colombia\",\r\n  \"responsable\": [\"Ing. Carlos Méndez\", \"MSc. Patricia Gómez\"],\r\n  \"codigoRegistro\": \"DERAUTOR:259-124\",\r\n  \"descripcionFuncional\": \"Sistema web para la gestión integral de proyectos de investigación, publicaciones y productividad académica. Permite registro, seguimiento y generación de reportes estadísticos.\",\r\n  \"propiedadIntelectual\": \"Registro Nacional de Derechos de Autor 2024-005\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"raw": "{\r\n  \"titulo\": \"Sistema de Gestión de Investigación Académica\",\r\n  \"tipoProductividad\": \"Software de gestión\",\r\n  \"etiquetas\": [\"gestión académica\", \"investigación\", \"python\", \"django\", \"web\"],\r\n  \"nivelAcceso\": \"Público\",\r\n  \"tipoProducto\": \"Aplicación web\",\r\n  \"pais\": \"Colombia\",\r\n  \"responsable\": [\"Ing. Carlos Méndez\", \"MSc. Patricia Gómez\"],\r\n  \"codigoRegistro\": \"12345\",\r\n  \"descripcionFuncional\": \"Sistema web para la gestión integral de proyectos de investigación, publicaciones y productividad académica. Permite registro, seguimiento y generación de reportes estadísticos.\",\r\n  \"propiedadIntelectual\": \"Registro Nacional de Derechos de Autor 2024-005\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5636,6 +5903,33 @@
 										"1",
 										"soft",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software"
 									]
 								}
 							},
@@ -5960,6 +6254,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -6280,6 +6601,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -6596,6 +6944,33 @@
 										"1",
 										"tutMar",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha"
 									]
 								}
 							},
@@ -6979,6 +7354,35 @@
 								"informacion",
 								"registrosFotograficos",
 								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver sin auth",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/public/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"public",
 								""
 							]
 						}
