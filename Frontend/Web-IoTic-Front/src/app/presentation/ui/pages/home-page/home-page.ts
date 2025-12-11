@@ -8,6 +8,7 @@ import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
 import { RegistroFotograficoDTO } from '../../../../models/DTO/RegistroFotograficoDTO';
 import { RegistroFotograficoService } from '../../../../services/registro-fotografico.service';
+import { interval, Subscription } from 'rxjs';
 declare var bootstrap: any;
 
 @Component({
@@ -19,6 +20,8 @@ declare var bootstrap: any;
 export class HomePage implements OnInit, AfterViewInit, OnDestroy {
 
   private observer!: IntersectionObserver;
+  private heroPhotoSubscription?: Subscription;
+  public currentHeroIndex: number = 0;
   public latestPublications: Record<string, UserProductivityItem | null> = {};
   public publicationTypes: Array<{ key: string, label: string }> = [
     { key: 'libro', label: 'Libro' },
@@ -86,12 +89,19 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   loadRegistroFotograficoHome(): void {
   this.registroFotograficoService.getAll().subscribe({
     next: (registros) => {
+      console.log('Registros fotográficos cargados:', registros);
+      
       // Puedes limitar cuántas fotos muestras en el home
       this.registrosFotograficosHome = registros;
 
       // Tomar las últimas 5 fotos (ordenadas por id desc) para el banner principal
       const ordenadas = [...registros].sort((a, b) => (b.id || 0) - (a.id || 0));
       this.heroFotos = ordenadas.slice(0, 5);
+      console.log('Hero fotos:', this.heroFotos);
+      console.log('Primera foto:', this.heroFotos[0]);
+
+      // Iniciar el cambio aleatorio de fotos cada 4 segundos
+      this.startHeroPhotoRotation();
 
       // Agrupar en slides de 3
       this.registrosFotograficosSlides = [];
@@ -199,6 +209,28 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     if (this.observer) {
       this.scrollAnimations.disconnect();
     }
+    if (this.heroPhotoSubscription) {
+      this.heroPhotoSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Inicia la rotación aleatoria de fotos del hero cada 4 segundos
+   */
+  startHeroPhotoRotation(): void {
+    if (!isPlatformBrowser(this.platformId) || this.heroFotos.length <= 1) {
+      return;
+    }
+
+    this.heroPhotoSubscription = interval(8000).subscribe(() => {
+      // Generar un índice aleatorio diferente al actual
+      let newIndex: number;
+      do {
+        newIndex = Math.floor(Math.random() * Math.min(5, this.heroFotos.length));
+      } while (newIndex === this.currentHeroIndex && this.heroFotos.length > 1);
+      
+      this.currentHeroIndex = newIndex;
+    });
   }
 
   goToRegistroFotografico(): void {

@@ -1,4 +1,4 @@
-.app-container { 
+.app-container {
   width: 100%;
   min-height: 100vh;
   position: relative;
@@ -10,152 +10,169 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
+  /* Remover display: flex, justify-content, align-items */
 }
 
-.banner-primary{
-  background-color: var(--color-primary);
-  height: 90vh;
-  position: relative;
+.main-content {
+  padding: 0 1rem;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
-.hero-photos-col {
-  position: absolute;
-  top: 68%;
-  right: -15%;
-  transform: translateY(-50%);
-  width: 55%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 0;
-}
-
-.hero-photos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 22px;
-  width: 100%;
-  max-width: 1400px;
-  margin-left: auto;
-}
-
-.hero-photo {
+.banner-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark, #1a365d) 100%);
+  min-height: 90vh;
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  height: 480px;
-  aspect-ratio: 1 / 1;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
-  animation: floatFade 20s ease-in-out infinite;
 }
 
-.hero-photo:nth-child(odd) {
-  animation-duration: 8s;
+/* Efecto decorativo de fondo */
+.banner-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 80%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.hero-photo img {
+/* Contenedor del título */
+#title-banner-home {
+  padding: 2rem;
+}
+
+#title-home {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.2;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 400;
+  max-width: 450px;
+  opacity: 0.85;
+}
+
+/* Contenedor de la imagen hero */
+.hero-photo-container {
+  width: 420px;
+  height: 420px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.hero-photo-container:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 35px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Overlay decorativo */
+.hero-photo-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3) 100%);
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.hero-photo-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
-  background: transparent;
-  padding: 0;
+  transition: transform 0.5s ease;
 }
 
-@media (max-width: 1200px) {
-  .hero-photos-col {
-    position: static;
-    transform: none;
-    width: 100%;
-    margin-top: 2.5rem;
-    padding-right: 0;
-    justify-content: center;
-  }
+.hero-photo-container:hover .hero-photo-image {
+  transform: scale(1.08);
 }
 
+/* Responsive */
 @media (max-width: 992px) {
-  .hero-photos {
-    max-width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  .hero-photo-container {
+    width: 320px;
+    height: 320px;
   }
-  .hero-photo {
-    height: 400px;
+  
+  #title-home {
+    font-size: clamp(2rem, 4vw, 3rem);
   }
 }
 
 @media (max-width: 768px) {
-  .banner-primary{
-    height: auto;
-    padding: 2.5rem 1.5rem;
+  .banner-primary {
+    min-height: auto;
+    padding: 6rem 1rem 3rem;
   }
-  .hero-photos-col {
-    margin-top: 1.5rem;
+  
+  .banner-primary .row {
+    flex-direction: column;
   }
-  .hero-photos {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
+  
+  #title-banner-home {
+    margin-bottom: 2rem;
   }
-  .hero-photo {
-    height: 340px;
+  
+  .hero-photo-container {
+    width: 280px;
+    height: 280px;
+  }
+  
+  #title-home {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 576px) {
-  .hero-photos {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-  }
-  .hero-photo {
-    height: 280px;
+  .hero-photo-container {
+    width: 240px;
+    height: 240px;
   }
 }
-
-@keyframes floatFade {
-  0% { transform: translateY(0) scale(1.02); opacity: 0.9; }
-  25% { transform: translateY(-6px) scale(1.03); opacity: 1; }
-  50% { transform: translateY(0) scale(1.02); opacity: 0.9; }
-  75% { transform: translateY(6px) scale(1.03); opacity: 1; }
-  100% { transform: translateY(0) scale(1.02); opacity: 0.9; }
-}
-
-#title-banner-home{
-  height: 20vh;
-  width: 5vh;
-}
-
-h1{
-  font-size: clamp(5vh, 5vw, 10vh);
-}
-
-#title-home{
-  padding-left: 2vh;
-  font-family: "Roboto", sans-serif;
-}
-
 .textWelcome{
   font-size: clamp(1rem, 1.5rem, 2rem);
   font-weight: 400;
   display: flex;
-  font-family: "Roboto", sans-serif;
-  padding-left: 4rem;
-  padding-right: 4rem;
+   font-family: "Roboto", sans-serif;
+   padding-left: 4rem;
+   padding-right: 4rem;
+}
+.responsive-img {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* o 1 / 1 si quieres cuadrado */
+  overflow: hidden;
+  border-radius: 20px;
 }
 
 .responsive-img {
   width: 50%;
   height: 50%;
-  margin-left: calc(-50vw + 50%);
+  margin-left: calc(-50vw + 50%); /* Centrar y expandir fuera del contenedor */
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 0; /* Sin bordes redondeados para ancho completo */
   position: relative;
 }
 
 .responsive-img img {
   width: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center top; /* Mostrar la parte superior de la imagen */
   display: block;
-  transform: translateY(-25%);
+  transform: translateY(-25%); /* Ajustar posición vertical para centrar mejor */
 }
 
 .responsive-img.center-crop img {
@@ -174,15 +191,18 @@ h1{
   padding: 5rem;
   height: 40vh;
   background-color: var(--color-secondary-light);
+  /* Centrado del contenido */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* ✅ Contenedor interno del carrusel */
 .sectionWelcome .carousel-inner {
-  height: 20rem;
+  height: 20rem; /* altura fija del área del texto */
 }
 
+/* Estilos para la sección de últimas publicaciones */
 .latest-publications-section {
   background-color: #f8f9fa;
   min-height: 400px;
@@ -229,7 +249,7 @@ h1{
 }
 
 .publication-info {
-  min-width: 0;
+  min-width: 0; /* Permite que el texto se ajuste */
 }
 
 .publication-title {
@@ -254,42 +274,53 @@ h1{
   font-size: 0.9rem;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .publication-card {
     flex-direction: column;
     text-align: center;
   }
+
   .publication-image {
     margin: 0 auto 1rem;
   }
+
   .image-placeholder {
     margin: 0 auto;
   }
 }
 
+/* ======== CARRUSEL TIPO BANNER ======== */
+
 .registro-carousel {
-  max-width: 1300px;
+  max-width: 1300px; /* más ancho */
   margin: 0 auto;
 }
 
+/* Fila que contiene las 3 imágenes */
 .registro-slide-row {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: 4rem;
+  gap: 4rem; /* MÁS ESPACIADAS */
   padding: 1rem 0;
 }
 
+/* Cada tarjeta tipo “banner reducido” */
 .registro-item {
   flex: 1 1 0;
   min-width: 0;
+
+  /* ALTURA estilo banner */
   height: clamp(260px, 30vw, 380px);
+
   border-radius: 20px;
   overflow: hidden;
   background-color: #e9ecef;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
+/* Imagen interna – recorte sutil */
 .registro-image {
   width: 100%;
   height: 100%;
@@ -298,6 +329,7 @@ h1{
   display: block;
 }
 
+/* Controles más elegantes */
 .registro-carousel .registro-control {
   width: 4rem;
   height: 4rem;
@@ -324,6 +356,7 @@ h1{
   transform: translateY(-1px) scale(1.08);
 }
 
+/* Indicadores */
 .registro-carousel .carousel-indicators [data-bs-target] {
   width: 12px;
   height: 12px;
@@ -335,10 +368,12 @@ h1{
   background-color: var(--color-primary);
 }
 
+/* Responsive */
 @media (max-width: 992px) {
   .registro-slide-row {
     gap: 1.5rem;
   }
+
   .registro-item {
     height: clamp(240px, 40vw, 340px);
   }
@@ -350,8 +385,12 @@ h1{
     overflow-x: auto;
     padding: 1rem;
   }
+
   .registro-item {
     flex: 0 0 90%;
     height: clamp(240px, 55vw, 320px);
   }
 }
+
+
+

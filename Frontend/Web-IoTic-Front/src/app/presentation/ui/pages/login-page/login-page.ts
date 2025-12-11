@@ -72,7 +72,7 @@ export class LoginPage {
       this.handleLoginError({
         success: false,
         errorType: 'network_error',
-        errorMessage: 'Error de conexión. Verifica tu internet e intenta nuevamente'
+        errorMessage: 'No puedes iniciar sesion, credenciales invalidas o falla de conexión '
       });
       console.error('Error de login:', error);
     } finally {
