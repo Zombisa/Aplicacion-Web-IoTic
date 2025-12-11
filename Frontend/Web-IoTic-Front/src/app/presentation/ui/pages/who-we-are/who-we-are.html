@@ -1,97 +1,68 @@
 <app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
-
 <div *ngIf="!(loadingService.loading$ | async)" class="who-we-are-container">
   <div class="header-wrapper">
     <app-header></app-header>
   </div>
 
-  <!-- Banner principal -->
-  <div class="banner-primary container-fluid d-flex justify-content-center align-items-center">
-    <h1 class="title">¿Quiénes somos?</h1>
-  </div>
+  <section class="dark-section container-fluid">
+    <!-- Título Principal -->
+    <div class="main-title-container">
+      <h1 class="main-title">¿Quiénes somos?</h1>
+    </div>
 
-  <!-- Sección Misión, Visión, Valores -->
-  <section class="container-fluid d-flex flex-column align-items-center sectionWhoAre">
-
-    <div class="row container-fluid section-info-company">
-      <!-- Misión -->
-      <div
-        class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-on-scroll animate-fadeInUp"
-      >
-        <div class="d-flex flex-column justify-content-center align-items-start mb-5">
-          <h2 class="subtitle mb-4">Misión</h2>
-          <p class="description-items-company" *ngIf="mision?.contenido">
-            {{ mision?.contenido }}
-          </p>
-          <p class="description-items-company placeholder" *ngIf="!mision?.contenido">
-            No hay información de misión disponible.
-          </p>
-        </div>
-      </div>
-
+    <!-- Contenedor de Visión y Misión -->
+    <div class="vision-mision-container">
       <!-- Visión -->
-      <div
-        class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start content-block animate-on-scroll animate-fadeInUp"
-      >
-        <div class="d-flex flex-column justify-content-center align-items-start mb-5">
-          <h2 class="subtitle mb-4">Visión</h2>
-          <p class="description-items-company" *ngIf="vision?.contenido">
-            {{ vision?.contenido }}
-          </p>
-          <p class="description-items-company placeholder" *ngIf="!vision?.contenido">
-            No hay información de visión disponible.
-          </p>
-        </div>
+      <div class="vision-block content-block">
+        <h2 class="section-heading">Visión</h2>
+        <p class="section-content-text" *ngIf="vision?.contenido">
+          {{ vision?.contenido }}
+        </p>
+        <p class="section-content-text placeholder" *ngIf="!vision?.contenido">
+          No hay información de visión disponible.
+        </p>
+      </div>
+
+      <!-- Misión  -->
+      <div class="mision-block content-block">
+        <h2 class="section-heading">Misión</h2>
+        <p class="section-content-text" *ngIf="mision?.contenido">
+          {{ mision?.contenido }}
+        </p>
+        <p class="section-content-text placeholder" *ngIf="!mision?.contenido">
+          No hay información de misión disponible.
+        </p>
       </div>
     </div>
 
-    <!-- VALORES -->
-    <div class="row container-fluid section-info-company" *ngIf="valores.length > 0">
-      <div
-        class="col-12 d-flex flex-column justify-content-center align-items-start content-block animate-on-scroll animate-fadeInUp"
-      >
-        <h2 class="subtitle mb-4">Valores</h2>
-        <ul class="description-items-company">
-          <li *ngFor="let valor of valores">
-            <strong>{{ valor.titulo }}:</strong> {{ valor.contenido }}
-          </li>
-        </ul>
-      </div>
+    <!-- Valores  -->
+    <div class="valores-block content-block" *ngIf="valores.length > 0">
+      <h2 class="section-heading">Valores</h2>
+      <ol class="valores-list">
+        <li *ngFor="let valor of valores">
+          <strong>{{ valor.titulo }}:</strong> {{ valor.contenido }}
+        </li>
+      </ol>
     </div>
 
-  </section>
-
-  <!-- Sección Objetivos -->
-  <section class="section-objetives container-fluid" *ngIf="objetivos.length > 0">
-    <div>
-      <h2 class="subtitle-secundary text-center mb-5 animate-on-scroll animate-fadeInUp">
-        Nuestros Objetivos
-      </h2>
-    </div>
-
-    <div class="container-fluid d-flex justify-content-center align-items-center">
-      <div class="row container-fluid d-flex justify-content-center align-items-center section-objetives">
-        <div
-          class="col-12 col-md-6 col-lg-4 d-flex flex-column justify-content-center align-items-center mb-4 block-obetives animate-on-scroll animate-slideInRight"
-          *ngFor="let objetivo of objetivos"
-        >
-          <h3 class="title-objective mb-2">{{ objetivo.titulo }}</h3>
-          <p class="description-objective description-objetives">
-            {{ objetivo.contenido }}
-          </p>
+    <!-- Objetivos  -->
+    <div class="objetivos-container" *ngIf="objetivos.length > 0">
+      <h2 class="section-heading">Objetivos</h2>
+      <div class="objetivos-grid">
+        <div class="objetivo-card" *ngFor="let objetivo of objetivos">
+          <h3 class="objetivo-card-title">{{ objetivo.titulo }}</h3>
+          <p class="objetivo-card-content">{{ objetivo.contenido }}</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Sección Historia -->
-  <section class="container-fluid section-history d-flex flex-column align-items-start animate-on-scroll animate-slideInLeft">
-    <div>
-      <h2 class="text-center mb-5" id="subtitle_history">Historia</h2>
-    </div>
-
-    <div>
-      <p id="description-history">
+  <!-- Historia -->
+  <section class="light-section container-fluid">
+    <!-- Historia -->
+    <div class="historia-block" *ngIf="historia?.contenido">
+      <h2 class="section-heading orange historia-title">Historia</h2>
+      <p class="historia-content">
         {{ historia?.contenido }}
       </p>
     </div>

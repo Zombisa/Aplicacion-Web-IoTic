@@ -1,144 +1,241 @@
-.banner-primary{
-  background-color: var(--color-primary);
-  height: 70vh;
+.who-we-are-container {
+  min-height: 100vh;
+}
 
+.header-wrapper {
+  width: 100%;
+  text-align: center;
+  padding: 0 1rem;
 }
-.title{
-    margin-top: 10rem;
-    margin-bottom: 2rem;
-    font-size: 5rem;
-    font-weight: 450;
-    font-family: "Roboto", sans-serif;
-    color: var(--color-secondary);
+
+app-header {
+  display: inline-block;
 }
-.subtitle {
-  font-size: 4rem;
-  font-weight: 350;
+
+/* Sección Oscura */
+.dark-section {
+  background-color: #202136;
   color: white;
-  align-self: flex-start; /* <--- alinea el título a la izquierda */
+  padding: 4rem 2rem;
+  min-height: 100vh;
 }
-.subtitle-secundary{
+
+/* Título Principal */
+.main-title-container {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding-top: 2rem;
+}
+
+.main-title {
+  font-size: 3.5rem;
+  font-weight: 600;
   color: var(--color-secondary);
-  font-size: 4rem;
-}
-.block-section{
-  margin-top: 10rem;
-}
-
-.separator{
-  background-color: rgb(68, 45, 15);
-  height: 10px;
-  width: 1rem;
-}
-
-/* Sección principal */
-.sectionWhoAre {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-/* Contenedor general */
-.section-info-company {
-    padding: clamp(0rem, 3vw, 6rem);
-}
-
-/* Bloque interno de cada ítem */
-.content-block {
-  width: 90%;
-  padding: 2rem ;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centra horizontalmente el texto */
-  text-align: justify;
-
-}
-
-.section-info-company {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 9rem;
-    align-items: center;
-}
-
-.section-info-company > div:nth-child(3) {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    align-self: center;
-}
-
-.description-items-company{
+  margin: 0;
   font-family: "Roboto", sans-serif;
-  font-weight: 200;
-   list-style: none;   
-  padding-left: 0;  
-}
-.block-obetives{
-  border: 1px solid white;
-  height: 19rem; 
-  min-width: 13rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1rem;
-}
-.title-objective{
-  font-size: clamp(1rem, 1.2rem,1.5rem);
-  font-weight: 800;
 }
 
-.description-objetives{
-  font-size: 1rem; 
-  font-weight: 400;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  text-align: justify; 
-  line-height: 1.4;
-  hyphens: auto; 
+/* Contenedor Visión y Misión */
+.vision-mision-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.section-objetives {
-  width: 80%;
-  margin-top: 10rem;
-
-}
-.separator{
-  height: 1px;
-  max-width: 1px;
-  background-color: white;
+/* Bloques de contenido */
+.content-block {
+  padding: 2rem;
 }
 
-
-
-.section-history{
-  background-color: var(--color-secondary-light);
-  padding: clamp(2rem, 6rem, 6rem);
+.vision-block {
+  grid-column: 1;
+  grid-row: 1;
 }
 
-#subtitle_history{
-  color: var(--color-primary);
-  font-size: 4rem;
+.mision-block {
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 2rem;
 }
-#description-history{
-    display: flex;
-  flex-direction: column;
-  align-items: center; /* centra horizontalmente el texto */
-  text-align: justify; /* mantiene justificado */
-  line-height: 1.4;
-  hyphens: auto; /* mejora la justificación */
+
+/* Títulos de sección */
+.section-heading {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1.5rem;
+  font-family: "Roboto", sans-serif;
 }
+
+.vision-block .section-heading,
+.mision-block .section-heading {
+  text-align: center;
+}
+
+.section-heading.orange {
+  color: var(--color-secondary);
+}
+
+/* Texto de contenido */
+.section-content-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+}
+
+.section-content-text.placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Valores */
+.valores-block {
+  grid-column: 1;
+  grid-row: 2;
+  max-width: 600px;
+}
+
+.valores-list {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.valores-list li {
+  margin-bottom: 1rem;
+}
+
+.valores-list strong {
+  font-weight: 600;
+}
+
+/* Objetivos - Estilo Tabla */
+.objetivos-container {
+  grid-column: 1 / -1;
+  margin-top: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.objetivos-container .section-heading {
+  text-align: center;
+}
+
+.objetivos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.objetivo-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.objetivo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.objetivo-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  font-family: "Roboto", sans-serif;
+}
+
+.objetivo-card-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  margin: 0;
+}
+
+/* Sección Clara (Blanco) */
+.light-section {
+  background-color: #f8f9fa;
+  padding: 4rem 2rem;
+  min-height: 50vh;
+}
+
+.historia-block {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.historia-title {
+  text-align: center;
+}
+
+.historia-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+  color: #333;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .vision-mision-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .mision-block {
+    margin-top: 0;
+  }
+
+  .valores-block {
+    grid-column: 1;
+    grid-row: auto;
+    max-width: 100%;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 968px) {
+  .objetivos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-    .section-info-company {
-        grid-template-columns: 1fr;
-    }
-    
-    .section-info-company > div:nth-child(3) {
-        grid-column: 1;
-        grid-row: auto;
-    }
+  .dark-section,
+  .light-section {
+    padding: 2rem 1rem;
+  }
+
+  .objetivos-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
-
-/** ANIMACIONES
-
-
-**/
