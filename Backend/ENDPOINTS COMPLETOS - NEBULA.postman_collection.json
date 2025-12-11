@@ -1,0 +1,7395 @@
+{
+	"info": {
+		"_postman_id": "89d6f6e2-575a-4a93-829a-0f833badc229",
+		"name": "ENDPOINTS COMPLETOS - NEBULA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38361461"
+	},
+	"item": [
+		{
+			"name": "Inventario",
+			"item": [
+				{
+					"name": "Consultar inventario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar un item inventario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir item a inventario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Excelente\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"observacion\": \"Equipo recién ingresado\",\r\n  \"image_r2\": \"ruta/imagen.jpg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir varios items diferentes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"descripcion\": \"Teclado mecánico\",\r\n      \"estado_fisico\": \"Excelente\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"teclado\"\r\n    },\r\n    {\r\n      \"descripcion\": \"Monitor 24 pulgadas\",\r\n      \"estado_fisico\": \"Bueno\",\r\n      \"estado_admin\": \"Disponible\",\r\n      \"image_r2\": \"monitor\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/bulk/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"bulk",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir varios items iguales con imagen diferente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cantidad\": 3,\r\n  \"descripcion\": \"Cable USB-C\",\r\n  \"estado_fisico\": \"Bueno\",\r\n  \"estado_admin\": \"Disponible\",\r\n  \"imagenes\": [\r\n    \"cable-1.jpg\",\r\n    \"cable-2.jpg\",\r\n    \"cable-3.jpg\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/bulk/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"bulk",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dar debe baja un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"descripcion\": \"Computador portátil HP EliteBook 840 G3\",\r\n  \"estado_fisico\": \"Dañado\",\r\n  \"estado_admin\": \"No prestar\",\r\n  \"observacion\": \"Se quemo\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar imagen de item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/image/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"image",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar imágenes del bucket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/images/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"images",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items disponibles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/available/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reports",
+								"available",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items prestados",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/loaned/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reports",
+								"loaned",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte - Items no prestar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/reports/not-loanable/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"reports",
+								"not-loanable",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos de un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/loans/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"loans",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos vencidos de un item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/items/1/loans/overdue/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"items",
+								"1",
+								"loans",
+								"overdue",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Préstamos",
+			"item": [
+				{
+					"name": "Consultar préstamos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir prestamo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"item_id\": 1,\r\n  \"nombre_persona\": \"Juan Pérez\",\r\n  \"cedula\": \"1234567890\",\r\n  \"telefono\": \"3001234567\",\r\n  \"correo\": \"juan@mail.com\",\r\n  \"direccion\": \"Calle 123\",\r\n  \"fecha_limite\": \"2025-12-30T12:00:00Z\",\r\n  \"file_path_entrega\": \"ruta/foto_entrega.jpg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "consultar préstamo especifico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre_persona\": \"Pipe Gómez\",\r\n  \"item_id\": 1,\r\n  \"fecha_devolucion\": null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Devolver préstamo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"estado_fisico\": \"Dañado\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar histórico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/history/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"history",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos activos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/active/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"active",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos devueltos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/returned/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"returned",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos vencidos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/overdue/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"overdue",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Préstamos por vencer (48h)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/por-vencer/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"por-vencer",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar foto de entrega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/delivery-photo/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								"delivery-photo",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar foto de devolución",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inventario/prestamos/1/return-photo/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventario",
+								"prestamos",
+								"1",
+								"return-photo",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Productividad",
+			"item": [
+				{
+					"name": "Misión",
+					"item": [
+						{
+							"name": "Agregar misión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Somos un equipo dedicado a promover el aprendizaje tecnológico en toda la comunidad universitaria.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar misión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver misión (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar misión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Misión actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/mision/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"mision",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Visión",
+					"item": [
+						{
+							"name": "Agregar visión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Ser un semillero líder en innovación tecnológica y formación de talento humano en la región y el país.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar visión",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver visión (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar visión",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Visión actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/vision/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"vision",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Historia",
+					"item": [
+						{
+							"name": "Crear historia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"El semillero nació en 2018 con el objetivo de impulsar el aprendizaje y la investigación en tecnologías emergentes.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar historia",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver historia (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar historia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contenido\": \"Historia actualizada del semillero.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/historia/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"historia",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Objetivos",
+					"item": [
+						{
+							"name": "Agregar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación\",\r\n  \"contenido\": \"Promover la participación de los estudiantes en proyectos de investigación aplicada.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar objetivos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver objetivos (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fomentar la investigación y la innovación\",\r\n  \"contenido\": \"Texto actualizado del objetivo.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/1/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"1",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar objetivo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/objetivos/1/eliminar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"objetivos",
+										"1",
+										"eliminar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Valores",
+					"item": [
+						{
+							"name": "Agregar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Trabajo en equipo\",\r\n  \"contenido\": \"Promovemos la colaboración y el apoyo mutuo entre todos los integrantes del semillero.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/agregar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"agregar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar valores",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/listar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"listar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver valores (público)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/ver/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"ver",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Trabajo en equipo (actualizado)\",\r\n  \"contenido\": \"Texto actualizado del valor.\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/1/editar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"1",
+										"editar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar valor",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8001/api/informacion/valores/1/eliminar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"informacion",
+										"valores",
+										"1",
+										"eliminar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "asignar rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uid\": \"zZjgYQESeOYtc5fr4QsadFLi9So1\",\r\n  \"rol\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/asignar-rol/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"asignar-rol",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear usuario con rol por admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"james\",\r\n  \"apellido\": \"Doe\",\r\n  \"email\": \"ja@prueba.com\",\r\n  \"contrasena\": \"123456\",\r\n  \"rol\": \"mentor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/crear/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sincronizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/usuarios/sincronizar/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"usuarios",
+								"sincronizar",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Información",
+			"item": [
+				{
+					"name": "Noticias",
+					"item": [
+						{
+							"name": "Obtener noticias publicadas",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/noticias/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"noticias",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Publicar noticia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Noticia otra\",\r\n  \"contenido\": \"El semillero presentó nuevos proyectos de automatización.\",\r\n  \"image_path\": \"url cloudflare\",\r\n  \"archivo_path\": \"url archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/noticia/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"noticia",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar noticia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\": \"Noticia editada\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/1/noticia/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"1",
+										"noticia",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar noticia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/1/Noticia/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"1",
+										"Noticia",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de noticia",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/2/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"2",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de noticia",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/2/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"2",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/misNoticias/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"misNoticias",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NoticiaById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias/1/noti/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias",
+										"1",
+										"noti",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/noticias",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"noticias"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Eventos",
+					"item": [
+						{
+							"name": "Obtener eventos publicados",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/eventos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"eventos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Publicar evento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Congreso Internacional de Tecnología\",\r\n  \"tipoProductividad\": \"Ponencia\",\r\n  \"etiquetas\": [\"tecnología\", \"innovación\", \"IA\", \"investigación\"],\r\n  \"autores\": [\"Pedro Ramírez\", \"Sofia López\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-003\",\r\n  \"alcance\": \"Internacional\",\r\n  \"institucion\": \"Universidad del Cauca\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar evento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"institucion\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"1",
+										"evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar evento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/Evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"1",
+										"Evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de evento",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/2/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"2",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de evento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/2/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"2",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/misEventos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"misEventos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EventoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos/1/eve/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos",
+										"1",
+										"eve",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/eventos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"eventos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cursos",
+					"item": [
+						{
+							"name": "Obtener cursos publicados",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/cursos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"cursos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar curso",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Curso de Machine Learning Avanzado\",\r\n  \"tipoProductividad\": \"Curso virtual\",\r\n  \"etiquetas\": [\"machine learning\", \"python\", \"inteligencia artificial\", \"deep learning\"],\r\n  \"autores\": [\"Carlos Mendoza\", \"Laura Silva\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-002\",\r\n  \"duracion\": 40,\r\n  \"institucion\": \"Universidad Nacional\",\r\n  \"link\": \"https://www.youtube.com/watch?v=ejemplo123\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/curso/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"curso",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar curso",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tipoProductividad\": \"Campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/1/curso/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"1",
+										"curso",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar curso",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"duracion\": \"60min\"\r\n}"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/1/Curso/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"1",
+										"Curso",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de curso",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/2/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"2",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de curso",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/2/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"2",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/misCursos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"misCursos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CursoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos/1/cur/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos",
+										"1",
+										"cur",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/cursos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"cursos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CapLibro",
+					"item": [
+						{
+							"name": "Listar caps de libros",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/capitulos_libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"capitulos_libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar un cap de libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Introducción a la Inteligencia Artificial\",\r\n  \"tipoProductividad\": \"Capítulo de libro científico\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 978,\r\n  \"volumen\": 1,\r\n  \"paginaInicio\": 45,\r\n  \"paginasFin\": 50,\r\n  \"editorial\": \"Editorial Universitaria\",\r\n  \"codigoEditorial\": 12345,\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-001\",\r\n  \"autores\": [\"María González\", \"Juan Pérez\", \"Ana Rodríguez\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/capitulo_libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"capitulo_libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar un cap de libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tipoProductividad\": \"Capítulo de libro nuevo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/capitulo_libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"capitulo_libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar un cap de libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/Capitulo_libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"Capitulo_libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de caplibro",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de caplibro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/misCapLibros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"misCapLibros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CapLibroById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros/1/capLib/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros",
+										"1",
+										"capLib",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/capLibros",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"capLibros"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Jurado",
+					"item": [
+						{
+							"name": "Listar jurados",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/jurados/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"jurados",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar jurado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Evaluación de Tesis Doctoral en Computación\",\r\n  \"tipoProductividad\": \"Jurado de tesis doctoral\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"orientados\": [\"Andrés Martínez\", \"Diana Ruiz\"],\r\n  \"programa\": \"Doctorado en Ciencias de la Computación\",\r\n  \"institucion\": \"Universidad del Cauca\",\r\n  \"autores\": [\"Dr. Roberto Sánchez\", \"Dra. Patricia Gómez\"],\r\n  \"etiquetas\": [\"inteligencia artificial\", \"tesis doctoral\", \"computación\"],\r\n  \"licencia\": \"Creative Commons BY-NC-SA\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/jurado/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"jurado",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar jurado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/jurado/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"jurado",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar jurado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/Jurado/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"Jurado",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de jurado",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de jurado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/misJurados/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"misJurados",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "juradoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados/1/jur/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados",
+										"1",
+										"jur",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/jurados",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"jurados"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Libro",
+					"item": [
+						{
+							"name": "Listar libros",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/Libros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"Libros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fundamentos de Inteligencia\",\r\n  \"tipoProductividad\": \"Libro de texto universitario\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 97895,\r\n  \"volumen\": 1,\r\n  \"paginas\": 350,\r\n  \"editorial\": \"Editorial Universidad del Cauca\",\r\n  \"codigoEditorial\": \"EUC-2024-045\",\r\n  \"etiquetas\": [\"inteligencia artificial\", \"machine learning\", \"educación superior\", \"tecnología\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-004\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. Laura Martínez\", \"MSc. Roberto Silva\"],\r\n  \"image_path\": \"urlcloudflare\",\r\n  \"archivo_path\": \"urlarchivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/libro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"1",
+										"libro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/Libros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"1",
+										"Libros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/2/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"2",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de libro",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/misLibros/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"misLibros",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LibroById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros/1/lib/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros",
+										"1",
+										"lib",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/libros",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"libros"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Material didactico",
+					"item": [
+						{
+							"name": "Listar m.didactico",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/materiales_did/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"materiales_did",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar m.didactico",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Guía de Prácticas de Laboratorio de Programación\",\r\n  \"tipoProductividad\": \"Material didáctico\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"descripcion\": \"Conjunto de prácticas de laboratorio para el curso de programación orientada a objetos con ejemplos en Python y Java\",\r\n  \"autores\": [\"Ing. Patricia Gómez\", \"MSc. Diego Morales\"],\r\n  \"etiquetasGTI\": [\"programación\", \"educación\", \"laboratorio\", \"POO\", \"python\"],\r\n  \"licencia\": \"Creative Commons BY-NC-SA 4.0\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/material_did/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"material_did",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar m.didactico",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/material_did/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"material_did",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar m.didactico",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/Material_did/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"Material_did",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de material didactico",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de Material did",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/misMaterialesDidacticos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"misMaterialesDidacticos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MaterialById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico/1/mat/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico",
+										"1",
+										"mat",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/materialDidactico",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"materialDidactico"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Participacion comites",
+					"item": [
+						{
+							"name": "Listar p.comites",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/Comites_ev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"Comites_ev",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar p.comites",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Comité Evaluador de Proyectos de Investigación\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"institucion\": \"Universidad del Cauca\",\r\n  \"tipoProductividad\": \"Comité de evaluación\",\r\n  \"autores\": [\"Dr. Andrés Ramírez\", \"Dra. Carolina Pérez\", \"MSc. Jorge Vargas\"],\r\n  \"etiquetasGTI\": [\"investigación\", \"evaluación\", \"proyectos\", \"ciencia\"],\r\n  \"licencia\": \"Confidencial\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/comite_ev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"comite_ev",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar p.comites",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/comite_ev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"comite_ev",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar p.comites",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/Comite_ev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"Comite_ev",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de p.comite",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de p.comites",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/misParticipaciones/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"misParticipaciones",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "participacionById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv/1/partCom/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv",
+										"1",
+										"partCom",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/participacionComitesEv",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"participacionComitesEv"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Proceso-Tecnicas",
+					"item": [
+						{
+							"name": "Listar proceso-tec",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/procesos_tecnicas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"procesos_tecnicas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar proceso-tec",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Proceso de Optimización de Algoritmos de Búsqueda\",\r\n  \"tipoProductividad\": \"Proceso técnico\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"autores\": [\"Ing. Sandra Muñoz\", \"MSc. Felipe Castro\"],\r\n  \"etiquetasGTI\": [\"optimización\", \"algoritmos\", \"búsqueda\", \"eficiencia\"],\r\n  \"licencia\": \"Propiedad intelectual reservada\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/proceso_tecnica/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"proceso_tecnica",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar proceso-tec",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/proceso_tecnica/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"proceso_tecnica",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar proceso-tec",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/Proceso_tecnica/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"Proceso_tecnica",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de proceso-tecnica",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de proceso/tec",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/misProcesosTenicas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"misProcesosTenicas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "procesoTecById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas/1/pro/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas",
+										"1",
+										"pro",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/procesosTecnicas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"procesosTecnicas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Revista",
+					"item": [
+						{
+							"name": "Listar revistas",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/revistas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"revistas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar revista",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Avances en Inteligencia Artificial y Machine Learning\",\r\n  \"issn\": 12345678,\r\n  \"volumen\": 15,\r\n  \"fasc\": 3,\r\n  \"linkDescargaArticulo\": \"https://revista-ia.com/articulos/vol15-fasc3/articulo-42.pdf\",\r\n  \"linksitioWeb\": \"https://revista-ia.com\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. María González\", \"MSc. Pedro Ramírez\"],\r\n  \"paginas\": 25,\r\n  \"responsable\": [\"Dr. Laura Martínez\", \"Editor en Jefe\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/revista/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"revista",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar revista",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/revista/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"revista",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar revistas",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/Revista/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"Revista",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen revista",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de revista",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/misRevistas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"misRevistas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RevistaById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas/1/rev/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas",
+										"1",
+										"rev",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/revistas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"revistas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Software",
+					"item": [
+						{
+							"name": "Listar software",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/Software/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"Software",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar software",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Sistema de Gestión de Investigación Académica\",\r\n  \"tipoProductividad\": \"Software de gestión\",\r\n  \"etiquetas\": [\"gestión académica\", \"investigación\", \"python\", \"django\", \"web\"],\r\n  \"nivelAcceso\": \"Público\",\r\n  \"tipoProducto\": \"Aplicación web\",\r\n  \"pais\": \"Colombia\",\r\n  \"responsable\": [\"Ing. Carlos Méndez\", \"MSc. Patricia Gómez\"],\r\n  \"codigoRegistro\": \"12345\",\r\n  \"descripcionFuncional\": \"Sistema web para la gestión integral de proyectos de investigación, publicaciones y productividad académica. Permite registro, seguimiento y generación de reportes estadísticos.\",\r\n  \"propiedadIntelectual\": \"Registro Nacional de Derechos de Autor 2024-005\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/software/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"software",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar software",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tituloDesarrollo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/software/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"software",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar software",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/Software/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"Software",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen software",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de software",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/miSoftware/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"miSoftware",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SoftById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Fundamentos de Inteligencia\",\r\n  \"tipoProductividad\": \"Libro de texto universitario\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"isbn\": 97895,\r\n  \"volumen\": 1,\r\n  \"paginas\": 350,\r\n  \"editorial\": \"Editorial Universidad del Cauca\",\r\n  \"codigoEditorial\": \"EUC-2024-045\",\r\n  \"etiquetas\": [\"inteligencia artificial\", \"machine learning\", \"educación superior\", \"tecnología\"],\r\n  \"propiedadIntelectual\": \"Registro Nacional 2024-004\",\r\n  \"autores\": [\"Dr. Carlos Fernández\", \"Dra. Laura Martínez\", \"MSc. Roberto Silva\"],\r\n  \"image_path\": \"urlcloudflare\",\r\n  \"archivo_path\": \"urlarchivo\"\r\n}"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software/1/soft/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software",
+										"1",
+										"soft",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/software",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"software"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Trabajo eventos",
+					"item": [
+						{
+							"name": "Listar t.eventos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/trabajos_eventos/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"trabajos_eventos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar t.eventos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Implementación de Redes Neuronales Profundas en Procesamiento de Lenguaje Natural\",\r\n  \"tipoProductividad\": \"Ponencia en congreso\",\r\n  \"volumen\": 3,\r\n  \"nombreSeminario\": \"Congreso Internacional de Inteligencia Artificial 2024\",\r\n  \"tipoPresentacion\": \"Ponencia oral\",\r\n  \"tituloActas\": \"Memorias del III Congreso Internacional de Inteligencia Artificial\",\r\n  \"isbn\": 9789,\r\n  \"paginas\": 12,\r\n  \"anio\": 2024,\r\n  \"etiquetas\": [\"inteligencia artificial\", \"NLP\", \"redes neuronales\", \"deep learning\"],\r\n  \"propiedadIntelectual\": \"Copyright © 2024 - Todos los derechos reservados\",\r\n  \"autores\": [\"Dr. Carlos Ramírez\", \"MSc. Sandra López\", \"Ing. Miguel Torres\"],\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/trabajo_evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"trabajo_evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar t.eventos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/trabajo_evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"trabajo_evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar t.eventos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/Trabajo_evento/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"Trabajo_evento",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de trabajo en evento",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de  t.evento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/miTrabajoEv/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"miTrabajoEv",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "trabajoById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos/1/trab/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos",
+										"1",
+										"trab",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/trabajoEventos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"trabajoEventos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tutoría concluída",
+					"item": [
+						{
+							"name": "Listar t.concluida",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/tutorias_concluidas/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"tutorias_concluidas",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar t.concluida",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Tutoría de Tesis de Maestría en Ciencias de la Computación\",\r\n  \"tipoProductividad\": \"Tutoría de tesis de maestría\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"orientados\": [\"Andrea Gómez Ruiz\", \"Carlos Mendoza López\"],\r\n  \"programa\": \"Maestría en Ciencias de la Computación\",\r\n  \"institucion\": \"Universidad del Cauca\",\r\n  \"autores\": [\"Dr. Roberto Sánchez\", \"Dra. María Torres\"],\r\n  \"etiquetasGTI\": [\"inteligencia artificial\", \"tesis\", \"posgrado\", \"investigación\"],\r\n  \"licencia\": \"Creative Commons BY-NC 4.0\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/tutoria_concluida/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"tutoria_concluida",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar t.concluida",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/tutoria_concluida/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"tutoria_concluida",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar t.concluida",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/Tutoria_concluida/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"Tutoria_concluida",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen t.concluida",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de  t.concluida",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/miTutoriasCon/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"miTutoriasCon",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "tutoConById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas/1/tutCon/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas",
+										"1",
+										"tutCon",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasConcluidas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasConcluidas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tutoría en marcha",
+					"item": [
+						{
+							"name": "Listar t.en marcha",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/tutorias_en_marcha/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"tutorias_en_marcha",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Agregar t.en marcha",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Tutoría de Tesis Doctoral en Inteligencia Artificial\",\r\n  \"subtipoTitulo\": \"Doctorado en Ciencias de la Computación\",\r\n  \"tipoProductividad\": \"Tutoría de tesis doctoral\",\r\n  \"descripcion\": \"Investigación enfocada en el desarrollo de algoritmos de aprendizaje profundo para el procesamiento de imágenes médicas con aplicaciones en diagnóstico temprano de enfermedades cardiovasculares\",\r\n  \"pais\": \"Colombia\",\r\n  \"anio\": 2024,\r\n  \"orientados\": [\"Juan Carlos Méndez Ríos\"],\r\n  \"programa\": \"Doctorado en Ciencias de la Computación\",\r\n  \"institucion\": \"Universidad del Cauca\",\r\n  \"autores\": [\"Dr. Roberto Sánchez\", \"Dra. Laura Martínez\"],\r\n  \"etiquetasGTI\": [\"inteligencia artificial\", \"deep learning\", \"imágenes médicas\", \"investigación\"],\r\n  \"licencia\": \"Confidencial\",\r\n  \"image_path\": \"url de cloudflare\",\r\n  \"archivo_path\": \"url del archivo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/tutoria_en_marcha/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"tutoria_en_marcha",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar t.en marcha",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"titulo\" : \"campo editado\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/tutoria_en_marcha/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"tutoria_en_marcha",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar t.en marcha",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/Tutoria_en_marcha/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"Tutoria_en_marcha",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar imagen de t.en marcha",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/imagen/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"imagen",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar archivo de t.en marcha",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/archivo/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mis publicaciones",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/miTutoriasMar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"miTutoriasMar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "tutoMarById",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_tokenMentor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha/1/tutMar/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha",
+										"1",
+										"tutMar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver sin auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/tutoriasEnMarcha",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"tutoriasEnMarcha"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Generar firma",
+					"item": [
+						{
+							"name": "generar firma imagenes",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/informacion/urlfirmada/images/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"urlfirmada",
+										"images",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Generar firma archivos",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/informacion/urlfirmada/files/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"urlfirmada",
+										"files",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Publicaciones",
+					"item": [
+						{
+							"name": "Todas las publicaciones by Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/informacion/publicaciones/2/Publicaciones/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"informacion",
+										"publicaciones",
+										"2",
+										"Publicaciones",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Registro Fotográfico",
+			"item": [
+				{
+					"name": "Crear registro fotográfico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Reunión del semillero 2025\",\r\n  \"fecha\": \"2025-12-09\",\r\n  \"descripcion\": \"Primera reunión del año con el equipo de investigación\",\r\n  \"file_path\": \"registros-fotograficos/reunion-2025-12-09.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar registros fotográficos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener detalle registro fotográfico",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar registro fotográfico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Reunión del semillero actualizada\",\r\n  \"descripcion\": \"Se actualizó la descripción de la reunión\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar con nueva foto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Reunión del semillero 2025\",\r\n  \"fecha\": \"2025-12-09\",\r\n  \"descripcion\": \"Primera reunión del año con el equipo de investigación\",\r\n  \"file_path\": \"registros-fotograficos/reunion-2025-12-09-v2.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar registro fotográfico",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver sin auth",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/informacion/registrosFotograficos/public/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"informacion",
+								"registrosFotograficos",
+								"public",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

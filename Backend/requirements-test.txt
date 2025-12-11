@@ -1,0 +1,24 @@
+# Dependencias de testing para el proyecto Django
+
+# Framework de testing
+pytest==7.4.3
+pytest-django==4.7.0
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Testing de APIs REST
+pytest-asyncio==0.21.1
+
+# Cobertura de código
+coverage==7.3.2
+
+# Utilidades de testing
+factory-boy==3.3.0
+faker==20.1.0
+
+# Mocking y fixtures
+responses==0.24.1
+freezegun==1.4.0
+
+# Django REST Framework (si no está en requirements.txt)
+# djangorestframework==3.14.0
