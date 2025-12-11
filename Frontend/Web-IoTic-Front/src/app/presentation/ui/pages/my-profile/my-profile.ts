@@ -116,15 +116,15 @@ export class MyProfile implements OnInit {
     // Navegar a la página de visualización correspondiente
     const routeMap: Record<string, string> = {
       'libro': 'libros',
-      'capitulo': 'capitulo_libro',
+      'capitulo': 'capitulos',
       'curso': 'curso',
-      'evento': 'trabajo_evento',
-      'revista': 'revista',
+      'evento': 'trabajo-eventos',
+      'revista': 'revistas',
       'software': 'software',
-      'tutoria_concluida': 'tutoria-concluida',
-      'tutoria_en_marcha': 'tutoria-en-marcha',
+      'tutoria_concluida': 'tutoria_concluidas',
+      'tutoria_en_marcha': 'tutoria_en_marcha',
       'trabajo_eventos': 'trabajo-eventos',
-      'participacion_comites_ev': 'participacion_comites_ev',
+      'participacion_comites_ev': 'participacion_comites',
       'material_didactico': 'material-didactico',
       'jurado': 'jurado',
       'proceso_tecnica': 'proceso-tecnica'

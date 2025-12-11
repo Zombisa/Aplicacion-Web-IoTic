@@ -41,7 +41,6 @@ export class FormCurso implements OnInit {
   private cargarInfo() {
     this.serviceCurso.getById(this.idInput).subscribe({
       next: (data) => {
-        console.log(data);
         this.cursoData = data;
         this.populateForm(this.cursoData);
       },
@@ -80,9 +79,7 @@ export class FormCurso implements OnInit {
    * Llena el formulario con los datos del curso
    * @param data datos del curso a editar
    */
-  private populateForm(data: CursoDTO): void {
-    console.log("Populating form with data:", data);
-    
+  private populateForm(data: CursoDTO): void {    
     // Convertir arrays a strings separados por coma para los inputs
     const autoresString = (data.autores && Array.isArray(data.autores))
       ? data.autores.join(', ')
@@ -191,7 +188,7 @@ export class FormCurso implements OnInit {
     delete formData.autoresString;
     delete formData.etiquetasString;
     
-    console.log("Enviando:", formData);
+    
     const payload: FormSubmitPayload = {
       data: formData,
       file_image: this.selectedFile,

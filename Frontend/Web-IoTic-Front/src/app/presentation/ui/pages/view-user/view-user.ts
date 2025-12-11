@@ -105,7 +105,7 @@ export class ViewUser implements OnInit {
     // Navegar a la página de visualización correspondiente
     const routeMap: Record<string, string> = {
       'libro': 'libros',
-      'capitulo': 'capitulo_libro',
+      'capitulo': 'capitulos',
       'curso': 'curso',
       'evento': 'trabajo_evento',
       'revista': 'revista',
@@ -116,7 +116,7 @@ export class ViewUser implements OnInit {
       'participacion_comites_ev': 'participacion_comites_ev',
       'material_didactico': 'material-didactico',
       'jurado': 'jurado',
-      'proceso_tecnica': 'proceso-tecnica'
+      'proceso_tecnica': 'proceso_tecnica'
     };
 
     const route = routeMap[event.tipo] || event.tipo;

@@ -67,12 +67,11 @@ export class EditProductiviy implements OnInit {
 
   @ViewChild('formContainer', { read: ViewContainerRef })
   formContainer!: ViewContainerRef;
-
-  formMap: any = {
+  formMap: Record<string, any> = {
     libro: FormBook,
     capitulo: FormCapBook,
     participacion_comites_ev: FormEvaluacion,
-    proceso_tecnica: FormProcesoTecnica,
+      'proceso-tecnica': FormProcesoTecnica, // ✅ comillas
     revista: FormRevista,
     software: FormSoftware,
     trabajo_eventos: FormTrabajoEventos,
@@ -83,6 +82,7 @@ export class EditProductiviy implements OnInit {
     jurado: FormJurado,
     evento: FormEvento
   };
+
 
   isLoading: boolean = false;
 
@@ -319,7 +319,7 @@ export class EditProductiviy implements OnInit {
       });
     },
 
-    proceso_tecnica: (payload) => {
+    'proceso-tecnica': (payload) => {
       this.procesoTecnicaService.update(this.id ,payload as ProcesoTecnicaPeticion).subscribe({
         next: () => this.mostrarExito('Proceso técnico guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')
