@@ -76,6 +76,7 @@
               class="input-line"
               formControlName="titulo"
               placeholder=" "
+              maxlength="70"
             />
             <label>Título del artículo</label>
             <small
@@ -98,6 +99,7 @@
               class="input-line"
               formControlName="autoresString"
               placeholder=" "
+              maxlength="150"
             />
             <label>Autores</label>
             <small>(separados por coma)</small>
@@ -110,6 +112,8 @@
               class="input-line"
               formControlName="issn"
               placeholder=" "
+              maxlength="8"
+              inputmode="numeric"
             />
             <label>ISSN</label>
             <small>(Numérico)</small>
@@ -131,6 +135,7 @@
               class="input-line"
               formControlName="volumen"
               placeholder=" "
+              inputmode="numeric"
             />
             <label>Volumen</label>
             <small>(Numérico)</small>
@@ -152,6 +157,7 @@
               class="input-line"
               formControlName="fasc"
               placeholder=" "
+              inputmode="numeric"
             />
             <label>Fascículo</label>
             <small>(Numérico)</small>
@@ -173,6 +179,8 @@
               class="input-line"
               formControlName="paginas"
               placeholder=" "
+              maxlength="50"
+              inputmode="numeric"
             />
             <label>Páginas</label>
             <small>(Numérico)</small>
@@ -194,6 +202,7 @@
               class="input-line"
               formControlName="responsableString"
               placeholder=" "
+              maxlength="150"
             />
             <label>Responsables</label>
             <small>(separados por coma)</small>
@@ -206,6 +215,7 @@
               class="input-line"
               formControlName="linkDescargaArticulo"
               placeholder=" "
+              maxlength="150"
             />
             <label>Link de descarga del artículo</label>
           </div>
@@ -217,6 +227,7 @@
               class="input-line"
               formControlName="linksitioWeb"
               placeholder=" "
+              maxlength="150"
             />
             <label>Link del sitio web de la revista</label>
           </div>

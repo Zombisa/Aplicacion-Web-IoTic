@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
-import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO'; // ajusta la ruta si es distinta
+import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO';
 import { SoftwareService } from '../../../../services/information/software.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-software',
@@ -12,7 +13,7 @@ import { SoftwareService } from '../../../../services/information/software.servi
   templateUrl: './form-software.html',
   styleUrls: ['./form-software.css']
 })
-export class FormSoftware implements OnInit{
+export class FormSoftware implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -27,6 +28,7 @@ export class FormSoftware implements OnInit{
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(private fb: FormBuilder,
     private serviceSoftware: SoftwareService
@@ -37,6 +39,19 @@ export class FormSoftware implements OnInit{
     if (this.editMode && this.idInput) {
       this.cargarInfo();
     }
+    this.setupNumericFieldLimits();
+  }
+
+  /**
+   * Configura los límites automáticos para campos numéricos
+   */
+  private setupNumericFieldLimits(): void {
+    // Año - máximo 4 dígitos
+    this.form.get('anio')?.valueChanges.subscribe(value => {
+      if (value && value.toString().length > 4) {
+        this.form.get('anio')?.setValue(value.toString().slice(0, 4), { emitEvent: false });
+      }
+    });
   }
   private cargarInfo() {
     this.serviceSoftware.getById(this.idInput).subscribe({
@@ -62,24 +77,18 @@ export class FormSoftware implements OnInit{
   private buildForm(): FormGroup {
     return this.fb.group({
       // BaseProductivity
-      titulo: ['', Validators.required],
-      tipoProductividad: ['Software', Validators.required],
-      pais: ['', Validators.required],
-      anio: ['', Validators.required],
-      autores: [[], Validators.required],
+      titulo: ['', [Validators.required, Validators.maxLength(150)]],
+      tipoProductividad: ['Software'],
+      pais: ['', Validators.maxLength(150)],
 
       // Campos propios de Software
-      tituloDesarrollo: ['', Validators.required],
-      responsable: [[], Validators.required],
-      etiquetas: [[], Validators.required],
-      nivelAcceso: ['', Validators.required],
-      tipoProducto: ['', Validators.required],
-      codigoRegistro: ['DERAUTOR:', Validators.required, ],
-      descripcionFuncional: ['', Validators.required],
-      propiedadIntelectual: ['', Validators.required],
-
-      // La completa el padre cuando sube la imagen
-      image_url: ['']
+      responsableString: ['', Validators.maxLength(150)],
+      etiquetasString: ['', Validators.maxLength(150)],
+      nivelAcceso: ['', Validators.maxLength(150)],
+      tipoProducto: ['', Validators.maxLength(150)],
+      codigoRegistro: ['', Validators.maxLength(50)],
+      descripcionFuncional: ['', Validators.maxLength(500)],
+      propiedadIntelectual: ['', Validators.maxLength(150)]
     });
   }
 
@@ -88,30 +97,28 @@ export class FormSoftware implements OnInit{
    * @param data datos del software a editar
    */
   private populateForm(data: SoftwareDTO): void {
+    const responsableString = data.responsable?.join(', ') || '';
+    const etiquetasString = data.etiquetas?.join(', ') || '';
+    
     this.form.patchValue({
-      // BaseProductivity
       titulo: data.titulo,
       tipoProductividad: data.tipoProductividad || 'Software',
       pais: data.pais,
-      anio: data.anio,
-      autores: data.autores || [],
-
-      // Campos propios de Software
-      tituloDesarrollo: data.tituloDesarrollo,
-      responsable: data.responsable || [],
-      etiquetas: data.etiquetas || [],
+      responsableString,
+      etiquetasString,
       nivelAcceso: data.nivelAcceso,
       tipoProducto: data.tipoProducto,
       codigoRegistro: data.codigoRegistro || '',
       descripcionFuncional: data.descripcionFuncional,
-      propiedadIntelectual: data.propiedadIntelectual,
-
-      image_url: data.image_r2 || ''
+      propiedadIntelectual: data.propiedadIntelectual
     });
 
-    // Si trae imagen, mostrar preview
-    if ( data.image_r2) {
-      this.imagePreview = data.image_r2!;
+    if (data.image_r2) {
+      this.imagePreview = data.image_r2;
+    }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
     }
   }
 
@@ -138,6 +145,17 @@ export class FormSoftware implements OnInit{
   }
 
   /**
+   * Elimina el archivo de documento seleccionado o existente (solo visualmente)
+   */
+  removeFile(): void {
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /**
    * Envía el formulario al componente padre
    */
   submitForm(): void {
@@ -146,40 +164,67 @@ export class FormSoftware implements OnInit{
       return;
     }
 
+    // Si en modo editar se quitó un documento existente, eliminarlo del servidor antes de emitir
+    if (this.editMode && !this.existingDocumentName && this.softwareData.file_r2) {
+      this.serviceSoftware.deleteFile(this.softwareData.id!).subscribe({
+        next: () => {
+          this.emitirFormulario();
+        },
+        error: (err) => {
+          console.error("Error al eliminar documento:", err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar documento',
+            text: 'No se pudo eliminar el documento. Intenta de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
+    const formValue = { ...this.form.value };
+
+    // Convertir strings a arrays
+    formValue.autores = formValue.autoresString
+      ?.split(',')
+      .map((a: string) => a.trim())
+      .filter((a: string) => a) || [];
+
+    formValue.responsable = formValue.responsableString
+      ?.split(',')
+      .map((r: string) => r.trim())
+      .filter((r: string) => r) || [];
+
+    formValue.etiquetas = formValue.etiquetasString
+      ?.split(',')
+      .map((e: string) => e.trim())
+      .filter((e: string) => e) || [];
+
+    // Eliminar campos string
+    delete formValue.autoresString;
+    delete formValue.responsableString;
+    delete formValue.etiquetasString;
+
+    // Asegurarse de que tipoProductividad esté presente
+    if (!formValue.tipoProductividad) {
+      formValue.tipoProductividad = 'Software';
+    }
+
     const payload: FormSubmitPayload = {
-      data: this.form.value,
+      data: formValue,
       file_image: this.selectedFile,
       file_document: this.selectedDocument
     };
 
+    console.log('Payload enviado:', payload);
     this.formSubmit.emit(payload);
-  }
-
-  onAutoresChange(value: string): void {
-    const autores = value
-      .split(',')
-      .map(a => a.trim())
-      .filter(a => a);
-
-    this.form.patchValue({ autores });
-  }
-
-  onResponsablesChange(value: string): void {
-    const responsable = value
-      .split(',')
-      .map(r => r.trim())
-      .filter(r => r);
-
-    this.form.patchValue({ responsable });
-  }
-
-  onEtiquetasChange(value: string): void {
-    const etiquetas = value
-      .split(',')
-      .map(e => e.trim())
-      .filter(e => e);
-
-    this.form.patchValue({ etiquetas });
   }
 
 }

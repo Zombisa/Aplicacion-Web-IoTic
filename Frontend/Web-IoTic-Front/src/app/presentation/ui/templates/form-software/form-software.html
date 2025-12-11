@@ -1,150 +1,205 @@
-<form (ngSubmit)="submitForm()" [formGroup]="form" class="form card form-container">
-  <div class="row g-4">
-    <!-- Upload Image Box -->
-    <section class="col-12 col-lg-6 column">
-      <div class="image-upload-box">
-        <input
-          type="file"
-          #fileInput
-          class="file-input-hidden"
-          accept="image/*"
-          (change)="onFileSelected($event)"
+<div class="container">
+  <h1 class="title">Software</h1>
+  <div class="divider"></div>
+</div>
+
+<div class="row g-4">
+  <!-- COLUMNA ARCHIVOS -->
+  <section class="col-12 col-lg-6 column">
+    <div class="image-upload-box">
+      <input
+        type="file"
+        #fileInput
+        class="file-input-hidden"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <div
+        class="upload-area"
+        (click)="fileInput.click()"
+        [class.has-image]="imagePreview"
+      >
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview-image"
+          alt="Vista previa"
         />
 
-        <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
-          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" alt="Vista previa" />
-          <div *ngIf="!imagePreview" class="upload-placeholder">
-            <i class="fas fa-camera camera-icon"></i>
-            <p class="upload-text">Haz clic para subir imagen</p>
-          </div>
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <i class="fas fa-camera camera-icon"></i>
+          <p class="upload-text">Haz clic para subir imagen</p>
         </div>
       </div>
 
-      <!-- Upload Document Box -->
-      <div class="document-upload-box">
-        <input
-          type="file"
-          #documentInput
-          class="file-input-hidden"
-          accept=".pdf,.doc,.docx,.txt"
-          (change)="onDocumentSelected($event)"
-        />
-        
-        <div class="document-upload-area" (click)="documentInput.click()">
-          <div class="document-upload-placeholder">
-            <i class="fas fa-file-alt document-icon"></i>
-            <p class="document-upload-text">
-              <span *ngIf="!selectedDocument">Haz clic para subir archivo (opcional)</span>
-              <span *ngIf="selectedDocument">{{ selectedDocument.name }}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+      <!-- DOCUMENTO -->
+      <input
+        type="file"
+        #documentInput
+        hidden
+        (change)="onDocumentSelected($event)"
+      />
 
-    <!-- Inputs -->
-    <section class="col-12 col-lg-6 column">
-      <!-- Título -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="titulo" placeholder=" " />
-        <label>Título</label>
-      </div>
+      <button
+        class="btn btn-outline-secondary mt-3"
+        (click)="documentInput.click()"
+        [class.file-loaded]="selectedDocument || existingDocumentName"
+      >
+        {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
+      </button>
 
-      <!-- Título del desarrollo -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="tituloDesarrollo" placeholder=" " />
-        <label>Título del desarrollo</label>
-      </div>
-
-      <!-- País -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="pais" placeholder=" " />
-        <label>País</label>
-      </div>
-
-      <!-- Año -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="anio" placeholder=" " />
-        <label>Año</label>
-      </div>
-
-      <!-- Autores -->
-      <div class="input-container personality-camp">
-        <input
-          type="text"
-          class="input-line"
-          placeholder=" "
-          (change)="onAutoresChange($event.target.value)"
-        />
-        <label>Autores (separados por coma)</label>
-      </div>
-
-      <!-- Nivel de acceso -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="nivelAcceso" placeholder=" " />
-        <label>Nivel de acceso</label>
-      </div>
-
-      <!-- Tipo de producto -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="tipoProducto" placeholder=" " />
-        <label>Tipo de producto</label>
-      </div>
-
-      <!-- Responsables (array) -->
-      <div class="input-container personality-camp">
-        <input
-          type="text"
-          class="input-line"
-          placeholder=" "
-          (change)="onResponsablesChange($event.target.value)"
-        />
-        <label>Responsables (separados por coma)</label>
-      </div>
-
-      <!-- Etiquetas (array) -->
-      <div class="input-container personality-camp">
-        <input
-          type="text"
-          class="input-line"
-          placeholder=" "
-          (change)="onEtiquetasChange($event.target.value)"
-        />
-        <label>Etiquetas (separadas por coma)</label>
-      </div>
-
-      <!-- Código de registro (opcional) -->
-      <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="codigoRegistro" placeholder=" " />
-        <label>Código de registro</label>
-        <small>debe tener el formaro: DERAUTOR:XXX-XXX</small>
-      </div>
-
-      <!-- Descripción funcional -->
-      <div class="input-container personality-camp">
-        <textarea
-          class="input-line"
-          formControlName="descripcionFuncional"
-          rows="3"
-          placeholder=" "
-        ></textarea>
-        <label>Descripción funcional</label>
-      </div>
-
-      <!-- Propiedad intelectual -->
-      <div class="input-container personality-camp">
-        <input
-          type="text"
-          class="input-line"
-          formControlName="propiedadIntelectual"
-          placeholder=" "
-        />
-        <label>Propiedad intelectual</label>
-      </div>
-    </section>
-
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Guardar software</button>
+      <button
+        *ngIf="selectedDocument || existingDocumentName"
+        class="btn btn-danger mt-2"
+        (click)="removeFile()"
+      >
+        Quitar archivo ✖
+      </button>
     </div>
+  </section>
+
+  <!-- COLUMNA FORMULARIO -->
+  <div class="col-12 col-lg-6">
+    <form
+      (ngSubmit)="submitForm()"
+      [formGroup]="form"
+      class="column"
+    >
+      <div class="row g-4">
+        <!-- FORMULARIO -->
+        <section class="form card">
+          <!-- TITULO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="titulo"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Título</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('titulo')?.touched &&
+                form.get('titulo')?.invalid
+              "
+            >
+              El título es obligatorio.
+            </small>
+          </div>
+
+          <!-- PAÍS -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="pais"
+              placeholder=" "
+              maxlength="70"
+            />
+            <label>País</label>
+          </div>
+
+
+        
+          <!-- NIVEL DE ACCESO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="nivelAcceso"
+              placeholder=" "
+              maxlength="40"
+            />
+            <label>Nivel de acceso</label>
+          </div>
+
+          <!-- TIPO DE PRODUCTO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="tipoProducto"
+              placeholder=" "
+              maxlength="50"
+            />
+            <label>Tipo de producto</label>
+          </div>
+
+          <!-- RESPONSABLES -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="responsableString"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Responsables</label>
+            <small>(separados por coma)</small>
+          </div>
+
+          <!-- ETIQUETAS -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="etiquetasString"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Etiquetas</label>
+            <small>(separadas por coma)</small>
+          </div>
+
+          <!-- CÓDIGO DE REGISTRO -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="codigoRegistro"
+              placeholder=" "
+              maxlength="50"
+            />
+            <label>Código de registro</label>
+            <small>debe tener el formato: DERAUTOR:XXX-XXX</small>
+          </div>
+
+          <!-- DESCRIPCIÓN FUNCIONAL -->
+          <div class="input-container personality-camp">
+            <textarea
+              class="input-line"
+              formControlName="descripcionFuncional"
+              placeholder=" "
+              maxlength="500"
+              rows="3"
+            ></textarea>
+            <label>Descripción funcional</label>
+          </div>
+
+          <!-- PROPIEDAD INTELECTUAL -->
+          <div class="input-container personality-camp">
+            <input
+              type="text"
+              class="input-line"
+              formControlName="propiedadIntelectual"
+              placeholder=" "
+              maxlength="150"
+            />
+            <label>Propiedad intelectual</label>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary mt-3"
+            [disabled]="form.invalid"
+          >
+            Guardar Software
+          </button>
+        </section>
+      </div>
+    </form>
   </div>
-</form>
+</div>

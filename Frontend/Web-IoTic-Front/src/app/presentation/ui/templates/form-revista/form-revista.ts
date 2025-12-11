@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
   templateUrl: './form-revista.html',
   styleUrls: ['./form-revista.css']
 })
-export class FormRevista implements OnInit, OnChanges {
+export class FormRevista implements OnInit {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
@@ -41,6 +41,40 @@ export class FormRevista implements OnInit, OnChanges {
     if (this.editMode && this.idInput) {
       this.cargarInfo();
     }
+    this.setupNumericFieldLimits();
+  }
+
+  /**
+   * Configura los límites automáticos para campos numéricos
+   */
+  private setupNumericFieldLimits(): void {
+    // ISSN - máximo 8 dígitos
+    this.form.get('issn')?.valueChanges.subscribe(value => {
+      if (value && value.toString().length > 8) {
+        this.form.get('issn')?.setValue(value.toString().slice(0, 8), { emitEvent: false });
+      }
+    });
+
+    // VOLUMEN - sin límite específico de longitud (solo números)
+    this.form.get('volumen')?.valueChanges.subscribe(value => {
+      if (value && value.toString().length > 8) {
+        this.form.get('volumen')?.setValue(value.toString().slice(0, 8), { emitEvent: false });
+      }
+    });
+
+    // FASCÍCULO - sin límite específico de longitud (solo números)
+    this.form.get('fasc')?.valueChanges.subscribe(value => {
+      if (value && value.toString().length > 10) {
+        this.form.get('fasc')?.setValue(value.toString().slice(0, 10), { emitEvent: false });
+      }
+    });
+
+    // PÁGINAS - máximo 50 caracteres
+    this.form.get('paginas')?.valueChanges.subscribe(value => {
+      if (value && value.toString().length > 10) {
+        this.form.get('paginas')?.setValue(value.toString().slice(0, 10), { emitEvent: false });
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,15 +100,15 @@ export class FormRevista implements OnInit, OnChanges {
    */
   private buildForm(): FormGroup {
     return this.fb.group({
-      titulo: ['', Validators.required],
-      autoresString: [''],
-      issn: ['', Validators.required],
-      volumen: ['', Validators.required],
-      fasc: ['', Validators.required],
-      paginas: ['', Validators.required],
-      responsableString: [''],
-      linkDescargaArticulo: [''],
-      linksitioWeb: ['']
+      titulo: ['', [Validators.required, Validators.maxLength(70)]],
+      autoresString: ['', Validators.maxLength(150)],
+      issn: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
+      volumen: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      fasc: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      paginas: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^\d+$/)]],
+      responsableString: ['', Validators.maxLength(150)],
+      linkDescargaArticulo: ['', Validators.maxLength(150)],
+      linksitioWeb: ['', Validators.maxLength(150)]
     });
   }
 
