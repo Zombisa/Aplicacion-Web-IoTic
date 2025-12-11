@@ -43,6 +43,7 @@ import { ViewMaterialDidactico } from './presentation/ui/pages/view-material-did
 import { RegistroFotograficoPage } from './presentation/ui/pages/registro-fotografico-page/registro-fotografico-page';
 import { RegistroFotograficoAdminPage } from './presentation/ui/pages/registro-fotografico-admin-page/registro-fotografico-admin-page';
 import { AddRegistroFotograficoPage } from './presentation/ui/pages/add-registro-fotografico/add-registro-fotografico';
+import { Contact } from './presentation/ui/pages/contact/contact';
 export const routes: Routes = [
 
      { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -85,5 +86,6 @@ export const routes: Routes = [
      { path: 'mentores-publicaciones/:id', component: ViewMentorPublications },
      { path: 'productividad/material/:id', component: ViewMaterialDidactico },
      { path: 'registro-fotografico', component: RegistroFotograficoPage },
-     {path: 'admin/registro-fotografico', component: RegistroFotograficoAdminPage, canActivate: [AuthGuard, AdminOrMentorGuard]}
+     {path: 'admin/registro-fotografico', component: RegistroFotograficoAdminPage, canActivate: [AuthGuard, AdminOrMentorGuard]},
+     {path: 'contacto', component: Contact}
 ];
