@@ -191,6 +191,7 @@ export class EditProductiviy implements OnInit {
   private compressFile(file: File): Promise<File> {
     return this.imageService.compressImage(file, 0.7, 1500);
   }
+
   /**
    * 
    * @param data datos del tiop a guardar
@@ -224,7 +225,12 @@ export class EditProductiviy implements OnInit {
         });
     });
   }
-
+  /**
+   * Toma el archivo lo sube  a R2 Y lo guarda dentro del dto para el  backend
+   * @param data datos del tipo a guardar
+   * @param file arvchivo a guardar en R2
+   * @returns 
+   */
   private uploadAndSetFile(data: BaseProductivityDTO, file: File): Promise<void> {
     const extension = file.name.split('.').pop() || 'pdf';
     const contentType = file.type;
@@ -275,7 +281,9 @@ export class EditProductiviy implements OnInit {
       buttonsStyling: true
     });
   }
-
+  /**
+   * funcion para 
+   */
   private guardarMap: Record<string, (payload: BaseProductivityDTO) => void> = {
     libro: (payload) => {
       this.booksService.editBook(this.id, payload as BookPeticion).subscribe({
@@ -368,7 +376,9 @@ export class EditProductiviy implements OnInit {
       });
     }
   };
-
+  /**
+   * funcion encargada de guardar el item en el back
+   */
   guardarEntidad(payload: BaseProductivityDTO) {
     this.isLoading = true;
     const guardarFn = this.guardarMap[this.tipo];

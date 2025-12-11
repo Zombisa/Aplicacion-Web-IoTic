@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
 import { RevistaService } from '../../../../services/information/revista.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-revista',
@@ -12,35 +13,45 @@ import { RevistaService } from '../../../../services/information/revista.service
   templateUrl: './form-revista.html',
   styleUrls: ['./form-revista.css']
 })
-export class FormRevista implements OnInit{
+export class FormRevista implements OnInit, OnChanges {
 
   @Output() formSubmit = new EventEmitter<FormSubmitPayload>();
 
   /** Modo editar */
   @Input() editMode: boolean = false;
 
-  /** Datos de la revista a editar */
-  @Input() revistaData!: RevistaDTO;
+  /** ID de la revista a editar */
+  @Input() idInput!: number;
+  revistaData!: RevistaDTO;
 
   form: FormGroup;
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private serviceRevista: RevistaService
   ) {
     this.form = this.buildForm();
   }
+
   ngOnInit(): void {
-    if (this.editMode && this.revistaData) {
+    if (this.editMode && this.idInput) {
       this.cargarInfo();
     }
   }
-  private cargarInfo() {
-    this.serviceRevista.getById(this.revistaData.id!).subscribe({
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idInput'] && this.idInput && this.editMode) {
+      this.cargarInfo();
+    }
+  }
+
+  private cargarInfo(): void {
+    this.serviceRevista.getById(this.idInput).subscribe({
       next: (data) => {
-        console.log(data);
         this.revistaData = data;
         this.populateForm(this.revistaData);
       },
@@ -50,30 +61,20 @@ export class FormRevista implements OnInit{
     });
   }
 
-
   /**
    * Construye el formulario reactivo para revistas
    */
   private buildForm(): FormGroup {
     return this.fb.group({
-      // BaseProductivity
-      tipoProductividad: ['Revistas', Validators.required],
       titulo: ['', Validators.required],
-      pais: ['', Validators.required],
-      anio: ['', Validators.required],
-      autores: [[], Validators.required],
-
-      // Campos propios de Revista
+      autoresString: [''],
       issn: ['', Validators.required],
       volumen: ['', Validators.required],
       fasc: ['', Validators.required],
       paginas: ['', Validators.required],
-      responsable: [[], Validators.required],
+      responsableString: [''],
       linkDescargaArticulo: [''],
-      linksitioWeb: [''],
-
-      // El padre la completa luego cuando sube la imagen
-      image_url: ['']
+      linksitioWeb: ['']
     });
   }
 
@@ -81,57 +82,31 @@ export class FormRevista implements OnInit{
    * Llena el formulario con los datos existentes
    */
   private populateForm(data: RevistaDTO): void {
+    const autoresString = data.autores?.join(', ') || '';
+    const responsableString = data.responsable?.join(', ') || '';
     this.form.patchValue({
-      // BaseProductivity
-      tipoProductividad: (data as any).tipoProductividad || 'Revistas',
       titulo: data.titulo,
       pais: data.pais,
       anio: data.anio,
-      autores: data.autores || [],
-
-      // Campos propios de Revista
+      autoresString,
       issn: data.issn,
       volumen: data.volumen,
       fasc: data.fasc,
       paginas: data.paginas,
-      responsable: data.responsable || [],
-      linkDescargaArticulo: (data as any).linkDescargaArticulo || '',
-      linksitioWeb: (data as any).linksitioWeb || '',
-      image_url: data.image_r2 || ''
+      responsableString,
+      linkDescargaArticulo: data.linkDescargaArticulo || '',
+      linksitioWeb: data.linksitioWeb || ''
     });
 
     if (data.image_r2) {
-      this.imagePreview =  data.image_r2!;
+      this.imagePreview = data.image_r2;
+    }
+
+    if (data.file_r2) {
+      this.existingDocumentName = data.file_r2;
     }
   }
-
-  /**
-   * Maneja cambio de texto en campo Autores (separados por coma)
-   */
-  onAutoresChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || '';
-    const autores = value
-      .split(',')
-      .map(a => a.trim())
-      .filter(a => a);
-
-    this.form.patchValue({ autores });
-  }
-
-  /**
-   * Maneja cambio de texto en campo Responsables (separados por coma)
-   */
-  onResponsablesChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || '';
-    const responsable = value
-      .split(',')
-      .map(r => r.trim())
-      .filter(r => r);
-
-    this.form.patchValue({ responsable });
-  }
+  
 
   /**
    * Captura el archivo de imagen seleccionado y genera un preview
@@ -156,6 +131,18 @@ export class FormRevista implements OnInit{
   }
 
   /**
+   * Elimina el archivo de documento seleccionado o existente (solo visualmente)
+   */
+  removeFile(): void {
+    // Solo se quita visualmente, la eliminación real ocurre en submitForm()
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
+  }
+
+  /**
    * Envía el formulario al componente padre
    */
   submitForm(): void {
@@ -164,8 +151,50 @@ export class FormRevista implements OnInit{
       return;
     }
 
+    // Si en modo editar se quitó un documento existente, eliminarlo del servidor antes de emitir
+    if (this.editMode && !this.existingDocumentName && this.revistaData.file_r2) {
+      this.serviceRevista.deleteFile(this.revistaData.id!).subscribe({
+        next: () => {
+          this.emitirFormulario();
+        },
+        error: (err) => {
+          console.error("Error al eliminar documento:", err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar documento',
+            text: 'No se pudo eliminar el documento. Intenta de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      this.emitirFormulario();
+    }
+  }
+
+  /**
+   * Emite el formulario al componente padre
+   */
+  private emitirFormulario(): void {
+    const formValue = { ...this.form.value };
+
+    // Convertir strings a arrays
+    formValue.autores = formValue.autoresString
+      .split(',')
+      .map((a: string) => a.trim())
+      .filter((a: string) => a);
+
+    formValue.responsable = formValue.responsableString
+      .split(',')
+      .map((r: string) => r.trim())
+      .filter((r: string) => r);
+
+    // Eliminar campos string
+    delete formValue.autoresString;
+    delete formValue.responsableString;
+
     const payload: FormSubmitPayload = {
-      data: this.form.value,
+      data: formValue,
       file_image: this.selectedFile,
       file_document: this.selectedDocument
     };
