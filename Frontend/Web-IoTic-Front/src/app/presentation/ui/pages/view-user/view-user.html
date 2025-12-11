@@ -35,19 +35,32 @@
           
           <!-- Publicaciones del usuario -->
           <div class="col-12 mt-3 mt-md-4">
+            <!-- Filtro por título -->
+            <div class="row mb-3">
+              <div class="col-12 col-md-6 col-lg-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Filtrar publicaciones por título..."
+                  [value]="searchTerm"
+                  (input)="onFilterChange($any($event.target).value)"
+                />
+              </div>
+            </div>
+
             <div *ngIf="loadingPublications" class="text-center py-3 py-md-4">
               <p class="mb-0">Cargando publicaciones...</p>
             </div>
             
             <!-- Mensaje cuando no hay publicaciones -->
-            <div *ngIf="!loadingPublications && publicationsByType.length === 0" class="no-publications-message">
-              <p class="text-muted">Este usuario no tiene publicaciones registradas.</p>
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length === 0" class="no-publications-message">
+              <p class="text-muted">No hay publicaciones registradas con ese título.</p>
             </div>
             
             <!-- Secciones de publicaciones por tipo -->
-            <div *ngIf="!loadingPublications && publicationsByType.length > 0" class="publications-sections">
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length > 0" class="publications-sections">
               <div 
-                *ngFor="let section of publicationsByType; trackBy: trackBySection" 
+                *ngFor="let section of filteredPublicationsByType; trackBy: trackBySection" 
                 class="publication-type-section">
                 <div class="section-header">
                   <h3 class="section-title">

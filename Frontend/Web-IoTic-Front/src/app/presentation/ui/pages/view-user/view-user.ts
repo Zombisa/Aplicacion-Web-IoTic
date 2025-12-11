@@ -32,6 +32,8 @@ export class ViewUser implements OnInit {
   errorMessage = '';
   publications: UserProductivityItem[] = [];
   publicationsByType: PublicationsByType[] = [];
+  filteredPublicationsByType: PublicationsByType[] = [];
+  searchTerm = '';
   loadingPublications = false;
   
   // Orden de los tipos de productividad para mostrar
@@ -128,6 +130,7 @@ export class ViewUser implements OnInit {
         
         this.publications = validPublications;
         this.groupPublicationsByType();
+        this.applyFilter();
         this.loadingPublications = false;
       },
       error: (error) => {
@@ -235,6 +238,41 @@ export class ViewUser implements OnInit {
     
     console.log(`Publicaciones agrupadas en ${this.publicationsByType.length} secciones:`, 
       this.publicationsByType.map(s => `${s.tipoDisplay} (${s.publications.length})`));
+  }
+
+  /**
+   * Aplica filtro por título sobre las publicaciones agrupadas
+   */
+  applyFilter(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredPublicationsByType = this.publicationsByType.map(section => ({
+        ...section,
+        publications: [...section.publications]
+      }));
+      return;
+    }
+
+    this.filteredPublicationsByType = this.publicationsByType
+      .map(section => {
+        const pubs = section.publications.filter(pub => {
+          const title = (pub.titulo || '').toLowerCase();
+          return title.includes(term);
+        });
+        if (pubs.length === 0) return null;
+        return {
+          ...section,
+          publications: pubs
+        };
+      })
+      .filter((section): section is PublicationsByType => section !== null);
+
+    console.log(`Filtro aplicado "${term}". Secciones resultantes:`, this.filteredPublicationsByType.map(s => `${s.tipoDisplay} (${s.publications.length})`));
+  }
+
+  onFilterChange(value: string): void {
+    this.searchTerm = value;
+    this.applyFilter();
   }
 
   /**
