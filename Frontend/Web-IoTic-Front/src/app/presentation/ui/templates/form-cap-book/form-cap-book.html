@@ -42,15 +42,17 @@
       />
 
       <button
+        type="button"
         class="btn btn-outline-secondary mt-3"
         (click)="documentInput.click()"
-        [class.file-loaded]="selectedDocument"
+        [class.file-loaded]="selectedDocument || existingDocumentName"
       >
-        {{ selectedDocument ? "Archivo seleccionado ✔" : "Subir archivo" }}
+        {{ selectedDocument ? "Archivo seleccionado ✔" : existingDocumentName ? "Tiene un documento subido ✔" : "Subir archivo" }}
       </button>
 
       <button
-        *ngIf="selectedDocument"
+        *ngIf="selectedDocument || existingDocumentName"
+        type="button"
         class="btn btn-danger mt-2"
         (click)="removeFile()"
       >

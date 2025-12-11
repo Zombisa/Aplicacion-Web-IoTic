@@ -29,6 +29,7 @@ export class FormCapBook implements OnInit{
   selectedFile: File | null = null;
   selectedDocument: File | null = null;
   imagePreview: string | null = null;
+  existingDocumentName: string | null = null;
   
   constructor(private fb: FormBuilder,
     private serviceCapBook: CapBookService
@@ -108,6 +109,11 @@ export class FormCapBook implements OnInit{
     if (data.image_r2) {
       this.imagePreview = data.image_r2!;
     }
+
+    // Si trae documento existente
+    if ((data as any).file_r2) {
+      this.existingDocumentName = (data as any).file_r2;
+    }
   }
   /**
    * Captura el archivo de imagen seleccionado y genera un preview
@@ -136,10 +142,14 @@ export class FormCapBook implements OnInit{
   }
 
   /**
-   * Elimina el documento seleccionado
+   * Elimina el documento seleccionado o existente
    */
   removeFile() {
-    this.selectedDocument = null;
+    if (this.existingDocumentName) {
+      this.existingDocumentName = null;
+    } else {
+      this.selectedDocument = null;
+    }
   }
 
    /**

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { CursoDTO } from '../../../../models/DTO/informacion/CursoDTO';
@@ -62,11 +62,9 @@ export class FormCurso implements OnInit {
       titulo: ['', Validators.required],
       tipoProductividad: ['Curso de duración corta', Validators.required],
       autoresString: ['', Validators.required],
-      autores: [[], Validators.required],
 
       // Campos propios de Curso
       etiquetasString: ['', Validators.required],
-      etiquetas: [[], Validators.required],
       propiedadIntelectual: ['', Validators.required],
       duracion: ['', Validators.required],
       institucion: ['', Validators.required],
@@ -94,9 +92,7 @@ export class FormCurso implements OnInit {
       titulo: data.titulo,
       tipoProductividad: data.tipoProductividad || 'Curso de duración corta',
       autoresString: autoresString,
-      autores: data.autores || [],
       etiquetasString: etiquetasString,
-      etiquetas: data.etiquetas || [],
       propiedadIntelectual: data.propiedadIntelectual,
       duracion: data.duracion,
       institucion: data.institucion,
@@ -189,27 +185,35 @@ export class FormCurso implements OnInit {
     // Preparar datos: convertir strings a arrays si es necesario
     const formData = { ...this.form.value };
     
-    // Si los valores de autores y etiquetas aún son strings, convertirlos
-    if (typeof formData.autores === 'string') {
-      formData.autores = formData.autores
-        .split(',')
-        .map((a: string) => a.trim())
-        .filter((a: string) => a);
-    }
-    if (typeof formData.etiquetas === 'string') {
-      formData.etiquetas = formData.etiquetas
-        .split(',')
-        .map((e: string) => e.trim())
-        .filter((e: string) => e);
-    }
+    // Convertir autoresString a array
+    const autores = typeof formData.autoresString === 'string' 
+      ? formData.autoresString
+          .split(',')
+          .map((a: string) => a.trim())
+          .filter((a: string) => a)
+      : [];
     
-    // Remover los campos string ya que no los necesitamos en la petición
-    delete formData.autoresString;
-    delete formData.etiquetasString;
+    // Convertir etiquetasString a array
+    const etiquetas = typeof formData.etiquetasString === 'string'
+      ? formData.etiquetasString
+          .split(',')
+          .map((e: string) => e.trim())
+          .filter((e: string) => e)
+      : [];
     
+    // Preparar objeto final sin los campos string
+    const dataToSend = {
+      ...formData,
+      autores,
+      etiquetas
+    };
+    
+    delete dataToSend.autoresString;
+    delete dataToSend.etiquetasString;
+    delete dataToSend.image_url;
     
     const payload: FormSubmitPayload = {
-      data: formData,
+      data: dataToSend,
       file_image: this.selectedFile,
       file_document: this.selectedDocument
     };
