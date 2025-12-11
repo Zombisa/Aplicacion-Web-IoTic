@@ -65,12 +65,10 @@ export class FormEvaluacion implements OnInit{
             pais: ['', Validators.required],
             anio: ['', Validators.required],
             autoresString: ['', Validators.required],
-            autores: [[], Validators.required],
 
             // Campos propios
             institucion: ['', Validators.required],
-            etiquetasGTIString: [''],
-            etiquetasGTI: [[], Validators.required],
+            etiquetasGTIString: ['', Validators.required],
             licencia: ['', Validators.required],
 
             // la completa el padre cuando sube la imagen

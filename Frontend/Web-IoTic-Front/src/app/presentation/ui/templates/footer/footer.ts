@@ -14,7 +14,7 @@ export class Footer {
   developers = [
     'Esteban Santiago Escandón',
     'Isabela Sanchez Saavedra',
-    'David Chacón',
+    'Jhoan David Chacón Morán',
     'Maria Paula Muñoz',
     'Mary Montenegro'
   ];

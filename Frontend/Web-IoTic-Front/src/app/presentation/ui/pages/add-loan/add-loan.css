@@ -1,6 +1,6 @@
 .banner-primary{
   background: var(--color-primary);
-  height: 35vh;
+  height: 150vh;
 
 }
 .title{
@@ -60,7 +60,9 @@
   .banner-primary .title {
     font-size: 1.8rem !important;
   }
-
+  .banner-primary{
+    height: 350vh;
+  }
   .person-section {
     padding: 2rem; /* menor padding en móviles */
   }
@@ -85,7 +87,9 @@
   .banner-primary .title {
     font-size: 2.2rem !important;
   }
-
+  .banner-primary{
+    height: 290vh;
+  }
   .person-section {
     padding: 2rem;
   }
@@ -101,6 +105,9 @@
 
   .form-label.small {
     font-size: 1rem;
+  }
+    .banner-primary{
+    height: 160vh;
   }
 
   .person-section {
