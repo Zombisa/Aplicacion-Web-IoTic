@@ -37,6 +37,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   ];
   public registrosFotograficosHome: RegistroFotograficoDTO[] = [];
   public registrosFotograficosSlides: RegistroFotograficoDTO[][] = [];
+  public heroFotos: RegistroFotograficoDTO[] = [];
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -87,6 +88,10 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     next: (registros) => {
       // Puedes limitar cuántas fotos muestras en el home
       this.registrosFotograficosHome = registros;
+
+      // Tomar las últimas 5 fotos (ordenadas por id desc) para el banner principal
+      const ordenadas = [...registros].sort((a, b) => (b.id || 0) - (a.id || 0));
+      this.heroFotos = ordenadas.slice(0, 5);
 
       // Agrupar en slides de 3
       this.registrosFotograficosSlides = [];

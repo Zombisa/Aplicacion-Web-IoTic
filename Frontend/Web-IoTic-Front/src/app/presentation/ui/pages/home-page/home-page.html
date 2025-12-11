@@ -3,14 +3,26 @@
     <app-header></app-header>
   </div>
   <div class="container-fluid d-flex align-items-center py-5 banner-primary mb-2">
-    <div class="row d-flex justify-content-center align-items-center">
-      <div class="col-md-6 d-flex" id="title-banner-home">
+    <div class="row w-100 d-flex justify-content-between align-items-center">
+      <div class="col-12 col-md-6 d-flex" id="title-banner-home">
         <h1 class="text-white animate-on-scroll animate-fadeInUp" id="title-home">
           Conoce el Semillero de IoTic
         </h1>
       </div>
-      <div class="col-md-6 text-center">
-        <img src="" alt="" />
+      <div class="col-12 col-md-6 mt-4 mt-md-0 hero-photos-col d-flex justify-content-md-end justify-content-center" *ngIf="heroFotos.length > 0">
+        <div class="hero-photos">
+          <div
+            class="hero-photo animate-on-scroll animate-fadeInUp"
+            *ngFor="let photo of heroFotos; let i = index"
+            [style.animationDelay]="(i * 0.25) + 's'"
+          >
+            <img
+              [src]="photo.foto_r2"
+              [alt]="photo.titulo || 'Registro fotográfico'"
+              loading="lazy"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
