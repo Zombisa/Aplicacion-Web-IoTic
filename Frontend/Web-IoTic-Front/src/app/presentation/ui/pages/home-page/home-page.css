@@ -203,3 +203,76 @@ h1{
   border-radius: 12px;
   padding: 0.75rem 1rem;
 }
+/* Contenedor de cada imagen dentro del slide */
+.registro-slide-row {
+  flex-wrap: nowrap;
+}
+
+/* Tarjeta de cada foto */
+.registro-item {
+  flex: 0 0 30%;          /* 3 por fila */
+  max-width: 280px;
+  aspect-ratio: 4 / 3;    /* todas con la misma proporción */
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #e9ecef;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* Imagen ajustada al contenedor sin deformarse */
+.registro-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* recorta y centra */
+  display: block;
+}
+@media (max-width: 768px) {
+  .registro-slide-row {
+    gap: 1rem;
+  }
+
+  .registro-item {
+    flex: 0 0 80%;
+    max-width: none;
+    margin: 0 auto;
+  }
+}
+/* Controles del carrusel de registro fotográfico */
+.registro-carousel .registro-control {
+  width: 4rem;
+  height: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 1;                    /* que no se escondan */
+}
+
+/* El botoncito redondo que ves (la flecha) */
+.registro-carousel .registro-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  font-size: 1.6rem;
+  color: var(--color-primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.registro-carousel .registro-control:hover .registro-arrow {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  background-color: #f1f3f5;
+}
+.registro-carousel .carousel-indicators [data-bs-target] {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.registro-carousel .carousel-indicators .active {
+  background-color: var(--color-primary);
+}
