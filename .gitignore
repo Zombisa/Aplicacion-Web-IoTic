@@ -71,3 +71,6 @@ firebase-key.json
 /Backend/apps/usuarios_roles/migrations
 /Backend/apps/informacion/migrations
 Backend/Documentación.docx
+DIAGRAMAS_ARQUITECTURA.md
+Backend/DOCUMENTACION_PRUEBAS_UNITARIAS.md
+Backend/.coverage
