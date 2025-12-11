@@ -1,101 +1,92 @@
-<div class="card form-registro-card" *ngIf="!loading; else loadingTpl">
-  <div class="card-body">
-    <h2 class="form-title mb-3">
-      {{ modo === 'create' ? 'Nuevo registro fotográfico' : 'Editar registro fotográfico' }}
-    </h2>
+<div class="form-registro-wrapper" *ngIf="!loading; else loadingTpl">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <!-- CUADRO PARA LA IMAGEN -->
+    <div class="image-box" (click)="fileInput.click()">
+      <ng-container *ngIf="!imagePreviewUrl; else previewTpl">
+        <span class="image-box-text">Subir imagen</span>
+      </ng-container>
 
-      <!-- TÍTULO -->
-      <div class="mb-3">
-        <label class="form-label small fw-semibold text-custom-primary">
-          Título *
-        </label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          formControlName="titulo"
-          placeholder="Título de la fotografía o evento" />
-        <div class="invalid-feedback d-block" *ngIf="hasError('titulo', 'required')">
-          El título es obligatorio.
-        </div>
-        <div class="invalid-feedback d-block" *ngIf="hasError('titulo', 'maxlength')">
-          Máximo 200 caracteres.
-        </div>
-      </div>
+      <ng-template #previewTpl>
+        <img
+          [src]="imagePreviewUrl"
+          alt="Previsualización"
+          class="image-box-preview" />
+      </ng-template>
 
-      <!-- FECHA -->
-      <div class="mb-3">
-        <label class="form-label small fw-semibold text-custom-primary">
-          Fecha
-        </label>
-        <input
-          type="date"
-          class="form-control form-control-sm"
-          formControlName="fecha" />
-      </div>
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden />
+    </div>
 
-      <!-- DESCRIPCIÓN -->
-      <div class="mb-3">
-        <label class="form-label small fw-semibold text-custom-primary">
-          Descripción
-        </label>
-        <textarea
-          rows="3"
-          class="form-control form-control-sm"
-          formControlName="descripcion"
-          placeholder="Breve descripción del momento o actividad">
-        </textarea>
-        <div class="invalid-feedback d-block" *ngIf="hasError('descripcion', 'maxlength')">
-          Máximo 500 caracteres.
-        </div>
-      </div>
+    <div class="error-text" *ngIf="hasError('file_path', 'required')">
+      La fotografía es obligatoria para crear el registro.
+    </div>
 
-      <!-- IMAGEN -->
-      <div class="mb-3">
-        <label class="form-label small fw-semibold text-custom-primary">
-          Fotografía {{ modo === 'create' ? '*' : '' }}
-        </label>
+    <!-- CAMPOS TIPO SUBRAYADO -->
 
-        <input
-          type="file"
-          class="form-control form-control-sm"
-          accept="image/*"
-          (change)="onFileSelected($event)" />
+    <!-- TÍTULO -->
+    <div class="field-line">
+      <label class="field-label">Título *</label>
+      <input
+        type="text"
+        class="field-input"
+        formControlName="titulo" />
+      <div class="field-underline"></div>
+    </div>
+    <div class="error-text" *ngIf="hasError('titulo', 'required')">
+      El título es obligatorio.
+    </div>
+    <div class="error-text" *ngIf="hasError('titulo', 'maxlength')">
+      Máximo 200 caracteres.
+    </div>
 
-        <div class="invalid-feedback d-block" *ngIf="hasError('file_path', 'required')">
-          La fotografía es obligatoria para crear el registro.
-        </div>
+    <!-- FECHA -->
+    <div class="field-line">
+      <label class="field-label">Fecha</label>
+      <input
+        type="date"
+        class="field-input"
+        formControlName="fecha" />
+      <div class="field-underline"></div>
+    </div>
 
-        <!-- PREVIEW -->
-        <div class="mt-3" *ngIf="imagePreviewUrl">
-          <p class="small text-muted mb-1">Vista previa:</p>
-          <div class="preview-wrapper">
-            <img [src]="imagePreviewUrl" alt="Previsualización" class="preview-image" />
-          </div>
-        </div>
-      </div>
+    <!-- DESCRIPCIÓN -->
+    <div class="field-line">
+      <label class="field-label">Descripción</label>
+      <input
+        type="text"
+        class="field-input"
+        formControlName="descripcion"
+        placeholder="" />
+      <div class="field-underline"></div>
+    </div>
+    <div class="error-text" *ngIf="hasError('descripcion', 'maxlength')">
+      Máximo 500 caracteres.
+    </div>
 
-      <!-- BOTONES -->
-      <div class="d-flex justify-content-end gap-2 mt-4">
-        <button
-          type="button"
-          class="btn btn-outline-secondary btn-sm"
-          (click)="onCancel()"
-          [disabled]="saving">
-          Cancelar
-        </button>
+    <!-- BOTONES INFERIORES TIPO PASTILLA -->
+    <div class="actions-row">
+      <button
+        type="button"
+        class="btn-pill btn-pill-secondary"
+        (click)="onCancel()"
+        [disabled]="saving">
+        Cancelar
+      </button>
 
-        <button
-          type="submit"
-          class="btn btn-primary btn-sm"
-          [disabled]="saving || form.invalid">
-          {{ saving ? 'Guardando…' : (modo === 'create' ? 'Publicar' : 'Guardar cambios') }}
-        </button>
-      </div>
+      <button
+        type="submit"
+        class="btn-pill btn-pill-primary"
+        [disabled]="saving || form.invalid">
+        {{ saving ? 'Guardando…' : (modo === 'create' ? 'Publicar' : 'Guardar cambios') }}
+      </button>
+    </div>
 
-    </form>
-  </div>
+  </form>
 </div>
 
 <ng-template #loadingTpl>

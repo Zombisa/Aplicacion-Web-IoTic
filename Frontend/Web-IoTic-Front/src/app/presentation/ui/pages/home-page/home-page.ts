@@ -6,6 +6,8 @@ import { ScrollAnimationServices } from '../../../../services/scroll-animation.s
 import { UserProductivityService, UserProductivityItem } from '../../../../services/information/user-productivity.service';
 import { LoadingService } from '../../../../services/loading.service';
 import { LoadingPage } from '../../components/loading-page/loading-page';
+import { RegistroFotograficoDTO } from '../../../../models/DTO/RegistroFotograficoDTO';
+import { RegistroFotograficoService } from '../../../../services/registro-fotografico.service';
 declare var bootstrap: any;
 
 @Component({
@@ -14,36 +16,39 @@ declare var bootstrap: any;
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
-export class HomePage implements OnInit, AfterViewInit, OnDestroy{
+export class HomePage implements OnInit, AfterViewInit, OnDestroy {
 
-      private observer!: IntersectionObserver;
-      public latestPublications: Record<string, UserProductivityItem | null> = {};
-      public publicationTypes: Array<{key: string, label: string}> = [
-        { key: 'libro', label: 'Libro' },
-        { key: 'capitulo', label: 'Capítulo de libro' },
-        { key: 'curso', label: 'Curso corto' },
-        { key: 'evento', label: 'Evento/Seminario' },
-        { key: 'revista', label: 'Revista' },
-        { key: 'software', label: 'Software' },
-        { key: 'tutoria_concluida', label: 'Tutoría concluida' },
-        { key: 'tutoria_en_marcha', label: 'Tutoría en marcha' },
-        { key: 'trabajo_eventos', label: 'Trabajo en eventos' },
-        { key: 'participacion_comites', label: 'Participación en comités' },
-        { key: 'material_didactico', label: 'Material didáctico' },
-        { key: 'jurado', label: 'Jurado' },
-        { key: 'proceso_tecnica', label: 'Proceso o técnica' }
-      ];
+  private observer!: IntersectionObserver;
+  public latestPublications: Record<string, UserProductivityItem | null> = {};
+  public publicationTypes: Array<{ key: string, label: string }> = [
+    { key: 'libro', label: 'Libro' },
+    { key: 'capitulo', label: 'Capítulo de libro' },
+    { key: 'curso', label: 'Curso corto' },
+    { key: 'evento', label: 'Evento/Seminario' },
+    { key: 'revista', label: 'Revista' },
+    { key: 'software', label: 'Software' },
+    { key: 'tutoria_concluida', label: 'Tutoría concluida' },
+    { key: 'tutoria_en_marcha', label: 'Tutoría en marcha' },
+    { key: 'trabajo_eventos', label: 'Trabajo en eventos' },
+    { key: 'participacion_comites', label: 'Participación en comités' },
+    { key: 'material_didactico', label: 'Material didáctico' },
+    { key: 'jurado', label: 'Jurado' },
+    { key: 'proceso_tecnica', label: 'Proceso o técnica' }
+  ];
+  public registrosFotograficosHome: RegistroFotograficoDTO[] = [];
+  public registrosFotograficosSlides: RegistroFotograficoDTO[][] = [];
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object, 
+    @Inject(PLATFORM_ID) private platformId: Object,
     private scrollAnimations: ScrollAnimationServices,
     private elementRef: ElementRef,
     private userProductivityService: UserProductivityService,
     public loadingService: LoadingService,
-    private router: Router
-     ) {}
+    private router: Router,
+    private registroFotograficoService: RegistroFotograficoService
+  ) { }
 
-    public mensajes: string[] = [
+  public mensajes: string[] = [
     '¡Bienvenido! Únete a nuestra comunidad y accede a experiencias exclusivas. Regístrate ahora y da el primer paso hacia nuevas oportunidades.',
     'Desde el año 2000 un grupo de profesores del Departamento de Sistemas de la Universidad del Cauca asignados al naciente Programa de Ingeniería de Sistemas, unieron sus intereses para conformar lo que ahora es el Grupo de tecnologías de la Información',
     'GTI. Hoy en día el grupo está conformado por más de 20 profesores de la Universidad del Cauca, especialmente del Departamento de Sistemas. Además se cuenta con un grupo de más de 30 estudiantes de pregrado realizando sus Proyectos de Grado enmarcados en los proyectos de investigación',
@@ -53,6 +58,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy{
 
   ngOnInit(): void {
     this.loadLatestPublications();
+    this.loadRegistroFotograficoHome();
   }
 
   /**
@@ -74,9 +80,50 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy{
   }
 
   /**
+ * Carga algunos registros fotográficos para el carrusel del home
+ */
+  loadRegistroFotograficoHome(): void {
+  this.registroFotograficoService.getAll().subscribe({
+    next: (registros) => {
+      // Puedes limitar cuántas fotos muestras en el home
+      this.registrosFotograficosHome = registros;
+
+      // Agrupar en slides de 3
+      this.registrosFotograficosSlides = [];
+      const chunkSize = 3;
+      for (let i = 0; i < this.registrosFotograficosHome.length; i += chunkSize) {
+        this.registrosFotograficosSlides.push(
+          this.registrosFotograficosHome.slice(i, i + chunkSize)
+        );
+      }
+
+      // Inicializar carrusel de Bootstrap
+      if (isPlatformBrowser(this.platformId)) {
+        setTimeout(() => {
+          const el = document.getElementById('registroFotograficoCarousel');
+          if (el && typeof (window as any).bootstrap !== 'undefined') {
+            const bootstrap = (window as any).bootstrap;
+            new bootstrap.Carousel(el, {
+              interval: 5000,
+              ride: 'carousel',
+              wrap: true,
+              keyboard: true,
+              pause: 'hover'
+            });
+          }
+        }, 50);
+      }
+    },
+    error: (err) => {
+      console.error('Error al cargar registros fotográficos para el home:', err);
+    }
+  });
+}
+
+  /**
    * Obtiene las publicaciones que tienen datos (no null)
    */
-  getAvailablePublications(): Array<{key: string, label: string, publication: UserProductivityItem}> {
+  getAvailablePublications(): Array<{ key: string, label: string, publication: UserProductivityItem }> {
     return this.publicationTypes
       .filter(type => this.latestPublications[type.key] !== null)
       .map(type => ({
@@ -116,36 +163,40 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy{
     }
   }
 
-     ngAfterViewInit() {
-  if (isPlatformBrowser(this.platformId)) {
-    // Agregar un pequeño delay para asegurar que el DOM esté completamente renderizado
-    setTimeout(() => {
-      const carouselElement = document.getElementById('welcomeCarousel');
-      if (carouselElement) {
-        // Verificar si Bootstrap está disponible
-        if (typeof (window as any).bootstrap !== 'undefined') {
-          const bootstrap = (window as any).bootstrap;
-          new bootstrap.Carousel(carouselElement, {
-            interval: 3000, // Cambiar a 3 segundos (1 segundo es muy rápido)
-            ride: 'carousel',
-            wrap: true,
-            keyboard: true,
-            pause: 'hover'
-          });
-        } else {
-          console.warn('Bootstrap JS no está disponible');
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Agregar un pequeño delay para asegurar que el DOM esté completamente renderizado
+      setTimeout(() => {
+        const carouselElement = document.getElementById('welcomeCarousel');
+        if (carouselElement) {
+          // Verificar si Bootstrap está disponible
+          if (typeof (window as any).bootstrap !== 'undefined') {
+            const bootstrap = (window as any).bootstrap;
+            new bootstrap.Carousel(carouselElement, {
+              interval: 3000, // Cambiar a 3 segundos (1 segundo es muy rápido)
+              ride: 'carousel',
+              wrap: true,
+              keyboard: true,
+              pause: 'hover'
+            });
+          } else {
+            console.warn('Bootstrap JS no está disponible');
+          }
         }
-      }
-    }, 10);
-  }
-  if (isPlatformBrowser(this.platformId)) {
+      }, 10);
+    }
+    if (isPlatformBrowser(this.platformId)) {
       this.scrollAnimations.observeElements(this.elementRef.nativeElement);
     }
-}
+  }
 
   ngOnDestroy(): void {
     if (this.observer) {
-       this.scrollAnimations.disconnect();
+      this.scrollAnimations.disconnect();
     }
+  }
+
+  goToRegistroFotografico(): void {
+    this.router.navigate(['/registro-fotografico']);
   }
 }

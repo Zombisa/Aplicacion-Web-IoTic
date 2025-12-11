@@ -1,7 +1,6 @@
 <app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
 
 <div *ngIf="!(loadingService.loading$ | async)">
-
   <div class="header-wrapper">
     <app-header></app-header>
   </div>

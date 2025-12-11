@@ -1,37 +1,46 @@
 <app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
 
 <div *ngIf="!(loadingService.loading$ | async)">
-
-  <div class="header-wrapper">
-    <app-header></app-header>
-  </div>
-
-  <!-- BANNER -->
-  <section class="banner-primary d-flex justify-content-center align-items-center flex-column text-center">
-    <h1 class="title">Administrar registro fotográfico</h1>
-    <p class="text-help">Publica, edita y elimina las memorias visuales del semillero</p>
-  </section>
-
-  <!-- CONTENEDOR -->
-  <div class="container-fluid px-3 px-md-4 py-4 registro-admin-container">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title mb-0">Publicaciones</h2>
-
-      <button
-        type="button"
-        class="btn btn-primary btn-sm"
-        (click)="nuevoRegistro()">
-        + Nuevo registro fotográfico
-      </button>
+  <div class="registro-admin-bg">
+    <div class="header-wrapper">
+      <app-header></app-header>
     </div>
 
-    <app-gallery-registro-fotografico
-      [registros]="registros"
-      [showActions]="true"
-      (edit)="onEdit($event)"
-      (remove)="onRemove($event)">
-    </app-gallery-registro-fotografico>
+    <!-- BANNER -->
+    <section
+      class="banner-primary d-flex justify-content-center align-items-center flex-column text-center"
+    >
+      <h1 class="title">Administrar registro fotográfico</h1>
+      <p class="text-help">Publica, edita y elimina las memorias visuales del semillero</p>
+    </section>
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container-fluid px-3 px-md-4 py-4 registro-admin-container">
+      <!-- TARJETA DEL FORMULARIO -->
+      <section class="registro-form-card">
+        <app-form-registro-fotografico
+          [modo]="modo"
+          [id]="selectedId"
+          (saved)="onFormSaved()"
+          (cancel)="onFormCancel()"
+        >
+        </app-form-registro-fotografico>
+      </section>
+
+      <!-- LISTADO / GALERÍA -->
+      <section class="registro-list mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="section-title mb-0">Publicaciones</h2>
+        </div>
+
+        <app-gallery-registro-fotografico
+          [registros]="registros"
+          [showActions]="true"
+          (edit)="onEdit($event)"
+          (remove)="onRemove($event)"
+        >
+        </app-gallery-registro-fotografico>
+      </section>
+    </div>
   </div>
 </div>

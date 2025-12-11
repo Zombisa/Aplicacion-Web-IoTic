@@ -1,9 +1,9 @@
-.header-wrapper {
-  position: relative;
-  z-index: 2;
-}
-
 .registro-page-container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.banner-primary{
+  background-color: var(--color-secondary-light);
+  height: 56vh;
 }

@@ -181,3 +181,25 @@ h1{
     margin: 0 auto;
   }
 }
+
+.registro-fotografico {
+  background-color: #f7f7f7; /* si quieres un fondo suave */
+}
+
+.registro-carousel {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.registro-carousel-img {
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.registro-carousel-caption {
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}

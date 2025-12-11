@@ -85,7 +85,5 @@ export const routes: Routes = [
      { path: 'mentores-publicaciones/:id', component: ViewMentorPublications },
      { path: 'productividad/material/:id', component: ViewMaterialDidactico },
      { path: 'registro-fotografico', component: RegistroFotograficoPage },
-     {path: 'admin/registro-fotografico', component: RegistroFotograficoAdminPage, canActivate: [AuthGuard, AdminOrMentorGuard]},
-     {path: 'admin/registro-fotografico/nuevo', component: AddRegistroFotograficoPage,canActivate: [AuthGuard, AdminOrMentorGuard]},
-     {path: 'admin/registro-fotografico/editar/:id', component: AddRegistroFotograficoPage, canActivate: [AuthGuard, AdminOrMentorGuard]},
+     {path: 'admin/registro-fotografico', component: RegistroFotograficoAdminPage, canActivate: [AuthGuard, AdminOrMentorGuard]}
 ];

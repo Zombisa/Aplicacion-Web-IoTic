@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { Header } from '../../templates/header/header';
 import { LoadingPage } from '../../components/loading-page/loading-page';
@@ -11,6 +10,7 @@ import { RegistroFotograficoDTO } from '../../../../models/DTO/RegistroFotografi
 import Swal from 'sweetalert2';
 import { RegistroFotograficoService } from '../../../../services/registro-fotografico.service';
 import { LoadingService } from '../../../../services/loading.service';
+import { FormRegistroFotografico } from '../../templates/form-registro-fotografico/form-registro-fotografico';
 
 @Component({
   selector: 'app-registro-fotografico-admin-page',
@@ -19,7 +19,8 @@ import { LoadingService } from '../../../../services/loading.service';
     CommonModule,
     Header,
     LoadingPage,
-    GalleryRegistroFotografico
+    GalleryRegistroFotografico,
+    FormRegistroFotografico
   ],
   templateUrl: './registro-fotografico-admin-page.html',
   styleUrls: ['./registro-fotografico-admin-page.css']
@@ -28,11 +29,14 @@ export class RegistroFotograficoAdminPage implements OnInit {
 
   registros: RegistroFotograficoDTO[] = [];
 
+  // control del formulario de arriba
+  modo: 'create' | 'edit' = 'create';
+  selectedId: number | null = null;
+
   constructor(
     private registroService: RegistroFotograficoService,
-    public loadingService: LoadingService,
-    private router: Router
-  ) {}
+    public loadingService: LoadingService
+  ) { }
 
   ngOnInit(): void {
     this.cargarRegistros();
@@ -52,14 +56,32 @@ export class RegistroFotograficoAdminPage implements OnInit {
     });
   }
 
-  /** Navegar a crear nuevo registro */
-  nuevoRegistro(): void {
-    this.router.navigate(['/admin/registro-fotografico/nuevo']);
+  /** Cuando el formulario se guarda (create o edit) */
+  onFormSaved(): void {
+    this.modo = 'create';
+    this.selectedId = null;
+    this.cargarRegistros();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Registro guardado',
+      timer: 1500,
+      showConfirmButton: false
+    });
   }
 
-  /** Desde la galería: editar */
+  /** Cuando el usuario cancela edición */
+  onFormCancel(): void {
+    this.modo = 'create';
+    this.selectedId = null;
+  }
+
+  /** Desde la galería: editar → carga el registro en el form de arriba */
   onEdit(registro: RegistroFotograficoDTO): void {
-    this.router.navigate(['/admin/registro-fotografico/editar', registro.id]);
+    this.modo = 'edit';
+    this.selectedId = registro.id;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /** Desde la galería: eliminar con confirmación */
