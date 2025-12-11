@@ -1,6 +1,6 @@
 <app-loading-page *ngIf="loadingService.loading$ | async"></app-loading-page>
 
-<div *ngIf="!(loadingService.loading$ | async)">
+<div *ngIf="!(loadingService.loading$ | async)" class="">
   <div class="header-wrapper">
     <app-header></app-header>
   </div>
@@ -9,7 +9,7 @@
     <!-- Banner del usuario -->
     <div class="row">
       <div class="col-12 p-0">
-        <div class="banner-primary d-flex justify-content-start align-items-center px-4">
+        <div class="banner-primary  d-flex justify-content-center align-items-center px-4">
           <div class="user-avatar me-4">
             <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

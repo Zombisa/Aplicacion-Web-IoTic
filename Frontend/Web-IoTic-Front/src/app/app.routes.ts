@@ -44,6 +44,8 @@ import { RegistroFotograficoPage } from './presentation/ui/pages/registro-fotogr
 import { RegistroFotograficoAdminPage } from './presentation/ui/pages/registro-fotografico-admin-page/registro-fotografico-admin-page';
 import { AddRegistroFotograficoPage } from './presentation/ui/pages/add-registro-fotografico/add-registro-fotografico';
 import { Contact } from './presentation/ui/pages/contact/contact';
+import { EditMyProfile } from './presentation/ui/pages/edit-my-profile/edit-my-profile';
+import { UpdatePassword } from './presentation/ui/pages/update-password/update-password';
 export const routes: Routes = [
 
      { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -87,5 +89,7 @@ export const routes: Routes = [
      { path: 'productividad/material/:id', component: ViewMaterialDidactico },
      { path: 'registro-fotografico', component: RegistroFotograficoPage },
      {path: 'admin/registro-fotografico', component: RegistroFotograficoAdminPage, canActivate: [AuthGuard, AdminOrMentorGuard]},
-     {path: 'contacto', component: Contact}
+     {path: 'contacto', component: Contact},
+     {path: 'mi-perfil/editar', component: EditMyProfile},
+     {path: 'mi-perfil/actualizar-contraseña', component: UpdatePassword , canActivate: [AuthGuard]},
 ];

@@ -73,7 +73,6 @@ export class UpdatePassword implements OnInit {
     try {
       const firebaseUser = await firstValueFrom(
         this.authService.currentUser.pipe(
-          // Esperar hasta que haya un usuario o null
         )
       );
 
