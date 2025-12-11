@@ -14,7 +14,7 @@ export class CursoService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<CursoDTO[]> {
-    return this.api.get<CursoDTO[]>(`${this.basePath}/cursos/`);
+    return this.api.get<CursoDTO[]>(`${this.basePath}/`);
   }
 
   getById(id: number): Observable<CursoDTO> {

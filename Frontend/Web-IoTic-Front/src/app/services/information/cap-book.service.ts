@@ -16,7 +16,7 @@ export class CapBookService {
    */
   getCapBooks(): Observable<CapBookDTO[]> {
     return this.http.get<CapBookDTO[]>(
-      `${this.config.apiUrlBackend}informacion/capLibros/capitulos_libro/`
+      `${this.config.apiUrlBackend}informacion/capLibros/`
     ).pipe(
       catchError((error) => {
         console.error('Error al obtener capítulos de libros:', error);
@@ -24,7 +24,6 @@ export class CapBookService {
       })
     );
   }
-
   /**
    * Crea un nuevo capítulo de libro en el backend
    * @param capBook datos del capítulo de libro a crear.
