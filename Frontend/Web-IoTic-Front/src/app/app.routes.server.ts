@@ -94,6 +94,19 @@ export const serverRoutes: ServerRoute[] = [
     path: 'productividad/material/:id',
     renderMode: RenderMode.Client
   },
+  {
+    path: 'mentores-publicaciones/:id',
+    renderMode: RenderMode.Client
+  },
+  {
+    path: 'home',
+    renderMode: RenderMode.Client
+  },
+  {
+    path: 'registro-fotografico',
+    renderMode: RenderMode.Client
+  },
+
   // Rutas estáticas - Prerender
   {
     path: '**',
