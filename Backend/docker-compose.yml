@@ -14,6 +14,34 @@ services:
       - "5432:5432"
     networks:
       - nebula_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Migrations Service
+  migrations:
+    build:
+      context: .
+      dockerfile: apps/inventario/Dockerfile
+    command: python manage.py migrate
+    volumes:
+      - .:/app
+      - ./firebase:/app/firebase
+    environment:
+      - DEBUG=${DEBUG}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DJANGO_SETTINGS_MODULE=backend.settings
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - nebula_network
 
   # Inventario Microservice
   inventario:
@@ -36,6 +64,7 @@ services:
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
       - db
+      - migrations
     networks:
       - nebula_network
 
@@ -60,6 +89,7 @@ services:
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
       - db
+      - migrations
     networks:
       - nebula_network
 
@@ -84,6 +114,7 @@ services:
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
       - db
+      - migrations
     networks:
       - nebula_network
 
