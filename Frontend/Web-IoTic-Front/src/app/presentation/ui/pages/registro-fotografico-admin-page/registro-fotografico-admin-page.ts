@@ -76,14 +76,6 @@ export class RegistroFotograficoAdminPage implements OnInit {
     this.selectedId = null;
   }
 
-  /** Desde la galería: editar → carga el registro en el form de arriba */
-  onEdit(registro: RegistroFotograficoDTO): void {
-    this.modo = 'edit';
-    this.selectedId = registro.id;
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   /** Desde la galería: eliminar con confirmación */
   onRemove(registro: RegistroFotograficoDTO): void {
     Swal.fire({
