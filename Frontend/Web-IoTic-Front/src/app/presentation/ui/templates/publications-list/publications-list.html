@@ -23,6 +23,7 @@
         <h3 class="publication-title">{{ publication.titulo || 'Sin título' }}</h3>
         <p class="publication-type">{{ publication.tipoDisplay || publication.tipoProductividad }}</p>
         <button 
+          *ngIf="showEditButton"
           type="button"
           class="edit-button"
           (click)="goToEdit($event, publication)"

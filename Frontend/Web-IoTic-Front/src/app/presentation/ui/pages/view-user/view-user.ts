@@ -10,6 +10,7 @@ import { SectionInfoUser } from '../../templates/section-info-user/section-info-
 import { ConfirmationModal } from '../../templates/confirmation-modal/confirmation-modal';
 import { PublicationsList } from '../../templates/publications-list/publications-list';
 import { UserProductivityService, UserProductivityItem } from '../../../../services/information/user-productivity.service';
+import { AuthService } from '../../../../services/auth.service';
 
 interface PublicationsByType {
   tipo: string;
@@ -35,6 +36,9 @@ export class ViewUser implements OnInit {
   filteredPublicationsByType: PublicationsByType[] = [];
   searchTerm = '';
   loadingPublications = false;
+  isAuthenticated = false;
+  canEditPublications = false;
+  sectionMode: 'view' | 'edit' = 'view';
   
   // Orden de los tipos de productividad para mostrar
   private readonly typeOrder: string[] = [
@@ -58,10 +62,17 @@ export class ViewUser implements OnInit {
     private router: Router,
     private usersService: UsersService,
     public loadingService: LoadingService,
-    private userProductivityService: UserProductivityService
+    private userProductivityService: UserProductivityService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe(user => {
+      this.isAuthenticated = !!user;
+      this.canEditPublications = this.isAuthenticated;
+      this.sectionMode = this.isAuthenticated ? 'edit' : 'view';
+    });
+
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {

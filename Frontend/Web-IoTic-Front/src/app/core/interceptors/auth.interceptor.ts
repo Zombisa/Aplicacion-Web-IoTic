@@ -28,7 +28,8 @@ export const authInterceptor: HttpInterceptorFn = (
     '/vision/ver/',
     '/historia/ver/',
     '/objetivos/ver/',
-    '/valores/ver/'
+    '/valores/ver/',
+    '/informacion/publicaciones/'
   ];
 
   const shouldSkipAuth = excludedPatterns.some(p => req.url.includes(p));

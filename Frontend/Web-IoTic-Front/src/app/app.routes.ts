@@ -52,7 +52,7 @@ export const routes: Routes = [
      { path: 'mi-perfil', component: MyProfile, canActivate: [AuthGuard] },
      { path: 'usuarios', component: UsersManagementPageComponent, canActivate: [AuthGuard, AdminGuard] },
      { path: 'usuarios/add', component: AddUser, canActivate: [AuthGuard, AdminGuard] },
-     { path: 'usuarios/view/:id', component: ViewUser, canActivate: [AuthGuard] },
+     { path: 'usuarios/view/:id', component: ViewUser },
      { path: 'inventario', component: InventoryPageComponent, canActivate: [AuthGuard, AdminGuard] },
      { path: 'who-we-are', component: WhoWeAre },
      { path: 'who-we-are/edit', component: EditWhoWeAre, canActivate: [AuthGuard, AdminGuard] },

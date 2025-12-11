@@ -28,7 +28,7 @@
           <div class="col-12">
             <app-section-info-user
               [user]="user"
-              mode="edit"
+              [mode]="sectionMode"
               (functionEmitter)="handlerFunctionEmitter($event)">
             </app-section-info-user>
           </div>
@@ -73,6 +73,7 @@
                   <app-publications-list
                     [publications]="section.publications"
                     [showTitle]="false"
+                    [showEditButton]="canEditPublications"
                     (publicationClick)="onPublicationClick($event)">
                   </app-publications-list>
                 </div>

@@ -34,15 +34,47 @@
           
           <!-- Publicaciones del usuario -->
           <div class="col-12 mt-4">
+            <!-- Filtro por título -->
+            <div class="row mb-3">
+              <div class="col-12 col-md-6 col-lg-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Filtrar publicaciones por título..."
+                  [value]="searchTerm"
+                  (input)="onFilterChange($any($event.target).value)"
+                />
+              </div>
+            </div>
+
             <div *ngIf="loadingPublications" class="text-center py-4">
               <p>Cargando publicaciones...</p>
             </div>
-            <app-publications-list
-              *ngIf="!loadingPublications"
-              [publications]="publications"
-              (publicationClick)="onPublicationClick($event)"
-              class="container">
-            </app-publications-list>
+
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length === 0" class="no-publications">
+              <p class="text-muted">No hay publicaciones registradas con ese título.</p>
+            </div>
+
+            <div *ngIf="!loadingPublications && filteredPublicationsByType.length > 0" class="publications-sections">
+              <div
+                *ngFor="let section of filteredPublicationsByType; trackBy: trackBySection"
+                class="publication-type-section">
+                <div class="section-header">
+                  <h3 class="section-title">
+                    <i class="fas fa-folder-open me-2"></i>
+                    {{ section.tipoDisplay }}
+                  </h3>
+                  <span class="section-count badge bg-primary">{{ section.publications.length }}</span>
+                </div>
+                <div class="section-content">
+                  <app-publications-list
+                    [publications]="section.publications"
+                    [showTitle]="false"
+                    (publicationClick)="onPublicationClick($event)">
+                  </app-publications-list>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

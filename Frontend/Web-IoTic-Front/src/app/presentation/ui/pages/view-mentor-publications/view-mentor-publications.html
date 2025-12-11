@@ -53,38 +53,45 @@
           <div class="col-12">
             <h2 class="publications-title">Publicaciones</h2>
           </div>
+
+          <!-- Filtro por título -->
+          <div class="col-12 col-md-6 col-lg-5 mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Filtrar publicaciones por título..."
+              [value]="searchTerm"
+              (input)="onFilterChange($any($event.target).value)"
+            />
+          </div>
         </div>
 
         <div *ngIf="loadingPublications" class="text-center py-4">
           <p>Cargando publicaciones...</p>
         </div>
 
-        <div *ngIf="!loadingPublications && publications.length === 0" class="no-publications">
+        <div *ngIf="!loadingPublications && filteredPublicationsByType.length === 0" class="no-publications">
           <p>No hay publicaciones para mostrar.</p>
         </div>
 
-        <div *ngIf="!loadingPublications && publications.length > 0" class="publications-grid">
-          <div 
-            *ngFor="let publication of publications" 
-            class="publication-card"
-            (click)="navigateToPublication(publication.tipo, publication.id)">
-            <div class="publication-image-wrapper">
-              <img 
-                *ngIf="publication.image_r2" 
-                [src]="publication.image_r2" 
-                [alt]="publication.titulo" 
-                class="publication-image">
-              <div *ngIf="!publication.image_r2" class="publication-image-placeholder">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-              </div>
+        <div *ngIf="!loadingPublications && filteredPublicationsByType.length > 0" class="publications-sections">
+          <div
+            *ngFor="let section of filteredPublicationsByType; trackBy: trackBySection"
+            class="publication-type-section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <i class="fas fa-folder-open me-2"></i>
+                {{ section.tipoDisplay }}
+              </h3>
+              <span class="section-count badge bg-primary">{{ section.publications.length }}</span>
             </div>
-            <div class="publication-info">
-              <h3 class="publication-title">{{ publication.titulo || 'Sin título' }}</h3>
-              <p class="publication-type">{{ publication.tipoDisplay || publication.tipoProductividad }}</p>
+            <div class="section-content">
+              <app-publications-list
+                [publications]="section.publications"
+                [showTitle]="false"
+                [showEditButton]="showEditButton"
+                (publicationClick)="navigateToPublication($event.tipo, $event.id)">
+              </app-publications-list>
             </div>
           </div>
         </div>
