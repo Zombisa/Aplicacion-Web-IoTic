@@ -11,9 +11,9 @@ from backend.serviceCloudflare.R2Service import generar_url_firmada
 from backend.serviceCloudflare.R2Client import s3
 
 class RegistroFotograficoViewSet(viewsets.ModelViewSet):
-    """CRUD de registros fotográficos con rol requerido (admin y mentor) y manejo de fotos en R2.
+    """CRUD de registros fotográficos con manejo de fotos en R2.
 
-    Roles: todas las acciones usan `verificarToken.validarRol` (403 si falla).
+    Acceso: lecturas públicas; crear/editar/eliminar requieren `verificarToken.validarRol`.
     Fotos: `file_path` → `foto_r2`; eliminar registro borra la foto en R2.
     Errores: 404 si no existe; 400 validación; 500 fallos R2.
     """
@@ -146,28 +146,20 @@ class RegistroFotograficoViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_403_FORBIDDEN)
         
     def list(self, request):
-        """Lista todos los registros fotográficos (requiere rol válido)."""
-        if verificarToken.validarRol(request) is True:
-            registros = RegistroFotografico.objects.all()
-            serializer = RegistroFotograficoSerializer(registros, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'error': 'Token expirado o invalido.'},
-                            status=status.HTTP_403_FORBIDDEN)
+        """Lista pública de registros fotográficos."""
+        registros = RegistroFotografico.objects.all()
+        serializer = RegistroFotograficoSerializer(registros, many=True)
+        return Response(serializer.data)
     
     def retrieve(self, request, pk=None):
-        """Obtiene el detalle de un registro fotográfico."""
-        if verificarToken.validarRol(request) is True:
-            try:
-                registro = RegistroFotografico.objects.get(pk=pk)
-                serializer = RegistroFotograficoSerializer(registro)
-                return Response(serializer.data)
-            except RegistroFotografico.DoesNotExist:
-                return Response({'error': 'Registro fotográfico no encontrado'}, 
-                              status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response({'error': 'Token expirado o invalido.'},
-                            status=status.HTTP_403_FORBIDDEN)
+        """Detalle público de un registro fotográfico."""
+        try:
+            registro = RegistroFotografico.objects.get(pk=pk)
+            serializer = RegistroFotograficoSerializer(registro)
+            return Response(serializer.data)
+        except RegistroFotografico.DoesNotExist:
+            return Response({'error': 'Registro fotográfico no encontrado'}, 
+                          status=status.HTTP_404_NOT_FOUND)
     
     @action(detail=False, methods=['get'], url_path='public')
     def list_public(self, request):
