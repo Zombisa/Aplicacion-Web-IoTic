@@ -27,6 +27,7 @@ export class FormEvaluacion implements OnInit{
     selectedFile: File | null = null;
     selectedDocument: File | null = null;
     imagePreview: string | null = null;
+    existingDocumentName: string | null = null;
 
     constructor(private fb: FormBuilder,
         private serviceEvaluation: ParticipacionComitesEvService
@@ -62,10 +63,12 @@ export class FormEvaluacion implements OnInit{
             tipoProductividad: ['Participación en comités de evaluación', Validators.required],
             pais: ['', Validators.required],
             anio: ['', Validators.required],
+            autoresString: ['', Validators.required],
             autores: [[], Validators.required],
 
             // Campos propios
             institucion: ['', Validators.required],
+            etiquetasGTIString: [''],
             etiquetasGTI: [[], Validators.required],
             licencia: ['', Validators.required],
 
@@ -78,19 +81,36 @@ export class FormEvaluacion implements OnInit{
      * Llena el formulario con los datos existentes
      */
     private populateForm(data: ParticipacionComitesEvDTO): void {
+        // Convertir arrays de autores y etiquetas a strings separados por coma
+        const autoresString = (data.autores && Array.isArray(data.autores))
+            ? data.autores.join(', ')
+            : '';
+
+        const etiquetasGTIString = (data.etiquetasGTI && Array.isArray(data.etiquetasGTI))
+            ? data.etiquetasGTI.join(', ')
+            : '';
+
         this.form.patchValue({
             titulo: data.titulo,
+            tipoProductividad: data.tipoProductividad || 'Participación en comités de evaluación',
             pais: data.pais,
             anio: data.anio,
+            autoresString: autoresString,
             autores: data.autores || [],
             institucion: data.institucion,
+            etiquetasGTIString: etiquetasGTIString,
             etiquetasGTI: data.etiquetasGTI || [],
             licencia: data.licencia,
-            image_url:  data.image_r2 || ''
+            image_url: data.image_r2 || ''
         });
 
-        if ( data.image_r2) {
-            this.imagePreview =  data.image_r2!;
+        if (data.image_r2) {
+            this.imagePreview = data.image_r2!;
+        }
+
+        // Si existe un archivo, mostrar que ya hay documento
+        if (data.file_r2) {
+            this.existingDocumentName = data.file_r2!;
         }
     }
 
@@ -117,6 +137,14 @@ export class FormEvaluacion implements OnInit{
     }
 
     /**
+     * Elimina el documento seleccionado
+     */
+    removeFile(): void {
+        this.selectedDocument = null;
+        this.existingDocumentName = null;
+    }
+
+    /**
      * Envía el formulario al componente padre
      */
     submitForm(): void {
@@ -125,8 +153,31 @@ export class FormEvaluacion implements OnInit{
             return;
         }
 
+        // Preparar datos
+        const formData = { ...this.form.value };
+        
+        // Convertir autoresString a array si aún es string
+        if (typeof formData.autoresString === 'string') {
+            formData.autores = formData.autoresString
+                .split(',')
+                .map((a: string) => a.trim())
+                .filter((a: string) => a);
+        }
+
+        // Convertir etiquetasGTIString a array si aún es string
+        if (typeof formData.etiquetasGTIString === 'string') {
+            formData.etiquetasGTI = formData.etiquetasGTIString
+                .split(',')
+                .map((e: string) => e.trim())
+                .filter((e: string) => e);
+        }
+        
+        // Remover los campos string ya que no los necesitamos en la petición
+        delete formData.autoresString;
+        delete formData.etiquetasGTIString;
+        
         const payload: FormSubmitPayload = {
-            data: this.form.value,
+            data: formData,
             file_image: this.selectedFile,
             file_document: this.selectedDocument
         };

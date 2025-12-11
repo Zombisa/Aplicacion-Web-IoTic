@@ -109,34 +109,6 @@ export class FormCurso implements OnInit {
   }
 
   /**
-   * Maneja cambio de texto en campo Autores (separados por coma)
-   */
-  onAutoresChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || '';
-    const autores = value
-      .split(',')
-      .map(a => a.trim())
-      .filter(a => a);
-
-    this.form.patchValue({ autores });
-  }
-
-  /**
-   * Maneja cambio de texto en campo Etiquetas (separadas por coma)
-   */
-  onEtiquetasChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || '';
-    const etiquetas = value
-      .split(',')
-      .map(e => e.trim())
-      .filter(e => e);
-
-    this.form.patchValue({ etiquetas });
-  }
-
-  /**
    * Captura el archivo de imagen seleccionado y genera un preview
    */
   onFileSelected(event: any): void {

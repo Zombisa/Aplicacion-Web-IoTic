@@ -70,11 +70,11 @@ export class EditProductiviy implements OnInit {
   formMap: Record<string, any> = {
     libro: FormBook,
     capitulo: FormCapBook,
-    participacion_comites_ev: FormEvaluacion,
-      'proceso-tecnica': FormProcesoTecnica, // ✅ comillas
+    'participacion-comites': FormEvaluacion,
+    'proceso-tecnica': FormProcesoTecnica, 
     revista: FormRevista,
     software: FormSoftware,
-    trabajo_eventos: FormTrabajoEventos,
+    'trabajo-eventos': FormTrabajoEventos,
     tutoria_en_marcha: FormTutoriaEnMarcha,
     tutoria_concluida: FormTutoriaConcluida,
     curso: FormCurso,
@@ -221,7 +221,9 @@ export class EditProductiviy implements OnInit {
       this.filesService.getPresignedUrl(extension, contentType)
         .pipe(
           switchMap((resp) => {
+            
             data.archivo_path = resp.file_path;
+            console.log("respo filepath:",resp.upload_url);
             return this.filesService.uploadToR2(resp.upload_url, file);
           })
         )
@@ -277,7 +279,7 @@ export class EditProductiviy implements OnInit {
       });
     },
 
-    participacion_comites_ev: (payload) => {
+    'participacion-comites': (payload) => {
       this.participacionComitesEvService.update(this.id ,payload as ParticipacionComitesEvPeticion).subscribe({
         next: () => this.mostrarExito('Participación guardada', 'Datos guardados correctamente.'),
         error: () => this.mostrarError('Error al guardar participación', 'No se pudo guardar.')
@@ -298,7 +300,7 @@ export class EditProductiviy implements OnInit {
       });
     },
 
-    trabajo_eventos: (payload) => {
+    'trabajo-eventos': (payload) => {
       this.trabajoEventosService.update(this.id ,payload as TrabajoEventosPeticion).subscribe({
         next: () => this.mostrarExito('Trabajo guardado', 'Guardado correctamente.'),
         error: () => this.mostrarError('Error al guardar', 'No se pudo guardar.')

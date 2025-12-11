@@ -14,7 +14,7 @@ export class ParticipacionComitesEvService {
   constructor(private api: ApiService) {}
 
   getAll(): Observable<ParticipacionComitesEvDTO[]> {
-    return this.api.get<ParticipacionComitesEvDTO[]>(`${this.basePath}/listar_comites_ev/`);
+    return this.api.get<ParticipacionComitesEvDTO[]>(`${this.basePath}/Comites_ev/`);
   }
 
   getById(id: number): Observable<ParticipacionComitesEvDTO> {

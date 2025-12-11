@@ -62,13 +62,12 @@ export class FormCapBook implements OnInit{
     return this.fb.group({
       titulo: ['', Validators.required],
       tipoProductividad: ['Capitulo de libros'],
-      pais: ['', Validators.required],
-      anio: [''  ,Validators.required],
-      autores: [[], Validators.required],
-      isbn: ['' ,Validators.required],
+      anio: ['', Validators.required],
+      autoresString: ['', Validators.required],
+      isbn: ['', Validators.required],
       volumen: ['', Validators.required],
-      paginasFin: ['', Validators.required, Validators.min(0)],
-      paginaInicio: ['', Validators.required, Validators.min(0)],
+      paginasFin: [null, [Validators.required, Validators.min(0)]],
+      paginaInicio: [null, [Validators.required, Validators.min(0)]],
       editorial: ['', Validators.required],
       codigoEditorial: ['', Validators.required],
       propiedadIntelectual: ['', Validators.required],
@@ -80,21 +79,30 @@ export class FormCapBook implements OnInit{
    * @param data datos del capítulo de libro a cargar en el formulario
    */
   private populateForm(data: CapBookDTO) {
+    console.log('Datos a popular:', data);
+    
+    // Convertir array de autores a string separado por coma
+    const autoresString = (data.autores && Array.isArray(data.autores))
+      ? data.autores.join(', ')
+      : '';
+
     this.form.patchValue({
-      titulo: data.titulo,
-      tipoProductividad: data.tipoProductividad,
-      pais: data.pais,
-      anio: data.anio,
+      titulo: data.titulo || '',
+      tipoProductividad: data.tipoProductividad || 'Capitulo de libros',
+      anio: data.anio || '',
+      autoresString: autoresString,
       autores: data.autores || [],
-      isbn: data.isbn,
-      volumen: data.volumen,
-      paginasFin: data.paginasFin,
-      paginaInicio: data.paginaInicio,
-      editorial: data.editorial,
-      codigoEditorial: data.codigoEditorial,
-      propiedadIntelectual: data.propiedadIntelectual,
-      imagePreview:  data.image_r2 || '',
+      isbn: data.isbn || '',
+      volumen: data.volumen || '',
+      paginasFin: data.paginasFin || null,
+      paginaInicio: data.paginaInicio || null,
+      editorial: data.editorial || '',
+      codigoEditorial: data.codigoEditorial || '',
+      propiedadIntelectual: data.propiedadIntelectual || '',
+      image_url: data.image_r2 || '',
     });
+
+    console.log('Formulario después de patchValue:', this.form.value);
 
     // Si trae imagen, mostrar preview
     if (data.image_r2) {
@@ -142,8 +150,23 @@ export class FormCapBook implements OnInit{
       this.form.markAllAsTouched();
       return;
     }
+
+    // Preparar datos
+    const formData = { ...this.form.value };
+    
+    // Convertir autoresString a array si aún es string
+    if (typeof formData.autoresString === 'string') {
+      formData.autores = formData.autoresString
+        .split(',')
+        .map((a: string) => a.trim())
+        .filter((a: string) => a);
+    }
+    
+    // Remover el campo string de autores ya que no lo necesitamos en la petición
+    delete formData.autoresString;
+    
     const dtoSubmit: FormSubmitPayload = {
-      data: this.form.value,
+      data: formData,
       file_image: this.selectedFile,
       file_document: this.selectedDocument
     };

@@ -7,7 +7,7 @@
   <!-- BANNER -->
   <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
     <h1 class="title text-center">Libro</h1>
-    <p class="text-help">Detalles y información del libro</p>
+    <p class="text-help">Información detallada del libro</p>
   </section>
 
   
@@ -16,6 +16,14 @@
          <div class="row">
             <div class="col-12 col-lg-6 mb-4 p-4">
                <img [src]="bookImageUrl" [alt]="book.titulo" class="book-image">
+               <a 
+                  *ngIf="book?.file_r2 && book.file_r2 !== ''"
+                  [href]="book.file_r2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn btn-download mt-3">
+                  <i class="fas fa-download"></i> Descargar Documento
+               </a>
             </div>
             <div class="col-12 col-lg-6 mb-4">
                 <div class="book-details">
@@ -64,6 +72,11 @@
                   <div class="detail-item" *ngIf="book?.propiedadIntelectual">
                     <h4 class="detail-label">Propiedad Intelectual</h4>
                     <p class="detail-value">{{ book.propiedadIntelectual }}</p>
+                  </div>
+
+                  <div class="detail-item" *ngIf="book?.etiquetas && book.etiquetas.length">
+                    <h4 class="detail-label">Etiquetas</h4>
+                    <p class="detail-value">{{ book.etiquetas.join(', ') }}</p>
                   </div>
                 </div>
             </div>

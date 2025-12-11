@@ -1,6 +1,7 @@
 .banner-primary {
   background-color: var(--color-primary);
-  height: 40rem;
+  height: 20rem;
+  padding-top: 10rem;
 }
 
 .title {

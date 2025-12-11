@@ -137,12 +137,8 @@
             <input
               type="text"
               class="input-line"
+              formControlName="autoresString"
               placeholder=" "
-              (change)="
-                form.patchValue({
-                  autores: $event.target.value.split(',')
-                })
-              "
             />
             <label>Autores</label>
             <small>(separados por coma)</small>
@@ -157,7 +153,7 @@
               placeholder=" "
             />
             <label>ISBN</label>
-            <small>(Númerico)</small>
+            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
@@ -178,7 +174,7 @@
               placeholder=" "
             />
             <label>Volumen</label>
-            <small>(Númerico)</small>
+            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
@@ -199,6 +195,7 @@
               placeholder=" "
             />
             <label>Páginas</label>
+            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
@@ -239,6 +236,7 @@
               placeholder=" "
             />
             <label>Código Editorial</label>
+            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
