@@ -55,3 +55,18 @@ section {
   }
 }
 
+/* Estilos para los botones de acción */
+.d-flex.gap-3 {
+  gap: 1rem;
+}
+
+@media (max-width: 576px) {
+  .d-flex.gap-3 {
+    flex-direction: column;
+  }
+  
+  .d-flex.gap-3 button {
+    width: 100%;
+  }
+}
+

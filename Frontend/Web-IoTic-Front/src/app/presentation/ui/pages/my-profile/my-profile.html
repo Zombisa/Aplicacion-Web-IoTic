@@ -30,6 +30,22 @@
               [user]="user"
               mode="view">
             </app-section-info-user>
+            
+            <!-- Botones de acción -->
+            <div class="d-flex gap-3 mt-3 mb-4">
+              <button 
+                class="btn btn-primary d-flex align-items-center" 
+                (click)="navigateToEdit()">
+                <i class="fas fa-edit me-2"></i>
+                Editar Perfil
+              </button>
+              <button 
+                class="btn btn-outline-secondary d-flex align-items-center" 
+                (click)="navigateToChangePassword()">
+                <i class="fas fa-key me-2"></i>
+                Actualizar Contraseña
+              </button>
+            </div>
           </div>
           
           <!-- Publicaciones del usuario -->

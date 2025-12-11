@@ -263,5 +263,19 @@ export class MyProfile implements OnInit {
     // No hay acciones disponibles en modo view
     console.log('Acción recibida pero no implementada:', action);
   }
+
+  /**
+   * Navegar a la página de edición de perfil
+   */
+  navigateToEdit(): void {
+    this.router.navigate(['/mi-perfil/editar']);
+  }
+
+  /**
+   * Navegar a la página de actualización de contraseña
+   */
+  navigateToChangePassword(): void {
+    this.router.navigate(['/mi-perfil/actualizar-contraseña']);
+  }
 }
 
