@@ -219,6 +219,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border-bottom-color: #1976d2;
 }
 
+.input-line.is-invalid {
+  border-bottom-color: #dc3545;
+}
+
+.input-line.is-invalid:focus {
+  border-bottom-color: #dc3545;
+}
+
 .input-line::placeholder {
   color: transparent; /* placeholder oculto */
 }
@@ -247,12 +255,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .invalid-feedback {
     display: block;               
     font-size: 0.875rem;          
-    
+    color: #721c24;
     background-color: #ffe6e6;    
-    padding: 0.5rem 0.75rem;      
+    padding: 0.75rem;      
     border-radius: 5px;           
-    margin-top: 0.25rem;          
-    animation: fadeIn 0.3s ease-in-out; 
+    margin-top: 0.5rem;          
+    animation: fadeIn 0.3s ease-in-out;
+    border-left: 3px solid #dc3545;
+    line-height: 1.6;
+}
+
+.invalid-feedback strong {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Estilo para mensajes de error en rojo */
+.text-danger {
+    color: #dc3545;
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 0.25rem;
 }
 
 /* Animación de aparición */

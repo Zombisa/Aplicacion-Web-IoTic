@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
 import { RevistaService } from '../../../../services/information/revista.service';
+import { urlValidator } from '../../../../validators/url-validator';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -107,8 +108,8 @@ export class FormRevista implements OnInit {
       fasc: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       paginas: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^\d+$/)]],
       responsableString: ['', Validators.maxLength(150)],
-      linkDescargaArticulo: ['', Validators.maxLength(150)],
-      linksitioWeb: ['', Validators.maxLength(150)]
+      linkDescargaArticulo: ['', [Validators.required, Validators.maxLength(150), urlValidator]],
+      linksitioWeb: ['', [Validators.required, Validators.maxLength(150), urlValidator]]
     });
   }
 
@@ -181,7 +182,30 @@ export class FormRevista implements OnInit {
    */
   submitForm(): void {
     if (this.form.invalid) {
+      // Marcar todos los campos como touched para mostrar errores
       this.form.markAllAsTouched();
+      
+      // También marcar como dirty los campos que tienen valores pero son inválidos
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+        if (control && control.invalid && control.value) {
+          control.markAsDirty();
+        }
+      });
+      
+      // Mostrar mensaje general si hay errores
+      const linkDescargaError = this.form.get('linkDescargaArticulo')?.errors;
+      const linkSitioError = this.form.get('linksitioWeb')?.errors;
+      
+      if (linkDescargaError?.['invalidUrl'] || linkSitioError?.['invalidUrl']) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de validación',
+          html: 'Por favor, revise los campos de link. Deben ser URLs válidas (ejemplo: https://ejemplo.com)',
+          confirmButtonText: 'Entendido'
+        });
+      }
+      
       return;
     }
 

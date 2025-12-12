@@ -118,8 +118,26 @@
 
       <!-- Link (opcional) -->
       <div class="input-container personality-camp">
-        <input type="text" class="input-line" formControlName="link" placeholder=" " />
+        <input 
+          type="text" 
+          class="input-line" 
+          formControlName="link" 
+          placeholder=" "
+          (input)="form.get('link')?.markAsDirty()"
+          (blur)="form.get('link')?.markAsTouched()"
+          [class.is-invalid]="form.get('link')?.invalid && (form.get('link')?.touched || form.get('link')?.dirty)"
+        />
         <label>Link (opcional)</label>
+        <small
+          class="text-danger"
+          *ngIf="
+            (form.get('link')?.touched || form.get('link')?.dirty) &&
+            form.get('link')?.invalid &&
+            form.get('link')?.hasError('invalidUrl')
+          "
+        >
+          Formato esperado: https://ejemplo.com o http://ejemplo.com
+        </small>
       </div>
           <button
             type="submit"

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { CursoDTO } from '../../../../models/DTO/informacion/CursoDTO';
 import { CursoService } from '../../../../services/information/curso.service';
+import { urlValidator } from '../../../../validators/url-validator';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -68,7 +69,7 @@ export class FormCurso implements OnInit {
       propiedadIntelectual: ['', Validators.required],
       duracion: ['', Validators.required],
       institucion: ['', Validators.required],
-      link: [''], // Opcional
+      link: ['', urlValidator], // Opcional pero si se ingresa debe ser URL válida
 
       // El padre la completa luego cuando sube la imagen
       image_url: ['']

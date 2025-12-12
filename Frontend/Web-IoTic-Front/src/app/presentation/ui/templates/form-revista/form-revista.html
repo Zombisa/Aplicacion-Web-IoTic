@@ -216,8 +216,31 @@
               formControlName="linkDescargaArticulo"
               placeholder=" "
               maxlength="150"
+              (input)="form.get('linkDescargaArticulo')?.markAsDirty()"
+              (blur)="form.get('linkDescargaArticulo')?.markAsTouched()"
+              [class.is-invalid]="form.get('linkDescargaArticulo')?.invalid && (form.get('linkDescargaArticulo')?.touched || form.get('linkDescargaArticulo')?.dirty)"
             />
-            <label>Link de descarga del artículo</label>
+            <label>Link de descarga del artículo <span class="text-danger">*</span></label>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('linkDescargaArticulo')?.touched || form.get('linkDescargaArticulo')?.dirty) &&
+                form.get('linkDescargaArticulo')?.invalid &&
+                form.get('linkDescargaArticulo')?.hasError('required')
+              "
+            >
+              El link de descarga del artículo es obligatorio.
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('linkDescargaArticulo')?.touched || form.get('linkDescargaArticulo')?.dirty) &&
+                form.get('linkDescargaArticulo')?.invalid &&
+                form.get('linkDescargaArticulo')?.hasError('invalidUrl')
+              "
+            >
+              Formato esperado: https://ejemplo.com o http://ejemplo.com
+            </small>
           </div>
 
           <!-- LINK SITIO WEB -->
@@ -228,8 +251,31 @@
               formControlName="linksitioWeb"
               placeholder=" "
               maxlength="150"
+              (input)="form.get('linksitioWeb')?.markAsDirty()"
+              (blur)="form.get('linksitioWeb')?.markAsTouched()"
+              [class.is-invalid]="form.get('linksitioWeb')?.invalid && (form.get('linksitioWeb')?.touched || form.get('linksitioWeb')?.dirty)"
             />
-            <label>Link del sitio web de la revista</label>
+            <label>Link del sitio web de la revista <span class="text-danger">*</span></label>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('linksitioWeb')?.touched || form.get('linksitioWeb')?.dirty) &&
+                form.get('linksitioWeb')?.invalid &&
+                form.get('linksitioWeb')?.hasError('required')
+              "
+            >
+              El link del sitio web de la revista es obligatorio.
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('linksitioWeb')?.touched || form.get('linksitioWeb')?.dirty) &&
+                form.get('linksitioWeb')?.invalid &&
+                form.get('linksitioWeb')?.hasError('invalidUrl')
+              "
+            >
+              Formato esperado: https://ejemplo.com o http://ejemplo.com
+            </small>
           </div>
 
           <button
