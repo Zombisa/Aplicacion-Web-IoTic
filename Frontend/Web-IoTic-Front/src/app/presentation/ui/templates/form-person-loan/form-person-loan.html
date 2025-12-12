@@ -24,7 +24,7 @@
 
             <div class="mb-3 input-container">
 
-                <input type="text"
+                <input type="number"
                 id="cedula"
                 formControlName="cedula"
                 class=" input-line"
@@ -41,7 +41,7 @@
             </div>
 
             <div class="mb-4 input-container" >
-                <input type="text"
+                <input type="number"
                 id="telefono"
                 formControlName="telefono"
                 class="input-line"
@@ -110,9 +110,8 @@
                 <!-- Botones -->
         <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 section-buttons" *ngIf="!showSuccess" >
             <button type="button" class="btn-outline-secondary" (click)="resetForm()">Limpiar</button>
-            <button type="submit" class="btn-primary" [disabled]="loanForm.invalid || isLoading">
-                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                {{ isLoading ? 'Guardando...' : 'Prestar' }}
+            <button type="submit" class="btn-primary" [disabled]="loanForm.invalid ">
+                Prestar
             </button>
         </div>
 

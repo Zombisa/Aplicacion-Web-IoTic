@@ -8,10 +8,13 @@ import { FormItem } from '../../templates/form-item/form-item';
 import Swal from 'sweetalert2';
 import { ImagesService } from '../../../../services/common/images.service';
 import { switchMap } from 'rxjs';
+import { Router } from '@angular/router';
+import { LoadingService } from '../../../../services/loading.service';
+import { LoadingPage } from '../../components/loading-page/loading-page';
 
 @Component({
   selector: 'app-add-item',
-  imports: [CommonModule, Header, FormItem],
+  imports: [CommonModule, Header, FormItem, LoadingPage],
   templateUrl: './add-item.html',
   styleUrl: './add-item.css'
 })
@@ -23,7 +26,9 @@ export class AddItem {
   constructor(
     private inventoryService: InventoryService,
     private authService: AuthService,
-    private  imageService: ImagesService
+    private  imageService: ImagesService,
+    private router: Router,
+    public loadingService: LoadingService
   ) {}
 
 
@@ -86,9 +91,10 @@ export class AddItem {
    * @param item Datos del item a guardar
    */
   private saveItemData(item: ItemDTOPeticion): void {
-    console.log(" Datos del item a guardar:", item);
+    this.loadingService.show();
     this.inventoryService.addElectronicComponent(item).subscribe({
           next: (response) => {
+            this.loadingService.hide();
             Swal.fire({
               icon: 'success',
               title: 'Item agregado exitosamente',
@@ -96,14 +102,19 @@ export class AddItem {
               confirmButtonText: 'Aceptar'
             });
             this.itemFormComponent.resetForm();
+            this.loadingService.hide();
           },
           error: (error) => {
+            
             console.error(" Error completo:", error);
             Swal.fire({
               icon: 'error',
               title: 'Error al agregar item',
               text: `Ocurrió un error al agregar el item: ${error.message || error}`,
               confirmButtonText: 'Aceptar'
+            }).then(() => {
+              
+              this.router.navigate(['/inventario']);
             });
           }
         });

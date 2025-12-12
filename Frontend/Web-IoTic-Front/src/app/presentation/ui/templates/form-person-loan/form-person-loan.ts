@@ -34,7 +34,7 @@ export class FormPersonLoan implements OnInit {
     private router: Router,
     private fb: FormBuilder,) { } 
   ngOnChanges() {
-    console.log("📥 idItem recibido:", this.idItem);
+    
   }
 
   ngOnInit(): void {
@@ -54,10 +54,10 @@ export class FormPersonLoan implements OnInit {
     return;
   }
 
-  this.isLoading = true;
+  
   const formData = this.loanForm.getRawValue();
 
-  // 🔥 Convertir fecha a ISO con zona horaria
+
   if (formData.fecha_limite) {
     formData.fecha_limite = new Date(formData.fecha_limite + "T00:00:00Z").toISOString();
   }
@@ -67,7 +67,6 @@ export class FormPersonLoan implements OnInit {
     item_id: this.idItem!
   };
 
-  console.log('🚀 Enviando datos del préstamo:', loanData);
   this.loanService.createLoan(loanData).subscribe({
     next: (response: LoanDTO) => {
      Swal.fire({
@@ -85,13 +84,14 @@ export class FormPersonLoan implements OnInit {
     },
     error: (error: unknown) => {
       console.error('❌ Error completo:', error);
+      this.resetForm();
       Swal.fire({
         icon: 'error',
         title: 'Error al crear el préstamo',
-        text: 'Ha ocurrido un error al intentar crear el préstamo. Por favor, inténtalo de nuevo más tarde.',
+        text: `Ha ocurrido un error Por favor, intenta nuevamente.`,
         buttonsStyling: true,
         customClass: {
-          confirmButton: 'btn btn-danger'
+          confirmButton: 'btn'
         } 
         
       });
