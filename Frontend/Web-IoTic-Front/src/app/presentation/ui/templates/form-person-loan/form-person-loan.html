@@ -35,7 +35,8 @@
                 Cedula<span class="text-danger">*</span>
                 </label>
                 <div class="invalid-feedback" *ngIf="loanForm.get('cedula')?.invalid && loanForm.get('cedula')?.touched">
-                La cédula es obligatoria (debe ser de 10 caracteres)
+                  <small *ngIf="loanForm.get('cedula')?.hasError('required')">La cédula es obligatoria.</small>
+                  <small *ngIf="loanForm.get('cedula')?.hasError('invalidCedula')">Formato esperado: Solo números, entre 6 y 10 dígitos</small>
                 </div>
             </div>
 
@@ -52,7 +53,8 @@
                 Teléfono<span class="text-danger">*</span>
                 </label>
                 <div class="invalid-feedback" *ngIf="loanForm.get('telefono')?.invalid && loanForm.get('telefono')?.touched">
-                El teléfono es obligatorio (debe ser de 10 caracteres)
+                  <small *ngIf="loanForm.get('telefono')?.hasError('required')">El teléfono es obligatorio.</small>
+                  <small *ngIf="loanForm.get('telefono')?.hasError('invalidTelefono')">Formato esperado: Solo números, exactamente 10 dígitos</small>
                 </div>  
             </div>
 
@@ -69,7 +71,8 @@
                 </label>
 
                 <div class="invalid-feedback" *ngIf="loanForm.get('correo')?.invalid && loanForm.get('correo')?.touched">
-                El correo electrónico es obligatorio y debe tener un formato válido
+                  <small *ngIf="loanForm.get('correo')?.hasError('required')">El correo electrónico es obligatorio.</small>
+                  <small *ngIf="loanForm.get('correo')?.hasError('email')">Formato esperado: ejemplo@dominio.com</small>
                 </div>  
             </div>
 

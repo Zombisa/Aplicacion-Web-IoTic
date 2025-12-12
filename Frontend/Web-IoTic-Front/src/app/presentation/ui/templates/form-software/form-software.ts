@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { SoftwareDTO } from '../../../../models/DTO/informacion/SoftwareDTO';
 import { SoftwareService } from '../../../../services/information/software.service';
+import { codigoRegistroValidator } from '../../../../validators/codigo-registro-validator';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -86,7 +87,7 @@ export class FormSoftware implements OnInit {
       etiquetasString: ['', Validators.maxLength(150)],
       nivelAcceso: ['', Validators.maxLength(150)],
       tipoProducto: ['', Validators.maxLength(150)],
-      codigoRegistro: ['', Validators.maxLength(50)],
+      codigoRegistro: ['', [Validators.maxLength(50), codigoRegistroValidator]],
       descripcionFuncional: ['', Validators.maxLength(500)],
       propiedadIntelectual: ['', Validators.maxLength(150)]
     });

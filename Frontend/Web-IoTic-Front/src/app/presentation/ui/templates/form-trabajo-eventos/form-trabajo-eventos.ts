@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { TrabajoEventosDTO } from '../../../../models/DTO/informacion/TrabajoEventosDTO';
 import { TrabajoEventosService } from '../../../../services/information/trabajo-eventos.service';
+import { isbnValidator } from '../../../../validators/isbn-validator';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -64,7 +65,7 @@ export class FormTrabajoEventos implements OnInit {
       nombreSeminario: ['', Validators.required],
       tipoPresentacion: ['', Validators.required],
       tituloActas: ['', Validators.required],
-      isbn: ['', Validators.required],
+      isbn: ['', [Validators.required, isbnValidator]],
       paginas: ['', Validators.required],
       etiquetas: [[],Validators.required],
       propiedadIntelectual: ['', Validators.required],

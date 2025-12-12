@@ -5,6 +5,7 @@ import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { BookDTO } from '../../../../models/DTO/BookDTO';
 import Swal from 'sweetalert2';
 import { BooksService } from '../../../../services/information/books.service';
+import { isbnValidator } from '../../../../validators/isbn-validator';
 
 @Component({
   selector: 'app-form-book',
@@ -59,7 +60,7 @@ export class FormBook implements OnInit {
       pais: ['', [Validators.required, Validators.minLength(2)]],
       anio: ['', [Validators.required, Validators.min(0)]],
       autoresString: ['', Validators.required],
-      isbn: ['', [Validators.required, Validators.minLength(1)]],
+      isbn: ['', [Validators.required, isbnValidator]],
       volumen: [null, [Validators.required, Validators.min(1)]],
       paginas: [null, [Validators.required, Validators.min(1)]],
       editorial: ['', Validators.required],

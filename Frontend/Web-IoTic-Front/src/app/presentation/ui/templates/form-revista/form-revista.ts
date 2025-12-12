@@ -5,6 +5,7 @@ import { FormSubmitPayload } from '../../../../models/Common/FormSubmitPayload';
 import { RevistaDTO } from '../../../../models/DTO/informacion/RevistaDTO';
 import { RevistaService } from '../../../../services/information/revista.service';
 import { urlValidator } from '../../../../validators/url-validator';
+import { issnValidator } from '../../../../validators/issn-validator';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -103,7 +104,7 @@ export class FormRevista implements OnInit {
     return this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(70)]],
       autoresString: ['', Validators.maxLength(150)],
-      issn: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
+      issn: ['', [Validators.required, Validators.maxLength(8), issnValidator]],
       volumen: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       fasc: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       paginas: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^\d+$/)]],

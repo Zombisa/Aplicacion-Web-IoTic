@@ -5,6 +5,8 @@ import { LoanPeticion } from '../../../../models/Peticion/LoanPeticion';
 import { LoanDTO } from '../../../../models/DTO/LoanDTO';
 import { CommonModule } from '@angular/common';
 import { fechaFuturaValidator } from '../../../../validators/fecha-futura-vaidators';
+import { cedulaValidator } from '../../../../validators/cedula-validator';
+import { telefonoValidator } from '../../../../validators/telefono-validator';
 import { timeEnd } from 'node:console';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -106,8 +108,8 @@ initializeForm() {
     this.loanForm = this.fb.group({
       nombre_persona: ['', [Validators.required, Validators.minLength(3)]],
       item_id: [this.idItem],
-      cedula: ['', [Validators.required, Validators.pattern(/^\d{6,10}$/)]],
-      telefono: ['', [ Validators.pattern(/^\d{10}$/), Validators.required]],
+      cedula: ['', [Validators.required, cedulaValidator]],
+      telefono: ['', [Validators.required, telefonoValidator]],
       correo: ['', [Validators.email, Validators.required]],
       direccion: ['', Validators.required],
       fecha_limite: ['', [Validators.required]],

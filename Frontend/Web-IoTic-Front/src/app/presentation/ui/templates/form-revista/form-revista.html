@@ -114,17 +114,30 @@
               placeholder=" "
               maxlength="8"
               inputmode="numeric"
+              (input)="form.get('issn')?.markAsDirty()"
+              (blur)="form.get('issn')?.markAsTouched()"
+              [class.is-invalid]="form.get('issn')?.invalid && (form.get('issn')?.touched || form.get('issn')?.dirty)"
             />
             <label>ISSN</label>
-            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
-                form.get('issn')?.touched &&
-                form.get('issn')?.invalid
+                (form.get('issn')?.touched || form.get('issn')?.dirty) &&
+                form.get('issn')?.invalid &&
+                form.get('issn')?.hasError('required')
               "
             >
               El ISSN es obligatorio.
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('issn')?.touched || form.get('issn')?.dirty) &&
+                form.get('issn')?.invalid &&
+                form.get('issn')?.hasError('invalidIssn')
+              "
+            >
+              Formato esperado: Solo números, máximo 8 dígitos
             </small>
           </div>
 

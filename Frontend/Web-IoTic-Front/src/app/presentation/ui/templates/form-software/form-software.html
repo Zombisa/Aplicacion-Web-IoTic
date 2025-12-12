@@ -162,9 +162,21 @@
               formControlName="codigoRegistro"
               placeholder=" "
               maxlength="50"
+              (input)="form.get('codigoRegistro')?.markAsDirty()"
+              (blur)="form.get('codigoRegistro')?.markAsTouched()"
+              [class.is-invalid]="form.get('codigoRegistro')?.invalid && (form.get('codigoRegistro')?.touched || form.get('codigoRegistro')?.dirty)"
             />
             <label>Código de registro</label>
-            <small>debe tener el formato: DERAUTOR:XXX-XXX</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('codigoRegistro')?.touched || form.get('codigoRegistro')?.dirty) &&
+                form.get('codigoRegistro')?.invalid &&
+                form.get('codigoRegistro')?.hasError('invalidCodigoRegistro')
+              "
+            >
+              Formato esperado: DERAUTOR:XXX-XXX
+            </small>
           </div>
 
           <!-- DESCRIPCIÓN FUNCIONAL -->

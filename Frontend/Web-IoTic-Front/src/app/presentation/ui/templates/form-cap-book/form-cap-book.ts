@@ -7,6 +7,7 @@ import { BookDTO } from '../../../../models/DTO/BookDTO';
 import { CapBookDTO } from '../../../../models/DTO/CapBookDTO';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CapBookService } from '../../../../services/information/cap-book.service';
+import { isbnValidator } from '../../../../validators/isbn-validator';
 
 @Component({
   selector: 'app-form-cap-book',
@@ -65,7 +66,7 @@ export class FormCapBook implements OnInit{
       tipoProductividad: ['Capitulo de libros'],
       anio: ['', Validators.required],
       autoresString: ['', Validators.required],
-      isbn: ['', Validators.required],
+      isbn: ['', [Validators.required, isbnValidator]],
       volumen: ['', Validators.required],
       paginasFin: [null, [Validators.required, Validators.min(0)]],
       paginaInicio: [null, [Validators.required, Validators.min(0)]],

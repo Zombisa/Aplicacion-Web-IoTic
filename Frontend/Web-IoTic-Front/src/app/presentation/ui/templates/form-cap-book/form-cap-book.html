@@ -131,17 +131,30 @@
               class="input-line"
               formControlName="isbn"
               placeholder=" "
+              (input)="form.get('isbn')?.markAsDirty()"
+              (blur)="form.get('isbn')?.markAsTouched()"
+              [class.is-invalid]="form.get('isbn')?.invalid && (form.get('isbn')?.touched || form.get('isbn')?.dirty)"
             />
             <label>ISBN</label>
-            <small>(Numérico)</small>
             <small
               class="text-danger"
               *ngIf="
-                form.get('isbn')?.touched &&
-                form.get('isbn')?.invalid
+                (form.get('isbn')?.touched || form.get('isbn')?.dirty) &&
+                form.get('isbn')?.invalid &&
+                form.get('isbn')?.hasError('required')
               "
             >
               El ISBN es obligatorio.
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="
+                (form.get('isbn')?.touched || form.get('isbn')?.dirty) &&
+                form.get('isbn')?.invalid &&
+                form.get('isbn')?.hasError('invalidIsbn')
+              "
+            >
+              Formato esperado: Solo números
             </small>
           </div>
 
