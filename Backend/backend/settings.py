@@ -68,9 +68,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     #"apps.usuarios_roles.middleware.firebase_auth_middleware",
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",  # frontend Angular
-]
+CORS_ALLOWED_ORIGINS = true
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
