@@ -16,6 +16,8 @@
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     padding: 3rem 1rem;
     margin-bottom: 2rem;
+    height: 20rem;
+    padding-top: 10rem;
   }
   
   .banner-primary .title {

@@ -24,7 +24,8 @@ app-header {
 .main-title-container {
   text-align: center;
   margin-bottom: 4rem;
-  padding-top: 2rem;
+  padding-top: 10rem;
+  margin-bottom: 5rem;
 }
 
 .main-title {
@@ -97,9 +98,14 @@ app-header {
 
 /* Valores */
 .valores-block {
-  grid-column: 1;
-  grid-row: 2;
-  max-width: 600px;
+   display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  
 }
 
 .valores-list {
@@ -198,7 +204,7 @@ app-header {
 /* Responsive */
 @media (max-width: 968px) {
   .vision-mision-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important; 
     gap: 2rem;
   }
 
@@ -238,4 +244,79 @@ app-header {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+}
+.container-content {
+    background: linear-gradient(135deg, var(--color-primary) 60%, #2c3e50 100%);
+    min-height: 100vh;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tittle {
+    color: var(--color-secondary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.contact-form {
+    background: rgba(255,255,255,0.10);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 2.5rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+    backdrop-filter: blur(2px);
+}
+.contact-form label {
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+.contact-form .form-control {
+    border-radius: 8px;
+    border: 1px solid #bfc9d1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255,255,255,0.85);
+    color: #222;
+    transition: border-color 0.2s;
+}
+.contact-form .form-control:focus {
+    border-color: var(--color-secondary);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-secondary-light, #b3c6ff);
+}
+.contact-form button[type="submit"] {
+    width: 100%;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: var(--color-secondary);
+    color: #fff;
+    border: none;
+    transition: background 0.2s;
+}
+.contact-form button[type="submit"]:hover {
+    background: var(--color-secondary-dark, #2c5aa0);
+}
+.alert-info {
+    background: #e3f0ff;
+    color: #2c5aa0;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    .contact-form {
+        padding: 1.2rem 0.5rem;
+    }
+    .tittle {
+        font-size: 2rem;
+    }
 }

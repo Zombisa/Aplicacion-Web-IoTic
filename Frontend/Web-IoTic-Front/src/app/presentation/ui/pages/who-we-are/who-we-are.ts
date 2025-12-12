@@ -10,12 +10,14 @@ import { VisionDTO } from '../../../../models/DTO/VisionDTO';
 import { HistoriaDTO } from '../../../../models/DTO/HistoriaDTO';
 import { ObjetivoDTO } from '../../../../models/DTO/ObjetivoDTO';
 import { ValorDTO } from '../../../../models/DTO/ValorDTO';
-
+import { FormsModule } from '@angular/forms';
+import emailjs from 'emailjs-com';
 @Component({
   selector: 'app-who-we-are',
   imports: [
     CommonModule,
     Header,
+    FormsModule,
     LoadingPage
   ],
   templateUrl: './who-we-are.html',
@@ -30,7 +32,10 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy {
   public historia: HistoriaDTO | null = null;
   public objetivos: ObjetivoDTO[] = [];
   public valores: ValorDTO[] = [];
-
+  email: string = '';
+    message: string = '';
+    successMessage: string = '';
+    name: string = '';
 
   objectKeys = Object.keys;
 
@@ -42,6 +47,27 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy {
     public loadingService: LoadingService
   ) {}
 
+
+  public mensajeInvitacion: string = 'En Help IoTic valoramos profundamente la opinión de nuestros usuarios. Si tienes alguna experiencia que desees compartir, sugerencias para mejorar nuestros servicios, o simplemente quieres hacernos llegar tus comentarios, por favor utiliza el siguiente formulario. Tu aporte es fundamental para seguir creciendo y ofrecerte siempre la mejor atención.'
+sendEmail() {
+  emailjs.send(
+    'iotic',                // Tu Service ID
+    'template_7eyusmi',     // Tu Template ID
+    {
+      name: this.name,      // Coincide con {{name}}
+      title: this.message,  // Coincide con {{title}}
+      email: this.email     // Coincide con {{email}} en “To Email”
+    },
+    '-qqk3WNKcqt39owTL'     // Tu Public Key
+  ).then(() => {
+    this.successMessage = '¡Mensaje enviado!';
+    this.email = '';
+    this.message = '';
+    this.name = '';
+  }, () => {
+    this.successMessage = 'Error al enviar el mensaje.';
+  });
+}
   ngOnInit(): void {
     this.loadData();
   }
