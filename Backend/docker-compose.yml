@@ -20,12 +20,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # Migrations Service
+  # Migrations Service: crea y aplica migraciones
   migrations:
     build:
       context: .
       dockerfile: apps/inventario/Dockerfile
-    command: python manage.py migrate
+    command: sh -c "python manage.py makemigrations && python manage.py migrate"
     volumes:
       - .:/app
       - ./firebase:/app/firebase
