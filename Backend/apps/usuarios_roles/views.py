@@ -138,7 +138,7 @@ def sincronizar_firebase(request):
 # Actualizar usuario
 @api_view(["PUT", "PATCH"])
 @verificar_token
-@verificar_roles(["admin"])
+
 def actualizar_usuario(request, usuario_id):
     """
     Actualiza datos básicos y rol de un usuario. También actualiza claim en Firebase si aplica.
