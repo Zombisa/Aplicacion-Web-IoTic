@@ -12,6 +12,7 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client \
+        netcat-openbsd \
         gcc \
         python3-dev \
         libpq-dev \
@@ -25,6 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project (since Django apps need the project structure)
 COPY ../.. .
+
+# Set permissions for entrypoint script
+RUN chmod +x /app/entrypoint.sh
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app

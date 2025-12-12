@@ -20,35 +20,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # Migrations Service
-  migrations:
-    build:
-      context: .
-      dockerfile: apps/inventario/Dockerfile
-    command: python manage.py migrate
-    volumes:
-      - .:/app
-      - ./firebase:/app/firebase
-    environment:
-      - DEBUG=${DEBUG}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DJANGO_SETTINGS_MODULE=backend.settings
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - nebula_network
-
   # Inventario Microservice
   inventario:
     build:
       context: .
       dockerfile: apps/inventario/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh /app/entrypoint.sh 0.0.0.0:8000
     volumes:
       - .:/app
       - ./firebase:/app/firebase
@@ -63,8 +40,8 @@ services:
       - DB_PORT=5432
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
-      - db
-      - migrations
+      db:
+        condition: service_healthy
     networks:
       - nebula_network
 
@@ -73,7 +50,7 @@ services:
     build:
       context: .
       dockerfile: apps/informacion/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8001
+    command: sh /app/entrypoint.sh 0.0.0.0:8001
     volumes:
       - .:/app
       - ./firebase:/app/firebase
@@ -88,8 +65,8 @@ services:
       - DB_PORT=5432
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
-      - db
-      - migrations
+      db:
+        condition: service_healthy
     networks:
       - nebula_network
 
@@ -98,7 +75,7 @@ services:
     build:
       context: .
       dockerfile: apps/usuarios_roles/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8002
+    command: sh /app/entrypoint.sh 0.0.0.0:8002
     volumes:
       - .:/app
       - ./firebase:/app/firebase
@@ -113,8 +90,8 @@ services:
       - DB_PORT=5432
       - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
-      - db
-      - migrations
+      db:
+        condition: service_healthy
     networks:
       - nebula_network
 
