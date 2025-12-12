@@ -244,6 +244,18 @@ app-header {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  .vision-mision-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .vision-block,
+  .mision-block {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 }
 .container-content {
     background: linear-gradient(135deg, var(--color-primary) 60%, #2c3e50 100%);
