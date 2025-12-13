@@ -69,12 +69,69 @@ export class LoginPage {
       const result = await this.authService.login(this.correo, this.password);
       this.navigateTo('/user');
     } catch (error: any) {
+      console.error('Error de login:', error);
+      
+      // Mapear errores de Firebase Auth a tipos de error específicos
+      let errorType = 'network_error';
+      let errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+      
+      if (error?.code) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            errorType = 'user_not_found';
+            errorMessage = 'El correo electrónico no está registrado.';
+            break;
+          case 'auth/wrong-password':
+            errorType = 'wrong_password';
+            errorMessage = 'La contraseña es incorrecta.';
+            break;
+          case 'auth/invalid-email':
+            errorType = 'invalid_email';
+            errorMessage = 'El formato del correo electrónico no es válido.';
+            break;
+          case 'auth/invalid-credential':
+            errorType = 'invalid_credential';
+            errorMessage = 'Correo o contraseña incorrectos.';
+            break;
+          case 'auth/network-request-failed':
+            errorType = 'network_error';
+            errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+            break;
+          case 'auth/too-many-requests':
+            errorType = 'too_many_attempts';
+            errorMessage = 'Demasiados intentos fallidos. Intenta más tarde.';
+            break;
+          case 'auth/user-disabled':
+            errorType = 'account_disabled';
+            errorMessage = 'Tu cuenta ha sido deshabilitada. Contacta al administrador.';
+            break;
+          default:
+            // Para otros errores, intentar determinar si es de credenciales o conexión
+            if (error.message?.includes('network') || error.message?.includes('conexión')) {
+              errorType = 'network_error';
+              errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+            } else {
+              errorType = 'invalid_credential';
+              errorMessage = 'Correo o contraseña incorrectos.';
+            }
+        }
+      } else if (error?.message) {
+        // Si no hay código pero hay mensaje, intentar determinar el tipo
+        const errorMsg = error.message.toLowerCase();
+        if (errorMsg.includes('network') || errorMsg.includes('conexión') || errorMsg.includes('connection')) {
+          errorType = 'network_error';
+          errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+        } else {
+          errorType = 'invalid_credential';
+          errorMessage = 'Correo o contraseña incorrectos.';
+        }
+      }
+      
       this.handleLoginError({
         success: false,
-        errorType: 'network_error',
-        errorMessage: 'No puedes iniciar sesion, credenciales invalidas o falla de conexión '
+        errorType: errorType,
+        errorMessage: errorMessage
       });
-      console.error('Error de login:', error);
     } finally {
       this.isLoading = false;
     }
