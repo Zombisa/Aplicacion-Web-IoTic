@@ -30,7 +30,7 @@
           <div class="block mb-4">
             <h3 class="title-card">Estados</h3>
             <div class="row g-3 section-estados">
-              <div class="col-12 col-md-6">
+              <div [class]="mode === 'edit' ? 'col-12 col-md-6' : 'col-12'">
                 <h4 class="text-state-subtitle">Estado físico</h4>
                 <div
                   class="box-state d-flex align-items-center"
@@ -43,18 +43,20 @@
                 </div>
               </div>
 
-              <div class="col-12 col-md-6">
-                <h4 class="text-state-subtitle">Estado administrativo</h4>
-                <div
-                  class="box-state d-flex align-items-center"
-                  [ngClass]="{
-                    'bad-warning': item.estado_admin === 'Prestado',
-                    'warning-state-no-loan': item.estado_admin === 'No prestar'
-                  }"
-                >
-                  <p>{{ item.estado_admin || 'Disponible' }}</p>
+              <ng-container *ngIf="mode === 'edit'">
+                <div class="col-12 col-md-6">
+                  <h4 class="text-state-subtitle">Estado administrativo</h4>
+                  <div
+                    class="box-state d-flex align-items-center"
+                    [ngClass]="{
+                      'bad-warning': item.estado_admin === 'Prestado',
+                      'warning-state-no-loan': item.estado_admin === 'No prestar'
+                    }"
+                  >
+                    <p>{{ item.estado_admin || 'Disponible' }}</p>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
             </div>
           </div>
 
