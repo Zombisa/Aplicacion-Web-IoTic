@@ -17,7 +17,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       switch (error.status) {
         case 401:
-          console.warn('🔐 Token expirado o inválido - Invalidando cache y redirigiendo al login');
+          console.warn('🔐 Token expirado o inválido - Invalidando cache');
           
           // Invalidar cache del token
           authService.invalidateTokenCache();
@@ -26,7 +26,40 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           if (typeof localStorage !== 'undefined') {
             localStorage.removeItem('token');
           }
-          router.navigate(['/login']);
+          
+          // Solo redirigir al login si:
+          // 1. La ruta actual NO es el login
+          // 2. La ruta actual NO es una ruta pública del frontend
+          // 3. La petición NO es a una ruta pública del backend
+          const currentUrl = router.url;
+          
+          // Rutas públicas del frontend (sin AuthGuard)
+          const publicFrontendRoutes = [
+            '/login',
+            '/home',
+            '/who-we-are',
+            '/productividad',
+            '/registro-fotografico',
+            '/contacto'
+          ];
+          const isPublicFrontendRoute = publicFrontendRoutes.some(route => 
+            currentUrl === route || currentUrl.startsWith(route + '/')
+          );
+          
+          // Rutas públicas del backend (no requieren token)
+          const isPublicBackendRoute = req.url.includes('/mision/ver/') ||
+                                       req.url.includes('/vision/ver/') ||
+                                       req.url.includes('/historia/ver/') ||
+                                       req.url.includes('/objetivos/ver/') ||
+                                       req.url.includes('/objetivos/listar/') ||
+                                       req.url.includes('/valores/ver/') ||
+                                       req.url.includes('/valores/listar/') ||
+                                       (req.url.includes('/registrosFotograficos/') && req.method === 'GET');
+          
+          // Solo redirigir si la ruta actual es protegida y la petición no es pública
+          if (!isPublicFrontendRoute && !isPublicBackendRoute) {
+            router.navigate(['/login']);
+          }
           break;
 
         case 403:

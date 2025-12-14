@@ -24,17 +24,29 @@ export const authInterceptor: HttpInterceptorFn = (
     '.jpeg',
     '.webp',
     '/assets/',
+    // Rutas públicas de información institucional
     '/mision/ver/',
     '/vision/ver/',
     '/historia/ver/',
     '/objetivos/ver/',
+    '/objetivos/listar/',
     '/valores/ver/',
+    '/valores/listar/',
+    // Rutas públicas de registros fotográficos
+    '/registrosFotograficos/public/',
+    // GET requests a registrosFotograficos (list y retrieve son públicos)
+    // Se verifica que sea GET para evitar excluir POST, PUT, DELETE que requieren auth
   ];
 
   const shouldSkipAuth = excludedPatterns.some(p => req.url.includes(p));
 
+  // Rutas públicas de registros fotográficos, solo GET requests (list y retrieve son públicos)
+  const isPublicRegistroFotografico = req.url.includes('/registrosFotograficos/') && 
+                                      req.method === 'GET' &&
+                                      !req.url.match(/\/registrosFotograficos\/\d+\/(editar|eliminar|update|delete|patch|put)/); // Excluir acciones que requieren auth
+
   // Si la URL coincide con la lista → no poner token
-  if (shouldSkipAuth) {
+  if (shouldSkipAuth || isPublicRegistroFotografico) {
     return next(req);
   }
 
