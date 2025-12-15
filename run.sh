@@ -12,11 +12,11 @@ fi
 
 # Construir imágenes
 echo "Construyendo imágenes..."
-docker compose buildch
+sudo docker compose up --build -d     
 
 # Iniciar servicios
 echo "Iniciando servicios..."
-docker compose up -d
+
 
 # Verificar el estado de los contenedores
 echo " Verificando el estado de los contenedores..."
