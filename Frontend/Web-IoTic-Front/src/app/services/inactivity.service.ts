@@ -1,186 +1,129 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, fromEvent, merge } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
+import { Subject, Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
+/**
+ * Servicio para detectar inactividad del usuario y cerrar sesión automáticamente
+ * después de 5 minutos de inactividad.
+ */
 @Injectable({
   providedIn: 'root'
 })
-export class InactivityService {
-  private inactivityTimer: any;
-  private warningTimer: any;
-  private isWarningShown = false;
-  
-  // Configuración de tiempos (en milisegundos)
-  private readonly INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutos
-  private readonly WARNING_TIME = 2 * 60 * 1000; // 2 minutos antes del logout
-  
-  // Subjects para comunicación
-  private inactivitySubject = new BehaviorSubject<boolean>(false);
-  private warningSubject = new BehaviorSubject<{ show: boolean; timeLeft: number }>({ show: false, timeLeft: 0 });
-  private logoutSubject = new BehaviorSubject<boolean>(false);
-  
-  // Eventos que se consideran actividad
-  private activityEvents = [
-    'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'
-  ];
+export class InactivityService implements OnDestroy {
+  private readonly INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
+  private inactivityTimer: any = null;
+  private activitySubject = new Subject<void>();
+  private subscriptions: Subscription[] = [];
+  private isTracking = false;
 
-  constructor() {
-    this.setupActivityDetection();
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeActivityTracking();
+    }
   }
 
-  private setupActivityDetection() {
-    // Verificar que estamos en el navegador
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    // Crear observables para todos los eventos de actividad
-    const activityObservables = this.activityEvents.map(event => 
-      fromEvent(document, event)
-    );
-
-    // Combinar todos los eventos de actividad
-    merge(...activityObservables)
-      .pipe(
-        debounceTime(1000), // Debounce para evitar demasiadas llamadas
-        distinctUntilChanged()
-      )
-      .subscribe(() => {
-        this.resetInactivityTimer();
-      });
-  }
-
-  private resetInactivityTimer() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    // Limpiar timers existentes
-    this.clearTimers();
+  /**
+   * Inicializa el seguimiento de actividad del usuario
+   */
+  private initializeActivityTracking(): void {
+    // Eventos que indican actividad del usuario
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
     
-    // Resetear estado de advertencia
-    this.isWarningShown = false;
-    this.warningSubject.next({ show: false, timeLeft: 0 });
-    this.inactivitySubject.next(false);
+    events.forEach(event => {
+      const subscription = new Subscription();
+      const handler = () => this.resetInactivityTimer();
+      
+      document.addEventListener(event, handler, { passive: true });
+      
+      subscription.add(() => {
+        document.removeEventListener(event, handler);
+      });
+      
+      this.subscriptions.push(subscription);
+    });
+  }
 
-    // Configurar timer de advertencia
-    this.warningTimer = setTimeout(() => {
-      this.showWarning();
-    }, this.INACTIVITY_TIMEOUT - this.WARNING_TIME);
+  /**
+   * Reinicia el timer de inactividad
+   */
+  private resetInactivityTimer(): void {
+    // Solo reiniciar si estamos en modo de seguimiento
+    if (!this.isTracking) {
+      return;
+    }
 
-    // Configurar timer de logout
+    // Limpiar timer anterior
+    if (this.inactivityTimer) {
+      clearTimeout(this.inactivityTimer);
+    }
+
+    // Crear nuevo timer
     this.inactivityTimer = setTimeout(() => {
-      this.triggerLogout();
+      this.handleInactivity();
     }, this.INACTIVITY_TIMEOUT);
   }
 
-  private showWarning() {
-    this.isWarningShown = true;
-    this.warningSubject.next({ 
-      show: true, 
-      timeLeft: this.WARNING_TIME / 1000 // Convertir a segundos
-    });
+  /**
+   * Maneja la inactividad del usuario cerrando la sesión
+   */
+  private async handleInactivity(): Promise<void> {
+    console.warn('⏰ Sesión cerrada por inactividad (5 minutos)');
     
-    // Iniciar countdown de la advertencia
-    this.startWarningCountdown();
-  }
-
-  private startWarningCountdown() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    let timeLeft = this.WARNING_TIME / 1000;
-    
-    const countdownInterval = setInterval(() => {
-      timeLeft -= 1;
-      this.warningSubject.next({ 
-        show: true, 
-        timeLeft: Math.max(0, timeLeft)
-      });
+    // Cerrar sesión
+    try {
+      await this.authService.logout();
       
-      if (timeLeft <= 0) {
-        clearInterval(countdownInterval);
+      // Limpiar cualquier dato local
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('token');
       }
-    }, 1000);
-  }
-
-  private triggerLogout() {
-    console.log('InactivityService: Triggering logout due to inactivity');
-    this.logoutSubject.next(true);
-    this.clearTimers();
-  }
-
-  private clearTimers() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.clear();
+      }
+      
+      // Redirigir al login
+      this.router.navigate(['/login'], {
+        queryParams: { reason: 'inactivity' }
+      });
+    } catch (error) {
+      console.error('Error al cerrar sesión por inactividad:', error);
     }
+  }
 
+  /**
+   * Inicia el seguimiento de inactividad (llamar después del login)
+   */
+  public startTracking(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isTracking = true;
+      this.resetInactivityTimer();
+    }
+  }
+
+  /**
+   * Detiene el seguimiento de inactividad (llamar en logout)
+   */
+  public stopTracking(): void {
+    this.isTracking = false;
     if (this.inactivityTimer) {
       clearTimeout(this.inactivityTimer);
       this.inactivityTimer = null;
     }
-    if (this.warningTimer) {
-      clearTimeout(this.warningTimer);
-      this.warningTimer = null;
-    }
   }
 
-  // Métodos públicos
-  startInactivityTimer() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
-    }
-    this.resetInactivityTimer();
-  }
-
-  stopInactivityTimer() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
-    }
-    this.clearTimers();
-    this.isWarningShown = false;
-    this.warningSubject.next({ show: false, timeLeft: 0 });
-    this.inactivitySubject.next(false);
-  }
-
-  extendSession() {
-    // Verificar que estamos en el navegador
-    if (typeof window === 'undefined') {
-      return;
-    }
-    this.resetInactivityTimer();
-  }
-
-  // Getters para observables
-  get inactivityStatus$(): Observable<boolean> {
-    return this.inactivitySubject.asObservable();
-  }
-
-  get warningStatus$(): Observable<{ show: boolean; timeLeft: number }> {
-    return this.warningSubject.asObservable();
-  }
-
-  get logoutTrigger$(): Observable<boolean> {
-    return this.logoutSubject.asObservable();
-  }
-
-  // Configuración
-  setInactivityTimeout(minutes: number) {
-    // Esta función podría ser usada para cambiar el timeout dinámicamente
-    // Por ahora mantenemos el valor fijo por simplicidad
-  }
-
-  getInactivityTimeout(): number {
-    return this.INACTIVITY_TIMEOUT / 1000 / 60; // Devolver en minutos
-  }
-
-  getWarningTime(): number {
-    return this.WARNING_TIME / 1000 / 60; // Devolver en minutos
+  /**
+   * Limpia recursos al destruir el servicio
+   */
+  ngOnDestroy(): void {
+    this.stopTracking();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = [];
   }
 }

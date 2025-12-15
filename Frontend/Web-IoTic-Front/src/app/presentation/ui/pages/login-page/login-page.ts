@@ -67,6 +67,7 @@ export class LoginPage {
       console.log('Starting login process...');
       console.log('Auth state before login:', this.authService.currentUser);
       const result = await this.authService.login(this.correo, this.password);
+      // El servicio de inactividad se iniciará automáticamente desde App component
       this.navigateTo('/user');
     } catch (error: any) {
       this.handleLoginError({
