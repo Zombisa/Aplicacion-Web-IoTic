@@ -1,5 +1,5 @@
 import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optional } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult, setPersistence, browserSessionPersistence } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult, setPersistence, browserLocalPersistence } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY, timeout } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, collection,  setDoc} from '@angular/fire/firestore';
@@ -26,29 +26,52 @@ export class AuthService {
   ) {
     // Solo inicializar Firebase en el navegador
     if (isPlatformBrowser(this.platformId) && this.afAuth) {
-      // Configurar persistencia de sesión (sessionStorage - más seguro que localStorage)
-      // La sesión se mantiene al recargar la página pero se cierra al cerrar la pestaña
-      setPersistence(this.afAuth, browserSessionPersistence).catch(error => {
-        console.error('Error configurando persistencia de Firebase Auth:', error);
-      });
-
-      // Suscribirse a cambios en el estado de autenticación
-      authState(this.afAuth).subscribe(async (user) => {
-        this.currentUserSubject.next(user);
-        
-        // Si hay un usuario, restaurar el token en cache
-        if (user) {
-          try {
-            // Obtener token fresco para actualizar el cache
-            await this.getToken();
-          } catch (error) {
-            console.error('Error al restaurar token después de recargar:', error);
-          }
-        } else {
-          // Si no hay usuario, limpiar cache
-          this.clearTokenCache();
-        }
-      });
+      // Configurar persistencia de sesión ANTES de suscribirse a authState
+      // Esto asegura que Firebase Auth use localStorage para restaurar sesiones
+      setPersistence(this.afAuth, browserLocalPersistence)
+        .then(() => {
+          console.log(' Persistencia de Firebase Auth configurada correctamente');
+          
+          // Después de configurar persistencia, suscribirse a cambios en el estado de autenticación
+          authState(this.afAuth).subscribe(async (user) => {
+            console.log('Estado de autenticación cambiado:', user ? 'Usuario encontrado' : 'Sin usuario');
+            this.currentUserSubject.next(user);
+            
+            // Si hay un usuario, restaurar el token en cache
+            if (user) {
+              try {
+                console.log('🔑 Restaurando token para usuario:', user.email);
+                // Obtener token fresco para actualizar el cache
+                await this.getToken();
+                console.log('Token restaurado correctamente');
+              } catch (error) {
+                console.error('Error al restaurar token después de recargar:', error);
+              }
+            } else {
+              // Si no hay usuario, limpiar cache
+              console.log('🧹 Limpiando cache de token (sin usuario)');
+              this.clearTokenCache();
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error configurando persistencia de Firebase Auth:', error);
+          
+          // Aún así, suscribirse a authState aunque falle la configuración de persistencia
+          authState(this.afAuth).subscribe(async (user) => {
+            this.currentUserSubject.next(user);
+            
+            if (user) {
+              try {
+                await this.getToken();
+              } catch (error) {
+                console.error('Error al restaurar token después de recargar:', error);
+              }
+            } else {
+              this.clearTokenCache();
+            }
+          });
+        });
     }
   }
   /**
