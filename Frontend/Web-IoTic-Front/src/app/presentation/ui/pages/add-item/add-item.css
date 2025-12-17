@@ -50,9 +50,14 @@
 }
 /* Mejoras responsive */
 @media (max-width: 576px) {
-  .banner-primary .title {
-    font-size: 1.8rem !important;
+  .title {
+      font-size: 1.8rem !important;
   }
+  .banner-primary  {
+
+    height: 90vh;
+  }
+
   
   .form-container {
     width: 100%;
@@ -66,9 +71,13 @@
 }
 
 @media (min-width: 576px) and (max-width: 768px) {
-  .banner-primary .title {
+  .title {
     font-size: 2.2rem !important;
   }
+  .banner-primary {
+    height: 90rem;
+  }
+
     
   .form-container {
     width: 100%;

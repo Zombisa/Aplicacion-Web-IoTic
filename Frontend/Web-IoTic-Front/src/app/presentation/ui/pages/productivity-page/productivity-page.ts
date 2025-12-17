@@ -16,19 +16,19 @@ export class ProductivityPage implements AfterViewInit, OnDestroy{
 
   /** Rutas  */
   public routesBox = [
-    { key: 'libros', title: 'Libros publicados', route: '/productividad/lista/libros', image:'https://i.blogs.es/b7cc06/libros/1366_2000.jpg' },
-    { key: 'capitulos', title: 'Capítulos de libros', route: '/productividad/lista/capitulos', image: 'https://cdn.pixabay.com/photo/2015/09/09/20/22/book-933088_1280.jpg' },
-    { key: 'eventos', title: 'Trabajos en eventos', route: '/productividad/lista/eventos', image: 'https://cevents.es/wp-content/uploads/2021/11/evento-corporativo-imgpost.jpg' },
+    { key: 'libros', title: 'Libros publicados', route: '/productividad/lista/libros', image:'https://images.pexels.com/photos/1907785/pexels-photo-1907785.jpeg' },
+    { key: 'capitulos', title: 'Capítulos de libros', route: '/productividad/lista/capitulos', image: 'https://images.pexels.com/photos/831430/pexels-photo-831430.jpeg' },
+    { key: 'eventos', title: 'Trabajos en eventos', route: '/productividad/lista/eventos', image: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg' },
     { key: 'revistas', title: 'Revistas', route: '/productividad/lista/revistas', image: 'https://www.itm.edu.co//wp-content/uploads/noticias/revista-Indexadas-ITM.jpg' },
-    { key: 'software', title: 'Software', route: '/productividad/lista/software', image: 'https://starkcloud.com/wp-content/uploads/2024/12/La-tecnologia-del-futuro-5-avances-que-cambiaran-el-mundo-2000x1200-1.jpg' },
-    { key: 'cursos', title: 'Cursos de duración corta', route: '/productividad/lista/cursos', image: 'https://d3puay5pkxu9s4.cloudfront.net/curso/4296/800_imagen.jpg'},
+    { key: 'software', title: 'Software', route: '/productividad/lista/software', image: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg' },
+    { key: 'cursos', title: 'Cursos de duración corta', route: '/productividad/lista/cursos', image: 'https://images.pexels.com/photos/5912280/pexels-photo-5912280.jpeg'},
     { key: 'organizacion', title: 'Organización de eventos', route: '/productividad/lista/organizacion', image: 'https://www.unicauca.edu.co/wp-content/uploads/2025/08/Unicauca-sede-de-Colombia-4.0-1.jpeg' },
-    { key: 'comites', title: 'Participación en comités de evaluación', route: '/productividad/lista/comites', image: 'https://13f177ac6e.cbaul-cdnwnd.com/88c0b6cd8d8017f6daf8f06193ac0945/200000099-e9fbbebfd7/RPP.jpg' },
-    { key: 'material', title: 'Desarrollo de material didáctico', route: '/productividad/lista/material', imgae:"https://lisit.cl/wp-content/uploads/2023/12/pruebas-de-software.png" },
+    { key: 'comites', title: 'Participación en comités de evaluación', route: '/productividad/lista/comites', image: 'https://images.pexels.com/photos/7693692/pexels-photo-7693692.jpeg' },
+    { key: 'material', title: 'Desarrollo de material didáctico', route: '/productividad/lista/material', imgae:"https://images.pexels.com/photos/1181573/pexels-photo-1181573.jpeg" },
     { key: 'jurado', title: 'Jurado - Comisiones evaluadoras ', route: '/productividad/lista/jurado', image: 'https://www.nuevaliada.cl/wp-content/uploads/2021/08/Que%CC%81-es-una-tesis-y-co%CC%81mo-hacerla.png'},
-    { key: 'procesos', title: 'Procesos o técnicas', route: '/productividad/lista/procesos' },
-    { key: 'tutorias-concluidas', title: 'Trabajos dirigidos - Tutorías concluidas', route: '/productividad/lista/tutorias_concluidas', images: "https://www.entornoturistico.com/wp-content/uploads/2022/06/Exposicio%CC%81n-de-tesis-ante-sinodales.jpg" },
-    { key: 'tutorias-en-marcha', title: 'Trabajos dirigidos - Tutorías en marcha', route: '/productividad/lista/tutorias_en_marcha' },
+    { key: 'procesos', title: 'Procesos o técnicas', route: '/productividad/lista/procesos', image: 'https://images.pexels.com/photos/4144097/pexels-photo-4144097.jpeg'},
+    { key: 'tutorias-concluidas', title: 'Trabajos dirigidos - Tutorías concluidas', route: '/productividad/lista/tutorias_concluidas', images: "https://images.pexels.com/photos/3321791/pexels-photo-3321791.jpeg" },
+    { key: 'tutorias-en-marcha', title: 'Trabajos dirigidos - Tutorías en marcha', route: '/productividad/lista/tutorias_en_marcha', Image: 'https://images.pexels.com/photos/3184660/pexels-photo-3184660.jpeg' },
   ];
 
   constructor(
