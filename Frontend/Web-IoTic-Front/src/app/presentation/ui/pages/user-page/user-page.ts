@@ -24,30 +24,24 @@ export class UserPage implements OnInit {
     this.isAdmin$ = this.authService.isAdmin().pipe(
       startWith(false),
       map(isAdmin => {
-        console.log('¿Es admin?:', isAdmin);
+        
         return isAdmin;
       })
     );
     this.isAdminOrMentor$ = this.authService.isAdminOrMentor().pipe(
       startWith(false),
       map(isAdminOrMentor => {
-        console.log('¿Es admin o mentor?:', isAdminOrMentor);
         return isAdminOrMentor;
       })
     );
     this.user$.subscribe(user => {
-      if (user) {
-        console.log('Usuario autenticado:', user);
-      } else {
-        console.log('No hay usuario autenticado');
-      }
+      // console.log('Usuario actual:', user); --- IGNORE ---
     });
   }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/home']);
-    console.log('Sesión cerrada');
   }
   navigateTo(path: string) {
     this.router.navigate([path]);

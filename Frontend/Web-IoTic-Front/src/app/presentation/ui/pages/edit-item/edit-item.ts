@@ -36,7 +36,6 @@ export class EditItem {
   ngOnInit(): void {
      this.activatedRoute.paramMap.subscribe(params => {
       this.itemId = Number(params.get('id'));
-      console.log('ID del item obtenido de la URL:', this.itemId);
       this.getItemById();
     });
   }
@@ -70,7 +69,6 @@ export class EditItem {
      * @returns 
      */
   private uploadAndSetImage(data: ItemDTOPeticion, file: File): Promise<void> {
-    console.log("Subiendo imagen...", file);
     const extension = file.name.split('.').pop() || 'jpg';
     const contentType = file.type;
     return new Promise((resolve, reject) => {
@@ -103,7 +101,6 @@ export class EditItem {
   private saveItem(itemData: ItemDTOPeticion): void {
     this.inventoryService.updateElectronicComponent(this.itemId, itemData).subscribe({
       next: (response) => {
-        console.log("Respuesta del servidor:", response);
         this.successMessage = 'Item agregado exitosamente';
         this.itemFormComponent.resetForm();
         Swal.fire({
@@ -133,11 +130,9 @@ export class EditItem {
    */
   getItemById(): void {
     this.loadingService.show();
-    console.log('Obteniendo el item con ID:', this.itemId);
     this.inventoryService.getElectronicComponentById(this.itemId).subscribe({
       next: (item) => {
         this.item = item;
-        console.log('Item obtenido:', this.item);
         this.loadingService.hide();
       },
       error: (error) => {

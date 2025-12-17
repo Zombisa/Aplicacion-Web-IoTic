@@ -4,7 +4,7 @@
   </div>
 
   <main class="main-content">
-    <div class="card shadow-sm p-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="card shadow-sm p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <mat-icon class="me-3 icon-user" style="font-size: 3rem; color: #6c757d;">account_circle</mat-icon>
         <div class="user-details">
@@ -21,7 +21,7 @@
           </ng-template>
         </div>
       </div>
-      <button class="btn btn-outline-danger d-flex align-items-center" (click)="logout()">
+      <button class="btn btn-outline-danger d-flex align-items-center mt-3 mt-md-0" (click)="logout()">
         <mat-icon class="me-1">logout</mat-icon>
       </button>
     </div>

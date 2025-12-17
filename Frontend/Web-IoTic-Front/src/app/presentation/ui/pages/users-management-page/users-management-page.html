@@ -6,11 +6,11 @@
   
   <div class="page-container">
     <div class="title-section">
-      <div class="d-flex justify-content-between align-items-center">
-        <h1 class="page-title">Gestion de usuarios</h1>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h1 class="page-title text-center text-md-start">Gestion de usuarios</h1>
         <button 
           *ngIf="isAdmin$ | async" 
-          class="btn btn-primary"
+          class="btn btn-primary mt-3 mt-md-0"
           (click)="goToAddUser()">
           <i class="bi bi-plus-circle me-2"></i>Agregar Usuario
         </button>

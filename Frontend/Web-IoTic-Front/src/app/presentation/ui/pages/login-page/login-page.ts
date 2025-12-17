@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -40,15 +42,13 @@ export class LoginPage {
   public router = inject(Router);
 
   constructor(private authService: AuthService) {
-    console.log('LoginPage - Constructor iniciado');
     
-
-
-
   }
-   navigateTo(path: string) {
+  
+  navigateTo(path: string) {
     this.router.navigate([path]);
   }
+
   async onLogin(form: NgForm) {
     if (form.invalid) {
       this.showErrorMessage('Por favor, completa todos los campos correctamente');
@@ -64,8 +64,7 @@ export class LoginPage {
     this.hideMessages();
 
     try {
-      console.log('Starting login process...');
-      console.log('Auth state before login:', this.authService.currentUser);
+      
       const result = await this.authService.login(this.correo, this.password);
       // El servicio de inactividad se iniciará automáticamente desde App component
       this.navigateTo('/user');
@@ -235,5 +234,18 @@ export class LoginPage {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  recoverPassword(email: string): void {
+    if (!email) {
+      this.showErrorMessage('Por favor, ingresa un correo electrónico válido.');
+      return;
+    }
+    this.authService.resetPassword(email).then(() => {
+      this.showSuccessMessage('Se ha enviado un correo para restablecer tu contraseña. Revisa tu bandeja de entrada.');
+    }).catch((error) => {
+      console.error('Error al enviar el correo de recuperación:', error);
+      this.showErrorMessage('No se pudo enviar el correo de recuperación. Verifica el correo ingresado.');
+    }); 
   }
 }

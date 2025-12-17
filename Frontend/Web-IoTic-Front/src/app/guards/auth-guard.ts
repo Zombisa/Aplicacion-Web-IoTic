@@ -36,23 +36,23 @@ export class AuthGuard implements CanActivate {
       timeout(5000),
       map(user => {
         if (user) {
-          console.log('✅ Usuario autenticado, permitiendo acceso');
+          
           // Actualizar el BehaviorSubject del AuthService para mantener consistencia
           (this.authService as any).currentUserSubject.next(user);
           return true; 
         } else {
-          console.warn('⚠️ Usuario no autenticado, redirigiendo al login...');
+          
           return this.router.createUrlTree(['/login']); 
         }
       }),
       catchError(error => {
-        // Si hay timeout, verificar el estado actual de Firebase Auth directamente
-        console.warn('⏱️ Timeout verificando autenticación, verificando estado actual...', error);
+
+        console.warn('⏱ Timeout verificando autenticación, verificando estado actual...', error);
         
         // Verificar directamente currentUser de Firebase Auth
         const currentUser = this.afAuth?.currentUser;
         if (currentUser) {
-          console.log('✅ Usuario encontrado en currentUser después del timeout');
+  
           (this.authService as any).currentUserSubject.next(currentUser);
           return of(true);
         }
@@ -68,11 +68,11 @@ export class AuthGuard implements CanActivate {
               (this.authService as any).currentUserSubject.next(user);
               return true;
             }
-            console.warn('❌ No se encontró usuario autenticado después de múltiples intentos');
+            console.warn('No se encontró usuario autenticado después de múltiples intentos');
             return this.router.createUrlTree(['/login']);
           }),
           catchError(() => {
-            console.warn('❌ Error final verificando autenticación');
+            console.warn(' Error final verificando autenticación');
             return of(this.router.createUrlTree(['/login']));
           })
         );

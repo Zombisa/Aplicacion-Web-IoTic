@@ -44,7 +44,6 @@
                   'bad-warning': itemForm.get('estado_fisico')?.value === 'Dañado' 
                 }">
               <select class="form-select mt-2" formControlName="estado_fisico">
-                <option value="">Seleccione estado</option>
                 <option value="Excelente">Excelente</option>
                 <option value="Bueno">Bueno</option>
                 <option value="Dañado">Dañado</option>
@@ -65,9 +64,7 @@
                   'warning-state-no-loan': itemForm.get('estado_admin')?.value === 'No prestar' 
                 }">
               <select class="form-select mt-2" formControlName="estado_admin">
-                <option value="">Seleccione estado</option>
                 <option value="Disponible">Disponible</option>
-                <option *ngIf="mode === 'create'" value="Prestado">Prestado</option>
                 <option value="No prestar">No prestar</option>
               </select>
             </div>
