@@ -48,7 +48,7 @@ services:
       R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
       R2_BUCKET_FILES_PATH: ${R2_BUCKET_FILES_PATH}
       R2_BUCKET_FILES_NAME: ${R2_BUCKET_FILES_NAME}
-      ports:
+    ports:
       - "8001:8000"
     depends_on:
       db:
