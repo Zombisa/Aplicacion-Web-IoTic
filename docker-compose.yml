@@ -1,4 +1,4 @@
-ervices:
+services:
   db:
     image: postgres:15
     container_name: postgres_db
@@ -55,7 +55,7 @@ ervices:
       - "8080:80"
     depends_on:
       - backend
-  networks:
+    networks:
       - web
 
 volumes:
@@ -64,4 +64,3 @@ volumes:
 networks:
   web:
     driver: bridge
-

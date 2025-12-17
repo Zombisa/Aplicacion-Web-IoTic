@@ -1,4 +1,3 @@
-  GNU nano 7.2                                                                                                                      entrypoint.sh                                                                                                                               
 #!/bin/sh
 set -e
 
