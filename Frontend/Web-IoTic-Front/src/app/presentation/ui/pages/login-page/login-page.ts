@@ -42,7 +42,7 @@ export class LoginPage {
   public router = inject(Router);
 
   constructor(private authService: AuthService) {
-    console.log('LoginPage - Constructor iniciado');
+    
   }
   
   navigateTo(path: string) {
@@ -64,8 +64,7 @@ export class LoginPage {
     this.hideMessages();
 
     try {
-      console.log('Starting login process...');
-      console.log('Auth state before login:', this.authService.currentUser);
+      
       const result = await this.authService.login(this.correo, this.password);
       // El servicio de inactividad se iniciará automáticamente desde App component
       this.navigateTo('/user');

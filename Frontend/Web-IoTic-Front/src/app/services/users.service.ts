@@ -27,7 +27,6 @@ export class UsersService {
 
   getUsers(): Observable<UserDTO[]> {
     const url = `${this.config.apiUrlBackend}usuarios/`;
-    console.log('Obteniendo usuarios desde:', url);
     return this.http.get<UserDTO[]>(url).pipe(
       map(users => {
         console.log(`Usuarios obtenidos: ${users?.length || 0} usuarios`);

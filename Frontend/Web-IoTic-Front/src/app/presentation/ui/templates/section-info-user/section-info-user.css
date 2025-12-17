@@ -87,7 +87,6 @@
 @media (max-width: 600px) {
   .user-card {
     max-width: 98vw;
-    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
   }
   .title-card {
     font-size: 1.3rem;

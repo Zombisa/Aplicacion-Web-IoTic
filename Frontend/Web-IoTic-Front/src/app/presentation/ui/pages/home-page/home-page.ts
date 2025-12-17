@@ -74,7 +74,6 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
       next: (publications) => {
         this.latestPublications = publications;
         this.loadingService.hide();
-        console.log('Últimas publicaciones cargadas:', publications);
       },
       error: (error) => {
         console.error('Error al cargar últimas publicaciones:', error);
@@ -89,7 +88,6 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   loadRegistroFotograficoHome(): void {
   this.registroFotograficoService.getAll().subscribe({
     next: (registros) => {
-      console.log('Registros fotográficos cargados:', registros);
       
       // Puedes limitar cuántas fotos muestras en el home
       this.registrosFotograficosHome = registros;
@@ -97,8 +95,6 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
       // Tomar las últimas 5 fotos (ordenadas por id desc) para el banner principal
       const ordenadas = [...registros].sort((a, b) => (b.id || 0) - (a.id || 0));
       this.heroFotos = ordenadas.slice(0, 5);
-      console.log('Hero fotos:', this.heroFotos);
-      console.log('Primera foto:', this.heroFotos[0]);
 
       // Iniciar el cambio aleatorio de fotos cada 4 segundos
       this.startHeroPhotoRotation();

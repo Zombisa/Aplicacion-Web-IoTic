@@ -35,12 +35,11 @@ export class AddUser implements OnInit {
    * Sincronizar Firebase y luego cargar roles
    */
   sincronizarYcargarRoles(): void {
-    console.log('Iniciando sincronización de Firebase...');
     this.loadingService.show();
     
     this.usersService.sincronizarFirebase().subscribe({
       next: (response) => {
-        console.log('Sincronización exitosa:', response);
+
         // Después de sincronizar, cargar los roles
         this.loadRoles();
       },
@@ -57,12 +56,12 @@ export class AddUser implements OnInit {
    * Cargar roles disponibles
    */
   loadRoles(): void {
-    console.log('Iniciando carga de roles...');
+    
     this.usersService.getRoles().subscribe({
       next: (data) => {
-        console.log('Roles recibidos del servicio:', data);
+    
         this.roles = data;
-        console.log('Roles asignados al componente:', this.roles);
+    
         this.loadingService.hide();
       },
       error: (error) => {

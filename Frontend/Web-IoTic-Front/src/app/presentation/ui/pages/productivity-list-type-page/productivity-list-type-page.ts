@@ -119,7 +119,6 @@ export class ProductivityListTypePage {
       next: (resp: BaseProductivityDTO[]) => {
         this.listTypes = resp;
         this.filteredListTypes = resp;
-        console.log('Información del tipo:', this.tipo, resp);
         this.loadingService.hide();
       },
       error: () => {

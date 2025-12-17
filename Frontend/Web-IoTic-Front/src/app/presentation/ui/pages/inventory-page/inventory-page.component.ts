@@ -55,7 +55,7 @@ export class InventoryPageComponent implements OnInit {
    */
   loadInventoryData() {
     this.loadingService.show();
-    console.log('Cargando datos del inventario desde el componente.');
+    
     this.inventoryService.getElectronicComponent().subscribe({
       next: (data: ItemDTO[]) => {
         this.inventoryData = data;
@@ -105,7 +105,6 @@ export class InventoryPageComponent implements OnInit {
    * Navegando al item seleccionado
    */
   onItemSelected(itemId: number) {
-    console.log("Navegando al item con ID:", itemId);
     this.router.navigate(['/inventario/view-item', itemId ]);
   }
 }

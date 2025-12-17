@@ -126,7 +126,6 @@ export class EditProductiviy implements OnInit {
     const idParam = params.get('id');
     this.id =  Number(idParam) ;
 
-    console.log("ID (number):", this.id);
   });
   }
 
@@ -156,7 +155,7 @@ export class EditProductiviy implements OnInit {
       this.currentFormRef.instance.idInput = this.id;   
 
     this.currentFormRef.instance.formSubmit.subscribe((payload: FormSubmitPayload) => {
-      console.log("Formulario recibido en padre:", payload);
+
       this.onFormSubmit(payload);
     });
   }
@@ -207,7 +206,6 @@ export class EditProductiviy implements OnInit {
         .pipe(
           switchMap((resp) => {
             data.image_path = resp.file_path;
-            console.log("Ruta de la imagen establecida en el data:", data.image_path);
             return this.imageService.uploadToR2(resp.upload_url, file);
           })
         )
@@ -241,7 +239,6 @@ export class EditProductiviy implements OnInit {
           switchMap((resp) => {
             
             data.archivo_path = resp.file_path;
-            console.log("respo filepath:",resp.upload_url);
             return this.filesService.uploadToR2(resp.upload_url, file);
           })
         )
