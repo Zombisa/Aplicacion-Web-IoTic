@@ -34,7 +34,7 @@ export class LoginPage {
   
   // Contador de intentos fallidos
   failedAttempts: number = 0;
-  maxAttempts: number = 5;
+  maxAttempts: number = 3;
   isBlocked: boolean = false;
   blockTimeRemaining: number = 0;
   public router = inject(Router);
@@ -191,7 +191,7 @@ export class LoginPage {
 
   private blockUser() {
     this.isBlocked = true;
-    this.blockTimeRemaining = 300; // 5 minutos
+    this.blockTimeRemaining = 60; // 60 segundos de bloqueo tras 3 intentos fallidos
     
     const interval = setInterval(() => {
       this.blockTimeRemaining--;
