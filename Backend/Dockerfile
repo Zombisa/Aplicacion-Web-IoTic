@@ -1,26 +1,27 @@
 FROM python:3.11-slim
 
+# Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=backend.settings
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        postgresql-client \
-        gcc \
-        python3-dev \
-        libpq-dev \
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
+# Copiar requirements y instalar dependencias Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copiar todo el proyecto
 COPY . .
 
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
-USER appuser
+# Copiar y dar permisos al entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-EXPOSE 8000
-
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
