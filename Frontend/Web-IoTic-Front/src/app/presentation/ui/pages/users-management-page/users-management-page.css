@@ -44,7 +44,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .page-container {
-    padding: 5rem;
+    padding: 0rem;
     padding-top: 15rem; /* Menos espacio en móvil */
   }
 

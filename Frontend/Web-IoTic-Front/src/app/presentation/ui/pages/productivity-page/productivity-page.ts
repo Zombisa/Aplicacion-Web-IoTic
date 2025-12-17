@@ -28,7 +28,7 @@ export class ProductivityPage implements AfterViewInit, OnDestroy{
     { key: 'jurado', title: 'Jurado - Comisiones evaluadoras ', route: '/productividad/lista/jurado', image: 'https://www.nuevaliada.cl/wp-content/uploads/2021/08/Que%CC%81-es-una-tesis-y-co%CC%81mo-hacerla.png'},
     { key: 'procesos', title: 'Procesos o técnicas', route: '/productividad/lista/procesos', image: 'https://images.pexels.com/photos/4144097/pexels-photo-4144097.jpeg'},
     { key: 'tutorias-concluidas', title: 'Trabajos dirigidos - Tutorías concluidas', route: '/productividad/lista/tutorias_concluidas', images: "https://images.pexels.com/photos/3321791/pexels-photo-3321791.jpeg" },
-    { key: 'tutorias-en-marcha', title: 'Trabajos dirigidos - Tutorías en marcha', route: '/productividad/lista/tutorias_en_marcha', Image: 'https://images.pexels.com/photos/3184660/pexels-photo-3184660.jpeg' },
+    { key: 'tutorias-en-marcha', title: 'Trabajos dirigidos - Tutorías en marcha', route: '/productividad/lista/tutorias_en_marcha', Image: 'https://www.unicauca.edu.co/wp-content/uploads/elementor/thumbs/WhatsApp-Image-2025-08-26-at-9.48.46-AM-ratwxe52uo9636x3frf1fq06y3yn8wob8v2d8w5ixk-rcmhqy2cw0f477d2v9dnog1lnf391ba4dhp8hblou8.jpeg' },
   ];
 
   constructor(
