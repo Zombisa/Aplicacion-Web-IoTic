@@ -26,7 +26,7 @@ export class WhoWeAreService {
 
   createMision(contenido: string): Observable<MisionDTO> {
 
-    return this.http.post<MisionDTO>(`${this.config.apiUrlBackend}mision/agregar/`, { contenido }).pipe(
+    return this.http.post<MisionDTO>(`${this.config.apiUrlBackend}informacion/mision/agregar/`, { contenido }).pipe(
       catchError(error => {
         console.error('Error al crear misión:', error);
         return throwError(() => error);
@@ -38,7 +38,7 @@ export class WhoWeAreService {
    * Obtener Misión (público)
    */
   getMision(): Observable<MisionDTO | null> {
-    return this.http.get<any>(`${this.config.apiUrlBackend}mision/ver/`).pipe(
+    return this.http.get<any>(`${this.config.apiUrlBackend}informacion/mision/ver/`).pipe(
       map(response => {
         // Si el backend devuelve un mensaje, retornar null
         if (response && response.message) {
@@ -57,7 +57,7 @@ export class WhoWeAreService {
    * Crear Visión 
    */
     createVision(contenido: string): Observable<VisionDTO> {
-    return this.http.post<VisionDTO>(`${this.config.apiUrlBackend}vision/agregar/`, { contenido }).pipe(
+    return this.http.post<VisionDTO>(`${this.config.apiUrlBackend}informacion/vision/agregar/`, { contenido }).pipe(
       catchError(error => {
         console.error('Error al crear visión:', error);
         return throwError(() => error);
@@ -70,7 +70,7 @@ export class WhoWeAreService {
    * Actualizar Misión 
    */
   updateMision(id: number, contenido: string): Observable<MisionDTO> {
-    return this.http.put<MisionDTO>(`${this.config.apiUrlBackend}mision/${id}/editar/`, { contenido })
+    return this.http.put<MisionDTO>(`${this.config.apiUrlBackend}informacion/mision/${id}/editar/`, { contenido })
       .pipe(
         catchError(error => {
           console.error('Error al actualizar misión:', error);
@@ -84,7 +84,7 @@ export class WhoWeAreService {
    * Obtener Visión 
    */
   getVision(): Observable<VisionDTO | null> {
-    return this.http.get<any>(`${this.config.apiUrlBackend}vision/ver/`).pipe(
+    return this.http.get<any>(`${this.config.apiUrlBackend}informacion/vision/ver/`).pipe(
       map(response => {
         // Si el backend devuelve un mensaje, retornar null
         if (response && response.message) {
@@ -103,7 +103,7 @@ export class WhoWeAreService {
    * Actualizar Visión 
    */
   updateVision(id: number, contenido: string): Observable<VisionDTO> {
-    return this.http.put<VisionDTO>(`${this.config.apiUrlBackend}vision/${id}/editar/`, { contenido }).pipe(
+    return this.http.put<VisionDTO>(`${this.config.apiUrlBackend}informacion/vision/${id}/editar/`, { contenido }).pipe(
       catchError(error => {
         console.error('Error al actualizar visión:', error);
         return throwError(() => error);
@@ -114,7 +114,7 @@ export class WhoWeAreService {
    * Crear Historia 
    */
   createHistoria(contenido: string): Observable<HistoriaDTO> {
-    return this.http.post<HistoriaDTO>(`${this.config.apiUrlBackend}historia/agregar/`, { contenido }).pipe(
+    return this.http.post<HistoriaDTO>(`${this.config.apiUrlBackend}informacion/historia/agregar/`, { contenido }).pipe(
       catchError(error => {
         console.error('Error al crear historia:', error);
         return throwError(() => error);
@@ -125,7 +125,7 @@ export class WhoWeAreService {
    * Obtener Historia 
    */
   getHistoria(): Observable<HistoriaDTO | null> {
-    return this.http.get<any>(`${this.config.apiUrlBackend}historia/ver/`).pipe(
+    return this.http.get<any>(`${this.config.apiUrlBackend}informacion/historia/ver/`).pipe(
       map(response => {
         // Si el backend devuelve un mensaje, retornar null
         if (response && response.message) {
@@ -144,7 +144,7 @@ export class WhoWeAreService {
    * Actualizar Historia 
    */
   updateHistoria(id: number, contenido: string): Observable<HistoriaDTO> {
-    return this.http.put<HistoriaDTO>(`${this.config.apiUrlBackend}historia/${id}/editar/`, { contenido }).pipe(
+    return this.http.put<HistoriaDTO>(`${this.config.apiUrlBackend}informacion/historia/${id}/editar/`, { contenido }).pipe(
       catchError(error => {
         console.error('Error al actualizar historia:', error);
         return throwError(() => error);
@@ -156,7 +156,7 @@ export class WhoWeAreService {
    * Obtener Objetivos 
    */
   getObjetivos(): Observable<ObjetivoDTO[]> {
-    return this.http.get<ObjetivoDTO[]>(`${this.config.apiUrlBackend}objetivos/ver/`).pipe(
+    return this.http.get<ObjetivoDTO[]>(`${this.config.apiUrlBackend}informacion/objetivos/ver/`).pipe(
       catchError(error => {
         console.error('Error al obtener objetivos:', error);
         return throwError(() => error);
@@ -168,7 +168,7 @@ export class WhoWeAreService {
    * Crear Objetivo 
    */
   createObjetivo(titulo: string, contenido: string): Observable<ObjetivoDTO> {
-    return this.http.post<ObjetivoDTO>(`${this.config.apiUrlBackend}objetivos/agregar/`, { titulo, contenido }).pipe(
+    return this.http.post<ObjetivoDTO>(`${this.config.apiUrlBackend}informacion/objetivos/agregar/`, { titulo, contenido }).pipe(
       catchError(error => {
         console.error('Error al crear objetivo:', error);
         return throwError(() => error);
@@ -180,7 +180,7 @@ export class WhoWeAreService {
    * Actualizar Objetivo 
    */
   updateObjetivo(id: number, titulo: string, contenido: string): Observable<ObjetivoDTO> {
-    return this.http.put<ObjetivoDTO>(`${this.config.apiUrlBackend}objetivos/${id}/editar/`, { titulo, contenido }).pipe(
+    return this.http.put<ObjetivoDTO>(`${this.config.apiUrlBackend}informacion/objetivos/${id}/editar/`, { titulo, contenido }).pipe(
       catchError(error => {
         console.error('Error al actualizar objetivo:', error);
         return throwError(() => error);
@@ -192,7 +192,7 @@ export class WhoWeAreService {
    * Eliminar Objetivo 
    */
   deleteObjetivo(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.config.apiUrlBackend}objetivos/${id}/eliminar/`).pipe(
+    return this.http.delete<void>(`${this.config.apiUrlBackend}informacion/objetivos/${id}/eliminar/`).pipe(
       catchError(error => {
         console.error('Error al eliminar objetivo:', error);
         return throwError(() => error);
@@ -204,7 +204,7 @@ export class WhoWeAreService {
    * Obtener Valores
    */
   getValores(): Observable<ValorDTO[]> {
-    return this.http.get<ValorDTO[]>(`${this.config.apiUrlBackend}valores/ver/`).pipe(
+    return this.http.get<ValorDTO[]>(`${this.config.apiUrlBackend}informacion/valores/ver/`).pipe(
       catchError(error => {
         console.error('Error al obtener valores:', error);
         return throwError(() => error);
@@ -216,7 +216,7 @@ export class WhoWeAreService {
    * Crear Valor 
    */
   createValor(titulo: string, contenido: string): Observable<ValorDTO> {
-    return this.http.post<ValorDTO>(`${this.config.apiUrlBackend}valores/agregar/`, { titulo, contenido }).pipe(
+    return this.http.post<ValorDTO>(`${this.config.apiUrlBackend}informacion/valores/agregar/`, { titulo, contenido }).pipe(
       catchError(error => {
         console.error('Error al crear valor:', error);
         return throwError(() => error);
@@ -228,7 +228,7 @@ export class WhoWeAreService {
    * Actualizar Valor 
    */
   updateValor(id: number, titulo: string, contenido: string): Observable<ValorDTO> {
-    return this.http.put<ValorDTO>(`${this.config.apiUrlBackend}valores/${id}/editar/`, { titulo, contenido }).pipe(
+    return this.http.put<ValorDTO>(`${this.config.apiUrlBackend}informacion/valores/${id}/editar/`, { titulo, contenido }).pipe(
       catchError(error => {
         console.error('Error al actualizar valor:', error);
         return throwError(() => error);
@@ -240,7 +240,7 @@ export class WhoWeAreService {
    * Eliminar Valor 
    */
   deleteValor(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.config.apiUrlBackend}valores/${id}/eliminar/`).pipe(
+    return this.http.delete<void>(`${this.config.apiUrlBackend}informacion/valores/${id}/eliminar/`).pipe(
       catchError(error => {
         console.error('Error al eliminar valor:', error);
         return throwError(() => error);
