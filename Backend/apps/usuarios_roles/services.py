@@ -1,7 +1,9 @@
 from firebase_admin import auth, db, firestore
-from .models import Usuario
+from .models import Usuario, Rol
 from django.contrib.auth.hashers import make_password
+import logging
 
+logger = logging.getLogger(__name__)
 
 def crear_usuario(data):
     """
@@ -103,3 +105,91 @@ def asignar_rol_firebase(uid_firebase, rol_nombre):
     except Exception as e:
         print(f"Error asignando rol: {e}")
         return False
+
+def sincronizar_usuarios_firebase():
+    """
+    Sincroniza usuarios de Firebase Authentication a PostgreSQL.
+    Retorna: dict con estadísticas de la sincronización
+    """
+    logger.info("🔄 Iniciando sincronización de usuarios Firebase → PostgreSQL")
+    
+    ROLES_VALIDOS = ["admin", "mentor"]
+    stats = {
+        "creados": 0,
+        "actualizados": 0,
+        "errores": 0,
+        "total_procesados": 0
+    }
+
+    try:
+        for user in auth.list_users().iterate_all():
+            stats["total_procesados"] += 1
+            
+            try:
+                uid = user.uid
+                email = user.email
+                nombre_default = email.split("@")[0] if email else "sin_nombre"
+
+                # Leer rol desde custom claims
+                claims = user.custom_claims or {}
+                rol_name_claim = (claims.get("role") or "").lower().strip()
+
+                rol_obj = None
+                if rol_name_claim in ROLES_VALIDOS:
+                    rol_obj, _ = Rol.objects.get_or_create(nombre=rol_name_claim)
+
+                # Crear o actualizar usuario
+                usuario, creado = Usuario.objects.get_or_create(
+                    uid_firebase=uid,
+                    defaults={
+                        "email": email,
+                        "nombre": nombre_default,
+                        "apellido": "",
+                        "contrasena": "",
+                        "estado": True,
+                        "rol": rol_obj
+                    }
+                )
+
+                if not creado:
+                    # Actualizar solo si hay cambios
+                    cambios = False
+                    if usuario.email != email:
+                        usuario.email = email
+                        cambios = True
+                    if usuario.nombre != nombre_default:
+                        usuario.nombre = nombre_default
+                        cambios = True
+                    if usuario.rol != rol_obj:
+                        usuario.rol = rol_obj
+                        cambios = True
+                    if not usuario.estado:
+                        usuario.estado = True
+                        cambios = True
+                    
+                    if cambios:
+                        usuario.save()
+                        stats["actualizados"] += 1
+                else:
+                    stats["creados"] += 1
+
+                rol_texto = rol_obj.nombre if rol_obj else "Sin rol"
+                logger.debug(f"✓ Usuario: {uid} ({email}) - Rol: {rol_texto}")
+                
+            except Exception as e:
+                stats["errores"] += 1
+                logger.error(f"❌ Error sincronizando usuario {user.uid}: {str(e)}")
+                continue
+
+        logger.info(
+            f"✅ Sincronización completa - "
+            f"Creados: {stats['creados']}, "
+            f"Actualizados: {stats['actualizados']}, "
+            f"Errores: {stats['errores']}, "
+            f"Total: {stats['total_procesados']}"
+        )
+        return stats
+        
+    except Exception as e:
+        logger.error(f"❌ Error crítico en sincronización: {str(e)}")
+        raise
