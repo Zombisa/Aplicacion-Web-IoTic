@@ -1,5 +1,5 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Header } from '../../templates/header/header';
 import { ScrollAnimationServices } from '../../../../services/scroll-animation.service';
 import { WhoWeAreService } from '../../../../services/who-we-are.service';
@@ -41,7 +41,6 @@ export class WhoWeAre implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private elementRef: ElementRef,
-    @Inject(PLATFORM_ID) private platformId: Object,
     private scrollAnimations: ScrollAnimationServices,
     private whoWeAreService: WhoWeAreService,
     public loadingService: LoadingService
@@ -73,9 +72,7 @@ sendEmail() {
   }
 
   ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.scrollAnimations.observeElements(this.elementRef.nativeElement);
-    }
+    this.scrollAnimations.observeElements(this.elementRef.nativeElement);
   }
 
   ngOnDestroy(): void {

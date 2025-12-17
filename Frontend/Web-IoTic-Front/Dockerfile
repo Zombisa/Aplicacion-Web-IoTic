@@ -24,7 +24,7 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist/Web-IoTic-Front/browser/ /usr/share/nginx/html/
 
 # Renombrar index.csr.html a index.html para nginx
-RUN mv /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html
+
 
 # Copiar configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
