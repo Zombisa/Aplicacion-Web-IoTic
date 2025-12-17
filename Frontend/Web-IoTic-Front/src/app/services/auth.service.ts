@@ -1,5 +1,5 @@
 import { Injectable, Injector, runInInjectionContext, Inject, PLATFORM_ID, Optional } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult, setPersistence, browserLocalPersistence } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, User, authState, getIdTokenResult, setPersistence, browserLocalPersistence, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, firstValueFrom, from, EMPTY, timeout } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {Firestore, doc, collection,  setDoc} from '@angular/fire/firestore';
@@ -341,6 +341,26 @@ export class AuthService {
     console.log('--- Observable Estado ---');
     console.log('CurrentUserSubject value:', this.currentUserSubject.value ? 'Sí' : 'No');
     console.log('=== END DEBUG ===');
+  }
+
+  /**
+   * Sends a password reset email to the provided email address.
+   * @param email The email address of the user requesting a password reset.
+   * @returns A promise that resolves when the email is sent successfully.
+   */
+  resetPassword(email: string): Promise<void> {
+    if (!this.afAuth) {
+      return Promise.reject('Firebase Auth is not initialized.');
+    }
+
+    return sendPasswordResetEmail(this.afAuth, email)
+      .then(() => {
+        console.log('Password reset email sent successfully to:', email);
+      })
+      .catch((error) => {
+        console.error('Error sending password reset email:', error);
+        throw error;
+      });
   }
 
 }

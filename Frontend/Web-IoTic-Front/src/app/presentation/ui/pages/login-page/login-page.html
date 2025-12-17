@@ -104,6 +104,43 @@
         </button>
       </form>
       
+      <!-- Botón para abrir el modal de recuperación de contraseña -->
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#passwordRecoveryModal">
+          ¿Olvidaste tu contraseña?
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de recuperación de contraseña -->
+<div class="modal fade" id="passwordRecoveryModal" tabindex="-1" aria-labelledby="passwordRecoveryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordRecoveryModalLabel">Recuperar contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña, Cuando tengas
+          tus nuevas credenciales inicia sesion nuevamente.</p>
+        <form (ngSubmit)="recoverPassword(correo)">
+          <div class="mb-3">
+            <label for="recoveryEmail" class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              id="recoveryEmail"
+              [(ngModel)]="correo"
+              name="email"
+              class="form-control"
+              placeholder="ejemplo@correo.com"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Enviar enlace</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
