@@ -40,7 +40,15 @@ services:
       DB_PORT: 5432
       DEBUG: ${DEBUG}
       DJANGO_SETTINGS_MODULE: backend.settings
-    ports:
+      
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_BUCKET_PATH: ${R2_BUCKET_PATH}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_BUCKET_FILES_PATH: ${R2_BUCKET_FILES_PATH}
+      R2_BUCKET_FILES_NAME: ${R2_BUCKET_FILES_NAME}
+      ports:
       - "8001:8000"
     depends_on:
       db:
