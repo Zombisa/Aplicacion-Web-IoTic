@@ -67,7 +67,7 @@ export class CapBookService {
    */
   deleteCapBook(id: number): Observable<any> {
     return this.http.delete(
-      `${this.config.apiUrlBackend}informacion/capLibros/${id}/capitulo_libro/`
+      `${this.config.apiUrlBackend}informacion/capLibros/${id}/Capitulo_libro/`
     ).pipe(
       catchError((error) => {
         console.error('Error al eliminar capítulo de libro:', error);

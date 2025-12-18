@@ -30,7 +30,7 @@ export class NoticiaService {
   }
 
   delete(id: number): Observable<void> {
-    return this.api.delete<void>(`${this.basePath}/${id}/noticia/`);
+    return this.api.delete<void>(`${this.basePath}/${id}/Noticia/`);
   }
 
   deleteImage(id: number): Observable<any> {

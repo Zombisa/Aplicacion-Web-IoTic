@@ -30,7 +30,7 @@ export class SoftwareService {
   }
 
   delete(id: number): Observable<void> {
-    return this.api.delete<void>(`${this.basePath}/${id}/software/`);
+    return this.api.delete<void>(`${this.basePath}/${id}/Software/`);
   }
 
   deleteImage(id: number): Observable<any> {

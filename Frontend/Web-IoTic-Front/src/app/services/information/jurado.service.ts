@@ -30,7 +30,7 @@ export class JuradoService {
   }
 
   delete(id: number): Observable<void> {
-    return this.api.delete<void>(`${this.basePath}/${id}/jurado/`);
+    return this.api.delete<void>(`${this.basePath}/${id}/Jurado/`);
   }
 
   deleteImage(id: number): Observable<any> {

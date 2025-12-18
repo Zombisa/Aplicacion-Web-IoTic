@@ -30,7 +30,7 @@ export class ProcesoTecnicaService {
   }
 
   delete(id: number): Observable<void> {
-    return this.api.delete<void>(`${this.basePath}/${id}/proceso_tecnica/`);
+    return this.api.delete<void>(`${this.basePath}/${id}/Proceso_tecnica/`);
   }
 
   deleteImage(id: number): Observable<any> {

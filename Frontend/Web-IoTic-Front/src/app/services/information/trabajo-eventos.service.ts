@@ -30,7 +30,7 @@ export class TrabajoEventosService {
   }
 
   delete(id: number): Observable<void> {
-    return this.api.delete<void>(`${this.basePath}/${id}/trabajo_evento/`);
+    return this.api.delete<void>(`${this.basePath}/${id}/Trabajo_evento/`);
   }
 
   deleteImage(id: number): Observable<any> {
