@@ -7,7 +7,7 @@
       <div class="row w-100 d-flex justify-content-center align-items-center">
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center align-items-md-start" id="title-banner-home">
               <h1 class="text-white text-center text-md-start" id="title-home">
-                Conoce el Semillero de IoTic
+                Conoce el semillero de IoTic
               </h1>
               <p class="text-white-50 mt-3 text-center text-md-start hero-subtitle">
                 Innovación, investigación y tecnología al servicio del conocimiento
@@ -34,7 +34,7 @@
     <div class="container">
       <div class="row text-center mb-4">
         <div class="col-12 d-flex flex-column align-items-center">
-          <h2 class="display-6 mb-3">Registro Fotográfico</h2>
+          <h2 class="display-6 mb-3">Registro fotográfico</h2>
           <p class="lead text-muted fw-bold">
             Momentos destacados de nuestro grupo de investigación, momentos que siempre quedan
             guardados en nuestra memoria.
@@ -111,7 +111,7 @@
     <div class="container">
       <div class="row">
         <div *ngFor="let item of getAvailablePublications()" class="col-12 col-md-6 mb-4">
-          <div class="publication-card d-flex align-items-center p-4 bg-white shadow-sm rounded">
+          <div class="publication-card d-flex align-items-center p-4 bg-white shadow-sm rounded" (click)="navigateToPublication2(item.publication.tipo, item.publication.id)">
             <!-- Imagen/Placeholder -->
             <div class="publication-image me-4">
               <div class="image-placeholder d-flex align-items-center justify-content-center">
@@ -139,19 +139,13 @@
             </div>
 
             <!-- Información de la publicación -->
-            <div class="publication-info flex-grow-1">
+            <div class="publication-info flex-grow-1" >
               <h5 class="publication-title mb-2 fw-bold">Última publicación:</h5>
               <p class="publication-type mb-1 text-muted small">{{ item.label }}</p>
               <p class="publication-name mb-1 fw-semibold">{{ item.publication.titulo }}</p>
               <p class="publication-year mb-2 text-muted small" *ngIf="item.publication.anio">
                 Año: {{ item.publication.anio }}
               </p>
-              <button
-                class="btn btn-sm btn-outline-primary mt-2"
-                (click)="navigateToPublication(item.publication.tipo, item.publication.id)"
-              >
-                Ver más
-              </button>
             </div>
           </div>
         </div>

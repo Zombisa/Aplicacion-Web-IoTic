@@ -147,7 +147,9 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Navega a la página de visualización de una publicación
    */
-  navigateToPublication(tipo: string, id: number): void {
+  navigateToPublication2(tipo: string, id: number): void {
+
+    console.log(`Navegando a publicación tipo: ${tipo}, id: ${id}`);
     const routeMap: Record<string, string> = {
       'libro': 'libros',
       'capitulo': 'capitulos',

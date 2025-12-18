@@ -38,3 +38,14 @@
 .textOption{
   color: var(--color-secondary-dark)
 }
+@media (max-width: 576px) {
+  .resume {
+    display: none;
+  }
+  .banner-primary{
+    padding-top: 30rem;
+  }
+  .dark-card{
+    padding-top: 23rem;
+  }
+}

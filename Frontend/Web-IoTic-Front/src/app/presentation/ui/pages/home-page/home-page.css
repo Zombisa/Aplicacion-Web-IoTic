@@ -116,7 +116,7 @@
 @media (max-width: 768px) {
   .banner-primary {
     min-height: auto;
-    padding: 6rem 1rem 3rem;
+    padding: 10rem 1rem 3rem;
   }
   
   .banner-primary .row {
