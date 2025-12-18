@@ -126,22 +126,23 @@ class MaterialDidacticoViewSet(viewsets.ModelViewSet):
 
             #eliminar imagen en el bucket de clouflare
             # extraer solo el nombre de la imagen
-            image_path = material_didactico.image_r2.split("/")[-1]
-
-            try:
-                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=image_path)
-            except Exception as e:
-                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if material_didactico.image_r2:
+                image_path = material_didactico.image_r2.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=image_path)
+                except Exception as e:
+                    return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
             #eliminar archivo en el bucket de clouflare
             # extraer solo el nombre del archivo
-            file_path = material_didactico.file_r2.split("/")[-1]
-
-            try:
-                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
-            except Exception as e:
-                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if material_didactico.file_r2:
+                file_path = material_didactico.file_r2.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+                except Exception as e:
+                    return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                    status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             material_didactico.delete()
             return Response({'Material didactico eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)

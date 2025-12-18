@@ -125,22 +125,23 @@ class ProcesoTecnicaViewSet(viewsets.ModelViewSet):
 
             #eliminar imagen en el bucket de clouflare
             # extraer solo el nombre de la imagen
-            image_path = proceso_tecnica.image_r2.split("/")[-1]
-
-            try:
-                s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=image_path)
-            except Exception as e:
-                return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if proceso_tecnica.image_r2:
+                image_path = proceso_tecnica.image_r2.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_NAME, Key=image_path)
+                except Exception as e:
+                    return Response({"error": f"No se pudo eliminar la imagen en R2: {str(e)}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
             #eliminar archivo en el bucket de clouflare
             # extraer solo el nombre del archivo
-            file_path = proceso_tecnica.file_r2.split("/")[-1]
-
-            try:
-                s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
-            except Exception as e:
-                return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if proceso_tecnica.file_r2:
+                file_path = proceso_tecnica.file_r2.split("/")[-1]
+                try:
+                    s3.delete_object(Bucket=settings.R2_BUCKET_FILES_NAME, Key=file_path)
+                except Exception as e:
+                    return Response({"error": f"No se pudo eliminar el archivo en R2: {str(e)}"},
+                                    status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             proceso_tecnica.delete()
             return Response({'Proceso técnico eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
