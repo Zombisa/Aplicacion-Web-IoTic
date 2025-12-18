@@ -98,7 +98,7 @@ export class AddItem {
             Swal.fire({
               icon: 'success',
               title: 'Item agregado exitosamente',
-              text: `El item con ID ${response.id} ha sido agregado.`,
+              text: `El item  ha sido agregado.`,
               confirmButtonText: 'Aceptar'
             });
             this.itemFormComponent.resetForm();

@@ -1,101 +1,52 @@
-.banner-primary{
+/* Estilos generales */
+.banner-primary {
   background-color: var(--color-secondary-light);
   height: 120vh;
 }
-.title{
-    margin-top: 10rem;
-    margin-bottom: 2rem;
-    font-size: 3rem;
-    font-weight: 300;
-    font-family: "Roboto", sans-serif;
+.title {
+  margin-top: 10rem;
+  margin-bottom: 2rem;
+  font-size: 3rem;
+  font-weight: 300;
+  font-family: "Roboto", sans-serif;
 }
 
-
-.form-container{
+.form-container {
   
 }
-.card{
+.card {
   height: 40rem;
 }
 .form-label {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
 }
 
 .btn-primary {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .btn-primary:hover {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary);
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 
 .text-primary {
-    color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
 }
 
 .is-valid {
-    border-color: #198754 !important;
+  border-color: #198754 !important;
 }
 
 .is-invalid {
-    border-color: #dc3545 !important;
-}
-/* Mejoras responsive */
-@media (max-width: 576px) {
-  .title {
-      font-size: 1.8rem !important;
-  }
-  .banner-primary  {
-
-    height: 90vh;
-  }
-
-  
-  .form-container {
-    width: 100%;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-  
-  .card {
-    margin: 0 0.5rem;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 768px) {
-  .title {
-    font-size: 2.2rem !important;
-  }
-  .banner-primary {
-    height: 90rem;
-  }
-
-    
-  .form-container {
-    width: 100%;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-}
-
-@media (min-width: 768px) {
-  .form-control-md-lg {
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-  }
-  
-  .form-select-md-lg {
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-  }
+  border-color: #dc3545 !important;
 }
 
 /* Inputs y labels responsive */
@@ -103,16 +54,57 @@
   font-size: 0.9rem;
 }
 
-@media (min-width: 768px) {
-  .form-label.small {
-    font-size: 1rem;
-  }
-}
+/* Media queries */
 
-/* Botones responsive */
+/* Pantallas pequeñas (max-width: 576px) */
 @media (max-width: 576px) {
+  .title {
+    font-size: 1.8rem !important;
+  }
+  .banner-primary {
+    height: 183vh;
+  }
+  .form-container {
+    width: 100%;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .card {
+    margin: 0 0.5rem;
+  }
   .btn {
     font-size: 0.9rem;
     padding: 0.5rem 1rem !important;
+  }
+}
+
+/* Pantallas medianas (min-width: 576px y max-width: 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .title {
+    font-size: 2.2rem !important;
+  }
+
+  .form-container {
+    width: 100%;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+/* Pantallas grandes (min-width: 768px) */
+@media (min-width: 768px) {
+  .form-control-md-lg {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+  }
+  .banner-primary {
+    height: 100vh;
+  }
+  .form-select-md-lg {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+  }
+  .form-label.small {
+    font-size: 1rem;
   }
 }
