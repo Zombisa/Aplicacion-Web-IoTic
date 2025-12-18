@@ -17,6 +17,8 @@ export const authInterceptor: HttpInterceptorFn = (
   // Agrupar rutas excluidas por servicio
   const excludedRoutesByService = {
     informacion: [
+      'usuarios/',
+      'usuarios/:id',
       '/mision/ver/',
       '/vision/ver/',
       '/historia/ver/',
