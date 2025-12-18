@@ -1,4 +1,9 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import {
+  HttpInterceptorFn,
+  HttpRequest,
+  HttpHandlerFn,
+  HttpEvent
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, from, switchMap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -10,95 +15,62 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
 
   const authService = inject(AuthService);
-  const configService = inject(AppConfigService);
+  const config = inject(AppConfigService);
 
-  const backendUrl = configService.apiUrlBackend || '';
-
-  // Agrupar rutas excluidas por servicio - SOLO PARA GET
-  const excludedRoutesGetOnly = {
-    informacion: [
-      'usuarios/',
-      'usuarios/:id',
-      '/mision/ver/',
-      '/vision/ver/',
-      '/historia/ver/',
-      '/objetivos/ver/',
-      '/objetivos/listar/',
-      '/valores/ver/',
-      '/valores/listar/',
-      '/informacion/libros/', // Ruta de getBooks
-      '/informacion/libros/:id/', // Ruta de getById
-      '/informacion/capLibros/', // Ruta de getCapBooks
-      '/informacion/eventos/', // Ruta de getAll eventos
-      '/informacion/eventos/:id/', // Ruta de getById eventos
-      '/informacion/jurados/', // Ruta de getAll jurados
-      '/informacion/jurados/:id/', // Ruta de getById jurados
-      '/informacion/cursos/', // Ruta de getAll cursos
-      '/informacion/cursos/:id/', // Ruta de getById cursos
-      '/informacion/revistas/', // getAll revista
-      '/informacion/revistas/:id/', // getById revista
-      '/informacion/procesosTecnicas/', // getAll proceso-tecnica
-      '/informacion/procesosTecnicas/:id/', // getById proceso-tecnica
-      '/informacion/participacionComitesEv/', // getAll participacion-comites-ev
-      '/informacion/participacionComitesEv/:id/', // getById participacion-comites-ev
-      '/informacion/noticias/', // getAll noticia
-      '/informacion/noticias/:id/', // getById noticia
-      '/informacion/materialDidactico/', // getAll material-didactico
-      '/informacion/materialDidactico/:id/', // getById material-didactico
-      '/informacion/tutoriasEnMarcha/', // getAll tutoria-en-marcha
-      '/informacion/tutoriasEnMarcha/:id/', // getById tutoria-en-marcha
-      '/informacion/tutoriasConcluidas/', // getAll tutoria-concluida
-      '/informacion/tutoriasConcluidas/:id/', // getById tutoria-concluida
-      '/informacion/trabajoEventos/', // getAll trabajo-eventos
-      '/informacion/trabajoEventos/:id/', // getById trabajo-eventos
-      '/informacion/software/', // getAll software
-      '/informacion/software/:id/', // getById software
-    ],
-    registrosFotograficos: [
-      '/registrosFotograficos/public/',
-    ],
-  };
-
-  // SOLO skip auth si es GET y la URL coincide con rutas públicas
-  if (req.method === 'GET') {
-    // Verificar si la URL coincide con alguna ruta excluida para GET
-    const shouldSkipAuthForGet = Object.entries(excludedRoutesGetOnly).some(([service, routes]) => {
-      if (service === 'general') return false; // Excluir "general" de esta lógica
-      
-      return routes.some(route => {
-        const regex = new RegExp(route.replace(':id', '\\d+')); // Reemplazar :id con un patrón numérico
-        return regex.test(req.url);
-      });
-    });
-
-    if (shouldSkipAuthForGet) {
-      return next(req);
-    }
-
-    // Rutas públicas de registros fotográficos, solo GET requests (list y retrieve son públicos)
-    const isPublicRegistroFotografico = req.url.includes('/registrosFotograficos/') && 
-                                        !req.url.match(/\/registrosFotograficos\/\d+\/(editar|eliminar|update|delete|patch|put)/); // Excluir acciones que requieren auth
-
-    if (isPublicRegistroFotografico) {
-      return next(req);
-    }
+  const backendUrl = config.apiUrlBackend;
+  if (!backendUrl || !req.url.startsWith(backendUrl)) {
+    return next(req); // no es backend
   }
-  
-  // Para cualquier otro método (DELETE, PUT, POST, PATCH) → SIEMPRE agregar token
 
-  // Si la URL NO es del backend → no poner token
-  if (!req.url.startsWith(backendUrl)) {
+  // ✅ RUTAS PÚBLICAS (solo GET) - Información
+  const publicGetRoutes = [
+    '/api/mision/ver/',
+    '/api/vision/ver/',
+    '/api/historia/ver/',
+    '/api/valores/ver/',
+    '/api/objetivos/ver/',
+    '/api/objetivos/listar/',
+    '/api/valores/listar/',
+    '/api/informacion/libros/',
+    '/api/informacion/capLibros/',
+    '/api/informacion/eventos/',
+    '/api/informacion/jurados/',
+    '/api/informacion/cursos/',
+    '/api/informacion/revistas/',
+    '/api/informacion/procesosTecnicas/',
+    '/api/informacion/participacionComitesEv/',
+    '/api/informacion/noticias/',
+    '/api/informacion/materialDidactico/',
+    '/api/informacion/tutoriasEnMarcha/',
+    '/api/informacion/tutoriasConcluidas/',
+    '/api/informacion/trabajoEventos/',
+    '/api/informacion/software/',
+    '/api/registrosFotograficos/public/',
+  ];
+
+  // ✅ Verificar si es GET y la URL es pública
+  const isPublicGet = publicGetRoutes.some(route => 
+    req.url.startsWith(backendUrl + route)
+  );
+
+  if (isPublicGet && req.method === 'GET') {
     return next(req);
   }
 
-  // Obtener token y agregarlo
+  // 🔐 TODO LO DEMÁS LLEVA TOKEN (DELETE, PUT, POST, PATCH, etc.)
   return from(authService.getToken()).pipe(
     switchMap(token => {
-      if (!token) return next(req);
+      if (!token) {
+        console.warn('⚠️ Request sin token:', req.url);
+        return next(req);
+      }
 
       const authReq = req.clone({
-        setHeaders: { Authorization: `Bearer ${token}` }
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
       return next(authReq);
     })
   );
