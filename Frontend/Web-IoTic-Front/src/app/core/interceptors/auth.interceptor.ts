@@ -14,8 +14,8 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const backendUrl = configService.apiUrlBackend || '';
 
-  // Agrupar rutas excluidas por servicio
-  const excludedRoutesByService = {
+  // Agrupar rutas excluidas por servicio - SOLO PARA GET
+  const excludedRoutesGetOnly = {
     informacion: [
       'usuarios/',
       'usuarios/:id',
@@ -59,29 +59,32 @@ export const authInterceptor: HttpInterceptorFn = (
     ],
   };
 
-  // Verificar si la URL coincide con alguna ruta excluida y es un GET
-  const shouldSkipAuth = Object.entries(excludedRoutesByService).some(([service, routes]) => {
-    if (service === 'general') return false; // Excluir "general" de esta lógica
-    return routes.some(route => {
-      const regex = new RegExp(route.replace(':id', '\\d+')); // Reemplazar :id con un patrón numérico
-      return regex.test(req.url) && req.method === 'GET';
+  // SOLO skip auth si es GET y la URL coincide con rutas públicas
+  if (req.method === 'GET') {
+    // Verificar si la URL coincide con alguna ruta excluida para GET
+    const shouldSkipAuthForGet = Object.entries(excludedRoutesGetOnly).some(([service, routes]) => {
+      if (service === 'general') return false; // Excluir "general" de esta lógica
+      
+      return routes.some(route => {
+        const regex = new RegExp(route.replace(':id', '\\d+')); // Reemplazar :id con un patrón numérico
+        return regex.test(req.url);
+      });
     });
-  });
 
-  // Si la URL coincide con la lista → no poner token
-  if (shouldSkipAuth) {
-    return next(req);
+    if (shouldSkipAuthForGet) {
+      return next(req);
+    }
+
+    // Rutas públicas de registros fotográficos, solo GET requests (list y retrieve son públicos)
+    const isPublicRegistroFotografico = req.url.includes('/registrosFotograficos/') && 
+                                        !req.url.match(/\/registrosFotograficos\/\d+\/(editar|eliminar|update|delete|patch|put)/); // Excluir acciones que requieren auth
+
+    if (isPublicRegistroFotografico) {
+      return next(req);
+    }
   }
-
-  // Rutas públicas de registros fotográficos, solo GET requests (list y retrieve son públicos)
-  const isPublicRegistroFotografico = req.url.includes('/registrosFotograficos/') && 
-                                      req.method === 'GET' &&
-                                      !req.url.match(/\/registrosFotograficos\/\d+\/(editar|eliminar|update|delete|patch|put)/); // Excluir acciones que requieren auth
-
-  // Si la URL coincide con la lista → no poner token
-  if (shouldSkipAuth || isPublicRegistroFotografico) {
-    return next(req);
-  }
+  
+  // Para cualquier otro método (DELETE, PUT, POST, PATCH) → SIEMPRE agregar token
 
   // Si la URL NO es del backend → no poner token
   if (!req.url.startsWith(backendUrl)) {
