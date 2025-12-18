@@ -43,10 +43,10 @@ export class ProductivityListTypePage {
     revistas: 'revistas',
     software: 'software',
     trabajo_eventos: 'trabajo-eventos',
-    eventos: 'trabajo-eventos',
+    eventos: 'eventos',
     organizacion: 'trabajo-eventos',
     cursos: 'cursos',
-    material: 'material', // mantiene actual comportamiento
+    material: 'material',
     tutorias_concluidas: 'tutorias_concluidas',
     tutorias_en_marcha: 'tutorias_en_marcha'
   };

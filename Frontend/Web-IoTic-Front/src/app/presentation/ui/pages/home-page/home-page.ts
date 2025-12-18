@@ -159,7 +159,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
       'tutoria-en-marcha': 'tutorias_en_marcha',
       'trabajo-eventos': 'trabajo-eventos',
       'participacion-comites': 'participacion-comites',
-      'material-didactico': 'material-didactico', // Si no existe ruta, redirigir a lista
+      'material-didactico': 'material',
       'jurado': 'jurado',
       'proceso-tecnica': 'procesos'
     };

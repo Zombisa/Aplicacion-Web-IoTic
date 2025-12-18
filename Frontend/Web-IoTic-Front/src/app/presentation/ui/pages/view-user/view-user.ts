@@ -301,17 +301,23 @@ export class ViewUser implements OnInit {
     const routeMap: Record<string, string> = {
       'libro': 'libros',
       'capitulo': 'capitulos',
-      'curso': 'curso',
-      'evento': 'trabajo_evento',
-      'revista': 'revista',
+      'curso': 'cursos',
+      'evento': 'eventos',
+      'revista': 'revistas',
       'software': 'software',
-      'tutoria_concluida': 'tutoria-concluida',
-      'tutoria_en_marcha': 'tutoria-en-marcha',
+      'tutoria_concluida': 'tutorias_concluidas',
+      'tutoria-concluida': 'tutorias_concluidas',
+      'tutoria_en_marcha': 'tutorias_en_marcha',
+      'tutoria-en-marcha': 'tutorias_en_marcha',
       'trabajo_eventos': 'trabajo-eventos',
-      'participacion_comites_ev': 'participacion_comites_ev',
-      'material_didactico': 'material-didactico',
+      'trabajo-eventos': 'trabajo-eventos',
+      'participacion_comites_ev': 'participacion-comites',
+      'participacion-comites': 'participacion-comites',
+      'material_didactico': 'material',
+      'material-didactico': 'material',
       'jurado': 'jurado',
-      'proceso_tecnica': 'proceso_tecnica'
+      'proceso_tecnica': 'procesos',
+      'proceso-tecnica': 'procesos'
     };
 
     const route = routeMap[event.tipo] || event.tipo;

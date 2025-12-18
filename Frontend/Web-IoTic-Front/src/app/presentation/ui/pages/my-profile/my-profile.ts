@@ -233,17 +233,17 @@ export class MyProfile implements OnInit {
     const routeMap: Record<string, string> = {
       'libro': 'libros',
       'capitulo': 'capitulos',
-      'curso': 'curso',
-      'evento': 'trabajo_evento',
-      'revista': 'revista',
+      'curso': 'cursos',
+      'evento': 'eventos',
+      'revista': 'revistas',
       'software': 'software',
-      'tutoria-concluida': 'tutoria-concluida',
-      'tutoria-en-marcha': 'tutoria-en-marcha',
+      'tutoria-concluida': 'tutorias_concluidas',
+      'tutoria-en-marcha': 'tutorias_en_marcha',
       'trabajo-eventos': 'trabajo-eventos',
-      'participacion-comites': 'participacion_comites_ev',
-      'material-didactico': 'material-didactico',
+      'participacion-comites': 'participacion-comites',
+      'material-didactico': 'material',
       'jurado': 'jurado',
-      'proceso-tecnica': 'proceso_tecnica'
+      'proceso-tecnica': 'procesos'
     };
 
     const route = routeMap[event.tipo] || event.tipo;

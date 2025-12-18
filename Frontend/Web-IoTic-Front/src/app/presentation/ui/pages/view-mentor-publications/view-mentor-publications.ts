@@ -133,7 +133,7 @@ export class ViewMentorPublications implements OnInit {
       'tutoria-en-marcha': 'tutorias_en_marcha',
       'trabajo-eventos': 'trabajo-eventos',
       'participacion-comites': 'participacion-comites',
-      'material-didactico': 'material-didactico',
+      'material-didactico': 'material',
       'jurado': 'jurado',
       'proceso-tecnica': 'procesos'
     };

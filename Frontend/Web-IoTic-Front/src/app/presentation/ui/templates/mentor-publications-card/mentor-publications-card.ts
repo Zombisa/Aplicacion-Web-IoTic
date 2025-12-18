@@ -29,16 +29,16 @@ export class MentorPublicationsCard {
       'libro': 'libros',
       'capitulo': 'capitulos',
       'curso': 'cursos',
-      'evento': 'trabajo-eventos',
+      'evento': 'eventos',
       'revista': 'revistas',
       'software': 'software',
       'tutoria-concluida': 'tutorias_concluidas',
       'tutoria-en-marcha': 'tutorias_en_marcha',
       'trabajo-eventos': 'trabajo-eventos',
-      'participacion-comites': 'comites',
-      'material-didactico': 'material-didactico',
+      'participacion-comites': 'participacion-comites',
+      'material-didactico': 'material',
       'jurado': 'jurado',
-      'proceso-tecnica': 'proceso-tecnica'
+      'proceso-tecnica': 'procesos'
     };
 
     const routePath = routeMap[event.tipo] || 'productividad';
