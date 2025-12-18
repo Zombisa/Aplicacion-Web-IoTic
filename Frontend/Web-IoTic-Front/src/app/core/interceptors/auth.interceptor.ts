@@ -14,31 +14,62 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const backendUrl = configService.apiUrlBackend || '';
 
-  // Lista ÚNICA de rutas que NO llevan token
-  const excludedPatterns = [
-    'firebase',
-    'cloudflare',
-    'storage.googleapis',
-    '.jpg',
-    '.png',
-    '.jpeg',
-    '.webp',
-    '/assets/',
-    // Rutas públicas de información institucional
-    '/mision/ver/',
-    '/vision/ver/',
-    '/historia/ver/',
-    '/objetivos/ver/',
-    '/objetivos/listar/',
-    '/valores/ver/',
-    '/valores/listar/',
-    // Rutas públicas de registros fotográficos
-    '/registrosFotograficos/public/',
-    // GET requests a registrosFotograficos (list y retrieve son públicos)
-    // Se verifica que sea GET para evitar excluir POST, PUT, DELETE que requieren auth
-  ];
+  // Agrupar rutas excluidas por servicio
+  const excludedRoutesByService = {
+    informacion: [
+      '/mision/ver/',
+      '/vision/ver/',
+      '/historia/ver/',
+      '/objetivos/ver/',
+      '/objetivos/listar/',
+      '/valores/ver/',
+      '/valores/listar/',
+      '/informacion/libros/', // Ruta de getBooks
+      '/informacion/libros/:id/', // Ruta de getById
+      '/informacion/capLibros/', // Ruta de getCapBooks
+      '/informacion/eventos/', // Ruta de getAll eventos
+      '/informacion/eventos/:id/', // Ruta de getById eventos
+      '/informacion/jurados/', // Ruta de getAll jurados
+      '/informacion/jurados/:id/', // Ruta de getById jurados
+      '/informacion/cursos/', // Ruta de getAll cursos
+      '/informacion/cursos/:id/', // Ruta de getById cursos
+      '/informacion/revistas/', // getAll revista
+      '/informacion/revistas/:id/', // getById revista
+      '/informacion/procesosTecnicas/', // getAll proceso-tecnica
+      '/informacion/procesosTecnicas/:id/', // getById proceso-tecnica
+      '/informacion/participacionComitesEv/', // getAll participacion-comites-ev
+      '/informacion/participacionComitesEv/:id/', // getById participacion-comites-ev
+      '/informacion/noticias/', // getAll noticia
+      '/informacion/noticias/:id/', // getById noticia
+      '/informacion/materialDidactico/', // getAll material-didactico
+      '/informacion/materialDidactico/:id/', // getById material-didactico
+      '/informacion/tutoriasEnMarcha/', // getAll tutoria-en-marcha
+      '/informacion/tutoriasEnMarcha/:id/', // getById tutoria-en-marcha
+      '/informacion/tutoriasConcluidas/', // getAll tutoria-concluida
+      '/informacion/tutoriasConcluidas/:id/', // getById tutoria-concluida
+      '/informacion/trabajoEventos/', // getAll trabajo-eventos
+      '/informacion/trabajoEventos/:id/', // getById trabajo-eventos
+      '/informacion/software/', // getAll software
+      '/informacion/software/:id/', // getById software
+    ],
+    registrosFotograficos: [
+      '/registrosFotograficos/public/',
+    ],
+  };
 
-  const shouldSkipAuth = excludedPatterns.some(p => req.url.includes(p));
+  // Verificar si la URL coincide con alguna ruta excluida y es un GET
+  const shouldSkipAuth = Object.entries(excludedRoutesByService).some(([service, routes]) => {
+    if (service === 'general') return false; // Excluir "general" de esta lógica
+    return routes.some(route => {
+      const regex = new RegExp(route.replace(':id', '\\d+')); // Reemplazar :id con un patrón numérico
+      return regex.test(req.url) && req.method === 'GET';
+    });
+  });
+
+  // Si la URL coincide con la lista → no poner token
+  if (shouldSkipAuth) {
+    return next(req);
+  }
 
   // Rutas públicas de registros fotográficos, solo GET requests (list y retrieve son públicos)
   const isPublicRegistroFotografico = req.url.includes('/registrosFotograficos/') && 
