@@ -6,21 +6,46 @@
 
   <!-- BANNER -->
   <section class="banner-primary d-flex justify-content-center align-items-center flex-column">
-    <h1 class="title text-center">Seminario</h1>
-    <p class="text-help">Detalles y información del seminario</p>
+    <h1 class="title text-center">{{ evento.alcance || 'Nombre del Evento' }}</h1>
+    <p class="text-help">Detalles y información del evento</p>
   </section>
 
-  <!-- CONTENEDOR DE LA INFORMACIÓN -->
-  <div class="container-fluid px-3 px-md-4 form-container">
-    <div class="row justify-content-center">
-      <div class="col-12 section-view-item">
-        <app-section-info-productivity
-          [item]="evento"
-          [itemImageUrl]="eventoImageUrl"
-          tipo="evento">
-        </app-section-info-productivity>
+  <section class="banner-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-lg-6 mb-4 p-4">
+          <img [src]="eventoImageUrl" [alt]="evento.alcance" class="evento-image">
+          <a 
+            *ngIf="evento?.file_r2 && evento.file_r2 !== ''"
+            [href]="evento.file_r2" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="btn btn-download mt-3">
+            <i class="fas fa-download"></i> Descargar Documento
+          </a>
+        </div>
+        <div class="col-12 col-lg-6 mb-4">
+          <div class="evento-details">
+            <h2 class="title-section">{{ evento.alcance || 'Nombre del Evento' }}</h2>
+
+            <div class="detail-item" *ngIf="evento?.fechaPublicacion">
+              <h4 class="detail-label">Fecha de Publicación</h4>
+              <p class="detail-value">{{ evento.fechaPublicacion }}</p>
+            </div>
+
+            <div class="detail-item" *ngIf="evento?.institucion">
+              <h4 class="detail-label">Institución</h4>
+              <p class="detail-value">{{ evento.institucion }}</p>
+            </div>
+
+            <div class="detail-item" *ngIf="evento?.etiquetas && evento.etiquetas.length">
+              <h4 class="detail-label">Etiquetas</h4>
+              <p class="detail-value">{{ evento.etiquetas.join(', ') }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>
 

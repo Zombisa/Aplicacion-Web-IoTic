@@ -19,6 +19,7 @@ import { LoadingPage } from '../../components/loading-page/loading-page';
 import { MaterialDidacticoService } from '../../../../services/information/material-didactico.service';
 import { JuradoService } from '../../../../services/information/jurado.service';
 import { CursoService } from '../../../../services/information/curso.service';
+import { EventoService } from '../../../../services/information/evento.service';
 
 
 @Component({
@@ -62,6 +63,7 @@ export class ProductivityListTypePage {
     private tutoriaEnMarchaService: TutoriaEnMarchaService,
     private tutoriaConcluidaService: TutoriaConcluidaService,
     private trabajoEventosService: TrabajoEventosService,
+    private eventos: EventoService,
     private softwareService: SoftwareService,
     private revistaService: RevistaService,
     private procesoTecnicaService: ProcesoTecnicaService,
@@ -96,7 +98,7 @@ export class ProductivityListTypePage {
       software: () => this.getList(this.softwareService.getAll()),
       revistas: () => this.getList(this.revistaService.getAll()),
       procesos: () => this.getList(this.procesoTecnicaService.getAll()),
-      eventos: () => this.getList(this.trabajoEventosService.getAll()),
+      eventos: () => this.getList(this.eventos.getAll()),
       cursos: () => this.getList(this.cursosService.getAll()),
       organizacion: () => this.getList(this.trabajoEventosService.getAll()),
       material: () => this.getList(this.materialDidactico.getAll()),
